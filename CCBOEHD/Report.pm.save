@@ -1,0 +1,920 @@
+#!/usr/bin/perl
+
+# CCBOE Helpdesk Scripts
+# Report.pm - Generate ticket reports from helpdesk database
+# By Clark Buehler (cbuehler@ccboe.com)
+
+package CCBOEHD::Report;
+use base qw(CCBOEHD::Base);
+
+use strict;
+use warnings;
+
+use CGI::Carp qw(fatalsToBrowser);
+
+use DBI;
+use CGI;
+use YAML;
+use Data::Dumper;
+
+##
+## Overrides
+##
+
+sub setup
+{
+	my $self = shift;
+
+	$self->start_mode('welcome');
+	$self->mode_param('mode');
+	$self->run_modes(
+		'custom' => 'custom_view',
+		'date' => 'date_view',
+		'report' => 'report_view',
+		'welcome' => 'welcome_view',
+	);
+	$self->load_config;
+	$self->db_connect;
+}
+
+
+## 
+## Interface functions
+## 
+
+sub custom_view{
+	my $self = shift;
+
+	my %form = $self->form_to_variables();
+	$self->load_template($self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'custom'}->{'template'});
+	$self->param('template')->param('self_url' => $self->query->url);
+
+	$self->populate_params('report.pl');
+	$self->set_self_url;
+
+	my $y = YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'report'}->{'rmap'});
+	$self->param('report',$y);
+
+	$self->fill_select_form($self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'custom'}->{'rmap'});
+
+
+	return $self->param('template')->output();
+}
+
+sub report_view{
+	my $self = shift;
+
+	my %form = $self->form_to_variables;
+	$self->load_template($self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'report'}->{'template'});
+	$self->param('template')->param('self_url' => $self->query->url);
+
+#die Data::Dumper::Dumper %form;
+	$self->populate_params('report.pl');
+	$self->set_self_url;
+
+	my $y = YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'report'}->{'rmap'});
+
+	$self->param('report',$y);
+
+	$self->fill_select_form;
+
+	my $sql = $self->make_sql_from_form_submit(%form);
+
+#die $sql;
+	$self->fill_results_loop($sql,$self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'report'}->{'rmap'});
+
+	if($self->param('template')->query(name => 'bookmarkable')){
+		my @bookmarkable;
+		foreach my $k (keys %form){
+			if(defined($form{$k}) && $form{$k} ne ''){
+#				my %row;
+				$row{'key'} = $k;
+				$row{'value'} = $form{$k};
+				push(@bookmarkable,\%row);
+			}
+		}
+		$self->param('template')->param('bookmarkable',[@bookmarkable]);
+	
+	}
+
+#'bookmarkable' => [
+#{'key' => 'foo',
+#'value' => 'bar',},
+#{'key' => 'foo',
+#'value' => 'bar',},
+#],
+
+#	my $dbg = $self->param('config')->{'db_password'};
+#	$dbg = '' unless $dbg;
+#	$self->param('template')->param('debug',$dbg);
+#$self->param('config')->{'db_password'}
+#$self->param('config')->{'db_user'}
+
+
+	return $self->param('template')->output();
+}
+
+sub welcome_view{
+	my $self = shift;
+	$self->query->param('mode' => 'welcome');
+	$self->populate_params('report.pl');
+
+	my %form = $self->form_to_variables;
+
+	$self->load_template($self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'welcome'}->{'template'});
+
+	$self->set_self_url;
+
+	my $y = YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'pnd'}->{$form{'app'}}->{'report.pl'}->{'welcome'}->{'rmap'});
+	$self->param('report-welcome',$y);
+
+	# Generate/Populate the School and Status select form.
+
+	$self->fill($self->school_from_ip()||1);
+
+	# Generate the Date Select form
+
+	# .. put stuff here ...
+
+        return $self->param('template')->output();
+}
+
+sub date_view{
+	my $self = shift;
+	return qq(<html><head><title> Under construction </title></head><body><h1>Under construction</h1><p>Try back later.</p></body></html>);
+}
+
+## 
+## Internal functions
+## 
+
+sub fill_loop{
+	my $self = shift;
+	my $loopname = shift;
+
+	my $y = $self->param('report-welcome');
+
+        my @col;
+
+        foreach my $f (@{$y->{'fields'}}){
+		my ($key) = keys %{$f};
+		my %fields = %{$f->{$key}};
+
+		my $sql;
+
+		$sql .= "select ".($fields{'field'})." from ".($fields{'table'});
+
+		if($fields{'where'} && defined($fields{'value'}) && $fields{'compare'}){
+			my %cmp = $self->lookup_cmp(
+					$y->{'comparisons'},
+					$fields{'compare'},
+				  );
+			$sql .= " where ".($fields{'where'})." ".($cmp{'sql'})." ".($self->param('hddb')->quote($fields{'value'}));
+		}
+
+		if($fields{'sort'}){
+			$sql .= " order by ".($fields{'sort'});
+		}
+
+		$sql .= ';';
+		my $sth = $self->param('hddb')->prepare($sql);
+		$sth->execute();
+
+		my $selected = $self->school_from_ip; # Get the current school number, if any
+
+		my @entries;
+		while(my $data = $sth->fetchrow_hashref()){
+			my %row;
+			$row{'txt'} = $data->{'txt'};
+			$row{'lbl'} = $data->{'lbl'};
+			$row{'sel'} = '';
+			$row{'sel'} = ' selected' if $data->{'sel'} eq $selected ;
+			push(@entries,\%row);
+		}
+		$self->param('template')->param($fields{'varname'} => [@entries]);
+
+        }
+
+	my @now = localtime(time);
+
+	my @bsec = $self->numeric_selector(0,59,0,'%02d');
+	my @esec = $self->numeric_selector(0,59,$now[0],'%02d');
+
+	my @bmin = $self->numeric_selector(0,59,0,'%02d');
+	my @emin = $self->numeric_selector(0,59,$now[1],'%02d');
+
+	my @bhr = $self->numeric_selector(0,23,0,'%02d');
+	my @ehr = $self->numeric_selector(0,23,$now[2]+1,'%02d');
+
+#die Data::Dumper::Dumper @now;
+	my @bday = $self->numeric_selector(1,31,0,'%02d');
+	my @eday = $self->numeric_selector(1,31,$now[3],'%02d');
+
+	my @bmonth = $self->numeric_selector(1,12,0,'%02d');
+	my @emonth = $self->numeric_selector(1,12,$now[4]+1,'%02d');
+
+	my @byr = $self->numeric_selector(2001,$now[5]+1900,$now[5]+1900,'%4d');
+	my @eyr = $self->numeric_selector(2001,$now[5]+1900,$now[5]+1900,'%4d');
+
+	$self->param('template')->param('bsec' => [@bsec]);
+	$self->param('template')->param('esec' => [@bsec]);
+
+	$self->param('template')->param('bmin' => [@bmin]);
+	$self->param('template')->param('emin' => [@emin]);
+
+	$self->param('template')->param('bhour' => [@bhr]);
+	$self->param('template')->param('ehour' => [@ehr]);
+
+	$self->param('template')->param('bday' => [@bday]);
+	$self->param('template')->param('eday' => [@eday]);
+
+	$self->param('template')->param('bmonth' => [@bmonth]);
+	$self->param('template')->param('emonth' => [@emonth]);
+
+	$self->param('template')->param('byear' => [@byr]);
+	$self->param('template')->param('eyear' => [@eyr]);
+
+
+        return @col;
+
+}
+
+sub numeric_selector{
+	my $self = shift;
+	my $start = shift;
+	my $end = shift;
+	my $selected = shift;
+	my $format = shift;
+
+	my @entries;
+	foreach my $n ($start..$end){
+		my %row;
+		$row{'txt'} = $n;
+		$row{'lbl'} = sprintf($format, $n);
+		$row{'sel'} = '';
+		$row{'sel'} = ' selected' if $n eq $selected;
+		push(@entries,\%row);
+	}
+
+	return @entries;
+}
+
+sub lookup_cmp{
+	my $self = shift;
+	my $c = shift;
+	my $lookup = shift;
+
+	my %found;
+	foreach my $cmp (@{$c}){
+		my ($cmpname) = keys %{$cmp};
+		if($cmpname eq $lookup){
+			%found = %{$cmp->{$cmpname}};
+			last;
+		}
+	}
+	return %found;;
+}
+
+sub match_any{
+	my $self = shift;
+	my $match = pop;
+	my @list = @_;
+	foreach my $v (@list){
+		return 1 if $v eq $match;
+	}
+	return undef;
+}
+
+sub uniq{
+	my $self = shift;
+	my @in = @_;
+	my %saw;
+	undef %saw;
+	my @out =  grep(!$saw{$_}++, @in);
+	return @out;
+}
+
+sub find_primary_key_column{
+	my $self = shift;
+	my $sql = shift;
+
+	my $pkeycol = ($self->param('report')->{'primarytable'}).'.'.($self->param('report')->{'primarykey'});
+
+	$sql =~ s/select //;
+	$sql =~ s/ from .*//;
+	my @fields = split(/,/,$sql);
+	my $n;
+	for(my $i=0;$i<@fields;$i++){
+		if($fields[$i] =~ /$pkeycol/){
+			$n = $i+1;
+			last;
+		}
+	}
+	return $n;
+}
+
+sub find_column_order{
+	my $self = shift;
+	my @all = @_;
+	my %form = $self->form_to_variables;
+
+#	my @sortable_columns = $self->labels_for_cols($self->cols_with_attribute('sort'));
+	my @sortable_columns = $self->cols_with_attribute('sort');
+	my @ordered;
+	# The array @sort goes out of scope sooner this way
+	do{
+		my @sort = sort { $a cmp $b } grep { /^sort.*/ } keys %form;
+		@ordered = map { $_ = $form{$_} } @sort;
+	};
+	my @correct = $self->uniq(@ordered,@sortable_columns);
+
+	return @correct;
+}
+
+# Remove from array ref $list all elements in array ref $remove
+sub remove_duplicates{
+	my $self = shift;
+	my $list = shift;
+	my $remove = shift;
+
+	my %h = map { $_ => 1 } @{$list};
+
+	foreach my $elem (@{$remove}){
+		delete $h{$elem};
+	}
+
+	return keys %h;
+}
+
+sub fill_results_loop{
+	use Time::HiRes qw / gettimeofday / ; # required for reporting query time
+	my $now = [Time::HiRes::gettimeofday()];
+
+	my $self = shift;
+	my $sql = shift;
+	my $file = shift; # the .rmap file name
+
+#die $sql;
+	my (@loop,@header, @head);
+	my $results = 0;
+
+	if($sql){
+		my $sth = $self->param('hddb')->prepare($sql);
+		$sth->execute();
+
+		my $hr = $self->param('report');
+
+		# Label of the Primary Key's field is the column header to look for in the results
+		my $info = $self->get_the_damn_field($self->param('report')->{'primarykey'});
+		my $fahr = $sth->fetchall_hashref($info->{'label'}); # FAHR = FetchAllHashRef. I'm so clever!
+
+#		die Data::Dumper::Dumper $fahr;
+
+		# Find the index of the column containing the primary key for this table.
+		my $pk_col = $self->find_primary_key_column($sql);
+
+		my @columns_in_order = $self->find_column_order;
+		my @shown_columns = $self->cols_with_attribute('show');
+		my @suppressed_columns = $self->cols_with_attribute('suppress');
+
+		# Add to shown columns and columns used in where clause of select:
+		@shown_columns = ($self->uniq($self->field_names_requested_in_form_submit,@shown_columns));
+
+		# Remove from shown columns any columns listed as 'suppress':
+		@shown_columns = ($self->remove_duplicates(\@shown_columns,\@suppressed_columns));
+
+
+		my $ary_ref = $self->param('hddb')->selectcol_arrayref($sql, { Columns=>[$pk_col] });
+
+#		die Data::Dumper::Dumper $ary_ref;
+
+		foreach my $pkey (@$ary_ref){
+			my @cols;
+			foreach my $k (@columns_in_order){
+				if($self->match_any(@shown_columns,$k)){
+					my ($lbl) = ($self->labels_for_cols($k));
+					push(@cols,{'colval' => $fahr->{$pkey}->{$lbl}});
+					push(@head,$lbl);
+				}
+			}
+			push(@loop,{
+				'col' => [@cols],
+				$self->param('report')->{'primarykey'} => $pkey,
+			});
+		}
+		$self->param('template')->param('showresults',1);
+		$results = scalar(@$ary_ref) if $ary_ref;
+	}
+
+	@head = $self->uniq(@head);
+	foreach my $he (@head){
+		push(@header,{'name'=>$he});
+	}
+	$self->param('template')->param('header',[@header]);
+
+	$self->param('template')->param('row',[@loop]);
+
+	my $elapsed = Time::HiRes::tv_interval($now);
+
+
+	$self->param('template')->param('selected_rows',$results);
+	$self->param('template')->param('selected_time',sprintf("%.3f", $elapsed));
+
+}
+
+sub remove_empties{
+	my $self = shift;
+	my @ar = @_;
+	my @out;
+	foreach my $v (@ar){
+		next unless $v;
+		push(@out,$v);
+	}
+	return @out;
+}
+
+sub how_many_filled{
+	my $self = shift;
+	my $basename = shift;
+	my %form = $self->form_to_variables;
+	my @r = grep { /^$basename.*/ } keys %form;
+	@r = map { $_ = $form{$_} } @r;
+	@r = $self->remove_empties(@r);
+	return scalar(@r);
+}
+
+### Begin block of new functions for cross table join
+
+sub column_ids_from_map{
+	my $self = shift;
+	my $y = $self->param('report');
+
+	my @col;
+	foreach my $f (@{$y->{'fields'}}){
+		my ($key) = keys %{$f};
+		push(@col,$key);
+	}
+	return @col;
+}
+
+# Find columns with attribute $_[0] in data structure $self->param('report')
+sub cols_with_attribute{
+	my $self = shift;
+	my $attr = shift;
+	my $y = $self->param('report');
+
+	my @all = $self->column_ids_from_map;
+	my @keep;
+	foreach my $f (@all){
+		my @attributes;
+		foreach my $field (@{$y->{'fields'}}){
+			if($field->{$f}){ # Otherwise when we reference $field->{$f} it creates it
+				my $c = $field->{$f}->{'column'};
+				if($c){
+					@attributes = @{$c};
+				}
+			}
+		}
+		if($self->match_any(@attributes,$attr)){
+			push(@keep,$f);
+		}
+	}
+
+	return @keep;
+}
+
+sub labels_for_cols{
+	my $self = shift;
+	my @cols = @_;
+	my @labels;
+	foreach my $f (@cols){
+		my $h = $self->get_the_damn_field($f);
+		push(@labels,$h->{'label'});
+#		foreach my $h (@{$self->param('report')->{'fields'}}){
+#			if($h->{$f}){
+#				push(@labels,$h->{$f}->{'label'});
+#			}
+#		}
+
+	}
+#die Data::Dumper::Dumper @labels;
+	@labels = $self->uniq(@labels);
+#die Data::Dumper::Dumper @labels;
+	return $self->uniq(@labels);
+}
+
+
+#sub type_lookup{
+#        my $self = shift;
+#        my $type = $self->value_of_form_field('type');
+#
+#        if(!$type){
+#                $type = $self->param('config')->{'report'}->{'default_type'};
+#        }
+#
+#        my $cfg = $self->param('config')->{'report'}->{$type};
+#
+#        if(!$cfg){
+#                $cfg = $self->param('config')->{'report'}->{'default'};
+#        }
+#        $self->param('template_file',$cfg{'template'});
+#        $self->param('report_file',$cfg{'config'});
+#}
+
+## End new block
+
+# This is a big one. Big, overly complicated, and harder to understand then necessary 
+# it merely creates the HTML forms at the top of the report page where you choose what 
+# to select with and sort by.
+sub fill_select_form{
+	my $self = shift;
+	my $file = shift;
+
+	my @shown_columns = $self->cols_with_attribute('show');
+	my @selectable_columns = $self->cols_with_attribute('select');
+	my @sortable_columns = $self->cols_with_attribute('sort');
+	my @all_columns = $self->uniq(@shown_columns, @selectable_columns, @sortable_columns);
+
+	my @selectable_column_labels = $self->labels_for_cols(@selectable_columns);
+	my @sortable_column_labels = $self->labels_for_cols(@sortable_columns);
+	my @all_column_labels = $self->labels_for_cols(@all_columns);
+
+	my %form = $self->form_to_variables;
+
+	# Set the number of fields to show (1 or the number you used in your query)
+	# Set the max fields availible 
+	my $filled = $self->how_many_filled('query');
+	$filled = 1 if ! $filled;
+	my $max = scalar(@shown_columns)-1;
+	if($filled > $max){ # Cannot fill more fields than we have! And it b0rks the JS.
+		$filled = $max;
+	}
+	$self->param('template')->param('filled_fields',$filled);
+	$self->param('template')->param('max_fields',$max);
+
+	# Take care of looking up comparison labels and values here
+	my (@cmpvalues,@cmplabels);
+
+	# Extract from config file in hashref hr the comparisons hash
+	my %cmp = $self->get_cmps($self->param('report'));
+
+	foreach my $c (keys %cmp){
+		push(@cmpvalues,$c);
+		push(@cmplabels,$cmp{$c}->{'txt'});
+	}
+
+	# And/Or labels and values. Very simple indeed.
+	my @ao_labels = qw(and or);
+	my @ao_values = qw(and or);
+
+# Fields are now handled the right, hard, complicated way
+#	my @fields = map { $_ =~ s/(.*)\d+$/$1/; } sort { $a cmp $b } grep { /^field.*/ } keys %form;
+
+	my @vals = sort { $a cmp $b } grep { /^query.*/ } keys %form;
+
+	# It is somewhat difficult to get everything to line up properly
+
+	my @used_field_names;
+	my @used_query_vals;
+	my @used_comparison_names;
+#	my @used_andor_names;
+	for(my $i=0;$i<@vals;$i++){
+		if(defined($form{'query'.$i}) and $form{'query'.$i} ne ''){
+			push(@used_field_names,$form{'field'.$i});
+			push(@used_query_vals,$form{'query'.$i});
+			push(@used_comparison_names,$form{'comparison'.$i});
+#			push(@used_andor_names,$form{'andor'.$i});
+		}
+	}
+
+	my @loop; # Select
+	for(my $i=0;$i<@all_columns;$i++){
+		my %r; # row.
+		$r{'seq'} = $i;
+#		$r{'query'} = $self->decide('query',$i,'',%form);
+		$r{'query'} = shift @used_query_vals;
+
+		if($self->match_any(@selectable_columns,$all_columns[$i])){
+			@{$r{'select_values'}} = $self->selectorify(\@selectable_column_labels, \@selectable_columns,$used_field_names[$i] || $selectable_columns[$i]);
+			@{$r{'select_comparisons'}} = $self->selectorify(\@cmplabels,\@cmpvalues, $used_comparison_names[$i] || $form{'comparison'.$i} || 'like');
+			@{$r{'andor'}} = $self->selectorify(\@ao_labels,\@ao_values, $form{'andor'.$i} || 'and');
+#			@{$r{'andor'}} = $self->selectorify(\@ao_labels,\@ao_values, $used_andor_names[$i], $form{'andor'.$i} || 'and');
+
+			push(@loop,\%r);
+		}
+	}
+
+	my @sloop; # Sort
+	for(my $i=0;$i<@all_columns;$i++){
+		my %r;
+		$r{'seq'} = $i;
+#		$r{'query'} = $self->decide('query',$i,'',%form);
+
+		@{$r{'select_sort'}} = $self->selectorify( \@sortable_column_labels,\@sortable_columns, $form{'sort'.$i} || ($sortable_columns[$i]));
+
+		push(@sloop,\%r);
+	}
+
+	# Stick the HTML forms into the template
+	$self->param('template')->param('sort_loop',[@sloop]);
+	$self->param('template')->param('select_fields',[@loop]);
+}
+
+
+# Finds the correct submitted form field and which value was selected on submit of the form and returns the value
+# This appeared to be so that the previously selected item will be selected again, or the default will be selected
+# This function is at the moment no longer used.
+sub decide{
+	my $self = shift;
+	my $basename = shift;
+	my $seq = shift;
+	my $default = shift;
+	my %form = @_;
+	my @result = sort { $a cmp $b } grep { /^$basename.*/ } keys %form;
+	@result = map { $_ = $form{$_} } @result;
+	@result = $self->remove_empties(@result);
+
+	return $result[$seq] || $default;
+}
+
+#$loop[0] = (
+#	{
+#		'col' => [
+#			{ 'colval' => 'school', },
+#			{ 'colval' => 'location', },
+#			{ 'colval' => 'updated', },
+#		],
+#		'ticket' => $ticket,
+#	},
+#	{
+#		'col' => [
+#			{ 'colval' => 'school', },
+#			{ 'colval' => 'location', },
+#			{ 'colval' => 'updated', },
+#		],
+#		'ticket' => $ticket,
+#	},
+#);
+
+
+# Usage:
+# my $hash = $self->get_the_damn_field('schoolname');
+# die $hash->{'label'}; # will report 'School'
+#
+# This is to get the element of the array of field descriptors which matches a given name
+# so that sub-elements of it may be more concisely referenced.
+# for example, the alternative to the above example without this function would be:
+# die $self->param('report')->{'fields'}->[0]->{'schoolname'}->{'label'};
+# but only because schoolname happens to be at index 0.
+#die Data::Dumper::Dumper map { my($k,$v) = each %{$_} ; $k => $_->{$k}->{'label'} } @{$self->param('report')->{'fields'}};
+sub get_the_damn_field{
+	my $self = shift;
+	my $requested = shift;
+
+	my @report_fields = @{$self->param('report')->{'fields'}};
+
+	foreach my $field (@report_fields){
+		my ($keyname) = keys %{$field};
+		if ($keyname eq $requested){
+			return $field->{$keyname};
+		}
+	}
+
+	return {};
+}
+
+sub field_names_requested_in_form_submit{
+	my $self = shift;
+	my %form = $self->form_to_variables();
+
+	my @fields = sort { $a cmp $b } grep { /^field.*/ } keys %form;
+	@fields = map { $_ = $form{$_} } @fields;
+	my @qs = sort { $a cmp $b } grep { /^query.*/ } keys %form;
+	@qs = map { $_ = $form{$_} } @qs;
+
+	my @out;
+	for(my $i=0;$i<@qs;$i++){
+		if(defined($qs[$i]) and $qs[$i] ne ''){
+			push(@out,$fields[$i]);
+		}
+	}
+	return @out;
+}
+
+sub grep_query_convert_to_val{
+	my $self = shift;
+	my $key = shift;
+
+	my %form = $self->form_to_variables;
+
+	my @fields = sort { $a cmp $b } grep { /^$key.*/ } keys %form;
+	@fields = map { $_ = $form{$_} } @fields;
+
+	return @fields;
+}
+
+# This is a big one. Converts form submit into a single SQL statement that can be sent to the database.
+sub make_sql_from_form_submit{
+	my $self = shift;
+	my %form = @_;
+
+	my $y = $self->param('report');
+
+	my %cmp = $self->get_cmps;
+
+	my @col_ids = $self->column_ids_from_map;
+#	my @column_labels = $self->labels_for_cols($self->cols_with_attribute('select'));
+
+
+# Test. This lot does away
+	my @fields = $self->grep_query_convert_to_val('field');
+	my @values = $self->grep_query_convert_to_val('query');
+	my @comparison = $self->grep_query_convert_to_val('comparison');
+	my @sort = $self->grep_query_convert_to_val('sort');
+	my @andor = $self->grep_query_convert_to_val('andor');
+
+	# Look up fields as IDs in the reportmap file, replace each field with its real table field.
+
+	my $found = 1;
+	my (@select,@as,@join_type,@join_on,@join_test,@order,@where,@and,%order);
+	my @ordered_fields = $self->all_not_in(\@fields,\@col_ids);
+	@ordered_fields = (@fields,@ordered_fields);
+
+	# Special case... can't remembet why we need this
+	if(!$self->match_any(@fields,'ticket')){
+		push(@fields,'ticket');
+	}
+
+	for(my $i=0;$i<@col_ids;$i++){
+		my $label = $col_ids[$i];
+		my $info = $self->get_the_damn_field($label);
+
+		push(@select,$info->{'name'});
+		push(@as,$info->{'label'});
+
+		push(@order,$info->{'sort'});
+
+		# if we have to join to another table to get this column...
+		if($info->{'join'}){
+			# join_type is the type of join: left, right, inner, etc.
+			push(@join_type,$info->{'join'}->{'type'});
+
+			# join_on is the table to join onto. Should have called this 'table' because 'test' below is really the 'on' part of the SQL statement
+			push(@join_on,$info->{'join'}->{'on'});
+
+			# join_test is the comparison that must be made (the test) to determine whether to join a given record
+			push(@join_test,'('.($info->{'join'}->{'from'}).' '.($info->{'join'}->{'compare'}).' '.($info->{'join'}->{'to'}).')');
+		}
+
+	}
+	# Build where/and info from form value submit
+	for(my $i=0;$i<@values;$i++){
+		if($values[$i] ne ''){
+			my $info = $self->get_the_damn_field($fields[$i]);
+			my $p = $cmp{$comparison[$i]}->{'pattern'};
+			my $where = $info->{'where'}.' ';
+
+			if($cmp{$comparison[$i]}->{'sql'} eq 'between'){
+				# Special case for 'between'.
+				my ($b1,$b2) = split(/ and /,$values[$i]);
+				if(defined($b1) && defined($b2) && $b1 ne '' && $b2 ne ''){
+					$p =~ s/\*/$b1/;
+					$p =~ s/\*/$b2/;
+					$where .= $cmp{$comparison[$i]}->{'sql'}.' '.$self->param('hddb')->quote($b1).' and '.$self->param('hddb')->quote($b2);
+				} else{
+					# Malformed values! Skip this.
+					next;
+				}
+			} else{
+				$p =~ s/\*/$values[$i]/;
+				$where .= $cmp{$comparison[$i]}->{'sql'}.' '.$self->param('hddb')->quote($p);
+			}
+			push(@where,$where);
+			push(@and,$andor[$i]);
+		}
+	}
+
+	# select all of the fields as their As value specified in the .rmap file
+	for(my $i=0;$i<@select;$i++){
+		$select[$i] .= ' as '.$self->param('hddb')->quote($as[$i]);
+	}
+
+	# What does this do any more?
+	foreach my $f (@{$self->param('report')->{'fields'}}){
+		my $k = keys %{$f};
+	}
+
+	# Done with 'select' portion of SQL.
+	my $select = join(', ', @select);
+
+	my @join;
+	for(my $i=0;$i<@join_type;$i++){
+		push(@join, $join_type[$i].' join '.$join_on[$i].' on '.$join_test[$i]);
+	}
+	my $join = join(' ',@join);
+
+	my @andwhere; # andwhere is to contain WHERE clauses with the correct ANDOR suffix (or none if last)
+	my $or_flag = 0;
+	for(my $w=0;$w<@where;$w++){
+
+		# Primitive grouping of consecutive OR statements. Seems to do the expected in common cases.
+		if($and[$w - 1] eq 'or'){
+			if($or_flag == 0){
+				$andwhere[$w - 1] = '('.$andwhere[$w - 1];
+				$or_flag = 1;
+			}
+		} else{
+			if($or_flag == 1){
+				$andwhere[$w - 1] .= ')';
+				$or_flag = 0;
+			}
+		}
+		if($w != 0){
+			$andwhere[$w - 1] .= ' '.$and[$w - 1];
+		}
+		push(@andwhere,$where[$w]);
+	}
+	my $where = join(' ',@andwhere);
+	# If the last statement was an OR, close the group with )
+	if($or_flag == 1){
+		$where .= ')';
+		$or_flag = 0;
+	}
+
+	foreach my $s (@sort){
+		my $info = $self->get_the_damn_field($s);
+#die Data::Dumper::Dumper $s if !$info->{'sort'};
+		$s = $info->{'sort'};
+	}
+	@order = $self->uniq(@sort,@order);
+
+	my $order = join(', ', @order);
+	if(!@where){ # If we have no WHERE clause something has gone horribly wrong.
+		return '';
+	} else{
+		my $table = $self->param('report')->{'primarytable'};
+		my $sql = "select $select from $table $join where $where order by $order;";
+		return $sql;
+	}
+}
+
+sub all_not_in{
+	my $self = shift;
+	my $flds = shift;
+	my $cols = shift;
+	my @notin;
+	foreach my $v (@{$cols}){
+		if(!$self->match_any(@$flds,$v)){
+			push (@notin,$v);
+		}
+	}
+	return @notin;
+}
+
+sub get_cmps{
+#	my $self = shift;
+#	my $hr = $self->param('report');
+#	my %cmp;
+#
+#	foreach my $c (@{$hr->{'comparisons'}}){
+#		my ($k) = keys %{$c};
+#		$cmp{$k} = $c->{$k};
+#	}
+#	return %cmp;
+	my $self = shift;
+
+        my $ops = YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'comparisons'});
+
+	my %cmp;
+        my @ops = @{$ops->{'comparisons'}};
+        foreach my $o (@ops){
+		my ($k) = keys %{$o};
+		$cmp{$k} = $o->{$k};
+        }
+        return %cmp;
+}
+
+# $self->selectoryify(\@labels,\@values,'label of initial selection');
+sub selectorify{
+	my $self = shift;
+	my $ar_labels = shift;
+	my $ar_values = shift;
+	my $match = shift;
+	my @loop;
+	my %h;
+	for(my $i=0;$i<@{$ar_labels};$i++){
+		my $selected = '';
+		if($ar_values->[$i] eq $match){
+			$selected = ' selected';
+		}
+		push(@loop,{
+			'txt' => $ar_labels->[$i],
+			'val' => $ar_values->[$i],
+			'selected' => $selected,
+		});
+	}
+
+	return @loop;
+}
+
+1;

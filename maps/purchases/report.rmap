@@ -1,0 +1,51 @@
+--- !helpdesk.ccboe.com/report
+
+primarytable: purchase
+primarykey: pid
+
+fields:
+ - pid:
+    name: purchase.pid
+    label: PID
+    as: PID
+    sort: purchase.pid
+ - order_number:
+    name: purchase.order_number
+    label: P.O. Number
+    as: P.O. Number
+    column:
+     - show
+     - sort
+     - select
+    where: purchase.order_number
+    sort: purchase.order_number
+ - purchased:
+    name: purchase.purchased
+    label: Purchase Date
+    as: Purchase Date
+    column:
+     - show
+     - sort
+     - select
+    where: purchase.purchased
+    sort: purchase.purchased
+ - arrived:
+    name: purchase.arrived
+    label: Arrived Date
+    as: Arrived Date
+    column:
+     - show
+     - sort
+     - select
+    where: purchase.arrived
+    sort: purchase.arrived
+ - notes:
+    name: purchase.notes
+    label: Notes
+    as: Notes
+    column:
+     - show
+     - sort
+     - select
+    where: purchase.notes
+    sort: purchase.notes

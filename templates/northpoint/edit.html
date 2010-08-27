@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <style>
+  <TMPL_INCLUDE NAME="common.css">
+  </style>
+  <title>CCPS Ticket #<TMPL_VAR NAME="helpdesk_ticket"> - Edit</title>
+ </head>
+ <body>
+ 
+<TMPL_IF NAME="sql_success">
+     <h1>Update Successful!</h1>
+     <p id="sql-success-text">
+      Your update as been merged into the database affecting <TMPL_VAR NAME="sql_success"> rows.
+     </p>
+     <p id="sql-success-text">
+      You may view the updated record and make corrections below or return to the <a href="report.pl">school selection page</a>.
+     </p>
+    
+</TMPL_IF>
+
+<TMPL_IF NAME="sql_error">
+     <h1>Your changes were not saved!</h1>
+     <p id="sql-error-text" style="width: 690px;">
+      An SQL Error occured (see below) and your changes were <b>not</b> inserted into the database. If you can tell what went wrong, correct it and resubmit the update. If not, save this page and contact your system administrator.
+     </p>
+</TMPL_IF>
+<TMPL_LOOP NAME="sql_error">
+     <ul style="color:red;">
+      <li><TMPL_VAR ESCAPE="html" NAME="error"></li>
+     </ul>
+</TMPL_LOOP>
+
+ <span id="page-title">Charles County Public Schools Helpdesk: Ticket #<span id="helpdesk-ticket-number"><TMPL_VAR ESCAPE="html" NAME="helpdesk_ticket"></span></span>
+ <form name="update" method="post" action="<TMPL_VAR NAME="self_url">">
+  <input type="hidden" name="cfg" value="northpoint">
+  <input type="hidden" name="app" value="helpdesk">
+  <input type="hidden" name="mode" value="update">
+  <input type="hidden" name="ticket" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_ticket">">
+  <div id="body-head">
+   <table style="text-align: left; width: 640px; height: 98px;" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+     <tr>
+      <td>School:</td>
+      <td>
+       <select name="school" size="1">
+<TMPL_LOOP NAME="school_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+       </select>
+      </td>
+      <td>Opened:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_requested"></td>
+      <td>Updated:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_updated"></td>
+     </tr>
+
+     <tr>
+      <td>Author:</td>
+      <td><input name="author" size="15" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_author">" type="text"></td>
+      <td>Barcode:</td>
+      <td><input name="barcode" size="20" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_barcode">" type="text"></td>
+      <td>Serial:</td>
+      <td><input name="serial" size="20" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_serial">" type="text"></td>
+     </tr>
+
+     <tr>
+      <td>Contact:</td>
+      <td><input name="contact" size="15" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_contact">" type="text"> </td>
+      <td>Contact Phone:</td>
+      <td><input name="phone" size="20" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_phone">" type="text"></td>
+      <td>Contact email:</td>
+      <td><input name="email" size="20" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_email">" type="text"</td>
+     </tr>
+
+     <tr>
+      <td>Location:</td>
+      <td colspan="3">
+       <input name="location" size="52" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_location">" type="text"></td>
+      <td>Free:</td>
+      <td>
+       <input name="free" size="20" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_free">" />
+      </td>
+     </tr>
+
+     <tr>
+      <td>Priority:</td>
+      <td style="vertical-align: top;">
+       <select name="priority" size="1">
+<TMPL_LOOP NAME="priority_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+       </select>
+      </td>
+      <td>Section:</td>
+      <td>
+       <select name="section" size="1">
+<TMPL_LOOP NAME="section_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+       </select>
+      </td>
+      <td>Status:</td>
+      <td style="vertical-align: top;">
+       <select name="status" size="1" tabindex="1">
+<TMPL_LOOP NAME="status_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+       </select>
+      </td>
+     </tr>
+
+    </tbody>
+   </table>
+  </div>
+  <div id="body_notes">
+   Reported Problem:<br />
+   <textarea class="widgEditor" tabindex="2" id="helpdesk-problem" style="width: 640px;" cols="70" rows="5" name="problem"><TMPL_VAR ESCAPE="html" NAME="helpdesk_problem"></textarea><br />
+   Troubleshooting Tried:<br />
+   <textarea tabindex="3" id="helpdesk-troubleshooting" style="width: 640px;" cols="70" rows="5" name="troubleshoot"><TMPL_VAR ESCAPE="html" NAME="helpdesk_troubleshot"></textarea> <br />
+   Tech Notes:<br />
+   <textarea tabindex="4" id="helpdesk-notes" style="width: 640px;" cols="70" rows="6" name="notes"><TMPL_VAR ESCAPE="html" NAME="helpdesk_notes"></textarea><br />
+   <div id="helpdesk-processed-by">Processed By:
+    <input tabindex="5" name="tech" size="20" value="<TMPL_VAR ESCAPE="html" NAME="helpdesk_tech">" type="text">
+   </div>
+   <div id="form_submit_button" style="width: 640px;" align="right">
+    <input tabindex="6" name="update" value="Update" type="submit">
+   </div>
+  </div>
+ </form>
+
+ <hr style="width: 690px;" align="left">
+
+ <div id="inventory-information">
+  <table style="text-align: left; width: 690px;" border="0" cellpadding="2" cellspacing="2" border="1" style="border:2px;">
+   <caption>Inventory information about CCPS#<TMPL_VAR NAME="helpdesk_barcode"></caption>
+    <tbody border="1">
+     <tr border="1">
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="inventory_hardwaretype">
+       Equipment Type: <TMPL_VAR NAME="inventory_hardwaretype">
+</TMPL_IF>
+      </td>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="inventory_serial">
+       Serial #: <TMPL_VAR NAME="inventory_serial">
+</TMPL_IF>
+      </td>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="equipment_model">
+       Model: <TMPL_VAR NAME="equipment_model">
+</TMPL_IF>
+      </td>
+     </tr>
+     <tr>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="inventory_name">
+       Computer Name: <TMPL_VAR NAME="inventory_name">
+</TMPL_IF>
+      </td>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="inventory_mac">
+       MAC: <TMPL_VAR NAME="inventory_mac">
+</TMPL_IF>
+      </td>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="inventory_port">
+       Port: <TMPL_VAR NAME="inventory_port">
+</TMPL_IF>
+      </td>
+     </tr>
+     <tr>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="software_os">
+       OS: <TMPL_VAR NAME="software_os">
+</TMPL_IF>
+      </td>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="inventory_assigned">
+       User: <TMPL_VAR NAME="inventory_assigned">
+</TMPL_IF>
+      </td>
+      <td style="vertical-align: top;">
+<TMPL_IF NAME="location">
+       Location:
+       <TMPL_VAR ESCAPE="html" NAME="inventory_location">
+</TMPL_IF>
+      </td>
+     </tr>
+   </tbody>
+  </table>
+  <div id="goto_inventory">
+   <form name="go_inventory" action="<TMPL_VAR NAME="self_url">?<TMPL_IF NAME="cfg">cfg=<TMPL_VAR NAME="cfg"></TMPL_IF>" method="post">
+    <TMPL_IF NAME="cfg"><input type="hidden" value="<TMPL_VAR NAME="cfg">" name="cfg" /></TMPL_IF>
+    <input type="hidden" name="app" value="inventory">
+    <input type="hidden" name="mode" value="edit">
+    <input type="hidden" name="ccps" value="<TMPL_VAR NAME="helpdesk_barcode">">
+    <input name="inventory" value="Modify inventory entry" type="submit">
+   </form>
+  </div>
+ </div>
+ <TMPL_IF NAME="debug">
+  <p align="center"><b>
+   <TMPL_VAR NAME="debug">
+  </b></p>
+ </TMPL_IF>
+ </body>
+</html>

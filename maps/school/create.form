@@ -1,0 +1,49 @@
+tables:
+ - school
+
+join:
+ - table: school_level
+   type: left
+   on:
+    source: school.level
+    dest: school_level.slid
+    comparison: is
+
+primarytable: school
+primarykey: scid
+
+where:
+ school:
+  db_field: scid
+  ht_field: school_scid
+  html_field: scid
+  table: school
+  comparison: is
+
+sort:
+ - school.name
+
+lists:
+ level_loop:
+  table: school_level
+  fields: slid as txt, name as lbl, slid as sel
+  select_with: sel
+  sort: name
+  default_selected: 0
+  value_from_html_field: level
+  value_from_db_field: Level
+
+fields:
+ school:
+  - db_field: school.scid
+    as: Site Code
+    ht_field: school_scid
+    html_field: scid
+  - db_field: school.name
+    as: Name
+    ht_field: school_name
+    html_field: name
+  - db_field: school.level
+    as: Level
+    ht_field: school_level
+    html_field: level

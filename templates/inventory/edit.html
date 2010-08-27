@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+<!--
+  <style type="text/css" media="all">
+	@import "templates/widg/css/main.css";
+	@import "templates/widg/css/widgEditor.css";
+  </style>
+-->
+  <style>
+  <TMPL_INCLUDE NAME="common.css">
+   ul{
+    margin-top:0px;
+    margin-bottom:0px;
+   }
+  </style>
+  <title>CCPS Barcde #<TMPL_VAR NAME="ccps"> - Edit</title>
+ </head>
+ <body onload="javascript:document.update.ccps.focus();document.update.ccps.select();return true">
+ 
+<TMPL_IF NAME="sql_success">
+     <h1>Update Successful!</h1>
+     <p id="sql-success-text">
+      Your update as been merged into the database affecting <TMPL_VAR NAME="sql_success"> rows.
+     </p>
+     <p id="sql-success-text">
+      You may view the updated record and make corrections below or go back and <a href="form.pl?<TMPL_IF NAME="cfg">cfg=<TMPL_VAR NAME="cfg">&</TMPL_IF>app=inventory&mode=new">input another 
+record</a>.
+     </p>
+    
+</TMPL_IF>
+
+<TMPL_IF NAME="sql_error">
+     <h1>Your changes were not saved!</h1>
+     <p id="sql-error-text" style="width: 690px;">
+      An SQL Error occured (see below) and your changes were <b>not</b> inserted into the database. If you can tell what went wrong, correct it and resubmit the update. If not, save this page and contact your system administrator.
+     </p>
+</TMPL_IF>
+<TMPL_LOOP NAME="sql_error">
+     <ul style="color:red;">
+      <li><TMPL_VAR ESCAPE="html" NAME="error"></li>
+     </ul>
+</TMPL_LOOP>
+
+ <span id="page-title">Charles County Public Schools Inventory for Barcode #<span id="helpdesk-ticket-number"><TMPL_VAR ESCAPE="html" NAME="ccps"></span></span>
+ <form name="update" method="post" action="<TMPL_VAR NAME="self_url">">
+  <input type="hidden" name="app" value="inventory">
+  <input type="hidden" name="mode" value="update">
+  <input type="hidden" name="eid" value="<TMPL_VAR NAME="equipment_eid">">
+  <input type="hidden" name="hwid" value="<TMPL_VAR NAME="hardware_type_hwid">">
+  <input type="hidden" name="replacement" value="<TMPL_VAR NAME="replacement">">
+
+ <p>Last updated: <TMPL_VAR NAME="inventory_updated"></p>
+ <div id="editablefields">
+       Barcode: <input type="text" name="ccps" value="<TMPL_VAR NAME="ccps">" /> (Look up in <a href="http://10.82.0.20/eqlookup.php?Eqid=<TMPL_VAR NAME="ccps">">old inventory</a>.)<br />
+       Serial: <input type="text" name="inventory_serial" value="<TMPL_VAR NAME="inventory_serial">" /><br />
+       School:
+       <select name="school" size="1">
+<TMPL_LOOP NAME="school_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+       </select>
+
+ <div id="inventory-information">
+Model: 
+<select name="equipment_model">
+<TMPL_LOOP NAME="model_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+</select><br />
+<ul>
+ <li>Vendor: <TMPL_VAR NAME="vendor_name"></li>
+ <li>Equipment Type: <TMPL_VAR NAME="equipment_type"></li>
+ <li>OS:
+  <select name="os">
+<TMPL_LOOP NAME="os_loop">
+   <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+  </select>
+ (originally <TMPL_VAR NAME="os_os">)
+ </li>
+ <li>Office:
+  <select name="office">
+<TMPL_LOOP NAME="office_loop">
+   <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+  </select>
+ (originally <TMPL_VAR NAME="office_office">)
+ </li>
+ <li>RAM: <input value="<TMPL_VAR ESCAPE="html" NAME="inventory_ram">" name="inventory_ram"> (In Megabytes) (originally <TMPL_VAR NAME="equipment_ram">)</li>
+ <li>CPU: <input value="<TMPL_VAR ESCAPE="html" NAME="inventory_speed">" name="inventory_speed"> (In Megahertz) (originally  <TMPL_VAR NAME="equipment_speed">)</li>
+ <li>HDD Capacity: <input value="<TMPL_VAR ESCAPE="html" NAME="inventory_hdd">" name="inventory_hdd"> (In Gigabytes) (originally  <TMPL_VAR NAME="equipment_hdd">)</li>
+ <li>Cost:
+  <select name="cost" size="1" <TMPL_VAR NAME="error_cost">>
+<TMPL_LOOP NAME="cost_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+  </select> (generally <TMPL_VAR NAME="equipment_cost"> for this model)</li>
+
+</ul>
+Grant Code: 
+<select name="grant_code">
+<TMPL_LOOP NAME="grant_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+</select><br />
+P.O. Number: 
+<select name="po_num">
+<option value="">None</option>
+<TMPL_LOOP NAME="po_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+</select><br />
+       Computer Name: <input type="text" name="inventory_name" value="<TMPL_VAR NAME="inventory_name">" /><br />
+       MAC: <input type="text" name="inventory_mac" value="<TMPL_VAR NAME="inventory_mac">" /><br />
+       IP: <input type="text" name="inventory_ip" value="<TMPL_VAR NAME="inventory_ip">" /><br />
+Software:<br /><textarea rows="10" cols="40" name="software"><TMPL_VAR NAME="software"></textarea><br />
+Notes:<br />
+<textarea rows="10" cols="40" name="notes"><TMPL_VAR NAME="inventory_notes"></textarea><br />
+<!--
+Software:
+<select name="software_sw">
+<option value="">None</option>
+<TMPL_LOOP NAME="os_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+</select><br />
+<ul>
+ <li>OS: <TMPL_VAR NAME="software_os"></li>
+ <li>Office: <TMPL_VAR NAME="software_office"></li>
+</ul>
+-->
+       User: <input type="text" name="inventory_assigned" value="<TMPL_VAR NAME="inventory_assigned">" /><br />
+       Location: <input size="50" type="text" name="inventory_location" value="<TMPL_VAR NAME="inventory_location">" 
+/><br />
+       Department: <input type="text" name="inventory_dept" value="<TMPL_VAR NAME="inventory_dept">" /><br />
+       Port: <input type="text" name="inventory_port" value="<TMPL_VAR NAME="inventory_port">" /><br />
+    Status:
+    <select name="status" <TMPL_VAR NAME="error_status">>
+<TMPL_LOOP NAME="status_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select>
+    <br />
+       Deployed Date: <input type="text" name="deployed_date" value="<TMPL_VAR NAME="deployed_date">" /> (use current date if unknown)<br />
+       Replaced Date (if any): <input type="text" name="replacement_date" value="<TMPL_VAR NAME="replacement_date">" /> <br />
+       Replacing: <input type="text" name="replacement_new" value="<TMPL_VAR NAME="replacement_new">" /><br />
+       Information verified by: <input type="text" name="inventory_installer" value="<TMPL_VAR NAME="inventory_installer">" /><br />
+ </div>
+<input type="submit" value="Update">
+</form>
+ </body>
+</html>

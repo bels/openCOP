@@ -1,0 +1,52 @@
+--- !helpdesk.ccboe.com/report
+
+primarytable: softwareconfig
+primarykey: swid
+
+fields:
+ - swid:
+    name: softwareconfig.swid
+    label: SWID
+    as: SWID
+    sort: softwareconfig.swid
+ - name:
+    name: softwareconfig.name
+    label: Name
+    as: Name
+    where: softwareconfig.name
+    sort: softwareconfig.name
+    column:
+     - show
+     - sort
+     - select
+ - os:
+    name: softwareconfig.os
+    label: OS
+    as: OS
+    column:
+     - show
+     - sort
+     - select
+    where: softwareconfig.os
+    sort: softwareconfig.os
+ - office:
+    name: softwareconfig.office
+    label: Office
+    as: Office
+    column:
+     - show
+     - sort
+     - select
+    where: softwareconfig.office
+    sort: softwareconfig.office
+ - other:
+    name: softwareconfig.other
+    label: Other
+    as: Other
+    column:
+     - show
+     - sort
+     - select
+    where: softwareconfig.other
+    sort: softwareconfig.other
+

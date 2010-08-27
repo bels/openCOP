@@ -1,0 +1,31 @@
+tables:
+ - helpdesk
+
+# Helper tables. These contain no updated fields bit list useful information (At least so far)
+join:
+
+primarytable: helpdesk
+primarykey: helpdesk
+
+# Describes primary key to compare against when selecting. select from helpdesk where ticket is $VALUE
+# what does this do when inserting?
+where:
+ helpdesk:
+  db_field: ticket
+  html_field: ticket
+  table: helpdesk
+  comparison: is
+
+sort:
+  - helpdesk.ticket
+
+lists:
+fields:
+ helpdesk:
+  - db_field: helpdesk.ticket
+    # Display name (if ever displayed). Do not assume this is unique!
+    as: Ticket
+    ht_field: ticket_number
+
+# into this:
+# select helpdesk.ticket as "Ticket",helpdesk.barcode as "CCPS#",i.room as "Location",hardware_type.name as "Hardware Type",school.name as "School",softwareconfig.os as "Operating System",equipment.model as "Model",vendor.name as "Vendor" from inventory as i,helpdesk left join hardware_type on (hardware_type.hwid = inventory.hardware_type) left join inventory on (helpdesk.barcode = inventory.ccps) left join school on (helpdesk.school = school.scid) left join softwareconfig on (softwareconfig.swid = inventory.software) left join equipment on (equipment.eid = inventory.model) left join vendor on (equipment.vendor = vendor.vid) where helpdesk.ticket = 1; 

@@ -1,0 +1,4 @@
+When running a query with mixed ANDs and ORs and you delete some value 
+(say query2 in a 4 query clause) the values drop back to collapse over 
+empty spaces but the AND and OR stay the same. They ought to collapse 
+along with the equivalent empty queries

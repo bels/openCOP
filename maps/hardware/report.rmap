@@ -1,0 +1,21 @@
+--- !helpdesk.ccboe.com/report
+
+primarytable: hardware_type
+primarykey: hwid
+
+fields:
+ - hwid:
+    name: hardware_type.hwid
+    label: HWID
+    as: HWID
+    sort: hardware_type.hwid
+ - name:
+    name: hardware_type.name
+    label: Type
+    as: Type
+    where: hardware_type.name
+    sort: hardware_type.name
+    column:
+     - show
+     - sort
+     - select

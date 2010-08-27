@@ -1,0 +1,82 @@
+ADD:
+	Field for State Room Classification
+	Field for E-911 Primary Phone (how? for every barcode? ick.)
+	maybe add a new table to hold locations... ick
+	(Probably this must wait on the new tag-based system. Room classification 
+	is just another property. Each item can have a property pointer to the 
+	room classification property in which it resides.)	
+	Clean up code to make it more MVC-like. In progress.
+
+*DONE*Type should be associated with Model not Inventory
+Cost should be associated with Purchase not Type
+
+*DONE*Something must be done about Software!
+*DONE*os:
+*DONE* .osid		1
+*DONE* .vendor	Microsoft
+*DONE* .line		Widnows
+*DONE* .version	XP SP2
+*DONE* .desc		Microsoft Windows XP SP2
+
+*DONE*office:
+*DONE* .offid		1
+*DONE* .vendor	Microsoft
+*DONE* .line		Office
+*DONE* .version	2000
+*DONE* .desc		Microsoft Office 2000
+*DONE*Something like that. Plus a inventory.software text field for other software notes.
+
+*DONE*Select OS and Office from the list when doing a Model and they're 
+*DONE*copied accross just like RAM, HD, etc.. Model should also have a 
+*DONE*software field just like inventory (described above) which is also 
+*DONE*copied accross.
+
+Add generic update query form. Behavior:
+	Select form much as seen in the current Report.
+	Sort form similarly.
+	In addition to the Report button there is at the buttom of the page an Update button.
+	Just above the Update button is another Select form like the first. In this Select 
+	form selected fields will be SET to selected values when Update is clicked.
+	Requires:
+		A new Report.pm mode: update or set.
+		A function to take the form submit from the Update button and turn it into a
+		(or a series of) 'update table set ... where ...;' statements.
+		How to handle cross-table stuff? How to handle 'field shows text, field is ID'?
+
+
+
+#To the Inventory table add a Deployed Date field. This can be used in 
+#conjunction with the Last Updated date and allows for less information 
+#loss when transitioning old record from the old db. *ADDED*! Not hooked 
+#to anything yet. *HOOKED UP* Works in at least Update if not Insert.
+#SEEMS TO WORK!
+
+Per MikeH:
+#	Add a new mode for Form.pm called (say) view. View mode is identical to edit mode except
+#	that the template has no submit button and the fields are not editable. An additional 
+#	"Notes to user" field may be nice along the top of the View. This would be a place where
+#	the CA can talk to their users.
+	THIS IS PARTIALLY DONE. View mode exists and has been hooked in somewhat.
+
+
+Add forms for:
+	Adding/editing schools.
+	Adding/editing operating systems.
+	Adding/editing office suites.
+	Adding/editing sections.
+	Adding/editing statues?
+
+
+Major revisions, including:
+	Remove the app= CGI param
+	Instead, create seperate .pm files (e.g. Inventory.pm, InventoryReport.pm) deriving from the base class.
+	Also create seperate .pl files instantiating those .pm's (e.g. inventory.pl)
+	Doing this will allow the removal of hard-coding from Form.pm and Report.pm.
+	It will also mean massive cleanups as functions are moved into just the modules they *need* to be in
+
+
+Setup a teardown() function to disconnect from the DB properly
+
+Catch errors with an error mode + template
+
+Classify each and every function according to whether it is a Model, View, Controller or other function. For functions which are at least two of Model, View and Controller find a way to split them appopriately (or a logical place to put them).

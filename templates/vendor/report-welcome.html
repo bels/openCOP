@@ -1,0 +1,28 @@
+<html>
+ <head>
+  <title> Search </title>
+ </head>
+ <body>
+  <form name="report" action="report.pl" method="post">
+   <input type="hidden" value="<TMPL_VAR NAME="cfg">" name="cfg" />
+   <input type="hidden" value="vendor" name="app" />
+   <input type="hidden" value="report" name="mode" />
+
+   <!-- lookup by model -->
+   <input type="hidden" value="name" name="field0" />
+   <input type="hidden" value="like" name="comparison0" />
+   <input type="hidden" value="and" name="andor0" />
+   <input type="hidden" value="name" name="sort0" />
+   <input type="text" value="" name="query0" />
+
+   <input type="submit" value="Look up vendor by name">
+  </form>
+
+  <hr />
+  <a href="<TMPL_VAR NAME="self_url">?app=vendor&mode=custom">Custom Report</a>
+
+  <div id="linkage" style="text-align:center;">
+   <a href="http://helpdesk.ccboe.com/">Return to Main Page</a>
+  </div>
+ </body>
+</html>

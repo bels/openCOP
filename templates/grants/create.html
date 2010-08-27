@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <style type="text/css">
+   <TMPL_IF NAME="errors">
+    .highlightonerror{
+	border-style:solid;
+	border-color:red;
+	border-width:2px;
+	font-weight:bold;
+    }
+   </TMPL_IF>
+  </style>
+  <title>Charles County Public Schools Grants - New</title>
+ </head>
+ <body>
+ <b><TMPL_VAR NAME="catch_errors"></b><br/>
+ <span id="page-title">Charles County Public Schools Grants - New</span>
+ <form name="create" method="post" action="<TMPL_VAR NAME="self_url">">
+  <input type="hidden" name="mode" value="create">
+  <input type="hidden" name="app" value="grants">
+  <div id="body-head">
+
+<TMPL_IF NAME="sql_error">
+   <h1>An SQL error occured!</h1>
+   <p>Please save this page and contact your system administrator.</p>
+ <TMPL_LOOP NAME="sql_error">
+   <p><TMPL_VAR NAME="error"></p>
+ </TMPL_LOOP>
+</TMPL_IF>
+
+<TMPL_IF NAME="errors">
+   <div id="errors">
+    <h1>Errors occured while processing your request</h1>
+    <p>Your request was not submitted. Please correct the following errors and resubmit.</p>
+
+ <TMPL_LOOP NAME="errors">
+    <p><b><TMPL_VAR ESCAPE="html" NAME="name"></b> <TMPL_VAR ESCAPE="html" NAME="msg">.</p>
+ </TMPL_LOOP>
+
+    <p>Incorrectly filled out fields have been highlighted in red.</p>
+   </div>
+</TMPL_IF>
+
+   <div id="fields">
+    Grant Code:  <input type="text" name="grant_code" value="<TMPL_VAR NAME="grant_code">" <TMPL_VAR NAME="error_grant_code"> /><br />
+   </div>
+   <input type="submit" value="Add">
+  </div>
+ </form>
+ 
+ <hr style="width: 690px;" align="left">
+
+ <TMPL_IF NAME="debug">
+  <p align="center"><b>
+   <TMPL_VAR NAME="debug">
+  </b></p>
+ </TMPL_IF>
+ </body>
+</html>

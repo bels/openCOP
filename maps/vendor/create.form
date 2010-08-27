@@ -1,0 +1,34 @@
+tables:
+ - vendor
+
+join:
+
+primarytable: vendor
+primarykey: vid
+
+where:
+ vendor:
+  db_field: vid
+#  ht_field: purchase_number
+  html_field:  vid
+  table: vendor
+  comparison: is
+
+sort:
+ - vendor.name
+
+lists:
+
+fields:
+ vendor:
+  - db_field: vendor.vid
+    as: ID
+    ht_field: vid
+  - db_field: vendor.name
+    as: Vendor
+    ht_field: vendor_name
+    html_field: vendor_name
+  - db_field: vendor.contact_info
+    as: Contact Info
+    ht_field: vendor_contact_info
+    html_field: vendor_contact_info

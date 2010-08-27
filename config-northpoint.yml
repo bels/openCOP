@@ -1,0 +1,26 @@
+pnd:
+ helpdesk:
+  form.pl:
+   new:
+    template: northpoint/create.html
+    form: northpoint/new.form
+   create:
+    template: northpoint/new-submitted.html
+    form: northpoint/create.form
+    requirements: northpoint/create.req
+    error_template: northpoint/create.html
+    smap: northpoint/new-submitted.yml
+   edit:
+    template: northpoint/edit.html
+    form: northpoint/edit.form
+   update:
+    template: northpoint/edit.html
+    form: northpoint/edit.form
+  report.pl:
+   report:
+    rmap: northpoint/report.rmap
+   custom:
+    rmap: northpoint/report.rmap
+   welcome:
+    template: northpoint/welcome.html
+    form: northpoint/welcome.form

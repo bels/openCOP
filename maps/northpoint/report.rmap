@@ -1,0 +1,162 @@
+--- !helpdesk.ccboe.com/report
+primarytable: helpdesk
+primarykey: ticket
+cols:
+ hidden:
+  - requested
+  - tech
+fields:
+ - schoolname:
+# Name is the table.fieldname where the value we want to display is stored
+    name: school.name
+# Label is what we want to call the value in e.g. the combo box
+    label: School
+# As is currently not displayed anywhere, but it might break code to omit it
+    as: School Name
+# Where will this field be used? Show=results table, sort=sort selector,select=fields selector
+    column:
+     - sort
+     - select
+    join:
+# 'field' will be the field to sort against!
+     sort: school.name
+     type: inner
+     on: school
+     from: helpdesk.school
+     to: school.scid
+     compare: '='
+ # If we're selecting based on this field, to what field should we pass the selection criteria?
+    where: school.name
+    sort: school.name
+ - ticket:
+    name: helpdesk.ticket
+    label: Ticket
+    as: Ticket
+    column:
+     - show
+     - sort
+     - select
+    where: helpdesk.ticket
+    sort: helpdesk.ticket
+ - location:
+    name: helpdesk.location
+    label: Location
+    as: Location
+    column:
+     - show
+     - sort
+     - select
+    where: helpdesk.location
+    sort: helpdesk.location
+ - problem:
+    name: helpdesk.problem
+    label: Problem
+    as: Problem
+    column:
+     - show
+     - sort
+     - select
+    where: helpdesk.problem
+    sort: helpdesk.problem
+ - barcode:
+    name: helpdesk.barcode
+    label: Barcode
+    as: Barcode
+    column:
+     - sort
+     - select
+    where: helpdesk.barcode
+    sort: helpdesk.barcode
+ - tech:
+    name: helpdesk.tech
+    label: Processed By
+    as: Processed By
+    column:
+     - sort
+     - select
+    where: helpdesk.tech
+    sort: helpdesk.tech
+ - requested:
+    name: helpdesk.requested
+    label: Date Opened
+    as: Date Opened
+    column:
+     - sort
+     - select
+    where: helpdesk.requested
+    sort: helpdesk.requested
+ - schoolnumber:
+    name: helpdesk.school
+    label: School Number
+    as: School Number
+    column:
+     - sort
+     - select
+    where: helpdesk.school
+    sort: helpdesk.school
+ - updated:
+    name: helpdesk.updated
+    label: Updated
+    as: Updated
+    column:
+     - show
+     - sort
+     - select
+    where: helpdesk.updated
+    sort: helpdesk.updated
+ - section:
+    name: section.name
+    label: Section
+    as: Section
+    column:
+     - sort
+     - select
+    join:
+     type: inner
+     on: section
+     from: helpdesk.section
+     to: section.sid
+     compare: '='
+    where: section.name
+    sort: section.sid
+ - priority:
+    name: helpdesk.priority
+    label: Priority
+    as: Priority
+    column:
+     - sort
+     - select
+    join:
+     type: inner
+     on: priority
+     from: helpdesk.priority
+     to: priority.prid
+     compare: '='
+    where: priority.description
+    sort: priority.severity
+ - ticket_status:
+    name: ticket_status.name
+    label: Status
+    as: Status
+    column:
+     - sort
+     - select
+    join:
+     type: inner
+     on: ticket_status
+     from: helpdesk.status
+     to: ticket_status.tsid
+     compare: '='
+    where: ticket_status.name
+    sort: ticket_status.name
+ - free:
+    name: helpdesk.free
+    label: When Free
+    as: When Free
+    column:
+     - show
+     - sort
+     - select
+    where: helpdesk.free
+    sort: helpdesk.free
+

@@ -1,0 +1,92 @@
+tables:
+ - equipment
+
+join:
+ - table: cost
+   type: left
+   on:
+    source: equipment.cost
+    dest: cost.cid
+    comparison: is
+ - table: vendor
+   type: left
+   on:
+    source: equipment.vendor
+    dest: vendor.vid
+    comparison: is
+
+primarytable: equipment
+primarykey: eid
+
+where:
+ equipment:
+  db_field: eid
+  ht_field: eid
+  html_field: equipment_id
+  table: equipment
+  comparison: is
+
+sort:
+ - equipment.model
+
+lists:
+ vendor_loop:
+  table: vendor
+  fields: vid as txt, name as lbl, vid as sel
+  select_with: sel
+  sort: name
+  default_selected: 1
+  value_from_html_field: vendor
+  value_from_db_field: Vendor
+ cost_loop:
+  table: cost
+  fields: cid as txt, name as lbl, cid as sel
+  select_with: sel
+  sort: value
+  default_selected: 1
+  value_from_html_field: cost
+  value_from_db_field: Cost
+
+fields:
+ equipment:
+  - db_field: equipment.eid
+    as: ID
+    ht_field: equipment_id
+    html_field: equipment_id
+  - db_field: equipment.vendor
+    as: Vendor
+    html_field: vendor
+  - db_field: equipment.model
+    as: Model
+    ht_field: equipment_model
+    html_field: equipment_model
+  - db_field: equipment.description
+    as: Description
+    ht_field: equipment_description
+    html_field: equipment_description
+  - db_field: equipment.warranty
+    as: Warranty Details
+    ht_field: equipment_warranty
+    html_field: equipment_warranty
+  - db_field: equipment.warranty_date
+    as: Warranty Date
+    ht_field: equipment_warranty_date
+    html_field: equipment_warranty_date
+    field_type: date
+  - db_field: equipment.hdd
+    as: Hard Disk Capaccity (in Gigabytes)
+    ht_field: equipment_hdd
+    html_field: equipment_hdd
+  - db_field: equipment.cost
+    as: Cost
+    html_field: cost
+  - db_field: equipment.speed
+    as: CPU Speed (in Megahertz)
+    ht_field: equipment_speed
+    html_field: equipment_speed
+  - db_field: equipment.ram
+    as: Amount of RAM (in Megabytes)
+    ht_field: equipment_ram
+    html_field: equipment_ram
+
+

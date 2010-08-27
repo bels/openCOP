@@ -1,0 +1,20 @@
+tables:
+ - grants
+
+primarytable: grants
+
+fields:
+ grants:
+  - db_field: grants.code
+    as: Grant Code
+
+where:
+ grants:
+  table: grants
+  db_field: gid
+  comparison: is
+
+sort:
+ - grants.code
+
+lists:

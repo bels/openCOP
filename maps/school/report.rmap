@@ -1,0 +1,27 @@
+--- !helpdesk.ccboe.com/report
+
+primarytable: school
+primarykey: scid
+
+fields:
+ - scid:
+    name: school.scid
+    label: Schoold Number
+    as: School Number
+    where: school.scid
+    sort: school.scid
+    column:
+     - show
+     - sort
+     - select
+ - name:
+    name: school.name
+    label: School
+    as: School
+    where: school.name
+    sort: school.name
+    column:
+     - show
+     - sort
+     - select
+

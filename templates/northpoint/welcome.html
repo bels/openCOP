@@ -1,0 +1,57 @@
+<html>
+ <head>
+  <title> Search </title>
+ </head>
+ <body>
+  <form name="report" action="report.pl?cfg=northpoint" method="post">
+   <input type="hidden" value="report" name="mode" />
+   <input type="hidden" value="helpdesk" name="app" />
+   <input type="hidden" value="northpoint" name="cfg" />
+
+   <input type="hidden" value="schoolnumber" name="field0" />
+   School:
+   <select name="query0">
+    <option value="">Any</option>
+<TMPL_LOOP NAME="school">
+    <option value="<TMPL_VAR NAME="txt">"<TMPL_VAR NAME="sel">><TMPL_VAR NAME="lbl"></option>
+</TMPL_LOOP>
+   </select>
+   <input type="hidden" value="is" name="comparison0" />
+   <input type="hidden" value="and" name="andor0" />
+   <input type="hidden" value="free" name="sort0" />
+
+   <input type="hidden" value="ticket_status" name="field1" />
+   Status:
+   <select name="query1">
+<TMPL_LOOP NAME="status">
+    <option value="<TMPL_VAR NAME="txt">"<TMPL_VAR NAME="sel">><TMPL_VAR NAME="lbl"></option>
+</TMPL_LOOP>
+   </select>
+   <input type="hidden" value="is" name="comparison1" />
+   <input type="hidden" value="and" name="andor1" />
+   <input type="hidden" value="location" name="sort1" />
+
+   <input type="hidden" value="section" name="field2" />
+   <input type="hidden" value="is" name="comparison2" />
+   <input type="hidden" value="and" name="andor2">
+   <input type="hidden" value="ticket" name="sort2" />
+
+   Section:
+   <select name="query2">
+    <option value="">Any</option>
+<TMPL_LOOP NAME="section">
+    <option value="<TMPL_VAR NAME="txt">"<TMPL_VAR NAME="sel">><TMPL_VAR NAME="lbl"></option>
+</TMPL_LOOP>
+   </select>
+
+   <input type="submit" value="Run School Report">
+  </form>
+
+  <hr />
+  <a href="<TMPL_VAR NAME="self_url">?<TMPL_IF NAME="cfg">cfg=<TMPL_VAR NAME="cfg">&</TMPL_IF>app=helpdesk&mode=custom">Custom Report</a>
+
+  <div id="linkage" style="text-align:center;">
+   <a href="http://helpdesk.ccboe.com/">Return to Main Page</a>
+  </div>
+ </body>
+</html>

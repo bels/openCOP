@@ -1,0 +1,529 @@
+Server: tech.ccboe.com
+Port: 3306
+Database: ccboehd
+Type: MySQL
+Notes:
+	- For most short text fields I've used varchar(255) even if they are unlikely to ever require that many characters. Disk space is cheap, you see. For text fields which will, in my opinion, possibly need to contain a short essay worth of text I have used type text (which is a glob and has no size limit). Again, not effecient where disk space is concerned.
+	- For primary keys I have generally used bigint which provides 20 digit numbers. Exceptions are places where I know we will never need that many, such as school ID numbers. The two digit nature of such numbers limits us to 100 uniques so it really made no sense to use anything bigger than an int.
+	- If you don't like the command line you can get MySQL-Front or Mysql Administrator (more dangerous).
+	- "Kind" is not really useful information. A data table stores data while a list table holds a information for combo boxes used by other tables. Generally. There is some ambiguity.
+	- The reason for the strange format of this file is that it is formatted with YAML, which is computer readable as well as human readable.
+
+Tables:
+	cost:
+		Description: A table to hold the text description of the different possible cost IDs.
+		Kind: List table
+		Notes:
+		Fields:
+			cid:
+				type: bigint(20)
+				desc: Arbitrary Cost ID
+				notes: Primary key, Auto Increment, not NULL
+			value:
+				type: int(11)
+				desc: How much the description "name" describes is worth. This is so we can sort by cost.
+				notes: 
+			name:
+				type: varchar(255)
+				desc: The cost description (e.g. 'Over a thousand')
+				notes: 
+	equipment:
+		Description:
+		Kind: Sort of Data, partly List
+		Notes: Given the purpose that evolved for this table it should have been called "models"
+			eid:
+				type: bigint(20)
+				desc: Arbitrary ID value for equipment.
+				notes: Primary Key, Auto Increment, not NULL
+			vendor:
+				type: bigint(20)
+				desc: ID of the vendor for equipment identified by eid.
+				notes: Foreign key. Relates to vid from the vendor table.
+			type:
+				type: bigint(20)
+				desc: ID of the type of hardware identified by eid.
+				notes: Foreign key. Relates to hwid from hardware_type table.
+			model:
+				type: varchar(255)
+				desc: Freeform string describing the model. Usually this is the model name but anything that uniquely identifies this model to a human is appropriate. This is what users will use to refer to this equipment (users never see the eid itself).
+				notes: 
+			description:
+				type: text
+				desc: Detailed description of what makes up this mdoel. May include as much hardware information as desired and might even include which drivers to use for whoch OSs.
+				notes: 
+			software:
+				type: text
+				desc: Detailed description of what software is installed on the image (or default, original image) for this model. May be detailed or empty or whatever is useful.
+				notes: 
+			warranty:
+				type: text
+				desc: Description of the warranty terms and who to contact about warranty repairs.
+				notes: 
+			warranty_date:
+				type: date
+				desc: Warranty expiration date. So we know whether it's useful/necessary to contact anyone about a warranty repair.
+				notes: 
+			hdd:
+				type: varchar(255)
+				desc: Capacity in Gigabytes of the hard drive(s) that comes in this model. For more than one hard drive either sum the total or say e.g. for two 200G drives: 2x200.
+				notes: 
+			cost:
+				type: bigint(20)
+				desc: The cost of the equipment identified by eid.
+				notes: Foreign key. Relates to cid from the cost table. 
+			speed:
+				type: varchar(127) 
+				desc: The speed in Megahertz of the processor that comes in this model. For SMP systems either provide a sum total or e.g. for two 3GHz processors say 2x3000.
+				notes: 
+			ram:
+				type: bigint(2)
+				desc: The amount of RAM in Megabytes that comes in this model.
+				notes: 
+			os:
+				type: bigint(20)
+				desc: The Operating System that came with the original, default image for this model.
+				notes: Foreign key. Relates to osid from the os table.
+			office:
+				type: bigint(20)
+				desc: The Office suite and version that came with the original or default image for this model.
+				notes: Foreign key. Relates to offid from the office table.
+	grants:
+		Description: Contains grant codes for use in inventory
+		Kind: List
+		Notes: 
+		Fields: 
+			gid:
+				type: varchar(255)
+				desc: Arbitrary unique ID for grant codes. This should have been bigint(20)!
+				notes: Primary key.
+			code:
+				type: varchar(255)
+				desc: The grant code itself.
+				notes: 
+			notes:
+				type: text
+				desc: Any information which would be useful to know about this grant.
+				notes: 
+	hardware_type:
+		Description: Contains hardware type names for use in inventory
+		Kind: List table
+		Notes: 
+		Fields:
+			hwid:
+				type: int(11)
+				desc: Arbitrary unique ID for hardware types.
+				notes: Primary key. Default '0'.
+			name:
+				type: text
+				desc: The name of this hardware type, e.g. "Workstation."
+				notes: Type should probably have been varchar(255) or smaller.
+	helpdesk:
+		Description: Contains helpdesk tickets.
+		Kind: Data
+		Notes: 
+		Fields:
+			ticket:
+				type: bigint(20)
+				desc: Arbitrary unique ID for helpdesk tickets. Originally imported from old helpdesk which is why it starts at such an odd number.
+				notes: Primary key. Not NULL.
+			status: 
+				type: int(11)
+				desc: The current status of this request. For exmaple: Done.
+				notes: Foreign key. Relates to tsid from the ticket_status table.
+			barcode: 
+				type: varchar(255)
+				desc: CCPS barcode of the equipment affected by the problem, if any. This is left as a string instead of a number because barcodes are, despite appearances, not numbers. They officially only contain digits, but that does not make them integers.
+				notes: 
+			school: 
+				type: int(11)
+				desc: The school that at which the problem described is occurring.
+				notes: Foreign key. Relates to scid from the school table.
+			location: 
+				type: text
+				desc: The room, area, or other location within the school in which the equipment, person or thing experiencing the problem resides.
+				notes: 
+			requested: 
+				type: datetime
+				desc: The date and time that this ticket was submitted.
+				notes: 
+			updated: 
+				type: datetime
+				desc: The date and time that this ticket was last modified.
+				notes: 
+			author: 
+				type: text
+				desc: The author of this ticket. 
+				notes: 
+			contact: 
+				type: varchar(255)
+				desc: Who to contact, apart from the author, for more details about the problem. This is mostly useful if the ticket was put in on the behalf of someone else.
+				notes: 
+			contact_phone:
+				type: varchar(255)
+				desc: The phone number of someone who knows about the problem in case telephonic contact becomes necessary.
+				notes: 
+			troubleshot: 
+				type: text
+				desc: Troubleshooting steps already taken which failed to resolve the problem, if any, if applicable. Yes, that's one o in shot.
+				notes: 
+			notes: 
+				type: text
+				desc: Commentary by the technician who looked at this problem. Other things tried, corrections to the problem description and, if resolved, what the solution was.
+				notes: 
+			team: 
+				type: int(11)
+				desc: Currently unused. This field is no longer relevant and never saw production use.
+				notes: Foreign key.
+			section: 
+				type: int(11)
+				desc: What category of problem this ticket is in. All problems are Helpdesk by default and are flagged as other sections if the helpdesk analyst cannot resolve the problem him/her self. Hopefully the appropriate people monitor the helpdesk for tickets belonging to sections they can deal with.
+				notes: Foreign key. Relates to sid from the section table.
+			problem: 
+				type: text
+				desc: A free form description of the problem, question, difficulty, error or failure being experienced.
+				notes: 
+			priority: 
+				type: int(11)
+				desc: Severity of the problem being described. Refer to the priority table for commentary.
+				notes: Foreign key. Relates to prid from the priority table.
+			serial: 
+				type: varchar(255)
+				desc: The serial number of the equipment affected by the problem, if any. This field is not necessary and, since it can be inferred from barcode, should only be used when the barcode is for whatever reason not available. Or, it should be used if relevant.
+				notes: 
+			tech: 
+				type: varchar(255)
+				desc: The name of the technician/computer analyst who *closed* this ticket. This is not the name of whoever looked at it last or commented in the notes field. Notes can be signed/dated individually if desired. This field is for the name of the person who is certifying that this problem is done and that the ticket is closed.
+				notes: 
+			memo: 
+				type: text
+				desc: Currently unused. Originally intended as a field where feedback on the ticket can be left after completion. This is no longer quite as relevant as it once might have been.
+				notes: 
+			email: 
+				type: varchar(255)
+				desc: I can not remember what this field was ever supposed to be used for. I will check my notes.
+				notes: 
+			contact_email: 
+				type: varchar(255)
+				desc: The email address of a person to contact about the problem. This is intended to be used only if the author wishes to be notified by email of the resolution/status of the problem and can be left blank if no email notification is desired.
+				notes: 
+			free: 
+				type: varchar(255)
+				desc: What time the person experiencing the problem will be free to interface with a technician attempting to solve it, if applicable and relevant. This field was added at the request of Belfield and currently only "exists" for northpoint.
+				notes: 
+	inventory:
+		Description: Things with barcodes.
+		Kind: Data
+		Notes: There's some redundency in here but it all serves a useful purpose.
+		Fields: 
+			ccps:
+				type: bigint(20)
+				desc: Charles County Public Schools barcode number. This really should not have been the primary key. I intend to change it so that it is not, sooner or later.
+				notes: Primary Key, Not Null, Auto Increment
+			hardware_type:
+				type: int(11)
+				desc: The type of hardware for the barcode. Yes, this is just like in equipment.
+				notes: Foreign key. Relates to hwid from the hardware_type table.
+			school:
+				type: int(11)
+				desc: The school number that this barcode is assigned to.
+				notes: Foreign key. Relates to scid from the school table.
+			serial:
+				type: varchar(255)
+				desc: The serial number for the barcode.
+				notes: 
+			model:
+				type: bigint(20)
+				desc: The model for this barcode.
+				notes: Foreign key. Relates to eid from the equipment table.
+			MAC:
+				type: varchar(32)
+				desc: The MAC address (if any) for this barcode. This is the primary MAC if more than one exists.
+				notes: 
+			ip:
+				type: varchar(255)
+				desc: The IP address (if any) for this barcode. The field size here really should be 28.
+				notes: 
+			name:
+				type: varchar(255)
+				desc: The network name (if any) for this barcode. Mostly this is just for worksations and printers.
+				notes: 
+			room:
+				type: varchar(255)
+				desc: The room in which this barcode is located.
+				notes: 
+			software:
+				type: text
+				desc: Free textual description of the software installed on this machine, if applicable. Initially this is copied from the equipment table based on model/eid but it may (and should) be changed later to reflect any special software installed on just this machine.
+				notes: 
+			assigned_to:
+				type: varchar(255)
+				desc: The primary user of this barcode or the person who is responsible for it. Note: students cannot be responsible for computers even if they are the primary users! This field should never be set to a student or guest account.
+				notes: 
+			grantid:
+				type: varchar(255)
+				desc: The grant code associated with this barcode, if any.
+				notes: Foreign key. Relates to gid from the grants table.
+			status:
+				type: int(11)
+				desc: The replacement status of this barcode.
+				notes: Foreign key. Relates to stid from the status table.
+			installer:
+				type: varchar(255)
+				desc: The name of the technician who most recently upated the inventory information for this barcode.
+				notes: 
+			port:
+				type: varchar(127)
+				desc: The network port that this equipment is attached to, if applicable. If the equipment is a switch this is the port that the uplink cable is plugged in to. If the equipment runs through a hub or small switch (not a cisco switch) then this is the ultimate uplink port to a cisco switchd.
+				notes: 
+			notes:
+				type: text
+				desc: Any notes concerning anything about this barcode which cannot be easily recorded in other fields.
+				notes: 
+			os:
+				type: bigint(20)
+				desc: The Operating System that is currently installed on this barcode, if applicable. This is initially copied from the equipment table according to the model/eid.
+				notes: Foreign key. Relates to osid from the os table.
+			office:
+				type: bigint(20)
+				desc: The Office suite and version currently in this barcode, if applicable. This is initially copied from the equipment table according to the model/eid.
+				notes: Foreign key. Relates to offid from the office table.
+			hdd:
+				type: varchar(255)
+				desc: Capacity in Gigabytes of the hard drive(s) currently in this barcode, if applicable. This is initially copied from the equipment table according to the model/eid.
+				notes: 
+			speed:
+				type: varchar(127) 
+				desc: The speed in Megahertz of the processor currently in this barcode, if applicable. This is initially copied from the equipment table according to the model/eid.
+				notes: 
+			ram:
+				type: bigint(20)
+				desc: The amount of RAM in Megabytes currently in this barcode, if applicable. This is initially copied from the equipment table according to the model/eid.
+				notes: 
+			po:
+				type: bigint(20)
+				desc: The purchase order number for this barcode. It is not cool to leave this at the default of "Unknown."
+				notes: Foreign key. Relates to the pid field from the purchase table.
+			dept:
+				type: varchar(255)
+				desc: The department or grade that this barcode is assigned to, if applicable and desired.
+				notes: 
+			cost:
+				type: bigint(20)
+				desc: The cost of the equipment identified by eid.
+				notes: Foreign key. Relates to cid from the cost table. 
+			updated:
+				type: datetime
+				desc: The date and time that this inventory entry was last updated.
+				notes: 
+			deployed:
+				type: date
+				desc: The earlist known date that this equipment was in use. This and updated establishes a lifetime for the barcode.
+				notes: 
+	office:
+		Description: List of office suites that can be found installed on computers in the system.
+		Kind: List
+		Notes: 
+		Fields:
+			offid:
+				type: bigint(20)
+				desc: Arbitrary ID for office suites.
+				notes: Primary key, Auto Increment.
+			vendor:
+				type: bigint(20)
+				desc: ID of the vendor that supplied this office suite.
+				notes: Foreign key. Relates to vid from the vendor table.
+			line:
+				type: varchar(255)
+				desc: The line or name of the office suite. This is "Office" for Microsoft, since that is the product name. Another option might be "StarOffice" if we were to install Sun's suite.
+				notes: 
+			version:
+				type: varchar(255)
+				desc: Version of the office suite. For example, for Microsoft Office 2000 this would be "2000"
+				notes: 
+			descr:
+				type: varchar(255)
+				desc: Free textual description of the office suite. For exmaple "Microsoft Office 2000"
+				notes: 
+	os:
+		Description: List of operating systems that can be found on computers in the system.
+		Kind: List
+		Notes: 
+		Fields:
+			osid:
+				type: bigint(20)
+				desc: Arbitrary ID for operating systems.
+				notes: Primary key, Auto Increment.
+			vendor:
+				type: bigint(20)
+				desc: ID of the vendor that supplied the operating system.
+				notes: Foreign key. Relates to vid from the vendor table.
+			line:
+				type: varchar(255)
+				desc: The name of the operating system. For example, "Windows" or "DOS"
+				notes: 
+			version:
+				type: varchar(255)
+				desc: The version of the operating system. For Windows XP this would be "XP"
+				notes: 
+			descr:
+				type: varchar(255)
+				desc: Free textual description of the operating system. For example "Microsoft Windows XP"
+				notes: 
+	priority:
+		Description: Contains priority names and values for the priority combo box
+		Kind: List
+		Notes: 
+		Fields: 
+			prid:
+				type: int(11)
+				desc: Arbitrary ID value for priorities.
+				notes: Primary key, Auto Increment.
+			severity:
+				type: int(11)
+				desc: How severe the things with this priority are. Lower is less severe. Used to determine sort order for the combo box but could be used for much more.
+				notes: 
+			description:
+				type: varchar(255)
+				desc: The description/name of the priority. Names are arbitrary but descriptive.
+				notes: 
+	purchase:
+		Description: Contains purchase order information.
+		Kind: Data/list
+		Notes: 
+		Fields: 
+			prid:
+				type: bigint(20)
+				desc: Arbitrary ID value for this PO. Using POs themselves is not a good idea (see the fiasco with using barcode as the PK for inventory.)
+				notes: Primary Key, Auto Increment.
+			purchased:
+				type: date
+				desc: The date this purchase order was made.
+				notes: 
+			arrived:
+				type: date
+				desc: The date the shipment arrived, or a date some of the shipment arrived.
+				notes: 
+			order_number:
+				type: varchar(255)
+				desc: The Purchase Order number.
+				notes: 
+			notes:
+				type: text
+				desc: Any extra information about this order; perhaps include what was in it or what it was for.
+				notes: 
+	replacement:
+		Description: A relationship table to chain old inventory.ccps's to new ones.
+		Kind: Data
+		Notes: It is important to note that replacement.replaced is the barcode that replacement.original was replaced by, not the barcode that replacement.original replaced.
+		Fields: 
+			original:
+				type: bigint(20)
+				desc: The barcode of the original equipment.
+				notes: Foreign key. Relates to ccps from the inventory table.
+			replacement:
+				type: bigint(20)
+				desc: The barcode of the equipment that replaced the original equipment.
+				notes: Foreign key. Relates to ccps from the inventory table.
+			date:
+				type: datetime
+				desc: The timestamp of when original was replaced.
+				notes: 
+	school:
+		Description: School names, numbers, and levels.
+		Kind: List/data
+		Notes: 
+		Fields: 
+			scid:
+				type: int(11)
+				desc: The school number. In retrospect this should probably not be the PK, but it works fairly well anyway.
+				notes: Primary key.
+			level:
+				type: int(11)
+				desc: The type of school/building this is. E.g. High School, Elementary School, Center, etc.
+				notes: Foreign key. Relates to slid from the school_level table.
+			name:
+				type: varchar(255)
+				desc: The name of this school. This is the short, common name (e.g. "Craik" not "Dr. James Craik")
+				notes: 
+			deleted:
+				type: tinyint(4)
+				desc: This is a binary flag 0/1 for Deleted/not deleted. When a school number is no longer in use for anything you cannot just delete the school, that causes instability in the DB when something references a nonexistant school. What you do is flag it Deleted which causes the scripts to exclude it from queries. In effect it has gone away, but all of the data remains present.
+				notes: Default: 0.
+	school_level:
+		Description: List of the school "levels." Actually just a building code category table.
+		Kind: List
+		Notes: 
+		Fields: 
+			slid:
+				type: int(11)
+				desc: Arbitrary unique ID for school levels.
+				notes: Primary key, Auto Increment.
+			type:
+				type: varchar(255)
+				desc: Name of the school level, e.g. "High School" or "Center"
+				notes: 
+	section:
+		Description: List of categories to which inventory tickets may belong.
+		Kind: List
+		Notes: 
+		Fields: 
+			sid:
+				type: int(11)
+				desc: Arbitrary unique ID for sections.
+				notes: 
+			name:
+				type: varchar(255)
+				desc: The name of this section. For example: Helpdesk
+				notes: 
+			email:
+				type: varchar(255)
+				desc: The email address of one who is responsible for this section. Originally the idea was that there would be a button that could be clicked to email a ticket to this address. As of now there is no such button (because getting exchange to allow an SMTP connection from tech is non trivial) and it is not a high priority (because copy/paste works and people should be checking the helpdesk anyway).
+				notes: 
+	softwareconfig: # this is probably defunct atm
+		Description: Defunct table. Originally to be used to describe the software set on any given computer before I decided that doing so was a maintenance nightmare and abandoned the idea in favor of a marginally less nightmarish solution.
+		Kind: Dead stub.
+		Notes: This will be deleted soon.
+		Fields: 
+			Who cares?
+	status:
+		Description: List of status codes for inventory entries. Ritght now there are only three but I can see adding more to distinguish equipment which is on hand but not used for any particular purpose (e.g. spare, sitting in the warehouse, etc.)
+		Kind: List
+		Notes: This should have been named "inventory_status." Currently valid status values are: Unknown; items whose current use status is unknown. In Use; items which are in active use on a regular basis given their function. Discarded; items which are no longer in active, will never again be in active use and are headed for the trash. Not in use; items which are in storage or are temprarily not active, such as spares.
+		Fields: 
+			stid:
+				type: int(11)
+				desc: Arbitrary unique ID for inventory status codes.
+				notes: Primary key, auto increment.
+			status:
+				type: varchar(255)
+				desc: The status name for this ID. For example: Discarded.
+				notes: This field should have been called 'name' to be consistent.
+	ticket_status:
+		Description: List of statuc codes for tickets. 
+		Kind: List
+		Fields: 
+			tsid: 
+				type: int(11)
+				desc: Arbitrary unique ID for ticket status codes.
+				notes: Primary key, auto increment.
+			name: 
+				type: varchar(255)
+				desc: The name of this status ID. For example: In Repair.
+				notes: 
+	vendor:
+		Description: Names and information of vendors supplying the equipment described in the equipment table.
+		Kind: Data/list
+		Notes: There could easily be more fields in this table tracking more information, if I knew what might be useful to track.
+		Fields: 
+			vid: 
+				type: bigint(20)
+				desc: Arbitrary unique ID for Vendors.
+				notes: Primary key, auto increment.
+			name: 
+				type: varchar(255)
+				desc: Name of vendor. Keep it short; use HP not Hewlett Packard, Inc.
+				notes: 
+			contact_info: 
+				type: text
+				desc: How to contact the vendor for warranty or other purposes. Might be just a phone number and a name.
+				notes: 

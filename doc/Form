@@ -1,0 +1,129 @@
+.form files are YAML.
+
+
+There is a root-level container called 'tables' which contains a list of tables that will be used in the FROM clause of the constructed SQL query.
+
+
+There is a root-level container called 'join' which holds a list containing the tables to join with.
+
+Each element of this list holds the following parameters:
+table - The name of the table to join with
+type - The type of join to use: left, right, inner, outer
+on - A container holding the following parameters:
+ source - The left-table field to join on.
+ dest - The right-table field to join on. This should 
+ comparison - The .cmps style comparison name to use when joining source and dest.
+
+
+
+There is a root-level parameter called 'primarytable' which holds the name of the table that is considered 'primary' for this query. The 'primary' table is used to look up other pertinent data in the 'where' conainer described below. It is always (so far) the same as the first element of the 'tables' list.
+
+
+There is a root-level container called 'where' holds a series of containers named after the tables listed in the 'tables' list.
+
+Each of these sub containers holds the following parameters:
+db_field - The field name in table which holds the primary key.
+ht_field - The HTML::Template field name which holds the primary key.
+html_field - The HTML form field name to pull the primary key from.
+table - The table name. Same as the container name.
+comparision - A .cmps style comparison name describing the comparison to use when matching the primary key field.
+
+
+There is a root-level continer called 'sort' which holds a list of values to sort the resultant query by. In practice this makes no difference since forms usually only match one record. This note is just so that if you see such a container you know what it is. Such a container can be safely omitted.
+
+
+There is a root level container called 'lists' which contains one container for HTML::Template LOOP variable to be 
+populated in the associated template file. The name of each subcontainer must match exactly the name of the 
+HTML::Template LOOP variable.
+
+Each loop container holds the following parameters:
+table - The table from which the list data is being pulled.
+fields - Which fields in the table are to be pulled (comma seperated). This is used directly in the constructed SQL query.
+select_with - Of the named fields which should be compared against when determining what value is selected.
+default_selected - If no value is available to compare against the select_with field, compare with this value.
+where - A field to use in the WHERE clause of the constructed SQL query.
+comparison - The comparison to use with the where field in the WHERE clause of the constructed SQL query. This is a .cmps style comparison name, not actual SQL.
+wherevalue - The value to use in comparing against the where field in the WHERE clause of the constructed SQL query. This can be a static value or one of the fields mentioned in the fields parameter.
+sort - The field, of those mentioned in the fields parameter, to use to sort the list.
+value_from_html_field - For updates, the HTML field name to take the value for this list from. 
+value_from_db_field - Matches the 'as' portion of the relevant field (see below). The value found this way will be used to compare against the field mentioned in select_with.
+
+
+
+
+There is a root-level container called 'fields' which contains one container per table from which fields will be 
+pulled/to which fields will be sent.
+
+Each table container holds a list of containers.
+
+Eeach container in the list holds the following parameters:
+db_field - The database field name (full table.field form) from which to take a value, or in which to place a value for updates.
+as - The label to apply to this data. This is (at the moment) never shown to the user. No two as parameters may be identical within the same .form file.
+ht_field - The HTML::Template field name (from the template file associated with this .form file) into which to put the value taken from db_field
+html_field - The HTML field name to take the value from when performing an update.
+field_type - The type of data in this field. This parameter is optional. At the moment the only valid value is date.
+
+db_field and as are required. ht_field may be omitted if you are only inserting data and never displaying it. 
+html_field may be omitted if you are only displaying data and not inserting/updating it. One of html_field and 
+ht_field must exist.
+
+
+
+An example.
+
+The following sample .form file will allow for the construction of a page on which there is a ticket number, a school list box containing the school names sorted by name with the school associated with the ticket number selected, and the inventoried user associated with the barcode mentioned in the helpdesk tickit's barcode field. The user will not be updateable but the other fields willl be.
+
+
+
+tables:
+ - helpdesk
+
+join:
+ - table: inventory
+   type: left
+   on:
+    source: helpdesk.barcode
+    dest: inventory.ccps
+    comparison: is
+
+primarytable: helpdesk
+
+where:
+ helpdesk:
+  db_field: ticket
+  ht_field: ticket
+  html_field: ticket
+  table: helpdesk
+  comparison: is
+
+lists:
+ school_loop:
+  table: school
+  fields: scid as txt, name as lbl, scid as sel
+  select_with: sel
+  default_selected: -1
+  where: deleted
+  comparison: is not
+  wherevalue: 1
+  sort: name
+  value_from_html_field: school
+  value_from_db_field: School
+
+fields:
+ helpdesk:
+  - db_field: helpdesk.ticket
+    as: Ticket
+    ht_field: helpdesk_ticket
+    html_field: ticket
+  - db_field: helpdesk.school
+# Note: This must match the value_from_db_field in school_loop
+    as: School
+# Note: This must match the value_from_html_field in school_loop
+    html_field: school
+ inventory:
+  - db_field: inventory.assigned_to
+    as: User
+    ht_field: inventory_assigned
+
+
+

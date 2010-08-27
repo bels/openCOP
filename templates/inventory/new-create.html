@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <style type="text/css">
+   <TMPL_INCLUDE NAME="common.css">
+   <TMPL_IF NAME="errors">
+   <TMPL_INCLUDE NAME="inventory/new-create-error.css">
+   </TMPL_IF>
+  </style>
+  <title>Charles County Public Schools Inventory - New Entry</title>
+ </head>
+ <body onload="javascript:document.create.ccps.focus();return true">
+ <b><TMPL_VAR NAME="catch_errors"></b>
+ <span id="page-title">Charles County Public Schools Inventory: New Entry</span>
+ <form name="create" method="post" action="<TMPL_VAR NAME="self_url">">
+  <input type="hidden" name="mode" value="create">
+  <input type="hidden" name="app" value="inventory">
+  <div id="body-head">
+
+<TMPL_IF NAME="sql_error">
+   <h1>An SQL error occured!</h1>
+   <p>Please save this page and contact your system administrator.</p>
+ <TMPL_LOOP NAME="sql_error">
+   <p><TMPL_VAR NAME="error"></p>
+ </TMPL_LOOP>
+</TMPL_IF>
+   <TMPL_IF NAME="errors">
+   <div id="errors">
+    <h1>Errors occured while processing your request</h1>
+    <p>Your request was not submitted. Please correct the following errors and resubmit.</p>
+   <TMPL_LOOP NAME="errors">
+    <p><b><TMPL_VAR ESCAPE="html" NAME="name"></b> <TMPL_VAR ESCAPE="html" NAME="msg">.</p>
+   </TMPL_LOOP>
+
+    <p>Incorrectly filled out fields have been highlighted in red.</p>
+   </div>
+   </TMPL_IF>
+
+   <div id="fields">
+    Barcode: <input type="text" name="ccps" value="<TMPL_VAR NAME="ccps">" <TMPL_VAR NAME="error_ccps">/> (Look up in <a href="http://10.82.0.20/eqlookup.php?Eqid=<TMPL_VAR NAME="ccps">">old inventory</a>)<br />
+    Serial: <input type="text" name="inventory_serial" value="<TMPL_VAR NAME="inventory_serial">" <TMPL_VAR NAME="error_inventory_serial"> /><br />
+    School:
+    <select name="school" size="1" <TMPL_VAR NAME="error_school">>
+<TMPL_LOOP NAME="school_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select>
+    <br />
+    Model: 
+    <select name="equipment_model" <TMPL_VAR NAME="error_equipment_model">>
+     <option value="">Select...</option>
+<TMPL_LOOP NAME="model_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select> Don't see the right thing? <a href="form.pl?app=equipment&mode=new">Create a model</a>.
+    <br />
+<!--
+    Equipment Type: 
+    <select name="inventory_hardwaretype" <TMPL_VAR NAME="error_inventory_hardwaretype">>
+     <option value="">Select...</option>
+<TMPL_LOOP NAME="hardware_type_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select> Don't see the right thing? <a href="form.pl?app=hardware&mode=new">Add new hardware type</a>.
+    <br />
+-->
+    Grant Code: 
+    <select name="grant_code" <TMPL_VAR NAME="error_grant_code">>
+<TMPL_LOOP NAME="grant_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select> Don't see the right thing? <a href="form.pl?app=grants&mode=new">Add a grant</a>.
+    <br />
+    Purchase Order Number: 
+    <select name="po_num" <TMPL_VAR NAME="error_po_num">>
+     <option value="">No Associated P.O.</option>
+<TMPL_LOOP NAME="po_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select> Don't see the right thing? <a href="form.pl?app=purchases&mode=new">Add a PO</a>.
+    <br />
+    Computer Name: <input type="text" name="inventory_name" value="<TMPL_VAR NAME="inventory_name">" <TMPL_VAR NAME="error_inventory_name"> /><br />
+    MAC: <input type="text" name="inventory_mac" value="<TMPL_VAR NAME="inventory_mac">" <TMPL_VAR NAME="error_inventory_mac"> /><br />
+    IP: <input type="text" name="inventory_ip" value="<TMPL_VAR NAME="inventory_ip">" <TMPL_VAR NAME="error_inventory_ip"> /><br />
+<!--
+    Software:
+    <select name="software_sw" <TMPL_VAR NAME="error_software_sw">>
+     <option value="">Select...</option>
+<TMPL_LOOP NAME="os_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select> Don't see the right thing? <a href="form.pl?app=software&mode=new">Create a new software configuration</a>.
+    <br />
+-->
+    Notes:<br />
+    <textarea rows="5" cols="40" name="notes"><TMPL_VAR NAME="inventory_notes"></textarea><br />
+    User: <input type="text" name="inventory_assigned" value="<TMPL_VAR NAME="inventory_assigned">" <TMPL_VAR NAME="error_inventory_assigned"> /><br />
+    Location: <input size="50" type="text" name="inventory_location" value="<TMPL_VAR NAME="inventory_location">" 
+<TMPL_VAR NAME="error_inventory_location"> /><br />
+    Department: <input type="text" name="inventory_dept" value="<TMPL_VAR NAME="inventory_dept">" <TMPL_VAR NAME="error_inventory_dept"> /><br />
+    Port: <input type="text" name="inventory_port" value="<TMPL_VAR NAME="inventory_port">" <TMPL_VAR NAME="error_inventory_port"> /><br />
+    Status:
+    <select name="status" <TMPL_VAR NAME="error_status">>
+<TMPL_LOOP NAME="status_loop">
+     <option value="<TMPL_VAR ESCAPE="html" NAME="txt">"<TMPL_VAR ESCAPE="html" NAME="sel">><TMPL_VAR ESCAPE="html" NAME="lbl"></option>
+</TMPL_LOOP>
+    </select>
+    <br />
+    Deployed Date: <input type="text" name="deployed_date" value="<TMPL_VAR NAME="deployed_date">" /> (use current date if unknwon)<br />
+    Replaced Date (if any): <input type="text" name="replacement_date" value="<TMPL_VAR NAME="replacement_date">" <TMPL_VAR NAME="error_replacement_date"> /><br />
+    Replacing: <input type="text" name="replacement_new" value="<TMPL_VAR NAME="replacement_new">" <TMPL_VAR NAME="error_replacement_new">><br />
+    Information verified by: <input type="text" name="inventory_installer" value="<TMPL_VAR NAME="inventory_installer">" <TMPL_VAR NAME="error_inventory_installer"> /><br />
+    <br />
+   </div>
+   <div id="form_submit_button" style="width: 690px;" align="right">
+    <input type="submit" value="Add">
+   </div>
+  </div>
+ </form>
+ 
+ <hr style="width: 690px;" align="left">
+
+ <TMPL_IF NAME="debug">
+  <p align="center"><b>
+   <TMPL_VAR NAME="debug">
+  </b></p>
+ </TMPL_IF>
+ </body>
+</html>

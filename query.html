@@ -1,0 +1,25 @@
+<html>
+ <head>
+  <title> Ticket/Barcode Search </title>
+ </head>
+ <body>
+  <form name="findbyticket" action="form.pl" method="post">
+   <input type="hidden" name="app" value="helpdesk">
+   <input type="hidden" name="mode" value="view">
+   Ticket #: <input type="text" name="ticket" value="">
+   <input type="submit" value="Search for Ticket">
+  </form>
+  <br /> or <br />
+  <form name="findbyticket" action="report.pl"?cfg=central method="post">
+   <input type="hidden" name="app" value="helpdesk">
+   <input type="hidden" name="mode" value="report">
+   Barcode: <input type="text" name="query0" value="">
+   <input type="hidden" name="field0" value="barcode">
+   <input type="hidden" name="comparison0" value="is">
+   <input type="hidden" name="andor0" value="and">
+   <input type="hidden" name="sort0" value="updated">
+   <input type="hidden" name="sort1" value="ticket">
+   <input type="submit" value="Search for Barcode">
+  </form>
+ </body>
+</html>

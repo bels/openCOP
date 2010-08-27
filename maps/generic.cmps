@@ -1,0 +1,46 @@
+--- !helpdesk.ccboe.com/comparison
+comparisons:
+ - is:
+    sql: "="
+    txt: is
+    pattern: "*"
+ - not:
+    sql: "!="
+    txt: is not
+    pattern: "*"
+ - like:
+    sql: like
+    txt: contains
+    pattern: "%*%"
+ - notlike:
+    sql: not like
+    txt: doesn't contain
+    pattern: "%*%"
+ - begins:
+    sql: like
+    txt: starts with
+    pattern: "*%"
+ - ends:
+    sql: like
+    txt: ends with
+    pattern: "%*"
+ - notbegins:
+    sql: not like
+    txt: doesn't start with
+    pattern: "*%"
+ - notends:
+    sql: not like
+    txt: doesn't end with
+    pattern: "%*"
+ - lessthan:
+    sql: '<'
+    txt: is less than
+    pattern: "*"
+ - greaterthan:
+    sql: '>'
+    txt: is greater than
+    pattern: "*"
+ - between:
+    sql: between
+    txt: is between
+    pattern: "* and *"

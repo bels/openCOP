@@ -1,0 +1,14 @@
+.req
+.reqmap - Requirements map. Used when creating a new entry. A simple description of field constraints, such as "not empty"
+
+.form - Description in computer readable form of the HTML form in a .template and the database table(s) and fields associated with it.
+
+template/*.html
+.template - An HTML template, specifically an HTML::Template.
+
+.rmap
+.report - Like .form, but for the report builder/query results pages which have many different and special requirements.
+
+.yml - YAML markup code. In practice nearly all files are in YAML, this just means it's a generic format of some kind.
+
+.cmps - A list of SQL comparisions.

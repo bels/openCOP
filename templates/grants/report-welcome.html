@@ -1,0 +1,28 @@
+<html>
+ <head>
+  <title> Search </title>
+ </head>
+ <body>
+  <form name="report" action="report.pl" method="post">
+   <input type="hidden" value="<TMPL_VAR NAME="cfg">" name="cfg" />
+   <input type="hidden" value="grants" name="app" />
+   <input type="hidden" value="report" name="mode" />
+
+   <!-- lookup by model -->
+   <input type="hidden" value="code" name="field0" />
+   <input type="hidden" value="is" name="comparison0" />
+   <input type="hidden" value="and" name="andor0" />
+   <input type="hidden" value="code" name="sort0" />
+   <input type="text" value="" name="query0" />
+
+   <input type="submit" value="Look up grant by code">
+  </form>
+
+  <hr />
+  <a href="<TMPL_VAR NAME="self_url">?app=grant&mode=custom">Custom Report</a>
+
+  <div id="linkage" style="text-align:center;">
+   <a href="http://helpdesk.ccboe.com/">Return to Main Page</a>
+  </div>
+ </body>
+</html>

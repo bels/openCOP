@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+<!--
+  <style type="text/css" media="all">
+	@import "templates/widg/css/main.css";
+	@import "templates/widg/css/widgEditor.css";
+  </style>
+-->
+  <style>
+  <TMPL_INCLUDE NAME="common.css">
+  </style>
+  <title>CCPS Ticket #<TMPL_VAR NAME="helpdesk_ticket"> - Edit</title>
+ </head>
+ <body>
+ 
+ <span id="page-title">Charles County Public Schools Helpdesk: Ticket #<span id="helpdesk-ticket-number"><TMPL_VAR ESCAPE="html" NAME="helpdesk_ticket"></span></span>
+  <div id="body-head">
+   <table style="text-align: left; width: 640px; height: 98px;" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+     <tr>
+      <td>School:</td>
+      <td>
+       <TMPL_VAR ESCAPE="html" NAME="school_name">
+      </td>
+      <td>Opened:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_requested"></td>
+      <td>Updated:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_updated"></td>
+     </tr>
+
+     <tr>
+      <td>Author:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_author"></td>
+      <td>Barcode:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_barcode"></td>
+      <td>Serial:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_serial"></td>
+     </tr>
+
+     <tr>
+      <td>Contact:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_contact"></td>
+      <td>Contact Phone:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_phone"></td>
+      <td>Contact email:</td>
+      <td><TMPL_VAR ESCAPE="html" NAME="helpdesk_email"></td>
+     </tr>
+
+     <tr>
+      <td>Location:</td>
+      <td colspan="5"><TMPL_VAR ESCAPE="html" NAME="helpdesk_location"></td>
+     </tr>
+
+     <tr>
+      <td>Priority:</td>
+      <td style="vertical-align: top;">
+       <TMPL_VAR NAME="priority_name">
+      </td>
+      <td>Section:</td>
+      <td>
+       <TMPL_VAR NAME="section_name">
+      </td>
+      <td>Status:</td>
+      <td style="vertical-align: top;">
+       <TMPL_VAR NAME="ticket_status_status">
+      </td>
+     </tr>
+
+    </tbody>
+   </table>
+  </div>
+
+  <div id="body_notes">
+   Reported Problem:<br />
+   <blockquote><TMPL_VAR ESCAPE="html" NAME="helpdesk_problem"></blockquote><br />
+   Troubleshooting Tried:<br />
+   <blockquote><TMPL_VAR ESCAPE="html" NAME="helpdesk_troubleshot"></blockquote><br />
+   Tech Notes:<br />
+   <blockquote><TMPL_VAR ESCAPE="html" NAME="helpdesk_notes"></blockquote><br />
+   <div id="helpdesk-processed-by">Processed By:
+    <TMPL_VAR ESCAPE="html" NAME="helpdesk_tech">
+   </div>
+  </div>
+
+ </body>
+</html>

@@ -1,0 +1,20 @@
+tables:
+ - softwareconfig
+
+primarytable: softwareconfig
+
+fields:
+ softwareconfig:
+  - db_field: softwareconfig.name
+    as: Name
+
+where:
+ softwareconfig:
+  table: softwareconfig
+  db_field: swid
+  comparison: is
+
+sort:
+ - softwareconfig.name
+
+lists:

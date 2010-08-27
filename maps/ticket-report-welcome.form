@@ -1,0 +1,77 @@
+tables:
+ - school
+ - section
+ - ticket_status
+
+primarytable: school
+
+
+# Okay. We need to select these three As labels because they describe the three lists. But, we don't have any primary 
+# key for the tables so we can't know which values we want. We want to force it to default to the default which it 
+# only does if the value is undef, which only happens if it's NULL. So we select the As's as the value in 
+# value_from_db_field in lists: and force it to be NULL. Thus the default_selected goes into effect. Whew!
+fields:
+ school:
+  - db_field: NULL
+    as: School
+ ticket_status:
+  - db_field: NULL
+    as: Status
+ section:
+  - db_field: NULL
+    as: Section
+
+where:
+ school:
+  table: school
+  db_field: deleted
+  comparison: is not
+
+sort:
+ - school.name
+
+lists:
+ # select scid as txt, name as lbl, scid as sel from school where scid order by name;
+ school:
+  # table the info is coming from
+  table: school
+  # what fields to select from that table. Note: txt, lbl and sel are currently MANDATORY names.
+  fields: name as txt, name as lbl, scid as sel
+  # When populating loop, compare with this field's result for a match to determine what should be selected.
+  select_with: sel
+  # Default value to select if none is given by user in form submit (see value_from_html_field)
+  default_selected: -1
+  # Use where, comparison,whervalue to skip deleted, i.e. where school.deleted != 1
+  where: deleted
+  comparison: is not
+  wherevalue: 1
+  sort: name
+  # Get from the field 'school' in the form submit the value to match against in your where statement.
+  value_from_html_field: school
+  value_from_db_field: School
+  # How select_from_function_works:
+  # specify the name of a function which will be eval'd. It will return the value to select with instead 
+  # of default_selected or undef for default_selected to remain in effect. It will be passed the field value or name (depending)
+  select_from_function: school_from_ip
+ status:
+  table: ticket_status
+  fields: name as txt, name as lbl, name as sel
+  select_with: sel
+  default_selected: new
+  where:
+  comparison:
+  wherevalue:
+  selected: 1
+  sort: name
+  value_from_html_field: status
+  value_from_db_field: Status
+ section:
+  table: section
+  fields: name as txt, name as lbl, sid as sel
+  select_with: sel
+  where:
+  comparison: is
+  default_selected: -1
+  value_from_html_field: section
+  value_from_db_field: Section
+  sort: name

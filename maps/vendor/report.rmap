@@ -1,0 +1,31 @@
+--- !helpdesk.ccboe.com/report
+
+primarytable: vendor
+primarykey: vid
+
+fields:
+ - vid:
+    name: vendor.vid
+    label: VID
+    as: VID
+    sort: vendor.vid
+ - name:
+    name: vendor.name
+    label: Vendor
+    as: Vendor
+    where: vendor.name
+    sort: vendor.name
+    column:
+     - show
+     - sort
+     - select
+ - contact_info:
+    name: vendor.contact_info
+    label: Contact Information
+    as: Contact Information
+    column:
+     - show
+     - sort
+     - select
+    where: vendor.contact_info
+    sort: vendor.contact_info

@@ -1,0 +1,44 @@
+tables:
+ - softwareconfig
+
+join:
+
+primarytable: softwareconfig
+primarykey: swid
+
+where:
+ softwareconfig:
+  db_field: swid
+#  ht_field: purchase_number
+  html_field:  swid
+  table: softwareconfig
+  comparison: is
+
+sort:
+ - softwareconfig.name
+
+lists:
+
+fields:
+ softwareconfig:
+  - db_field: softwareconfig.swid
+    as: ID
+    ht_field: swid
+  - db_field: softwareconfig.name
+    as: Name
+    ht_field: software_name
+    html_field: software_name
+  - db_field: softwareconfig.os
+    as: OS
+    ht_field: software_os
+    html_field: software_os
+  - db_field: softwareconfig.office
+    as: Office
+    ht_field: software_office
+    html_field: software_office
+  - db_field: softwareconfig.other
+    as: Other
+    ht_field: software_other
+    html_field: software_other
+
+

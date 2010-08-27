@@ -1,0 +1,20 @@
+tables:
+ - vendor
+
+primarytable: vendor
+
+fields:
+ vendor:
+  - db_field: vendor.name
+    as: Vendor
+
+where:
+ vendor:
+  table: vendor
+  db_field: vid
+  comparison: is
+
+sort:
+ - vendor.name
+
+lists:

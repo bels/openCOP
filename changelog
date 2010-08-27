@@ -1,0 +1,18 @@
+Changes from 0.3.2 -> ?
+ * Report bookmarking uses shorter query strings.
+ * 
+
+Changes from 0.3.1 -> 0.3.2:
+ * Changed sort order on helpdesk welcome page. Now Updated is first.
+ * In reports the columns you select with are now always shown (unless they are explicitly suppressed in the config.)
+ * Re-fixed the autoselection of the current school in various school select boxes.
+ * Added deployed date field to inventory. This + the automatic Updated timestamp establishes a definite minimal lifespan.
+ * Added notes field to inventory. This field is for any machine-specific information or commentary for which there is no more appropriate field.
+ * Added a view mode so users can check ticket status in a (safer) read only manner. They can still get to edit mode when they do a barcode report (will fix that later)
+ * Fixes to some of the northpoint-specific stuff.
+ * Removed ability to change equipment type on a per-barcode basis. A laptop does not ever become a phone.
+ * Consecutive logical ORs in report queries are now grouped. This behavior seems "correct" at least most of the time. Previously ORs did not behave as expected, or some times at all. 
+ * Created some (fairly terse) documentation of tables and their relationships.
+ * Now it is possible to bookmark reports. A similar feature for forms is possible if there's interest.
+ * Lots of little things.
+

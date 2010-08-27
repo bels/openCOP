@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <title>Charles County Public Schools Purchase Order - Submitted</title>
+ </head>
+ <body>
+ <b><TMPL_VAR NAME="catch_errors"></b><br/>
+ <span id="page-title">Charles County Public Schools Purchase Order: Record Created Successfully</span>
+  <div id="body-head">
+
+   <div id="fields">
+    Purchase ID: <TMPL_VAR NAME="purchase_id"><br />
+    Purchase Order Number: <TMPL_VAR NAME="purchase_number"><br />
+    Purchase Date: <TMPL_VAR NAME="purchase_date"><br />
+    Arrived Date: <TMPL_VAR NAME="purchase_arrived"><br />
+    Notes: <blockquote><TMPL_VAR NAME="purchase_notes"></blockquote>
+   </div>
+  </div>
+ 
+ <hr style="width: 690px;" align="left">
+
+ <TMPL_IF NAME="debug">
+  <p align="center"><b>
+   <TMPL_VAR NAME="debug">
+  </b></p>
+ </TMPL_IF>
+ </body>
+</html>

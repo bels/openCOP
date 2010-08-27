@@ -1,0 +1,414 @@
+tables:
+ - inventory
+
+# Helper tables. These contain no updated fields bit list useful information (At least so far)
+join:
+ - table: equipment
+   type: left
+   on:
+    source: inventory.model
+    dest: equipment.eid
+    comparison: is
+# - table: school
+#   type: left
+#   on:
+#    source: inventory.school
+#    dest: school.scid
+#    comparison: is
+ - table: hardware_type
+   type: left
+   on:
+    source: inventory.hardware_type
+    dest: hardware_type.hwid
+    comparison: is
+ - table: hardware_type as ehw
+   type: left
+   on:
+    source: equipment.type
+    dest: ehw.hwid
+    comparison: is
+ - table: softwareconfig
+   type: left
+   on:
+    source: inventory.software
+    dest: softwareconfig.swid
+    comparison: is
+ - table: replacement
+   type: left
+   on:
+    source: inventory.ccps
+    dest: replacement.original
+    comparison: is
+ - table: status
+   type: left
+   on:
+    source: inventory.status
+    dest: status.stid
+    comparison: is
+ - table: vendor
+   type: left
+   on:
+    source: equipment.vendor
+    dest: vendor.vid
+    comparison: is
+ - table: cost
+   type: left
+   on:
+    source: inventory.cost
+    dest: cost.cid
+    comparison: is
+ - table: cost as ecost
+   type: left
+   on:
+    source: equipment.cost
+    dest: ecost.cid
+    comparison: is
+ - table: os
+   type: left
+   on:
+    source: inventory.os
+    dest: os.osid
+    comparison: is
+ - table: os as eos
+   type: left
+   on:
+    source: equipment.os
+    dest: eos.osid
+    comparison: is
+ - table: office
+   type: left
+   on:
+    source: inventory.office
+    dest: office.offid
+    comparison: is
+ - table: office as eoffice
+   type: left
+   on:
+    source: equipment.office
+    dest: eoffice.offid
+    comparison: is
+
+# priamrytable is the table to select from in the select * from table; statement.
+primarytable: inventory
+
+# Describes primary key to compare against when selecting. select from helpdesk where ticket is $VALUE
+# Also the key to compare against when updating
+where:
+ inventory:
+  db_field: ccps
+  ht_field: ccps
+  html_field: ccps
+  table: inventory
+  comparison: is
+ softwareconfig:
+  db_field: swid
+  ht_field: software_swid
+  html_field: software_swid
+  table: softwareconfig
+  comparison: is
+ hardware_type:
+  db_field: hwid
+  ht_field: hardware_type_hwid
+  html_field: hwid
+  table: hardware_type
+  comparison: is
+ equipment:
+  db_field: eid
+  ht_field: equipment_eid
+  html_field: eid
+  table: equipment
+  comparison: is
+ replacement:
+  db_field: original
+  ht_field: replacement
+  html_field: ccps
+  table: replacement
+  comparison: is
+ status:
+  db_field: db_field: stid
+  ht_field: status
+  html_field: status
+  table: status
+  comparison: is
+
+sort:
+ - inventory.ccps
+
+lists:
+ # select scid as txt, name as lbl, scid as sel from school where scid order by name;
+ school_loop:
+  # table the info is coming from
+  table: school
+  # what fields to select from that table. Note: txt, lbl and sel are currently MANDATORY names.
+  fields: scid as txt, name as lbl, scid as sel
+  # When populating loop, compare with this field's result for a match to determine what should be selected.
+  select_with: sel
+  # Default value to select if none is given by user in form submit (see value_from_html_field)
+  default_selected: -1
+  # Use where, comparison,whervalue to skip deleted, i.e. where school.deleted != 1
+  where: deleted
+  comparison: is not
+  wherevalue: 1
+  sort: name
+  # Get from the field 'school' in the form submit the value to match against in your where statement.
+  value_from_html_field: school
+  value_from_db_field: School
+ model_loop:
+  table: equipment
+  fields: eid as txt, model as lbl, eid as sel
+  select_with: sel
+  sort: model
+  default_selected: 0
+  where: 
+  comparison: is not
+  wherevalue: 1
+  value_from_html_field: equipment_model
+  value_from_db_field: Model
+ status_loop:
+  table: status
+  fields: stid as txt, status as lbl, stid as sel
+  select_with: sel
+  sort: stid
+  default_selected: 1
+  where: 
+  comparison: is not
+  wherevalue: 1
+  value_from_html_field: status
+  value_from_db_field: Status
+ grant_loop:
+  table: grants
+  fields: gid as txt, code as lbl, gid as sel
+  select_with: sel
+  sort: gid
+  default_selected: 0
+  value_from_html_field: grant_code
+  value_from_db_field: Grant Code
+ po_loop:
+  table: purchase
+  fields: pid as txt, order_number as lbl, pid as sel
+  select_with: sel
+  sort: order_number
+  default_selected: 0
+  value_from_html_field: po_num
+  value_from_db_field: PO Number
+ office_loop:
+  table: office
+  fields: offid as txt, descr as lbl, offid as sel
+  select_with: sel
+  sort: descr
+  default_selected: 3
+  where: 
+  comparison: is not
+  wherevalue: 1
+  value_from_html_field: office
+  value_from_db_field: Office
+ os_loop:
+  table: os
+  fields: osid as txt, descr as lbl, osid as sel
+  select_with: sel
+  sort: descr
+  default_selected: 1
+  where: 
+  comparison: is not
+  wherevalue: 1
+  value_from_html_field: os
+  value_from_db_field: OS
+ cost_loop:
+  table: cost
+  fields: cid as txt, name as lbl, cid as sel
+  select_with: sel
+  sort: value
+  default_selected: 1
+  value_from_html_field: cost
+  value_from_db_field: Cost
+
+
+# Select all of these fields on select statement, ignoring the tables
+# on update/insert, for each table listed, update its fields from the form submit as associated
+fields:
+ inventory:
+  - db_field: inventory.ccps
+    as: Charles County Public Schools Barcode
+    ht_field: ccps
+    html_field: ccps
+  - db_field: inventory.hardware_type
+    as: Type
+    html_field: inventory_hardware_type
+  - db_field: inventory.school
+    as: School
+    html_field: school
+  - db_field: inventory.room
+    as: Location
+    ht_field: inventory_location
+    html_field: inventory_location
+  - db_field: inventory.dept
+    as: Department
+    ht_field: inventory_dept
+    html_field: inventory_dept
+  - db_field: inventory.serial
+    as: Serial
+    ht_field: inventory_serial
+    html_field: inventory_serial
+  - db_field: inventory.model
+    as: Model
+    html_field: equipment_model
+  - db_field: inventory.name
+    as: Computer Name
+    ht_field: inventory_name
+    html_field: inventory_name
+  - db_field: inventory.mac
+    as: MAC Address
+    ht_field: inventory_mac
+    html_field: inventory_mac
+  - db_field: inventory.ip
+    as: IP Address
+    ht_field: inventory_ip
+    html_field: inventory_ip
+  - db_field: inventory.software
+    as: Software
+    ht_field: software
+    html_field: software
+  - db_field: inventory.assigned_to
+    as: User
+    ht_field: inventory_assigned
+    html_field: inventory_assigned
+  - db_field: inventory.grantid
+    as: Grant Code
+    html_field: grant_code
+  - db_field: inventory.po
+    as: PO Number
+    html_field: po_num
+  - db_field: inventory.status
+    as: Status
+    html_field: status
+  - db_field: inventory.installer
+    as: Installed By
+    ht_field: inventory_installer
+    html_field: inventory_installer
+  - db_field: inventory.port
+    as: Net Port
+    ht_field: inventory_port
+    html_field: inventory_port
+  - db_field: inventory.hdd
+    as: Hard Disk Capacity (GB)
+    ht_field: inventory_hdd
+    html_field: inventory_hdd
+  - db_field: inventory.ram
+    as: RAM (MB)
+    ht_field: inventory_ram
+    html_field: inventory_ram
+  - db_field: inventory.speed
+    as: Clockspeed (MHz)
+    ht_field: inventory_speed
+    html_field: inventory_speed
+  - db_field: inventory.os
+    as: OS
+    html_field: os
+  - db_field: inventory.office
+    as: Office
+    html_field: office
+  - db_field: inventory.cost
+    as: Cost
+    html_field: cost
+  - db_field: inventory.updated
+    as: Updated
+    ht_field: inventory_updated
+    html_field: updated
+    # Date Fields: An Explanation.
+    # Dates are handled specially in mysql and thus in the code.
+    # If type is date, Date::Manip::UnixDate() is called on the input value before it is passed to mysql.
+    # Similarly, the data could be date-formatted before being extracted.
+    field_type: date
+  - db_field: inventory.deployed
+    as: Deployed
+    ht_field: deployed_date
+    html_field: deployed_date
+    field_type: date
+  - db_field: inventory.notes
+    as: Notes
+    ht_field: inventory_notes
+    html_field: notes
+ hardware_type:
+  - db_field: ehw.name
+    as: EType
+    ht_field: equipment_type
+#  - db_field: hardware_type.name
+#    as: Hardware Type
+#  - db_field: hardware_type.hwid
+#    as: HWID
+#    ht_field: hardware_type_hwid
+# equipment:
+#  - db_field: equipment.model
+#    as: Equipment Model
+#  - db_field: equipment.eid
+#    as: EID
+#    ht_field: equipment_eid
+# softwareconfig:
+#  - db_field: softwareconfig.os
+#    as: Operating System
+#    ht_field: software_os
+#  - db_field: softwareconfig.office
+#    as: Office Suite
+#    ht_field: software_office
+# school:
+#  - db_field: school.name
+#    as: School Name
+ replacement:
+  - db_field: replacement.date
+    as: Replaced Date
+    ht_field: replacement_date
+    html_field: replacement_date
+    field_type: date
+  - db_field: replacement.original
+    as: Original Barcode
+    html_field: ccps
+  - db_field: replacement.replaced
+    as: Replacing
+    ht_field: replacement_new
+    html_field: replacement_new
+ vendor:
+  - db_field: vendor.name
+    as: Vendor
+    ht_field: vendor_name
+ equipment:
+  - db_field: equipment.hdd
+    as: Equipment Hard Disk Capacity (GB)
+    ht_field: equipment_hdd
+  - db_field: equipment.ram
+    as: Equipment RAM (MB)
+    ht_field: equipment_ram
+  - db_field: equipment.speed
+    as: Equipment Clockspeed (MHz)
+    ht_field: equipment_speed
+  - db_field: ecost.name
+    as: ECost
+    ht_field: equipment_cost
+ os:
+  - db_field: eos.descr
+    as: OOS
+    ht_field: os_os
+ office:
+  - db_field: eoffice.descr
+    as: OOffice
+    ht_field: office_office
+
+
+
+
+# equipment. later put this in inventory-equipment-edit.form
+#  - db_field: equipment.hdd
+#    as: Equipment Hard Disk Capacity (GB)
+#    ht_field: equipment_hdd
+#    html_field: equipment_hdd
+#  - db_field: equipment.ram
+#    as: Equipment RAM (MB)
+#    ht_field: equipment_ram
+#    html_field: equipment_ram
+#  - db_field: equipment.speed
+#    as: Equipment Clockspeed (MHz)
+#    ht_field: equipment_speed
+#    html_field: equipment_speed
+
+
+
+

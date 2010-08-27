@@ -1,0 +1,30 @@
+tables:
+ - hardware_type
+
+join:
+
+primarytable: hardware_type
+primarykey: hwid
+
+where:
+ hardware_type:
+  db_field: hwid
+#  ht_field: purchase_number
+  html_field:  hwid
+  table: hardware_type
+  comparison: is
+
+sort:
+ - hardware_type.name
+
+lists:
+
+fields:
+ hardware_type:
+  - db_field: hardware_type.hwid
+    as: ID
+    ht_field: hwid
+  - db_field: hardware_type.name
+    as: Hardware Type
+    ht_field: hardware_type
+    html_field: hardware_type

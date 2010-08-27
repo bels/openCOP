@@ -1,0 +1,15 @@
+<html>
+ <head>
+  <title> Look up or create a new entry </title>
+  
+ <body onload="javascript:document.inv.ccps.focus();return true">
+  <p>
+   <form name="inv" method="post" action="form.pl">
+    <input type="hidden" name="app" value="inventory" />
+    <input type="hidden" name="mode" value="edit" />
+    Barcode: <input type="text" name="ccps" value="" />
+    <input type="submit" value="Look up" />
+   </form>
+  </p>
+ </body>
+</html>

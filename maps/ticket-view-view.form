@@ -1,0 +1,141 @@
+tables:
+ - helpdesk
+
+# Helper tables. These contain no updated fields bit list useful information (At least so far)
+join:
+ - table: inventory
+   type: left
+   on:
+    source: helpdesk.barcode
+    dest: inventory.ccps
+    comparison: is
+ - table: school
+   type: left
+   on:
+    source: helpdesk.school
+    dest: school.scid
+    comparison: is
+ - table: ticket_status
+   type: left
+   on:
+    source: helpdesk.status
+    dest: ticket_status.tsid
+    comparison: is
+ - table: priority
+   type: left
+   on:
+    source: helpdesk.priority
+    dest: priority.prid
+    comparison: is
+ - table: section
+   type: left
+   on:
+    source: helpdesk.section
+    dest: section.sid
+    comparison: is
+
+# priamrytable is the table to select from in the select * from table; statement.
+primarytable: helpdesk
+
+# Describes primary key to compare against when selecting. select from helpdesk where ticket is $VALUE
+# Also the key to compare against when updating
+where:
+ helpdesk:
+  db_field: ticket
+  ht_field: ticket
+  html_field: ticket
+  table: helpdesk
+  comparison: is
+
+sort:
+ - helpdesk.ticket
+
+# Select all of these fields on select statement, ignoring the tables
+# on update/insert, for each table listed, update its fields from the form submit as associated
+fields:
+ helpdesk:
+    # Database field from which to draw and update
+  - db_field: helpdesk.ticket
+    # Display name (if ever displayed). Do not assume this is unique!
+    as: Ticket
+    # HTML::Template field to update. We DO NOT do this if it's a loop!
+    ht_field: helpdesk_ticket
+    # HTML Form field name to draw from on submit
+    html_field: ticket
+  - db_field: helpdesk.school
+    as: School
+    html_field: school
+  - db_field: helpdesk.barcode
+    as: Barcode
+    ht_field: helpdesk_barcode
+    html_field: barcode
+  - db_field: helpdesk.location
+    as: Location
+    ht_field: helpdesk_location
+    html_field: location
+  - db_field: helpdesk.updated
+    as: Updated
+    ht_field: helpdesk_updated
+    html_field: updated
+    # Date Fields: An Explanation.
+    # Dates are handled specially in mysql and thus in the code.
+    # If type is date, Date::Manip::UnixDate() is called on the input value before it is passed to mysql.
+    # Similarly, the data could be date-formatted before being extracted.
+    field_type: date
+  - db_field: helpdesk.requested
+    as: Opened
+    ht_field: helpdesk_requested
+    field_type: date
+  - db_field: helpdesk.author
+    as: Author
+    ht_field: helpdesk_author
+    html_field: author
+  - db_field: helpdesk.contact
+    as: Contact
+    ht_field: helpdesk_contact
+    html_field: contact
+  - db_field: helpdesk.contact_phone
+    as: Phone Number
+    ht_field: helpdesk_phone
+    html_field: phone
+  - db_field: helpdesk.email
+    as: Email
+    ht_field: helpdesk_email
+    html_field: email
+  - db_field: helpdesk.problem
+    as: Problem Description
+    ht_field: helpdesk_problem
+    html_field: problem
+  - db_field: helpdesk.troubleshot
+    as: Troubleshooting Tried
+    ht_field: helpdesk_troubleshot
+    html_field: troubleshoot
+  - db_field: helpdesk.notes
+    as: Notes
+    ht_field: helpdesk_notes
+    html_field: notes
+  - db_field: helpdesk.tech
+    as: Processed By
+    ht_field: helpdesk_tech
+    html_field: tech
+  - db_field: helpdesk.serial
+    as: Serial Number
+    ht_field: helpdesk_serial
+    html_field: serial
+ school:
+  - db_field: school.name
+    as: School Name
+    ht_field: school_name
+ ticket_status:
+  - db_field: ticket_status.name
+    as: Status
+    ht_field: ticket_status_status
+ priority:
+  - db_field: priority.description
+    as: Priority
+    ht_field: priority_name
+ section:
+  - db_field: section.name
+    as: Section
+    ht_field: section_name
+

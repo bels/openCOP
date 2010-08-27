@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <style type="text/css">
+   <TMPL_INCLUDE NAME="common.css">
+   <TMPL_IF NAME="errors">
+    <TMPL_INCLUDE NAME="ticket-create-error-css.css">
+   </TMPL_IF>
+  </style>
+  <title>Charles County Public Schools Helpdesk: New Trouble Ticket</title>
+ </head>
+ <body>
+<b><TMPL_VAR NAME="catch_errors"></b>
+ <span id="page-title">Charles County Public Schools Helpdesk: Input A New Request</span>
+ <form name="create" method="post" action="<TMPL_VAR NAME="self_url">">
+  <TMPL_IF NAME="cfg"><input type="hidden" value="<TMPL_VAR NAME="cfg">" name="cfg" /></TMPL_IF>
+  <input type="hidden" name="app" value="helpdesk">
+  <input type="hidden" name="mode" value="create">
+  <div id="body-head">
+
+<TMPL_IF NAME="sql_error">
+   <h1>An SQL error occured!</h1>
+   <p>Please save this page and contact your system administrator.</p>
+ <TMPL_LOOP NAME="sql_error">
+   <p><TMPL_VAR NAME="error"></p>
+ </TMPL_LOOP>
+</TMPL_IF>
+   <TMPL_IF NAME="errors">
+   <div id="errors">
+    <h1>Errors occured while processing your request</h1>
+    <p>Your request was not submitted. Please correct the following errors and resubmit.</p>
+   <TMPL_LOOP NAME="errors">
+    <p><b><TMPL_VAR ESCAPE="html" NAME="name"></b> <TMPL_VAR ESCAPE="html" NAME="msg">.</p>
+   </TMPL_LOOP>
+
+    <p>Incorrectly filled out fields have been highlighted in red.</p>
+   </div>
+   </TMPL_IF>
+
+   <table style="text-align: left; width: 690px; height: 98px;" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+
+     <tr>
+      <td>School:</td>
+      <td>
+       <select name="school" size="1" tabindex="1">
+<TMPL_LOOP NAME="school_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="school_scid">"<TMPL_VAR ESCAPE="html" NAME="selected">><TMPL_VAR ESCAPE="html" NAME="school_name"></option>
+</TMPL_LOOP>
+       </select>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+     </tr>
+
+     <tr>
+      <td>Author:</td>
+      <td><input <TMPL_VAR NAME="error_author"> name="author" size="20" value="<TMPL_VAR NAME="author">" type="text" tabindex="2"><a href="tips.pl?101"  target="_tips" tabindex="14">?</a></td> 
+      <td>Barcode:</td>
+      <td><input <TMPL_VAR NAME="error_barcode"> name="barcode" size="20" value="<TMPL_VAR NAME="barcode">" type="text" tabindex="3"><a href="tips.pl?102" target="_tips">?</a></td>
+      <td>or Serial:</td>
+      <td><input <TMPL_VAR NAME="error_serial"> name="serial" size="20" value="<TMPL_VAR NAME="serial">" type="text" tabindex="4"></td>
+     </tr>
+
+     <tr>
+      <td>Contact:</td>
+      <td><input <TMPL_VAR NAME="error_contact"> name="contact" size="20" value="<TMPL_VAR NAME="contact">" type="text" tabindex="5"><a href="tips.pl?103" target="_tips">?</a></td>
+      <td>Phone:</td>
+      <td><input <TMPL_VAR NAME="error_phone"> name="phone" size="20" value="<TMPL_VAR NAME="phone">" type="text" tabindex="6"><a href="tips.pl?104" target="_tips">?</a></td>
+      <td>Email:</td>
+      <td><input <TMPL_VAR NAME="error_email"> name="email" size="20" value="<TMPL_VAR NAME="email">" type="text" tabindex="7"><a href="tips.pl?105" target="_tips">?</a></td>
+     </tr>
+
+     <tr>
+      <td>Location:</td>
+      <td colspan="5"><input <TMPL_VAR NAME="error_location"> name="location" size="85" value="<TMPL_VAR NAME="location">" type="text" tabindex="8"><a href="tips.pl?106" target="_tips">?</a></td> 
+     </tr>
+
+     <tr>
+      <td>Priority:</td>
+      <td style="vertical-align: top;">
+       <select name="priority" size="1" tabindex="9">
+<TMPL_LOOP NAME="priority_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="priority_prid">"<TMPL_VAR ESCAPE="html" NAME="selected">><TMPL_VAR ESCAPE="html" NAME="priority_desc"></option>
+</TMPL_LOOP>
+       </select> <a href="tips.pl?107" target="_tips">?</a>
+      </td>
+      <td>Section:</td>
+      <td style="vertical-align: top;">
+       <select name="section" size="1" tabindex="10">
+<TMPL_LOOP NAME="section_loop">
+        <option value="<TMPL_VAR ESCAPE="html" NAME="section_sid">"<TMPL_VAR ESCAPE="html" NAME="selected">><TMPL_VAR ESCAPE="html" NAME="section_label"></option>
+</TMPL_LOOP>
+       </select> <a href="tips.pl?108" target="_tips">?</a>
+      </td>
+      <td>
+       &nbsp;
+      </td>
+     </tr>
+
+    </tbody>
+   </table>
+  </div>
+  <div id="body_notes">
+   Problem:<br />
+   <textarea <TMPL_VAR NAME="error_problem"> id="helpdesk-problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"><TMPL_VAR NAME="problem"></textarea><br />
+   Troubleshooting Tried:<br />
+   <textarea <TMPL_VAR NAME="error_troubleshooting"> id="helpdesk-troubleshooting" style="width: 690px;" cols="80" rows="5" name="troubleshoot" tabindex="12"><TMPL_VAR NAME="troubleshoot"></textarea> <br />
+   <div id="form_submit_button" style="width: 690px;" align="right">
+    <input value="Submit Request" type="submit" tabindex="13">
+   </div>
+  </div>
+ </form>
+ 
+ <hr style="width: 690px;" align="left">
+
+ <TMPL_IF NAME="debug">
+  <p align="center"><b>
+   <TMPL_VAR NAME="debug">
+  </b></p>
+ </TMPL_IF>
+ </body>
+</html>

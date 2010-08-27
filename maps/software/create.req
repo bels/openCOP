@@ -1,0 +1,14 @@
+--- !helpdesk.ccboe.com/requirements
+#HTML form field name: requirements string
+# Possible strings are:
+# required - must not be empty
+# morethantwo - must contain at least three characters
+# morethanN - must contain more then N characters
+# onlynumeric - must contain digets only
+# alphabetic - must contain only the 26 alphabet characters
+# alphanumeric - must contain letters and numbers and no symbols
+# isemail - must validate as an email address
+# ismac - must validate as a MAC address
+software_name: required
+software_os: required
+

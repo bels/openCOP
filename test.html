@@ -1,0 +1,60 @@
+<html>
+<head>
+<script language="javascript">
+
+document.addEventListener ('keydown',checkKDcapture,true);
+
+function checkKDcapture(e) {
+     alert('Target: '+e.target.id);
+     if (e.target.id=='country') {
+          e.preventDefault();
+          if (e.stopPropagation()) {
+               e.stopPropogation();
+          } else {
+               e.returnValue = false;
+          }
+     }
+}
+function checkSelect(e,obj) {
+     alert('cs');
+     if (window.event) {
+          alert('window.event');
+          e = window.event;
+          e.cancelBubble = true;
+          e.returnValue = false;
+          sKey = e.keyCode;
+     } else {
+          alert('not window.event');
+          sKey = e.which;
+     }
+     alert(sKey);
+}
+
+/*document.captureEvents(Event.KEYPRESS);
+document.onkeypress=activate_hot;
+
+function activate_hot(){
+	var hotkey="h";
+	if(keypress_match(hotkey)){
+		alert('MAtched');
+	}
+}
+
+function keypress_match(keycode){
+	var ev = '';
+	if (document.layers){
+		ev = e.which;
+	} else if (document.all){
+		ev = event.keyCode;
+	}
+	return (ev == keycode);
+}*/
+
+
+
+</script>
+</head>
+<body>
+word
+</body>
+</html>

@@ -1,0 +1,671 @@
+#!/usr/bin/perl
+
+# CCBOE Helpdesk Scripts
+# Report.pm - Generate ticket reprots from helpdesk database
+# By Clark Buehler (cbuehler@ccboe.com)
+
+package CCBOEHD::Report;
+use base qw(CCBOEHD::Base);
+
+use strict;
+use warnings;
+
+use CGI::Carp qw(fatalsToBrowser);
+
+use DBI;
+use CGI;
+use YAML;
+use Data::Dumper;
+
+##
+## Overrides
+##
+
+sub setup
+{
+	my $self = shift;
+
+	$self->start_mode('start');
+	$self->mode_param('mode');
+	$self->run_modes(
+		'start' => 'start_view',
+		'report' => 'report_view',
+		'welcome' => 'welcome_view',
+	);
+	$self->load_config;
+	$self->db_connect;
+}
+
+
+## 
+## Interface functions
+## 
+
+sub start_view{
+	my $self = shift;
+	$self->load_template($self->param('config')->{'pnd'}->{'report.pl'}->{'start'}->{'template'});
+	$self->param('template')->param('self_url' => $self->query->url);
+
+	my $y = YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'pnd'}->{'report.pl'}->{'report'}->{'rmap'});
+	$self->param('report',$y);
+
+	$self->fill_select_form($self->param('config')->{'pnd'}->{'report.pl'}->{'start'}->{'rmap'});
+
+
+	return $self->param('template')->output();
+}
+
+sub report_view{
+	my $self = shift;
+	$self->load_template($self->param('config')->{'pnd'}->{'report.pl'}->{'report'}->{'template'});
+	$self->param('template')->param('self_url' => $self->query->url);
+
+	my $y = YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'pnd'}->{'report.pl'}->{'report'}->{'rmap'});
+	$self->param('report',$y);
+
+	$self->fill_select_form;
+
+	my %form = $self->form_to_variables;
+
+	my $sql = $self->make_sql_from_form_submit(%form);
+
+	$self->fill_results_loop($sql,$self->param('config')->{'pnd'}->{'report.pl'}->{'report'}->{'rmap'});
+
+	
+#	my $dbg = $self->param('config')->{'db_password'};
+#	$dbg = '' unless $dbg;
+#	$self->param('template')->param('debug',$dbg);
+#$self->param('config')->{'db_password'}
+#$self->param('config')->{'db_user'}
+
+
+	return $self->param('template')->output();
+}
+
+sub welcome_view{
+	my $self = shift;
+
+	# Generate/Populate the School and Status select form.
+
+	# Generate the Date Select form
+
+        return $self->param('template')->output();
+}
+
+## 
+## Internal functions
+## 
+
+
+sub match_any{
+	my $self = shift;
+	my $match = pop;
+	my @list = @_;
+	foreach my $v (@list){
+		return 1 if $v eq $match;
+	}
+	return undef;
+}
+
+sub uniq{
+	my $self = shift;
+	my @in = @_;
+	my %saw;
+	undef %saw;
+	my @out =  grep(!$saw{$_}++, @in);
+	return @out;
+}
+
+sub find_ticket_column{
+	my $self = shift;
+	my $sql = shift;
+
+	$sql =~ s/select //;
+	$sql =~ s/ from .*//;
+	my @fields = split(/,/,$sql);
+	my $n;
+	for(my $i=0;$i<@fields;$i++){
+		if($fields[$i] =~ /helpdesk.ticket/){
+			$n = $i+1;
+			last;
+		}
+	}
+	return $n;
+}
+
+sub find_column_order{
+	my $self = shift;
+	my @all = @_;
+	my %form = $self->form_to_variables;
+
+#	my @sortable_columns = $self->labels_for_cols($self->cols_with_attribute('sort'));
+	my @sortable_columns = $self->cols_with_attribute('sort');
+	my @ordered;
+	do{
+		my @sort = sort { $a cmp $b } grep { /^sort.*/ } keys %form;
+		@ordered = map { $_ = $form{$_} } @sort;
+	};
+	my @correct = $self->uniq(@ordered,@sortable_columns);
+#die Data::Dumper::Dumper @correct;
+	return @correct;
+}
+
+sub fill_results_loop{
+	use Time::HiRes qw / gettimeofday / ; # required for reporting query time
+	my $now = [Time::HiRes::gettimeofday()];
+
+	my $self = shift;
+	my $sql = shift;
+	my $file = shift; # the report.yml config file name
+
+#die Data::Dumper::Dumper $sql;
+#die $sql;
+	my (@loop,@header, @head);
+	my $results = 0;
+
+	if($sql){
+		my $sth = $self->param('hddb')->prepare($sql);
+
+		$sth->execute();
+
+		my $hr = $self->param('report');
+
+		my $fahr = $sth->fetchall_hashref('Ticket');
+
+#	die Data::Dumper::Dumper $fahr;
+
+		my $ticketcol = $self->find_ticket_column($sql);
+		my @columns_in_order = $self->find_column_order;
+#	my @shown_columns = $self->labels_for_cols($self->cols_with_attribute('show'));
+		my @shown_columns = $self->cols_with_attribute('show');
+
+		my $ary_ref = $self->param('hddb')->selectcol_arrayref($sql, { Columns=>[$ticketcol] });
+
+#	die Data::Dumper::Dumper $fahr;
+
+#	foreach my $ticket (keys %{$fahr}){
+		foreach my $ticket (@$ary_ref){
+			my @cols;
+#		foreach my $k (keys %{$fahr->{$ticket}}){
+#		foreach my $k (@{$hr->{'cols'}->{'shown'}}){
+			foreach my $k (@columns_in_order){
+#	die Data::Dumper::Dumper @shown_columns;
+				if($self->match_any(@shown_columns,$k)){
+					my ($lbl) = ($self->labels_for_cols($k));
+					push(@cols,{'colval' => $fahr->{$ticket}->{$lbl}});
+					push(@head,$lbl);
+				}
+			}
+			push(@loop,{
+				'col' => [@cols],
+				'ticket' => $ticket,
+			});
+		}
+		$self->param('template')->param('showresults',1);
+		$results = scalar(@$ary_ref) if $ary_ref;
+	}
+
+	@head = $self->uniq(@head);
+	foreach my $he (@head){
+		push(@header,{'name'=>$he});
+	}
+	$self->param('template')->param('header',[@header]);
+
+	$self->param('template')->param('row',[@loop]);
+
+	my $elapsed = Time::HiRes::tv_interval($now);
+
+
+	$self->param('template')->param('selected_rows',$results);
+	$self->param('template')->param('selected_time',sprintf("%.3f", $elapsed));
+
+}
+
+sub remove_empties{
+	my $self = shift;
+	my @ar = @_;
+	my @out;
+	foreach my $v (@ar){
+		next unless $v;
+		push(@out,$v);
+	}
+	return @out;
+}
+
+sub how_many_filled{
+	my $self = shift;
+	my $basename = shift;
+	my %form = $self->form_to_variables;
+	my @r = grep { /^$basename.*/ } keys %form;
+	@r = map { $_ = $form{$_} } @r;
+	@r = $self->remove_empties(@r);
+	return scalar(@r);
+}
+
+### Begin block of new functions for cross table join
+
+sub column_ids_from_map{
+	my $self = shift;
+#	my $y = YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$file); # file should be report.yml here
+	my $y = $self->param('report');
+
+	my @col;
+	foreach my $f (@{$y->{'fields'}}){
+		my ($key) = keys %{$f};
+		push(@col,$key);
+	}
+	return @col;
+}
+
+# Find columns with attribute $_[0] in data structure $self->param('report')
+sub cols_with_attribute{
+	my $self = shift;
+	my $attr = shift;
+	my $y = $self->param('report');
+
+	my @all = $self->column_ids_from_map;
+	my @keep;
+	foreach my $f (@all){
+		my @attributes;
+		foreach my $field (@{$y->{'fields'}}){
+			if($field->{$f}){ # Otherwise when we reference $field->{$f} it creates it
+				my $c = $field->{$f}->{'column'};
+				if($c){
+					@attributes = @{$c};
+				}
+			}
+		}
+		if($self->match_any(@attributes,$attr)){
+			push(@keep,$f);
+		}
+	}
+
+	return @keep;
+}
+
+sub labels_for_cols{
+	my $self = shift;
+	my @cols = @_;
+	my @labels;
+	foreach my $f (@cols){
+		my $h = $self->get_the_damn_field($f);
+		push(@labels,$h->{'label'});
+#		foreach my $h (@{$self->param('report')->{'fields'}}){
+#			if($h->{$f}){
+#				push(@labels,$h->{$f}->{'label'});
+#			}
+#		}
+
+	}
+#die Data::Dumper::Dumper @labels;
+	@labels = $self->uniq(@labels);
+#die Data::Dumper::Dumper @labels;
+	return $self->uniq(@labels);
+}
+
+
+#sub type_lookup{
+#        my $self = shift;
+#        my $type = $self->value_of_form_field('type');
+#
+#        if(!$type){
+#                $type = $self->param('config')->{'report'}->{'default_type'};
+#        }
+#
+#        my $cfg = $self->param('config')->{'report'}->{$type};
+#
+#        if(!$cfg){
+#                $cfg = $self->param('config')->{'report'}->{'default'};
+#        }
+#        $self->param('template_file',$cfg{'template'});
+#        $self->param('report_file',$cfg{'config'});
+#}
+
+## End new block
+
+sub fill_select_form{
+	my $self = shift;
+	my $file = shift;
+	my $hr = $self->param('report');#YAML::LoadFile($self->param('config')->{'config_dir'}.'/'.$file); # file should be report.yml here
+
+	# Returns a list of all columns which will appear in the SQL statement
+#	my @columns = $self->uniq(@{$hr->{'cols'}->{'shown'}},@{$hr->{'cols'}->{'hidden'}});
+
+#	@columns = $self->column_ids_from_map;
+	my @column_labels = $self->labels_for_cols($self->cols_with_attribute('select'));
+
+	my @shown_columns = $self->cols_with_attribute('show');
+	my @selectable_columns = $self->cols_with_attribute('select');
+	my @sortable_columns = $self->cols_with_attribute('sort');
+	my @all_columns = $self->uniq(@shown_columns, @selectable_columns, @sortable_columns);
+
+	my @selectable_column_labels = $self->labels_for_cols(@selectable_columns);
+	my @sortable_column_labels = $self->labels_for_cols(@sortable_columns);
+	my @all_column_labels = $self->labels_for_cols(@all_columns);
+
+	my %form = $self->form_to_variables;
+
+#die Data::Dumper::Dumper @all_columns;
+#die Data::Dumper::Dumper @selectable_column_labels;
+
+	# Set the number of fields to show (1 or the number you used in your query)
+	# Set the max fields availible 
+	my $filled = $self->how_many_filled('query');
+	$filled = 1 if ! $filled;
+	$self->param('template')->param('filled_fields',$filled);
+	$self->param('template')->param('max_fields',scalar(@shown_columns)-1);
+
+	# Take care of looking up comparison labels and values here
+	my (@cmpvalues,@cmplabels);
+	foreach my $c (@{$hr->{'comparisons'}}){
+		my ($k) = keys %{$c};
+		push(@cmpvalues,$k);
+		push(@cmplabels,$c->{$k}->{'txt'});
+	}
+	my %cmp = $self->get_cmps($hr);
+
+	# And/Or labels and values. Very simple indeed.
+	my @ao_labels = qw(and or);
+	my @ao_values = qw(and or);
+
+#	my @fields = map { $_ =~ s/(.*)\d+$/$1/; } sort { $a cmp $b } grep { /^field.*/ } keys %form;
+	my (@used_field_names,@used_query_vals);
+
+	my @vals = sort { $a cmp $b } grep { /^query.*/ } keys %form;
+#	@vals = map { $_ = $form{$_} } @vals;
+#die Data::Dumper::Dumper %form;
+	for(my $i=0;$i<@vals;$i++){
+		if(defined($form{'query'.$i}) and $form{'query'.$i} ne ''){
+			push(@used_field_names,$form{'field'.$i});
+			push(@used_query_vals,$form{'query'.$i});
+		}
+	}
+
+	my @loop;
+	for(my $i=0;$i<@all_columns;$i++){
+		my %r;
+		$r{'seq'} = $i;
+#		$r{'query'} = $self->decide('query',$i,'',%form);
+		$r{'query'} = shift @used_query_vals;
+
+		if($self->match_any(@selectable_columns,$all_columns[$i])){
+			@{$r{'select_values'}} = $self->selectorify(\@selectable_column_labels, \@selectable_columns,$used_field_names[$i] || $selectable_columns[$i]);
+			@{$r{'select_comparisons'}} = $self->selectorify(\@cmplabels,\@cmpvalues,$form{'comparison'.$i} || 'like');
+			@{$r{'andor'}} = $self->selectorify(\@ao_labels,\@ao_values, $form{'andor'.$i} || 'and');
+##die Data::Dumper::Dumper $cmp{$form{'comparison'.$i}}->{'sql'};
+##die Data::Dumper::Dumper %cmp;
+##die Data::Dumper::Dumper @cmpvalues;
+###die Data::Dumper::Dumper $cmp{$form{'comparison'.$i}}->{'sql'};
+			push(@loop,\%r);
+		}
+#die $selectable_columns[$i];
+#die Data::Dumper::Dumper @{$r{'select_values'}} ;
+	}
+
+	my @sloop;
+	for(my $i=0;$i<@all_columns;$i++){
+		my %r;
+		$r{'seq'} = $i;
+#		$r{'query'} = $self->decide('query',$i,'',%form);
+
+		@{$r{'select_sort'}} = $self->selectorify( \@sortable_column_labels,\@sortable_columns, $form{'sort'.$i} || ($sortable_columns[$i]));
+
+		push(@sloop,\%r);
+		
+	}
+#die  Data::Dumper::Dumper #@loop;
+	$self->param('template')->param('sort_loop',[@sloop]);
+	$self->param('template')->param('select_fields',[@loop]);
+}
+
+
+# Finds the correct submitted form field and which value was selected on submit of the form and returns the value
+# This appears to be so that the previously selected item will be selected again, or the default will be selected
+
+sub decide{
+	my $self = shift;
+	my $basename = shift;
+	my $seq = shift;
+	my $default = shift;
+	my %form = @_;
+	my @result = sort { $a cmp $b } grep { /^$basename.*/ } keys %form;
+	@result = map { $_ = $form{$_} } @result;
+	@result = $self->remove_empties(@result);
+
+	return $result[$seq] || $default;
+}
+
+#sub build_cmp_loop{
+#	my $self = shift;
+#	
+#}
+
+#$loop[0] = (
+#	{
+#		'col' => [
+#			{ 'colval' => 'school', },
+#			{ 'colval' => 'location', },
+#			{ 'colval' => 'updated', },
+#		],
+#		'ticket' => $ticket,
+#	},
+#	{
+#		'col' => [
+#			{ 'colval' => 'school', },
+#			{ 'colval' => 'location', },
+#			{ 'colval' => 'updated', },
+#		],
+#		'ticket' => $ticket,
+#	},
+#);
+
+
+#my $hash = $self->get_the_damn_field($y,'schoolnumber');
+#die Data::Dumper::Dumper $hash->{'name'}; # will report 'school'
+# This is to get the element of the array of field descriptors which matches a given name
+# so that sub-elements of it may be more concisely referenced.
+sub get_the_damn_field{
+	my $self = shift;
+	my $hr = $self->param('report');
+	my $requested = shift;
+	my @a = @{$hr->{'fields'}};
+#die Data::Dumper::Dumper $hr;
+	foreach my $b (@a){
+		my ($keyname) = keys %{$b};
+		if ($keyname eq $requested){
+			return $b->{$keyname};
+		}
+	}
+
+	return {};
+}
+
+
+sub make_sql_from_form_submit{
+	my $self = shift;
+	my %form = @_;
+
+	my $y = $self->param('report');
+
+	my %cmp = $self->get_cmps;
+
+	my @col_ids = $self->column_ids_from_map;
+#	my @column_labels = $self->labels_for_cols($self->cols_with_attribute('select'));
+
+	my @fields = sort { $a cmp $b } grep { /^field.*/ } keys %form;
+	my @values = sort { $a cmp $b } grep { /^query.*/ } keys %form;
+	my @comparison = sort { $a cmp $b } grep { /^comparison.*/ } keys %form;
+	my @sort = sort { $a cmp $b } grep { /^sort.*/ } keys %form;
+	my @andor = sort { $a cmp $b } grep { /^andor.*/ } keys %form;
+
+#die Data::Dumper::Dumper %form;
+	@values = map { $_ = $form{$_} } @values;
+	@fields = map { $_ = $form{$_} } @fields;
+	@comparison = map { $_ = $form{$_} } @comparison;
+	@sort = map { $_ = $form{$_} } @sort;
+	@andor = map { $_ = $form{$_} } @andor;
+#	pop @andor; # The last value is for a connection to a field which does not exist
+
+#die Data::Dumper::Dumper @fields;
+
+	# Look up fields as IDs in report.yml, replace each field with its real table field.
+
+	my $found = 1;
+#	my @sel; # Really @sel isn't required any more.
+	my (@select,@as,@join_type,@join_on,@join_test,@order,@where,@and,%order);
+	my @ordered_fields = $self->all_not_in(\@fields,\@col_ids);
+	@ordered_fields = (@fields,@ordered_fields);
+#	foreach my $label (@col_ids){
+
+	if(!$self->match_any(@fields,'ticket')){
+		push(@fields,'ticket');
+	}
+	for(my $i=0;$i<@col_ids;$i++){
+		my $label = $col_ids[$i];
+		my $info = $self->get_the_damn_field($label);
+
+		my %s;
+#		if($values[$i]){
+			# If there's a value then we're definitely a used field.
+#			$s{'index'} = $i;
+#			$s{'value'} = $values[$i] if $values[$i];
+#			$s{'comparison'} = $comparison[$i];
+
+#			$s{'andor'} = $andor[$i];
+
+#			$s{'field'} = $info->{'name'};
+#			$s{'as'} = $info->{'label'};
+
+			push(@select,$info->{'name'});
+			push(@as,$info->{'label'});
+
+
+			push(@order,$info->{'sort'});
+#			$s{'sort'} = $sort[$i];
+
+#		# If a value wasn't specified for this field than we definitely don't want to test against it.
+##		if(defined($s{'value'})){
+#			$s{'where'} = $info->{'where'};
+#			my $p = $cmp{$s{'comparison'}}->{'pattern'};
+#			$p =~ s/\*/$s{'value'}/;
+#			my $where = $s{'where'}.' '.$cmp{$s{'comparison'}}->{'sql'}.' '.$self->param('hddb')->quote($p);
+#			push(@where,$where);
+#			push(@and,$s{'andor'});
+#
+#		}
+
+		if($info->{'join'}){
+			# push onto joining arrays
+#			$s{'join'} = $info->{'join'};
+			push(@join_type,$info->{'join'}->{'type'});
+			push(@join_on,$info->{'join'}->{'on'});
+			push(@join_test,'('.($info->{'join'}->{'from'}).' '.($info->{'join'}->{'compare'}).' '.($info->{'join'}->{'to'}).')');
+		}
+
+	}
+
+	# Build where/and info from form value submit
+	for(my $i=0;$i<@values;$i++){
+	    if($values[$i] ne ''){
+		my $info = $self->get_the_damn_field($fields[$i]);
+		my $p = $cmp{$comparison[$i]}->{'pattern'};
+		$p =~ s/\*/$values[$i]/;
+		my $where = $info->{'where'}.' '.$cmp{$comparison[$i]}->{'sql'}.' '.$self->param('hddb')->quote($p);
+		push(@where,$where);
+		push(@and,$andor[$i]);
+	    }
+	}
+
+	for(my $i=0;$i<@select;$i++){
+		$select[$i] .= ' as '.$self->param('hddb')->quote($as[$i]);
+	}
+	push(@select,'helpdesk.ticket as \'Ticket\'');
+	my $select = join(', ', @select);
+
+	my @join;
+	for(my $i=0;$i<@join_type;$i++){
+		push(@join, $join_type[$i].' join '.$join_on[$i].' on '.$join_test[$i]);
+	}
+	my $join = join(' ',@join);
+
+	my @andwhere;
+	shift @and;
+	for(my $w=0;$w<@where;$w++){
+		if($w != 0){
+			$andwhere[$w - 1] .= ' '.$and[$w - 1];
+		}
+		push(@andwhere,$where[$w]);
+	}
+	my $where = join(' ',@andwhere);
+#die $where;
+#	die Data::Dumper::Dumper %order;
+
+	foreach my $s (@sort){
+		my $info = $self->get_the_damn_field($s);
+		$s = $info->{'sort'};
+	}
+	@order = $self->uniq(@sort,@order);
+#die Data::Dumper::Dumper @sort;
+	my $order = join(', ', @order);
+#die $order;
+	if(!@where){
+		return '';
+	} else{
+		my $sql = "select $select from helpdesk $join where $where order by $order;";
+die $sql;
+		return $sql;
+	}
+#	my $sql = "select $select from helpdesk $join where $where order by school;";
+#die Data::Dumper::Dumper $sql;
+#die $sql;
+}
+
+sub all_not_in{
+	my $self = shift;
+	my $flds = shift;
+	my $cols = shift;
+	my @notin;
+	foreach my $v (@{$cols}){
+		if(!$self->match_any(@$flds,$v)){
+			push (@notin,$v);
+		}
+	}
+	return @notin;
+}
+
+sub get_cmps{
+	my $self = shift;
+	my $hr = $self->param('report');
+	my %cmp;
+
+	foreach my $c (@{$hr->{'comparisons'}}){
+		my ($k) = keys %{$c};
+		$cmp{$k} = $c->{$k};
+	}
+	return %cmp;
+}
+
+# $self->selectoryify(\@labels,\@values,'label of initial selection');
+sub selectorify{
+	my $self = shift;
+	my $ar_labels = shift;
+	my $ar_values = shift;
+	my $match = shift;
+	my @loop;
+	my %h;
+	for(my $i=0;$i<@{$ar_labels};$i++){
+		my $selected = '';
+		if($ar_values->[$i] eq $match){
+			$selected = ' selected';
+		}
+		push(@loop,{
+			'txt' => $ar_labels->[$i],
+			'val' => $ar_values->[$i],
+			'selected' => $selected,
+		});
+	}
+
+	return @loop;
+}
+
+1;

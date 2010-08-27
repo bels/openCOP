@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <title>Charles County Public Schools Software - Submitted</title>
+ </head>
+ <body>
+ <b><TMPL_VAR NAME="catch_errors"></b><br/>
+ <span id="page-title">Charles County Public Schools Software: Record Created Successfully</span>
+  <div id="body-head">
+
+   <div id="fields">
+    Software ID: <TMPL_VAR NAME="swid"><br />
+    Name: <TMPL_VAR NAME="software_name"><br />
+    OS: <TMPL_VAR NAME="software_os"><br />
+    Office: <TMPL_VAR NAME="software_office"><br />
+    Other: <blockquote><TMPL_VAR NAME="software_other"></blockquote>
+   </div>
+  </div>
+ 
+ <hr style="width: 690px;" align="left">
+
+ <TMPL_IF NAME="debug">
+  <p align="center"><b>
+   <TMPL_VAR NAME="debug">
+  </b></p>
+ </TMPL_IF>
+ </body>
+</html>

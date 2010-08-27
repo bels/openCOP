@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <style>
+  <title>CCPS Software #<TMPL_VAR NAME="swid"> - Edit</title>
+ </head>
+ <body>
+ 
+<TMPL_IF NAME="sql_success">
+     <h1>Update Successful!</h1>
+     <p id="sql-success-text">
+      Your update as been merged into the database affecting <TMPL_VAR NAME="sql_success"> rows.
+     </p>
+     <p id="sql-success-text">
+      You may view the updated record and make corrections below or go back and <a href="form.pl?<TMPL_IF NAME="cfg">cfg=<TMPL_VAR NAME="cfg">&</TMPL_IF>app=software&mode=new">input another record</a>.
+     </p>    
+</TMPL_IF>
+
+<TMPL_IF NAME="sql_error">
+     <h1>Your changes were not saved!</h1>
+     <p id="sql-error-text" style="width: 690px;">
+      An SQL Error occured (see below) and your changes were <b>not</b> inserted into the database. If you can tell what went wrong, correct it and resubmit the update. If not, save this page and contact your system administrator.
+     </p>
+</TMPL_IF>
+<TMPL_LOOP NAME="sql_error">
+     <ul style="color:red;">
+      <li><TMPL_VAR ESCAPE="html" NAME="error"></li>
+     </ul>
+</TMPL_LOOP>
+
+ <span id="page-title">Charles County Public Schools Software Number <TMPL_VAR NAME="swid"></span>
+ <form name="update" method="post" action="<TMPL_VAR NAME="self_url">">
+  <input type="hidden" name="app" value="software">
+  <input type="hidden" name="mode" value="update">
+
+  <input type="hidden" name="swid" value="<TMPL_VAR NAME="swid">" />
+
+ <div id="editablefields">
+  Name:  <input type="text" name="software_name" value="<TMPL_VAR NAME="software_name">" <TMPL_VAR NAME="error_software_name"> /><br />
+  OS:  <input type="text" name="software_os" value="<TMPL_VAR NAME="software_os">" <TMPL_VAR NAME="error_software_os"> /><br />
+  Office:  <input type="text" name="software_office" value="<TMPL_VAR NAME="software_office">" <TMPL_VAR NAME="error_software_office"> /><br />
+  Other:<br />
+  <textarea rows="10" cols="30" name="software_other" <TMPL_VAR NAME="error_software_other">><TMPL_VAR NAME="software_other"></textarea><br />
+ </div>
+ <input type="submit" value="Update">
+ </form>
+ </body>
+</html>

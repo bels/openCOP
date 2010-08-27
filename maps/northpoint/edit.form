@@ -1,0 +1,226 @@
+tables:
+ - helpdesk
+# - inventory
+# - equipment
+
+# Helper tables. These contain no updated fields bit list useful information (At least so far)
+join:
+ - table: inventory
+   type: left
+   on:
+    source: helpdesk.barcode
+    dest: inventory.ccps
+    comparison: is
+ - table: hardware_type
+   type: left
+   on:
+    source: inventory.hardware_type
+    dest: hardware_type.hwid
+    comparison: is
+ - table: equipment
+   type: left
+   on:
+    source: inventory.model
+    dest: equipment.eid
+    comparison: is
+# - table: school
+#   type: right
+#   on:
+#    source: helpdesk.school
+#    dest: school.scid
+#    comparison: is
+ - table: softwareconfig
+   type: left
+   on:
+    source: inventory.software
+    dest: softwareconfig.swid
+    comparison: is
+
+
+# priamrytable is the table to select from in the select * from table; statement.
+primarytable: helpdesk
+
+# Describes primary key to compare against when selecting. select from helpdesk where ticket is $VALUE
+# Also the key to compare against when updating
+where:
+ helpdesk:
+  db_field: ticket
+  ht_field: ticket
+  html_field: ticket
+  table: helpdesk
+  comparison: is
+
+sort:
+ - helpdesk.ticket
+
+lists:
+ # select scid as txt, name as lbl, scid as sel from school where scid order by name;
+ school_loop:
+  # table the info is coming from
+  table: school
+  # what fields to select from that table. Note: txt, lbl and sel are currently MANDATORY names.
+  fields: scid as txt, name as lbl, scid as sel
+  # When populating loop, compare with this field's result for a match to determine what should be selected.
+  select_with: sel
+  # Default value to select if none is given by user in form submit (see value_from_html_field)
+  default_selected: -1
+  # Use where, comparison,whervalue to skip deleted, i.e. where school.deleted != 1
+  where: deleted
+  comparison: is not
+  wherevalue: 1
+  sort: name
+  # Get from the field 'school' in the form submit the value to match against in your where statement.
+  value_from_html_field: school
+  value_from_db_field: School
+ status_loop:
+  table: ticket_status
+  fields: tsid as txt, name as lbl, tsid as sel
+  select_with: sel
+  default_selected: 1
+  where:
+  comparison:
+  wherevalue:
+  selected: -1
+  sort: tsid
+  value_from_html_field: status
+  value_from_db_field: Status
+ priority_loop:
+  table: priority
+  fields: prid as txt, description as lbl, prid as sel
+  select_with: sel
+  where:
+  comparison: is
+  default_selected: 1
+  sort: severity
+  value_from_html_field: priority
+  value_from_db_field: Priority
+ section_loop:
+  table: section
+  fields: sid as txt, name as lbl, sid as sel
+  select_with: sel
+  where:
+  comparison: is
+  default_selected: 1
+  value_from_html_field: section
+  value_from_db_field: Section
+  sort: name
+
+# Select all of these fields on select statement, ignoring the tables
+# on update/insert, for each table listed, update its fields from the form submit as associated
+fields:
+ helpdesk:
+    # Database field from which to draw and update
+  - db_field: helpdesk.ticket
+    # Display name (if ever displayed). Do not assume this is unique!
+    as: Ticket
+    # HTML::Template field to update. We DO NOT do this if it's a loop!
+    ht_field: helpdesk_ticket
+    # HTML Form field name to draw from on submit
+    html_field: ticket
+  - db_field: helpdesk.school
+    as: School
+    html_field: school
+  - db_field: helpdesk.barcode
+    as: Barcode
+    ht_field: helpdesk_barcode
+    html_field: barcode
+  - db_field: helpdesk.location
+    as: Location
+    ht_field: helpdesk_location
+    html_field: location
+  - db_field: helpdesk.updated
+    as: Updated
+    ht_field: helpdesk_updated
+    html_field: updated
+    # Date Fields: An Explanation.
+    # Dates are handled specially in mysql and thus in the code.
+    # If type is date, Date::Manip::UnixDate() is called on the input value before it is passed to mysql.
+    # Similarly, the data could be date-formatted before being extracted.
+    field_type: date
+  - db_field: helpdesk.requested
+    as: Opened
+    ht_field: helpdesk_requested
+    field_type: date
+  - db_field: helpdesk.author
+    as: Author
+    ht_field: helpdesk_author
+    html_field: author
+  - db_field: helpdesk.contact
+    as: Contact
+    ht_field: helpdesk_contact
+    html_field: contact
+  - db_field: helpdesk.contact_phone
+    as: Phone Number
+    ht_field: helpdesk_phone
+    html_field: phone
+  - db_field: helpdesk.email
+    as: Email
+    ht_field: helpdesk_email
+    html_field: email
+  - db_field: helpdesk.problem
+    as: Problem Description
+    ht_field: helpdesk_problem
+    html_field: problem
+  - db_field: helpdesk.troubleshot
+    as: Troubleshooting Tried
+    ht_field: helpdesk_troubleshot
+    html_field: troubleshoot
+  - db_field: helpdesk.notes
+    as: Notes
+    ht_field: helpdesk_notes
+    html_field: notes
+  - db_field: helpdesk.tech
+    as: Processed By
+    ht_field: helpdesk_tech
+    html_field: tech
+  - db_field: helpdesk.serial
+    as: Serial Number
+    ht_field: helpdesk_serial
+    html_field: serial
+  - db_field: helpdesk.status
+    as: Status
+    html_field: status
+  - db_field: helpdesk.priority
+    as: Priority
+    html_field: priority
+  - db_field: helpdesk.section
+    as: Section
+    html_field: section
+  - db_field: helpdesk.free
+    as: When Free
+    ht_field: helpdesk_free
+    html_field: free
+ inventory:
+  - db_field: inventory.room
+    as: Inventoried Location
+    ht_field: inventory_location
+  - db_field: inventory.serial
+    as: Serial
+    ht_field: inventory_serial
+  - db_field: inventory.name
+    as: Computer Name
+    ht_field: inventory_name
+  - db_field: inventory.mac
+    as: MAC Address
+    ht_field: inventory_mac
+  - db_field: inventory.port
+    as: Port
+    ht_field: inventory_port
+  - db_field: inventory.assigned_to
+    as: User
+    ht_field: inventory_assigned
+ hardware_type:
+  - db_field: hardware_type.name
+    as: "Hardware Type"
+    ht_field: inventory_hardwaretype
+ equipment:
+  - db_field: equipment.model
+    as: "Model"
+    ht_field: equipment_model
+ softwareconfig:
+  - db_field: softwareconfig.os
+    as: Operating System
+    ht_field: software_os
+
+# into this:
+# select helpdesk.ticket as "Ticket",helpdesk.barcode as "CCPS#",i.room as "Location",hardware_type.name as "Hardware Type",school.name as "School",softwareconfig.os as "Operating System",equipment.model as "Model",vendor.name as "Vendor" from inventory as i,helpdesk left join hardware_type on (hardware_type.hwid = inventory.hardware_type) left join inventory on (helpdesk.barcode = inventory.ccps) left join school on (helpdesk.school = school.scid) left join softwareconfig on (softwareconfig.swid = inventory.software) left join equipment on (equipment.eid = inventory.model) left join vendor on (equipment.vendor = vendor.vid) where helpdesk.ticket = 1; 

@@ -1,0 +1,133 @@
+--- !helpdesk.ccboe.com/report
+
+primarytable: equipment
+primarykey: eid
+
+fields:
+ - eid:
+    name: equipment.eid
+    label: EID
+    as: EID
+    sort: equipment.eid
+ - vendor:
+    name: vendor.name
+    label: Vendor
+    as: Vendor
+    where: vendor.name
+    sort: vendor.name
+    column:
+     - show
+     - sort
+     - select
+    join:
+     sort: vendor.name
+     type: inner
+     on: vendor
+     from: equipment.vendor
+     to: vendor.vid
+     compare: '='
+ - hardwaretype:
+    name: hardware_type.name
+    label: Hardware Type
+    as: Hardware Type
+    column:
+     - show
+     - sort
+     - select
+    join:
+     sort: hardware_type.hwid
+     type: left
+     on: hardware_type
+     from: equipment.type
+     to: hardware_type.hwid
+     compare: '='
+    where: hardware_type.name
+    sort: hardware_type.hwid
+ - model:
+    name: equipment.model
+    label: Model
+    as: Model
+    column:
+     - show
+     - sort
+     - select
+    where: equipment.model
+    sort: equipment.model
+ - description:
+    name: equipment.description
+    label: Description
+    as: Description
+    column:
+     - show
+     - sort
+     - select
+    where: equipment.description
+    sort: equipment.description
+ - warranty:
+    name: equipment.warranty
+    label: Warranty Details
+    as: Warranty Details
+    column:
+     - show
+     - sort
+     - select
+    where: equipment.warranty
+    sort: equipment.warranty
+ - warranty_date:
+    name: equipment.warranty_date
+    label: Warranty Date
+    as: Warranty Date
+    column:
+     - show
+     - sort
+     - select
+    where: equipment.warranty_date
+    sort: equipment.warranty_date
+ - hdd:
+    name: equipment.hdd
+    label: Hard Disk Size (GB)
+    as: Hard Disk Size (GB)
+    column:
+     - show
+     - sort
+     - select
+    where: equipment.hdd
+    sort: equipment.hdd
+ - cost:
+    name: cost.name
+    label: Cost
+    as: Cost
+    where: cost.name
+    sort: cost.name
+    column:
+     - show
+     - sort
+     - select
+    join:
+     sort: cost.name
+     type: left
+     on: cost
+     from: equipment.cost
+     to: cost.cid
+     compare: '='
+ - speed:
+    name: equipment.speed
+    label: CPU Speed (Mhz)
+    as: CPU Speed (Mhz)
+    column:
+     - show
+     - sort
+     - select
+    where: equipment.speed
+    sort: equipment.speed
+ - ram:
+    name: equipment.ram
+    label: RAM (MB)
+    as: RAM (MB)
+    column:
+     - show
+     - sort
+     - select
+    where: equipment.ram
+    sort: equipment.ram
+

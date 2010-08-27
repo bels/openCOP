@@ -1,0 +1,4 @@
+Notes of what I had to change in openCOP
+
+- ccps is no longer the name of the inventory primary key
+- changed the name of the date column in the replacement table to replaced_on because date is a reserved word

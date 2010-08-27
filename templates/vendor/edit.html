@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <title>CCPS Vendor #<TMPL_VAR NAME="vid"> - Edit <TMPL_VAR NAME="vendor_name"></title>
+ </head>
+ <body>
+ 
+<TMPL_IF NAME="sql_success">
+     <h1>Update Successful!</h1>
+     <p id="sql-success-text">
+      Your update as been merged into the database affecting <TMPL_VAR NAME="sql_success"> rows.
+     </p>
+     <p id="sql-success-text">
+      You may view the updated record and make corrections below or go back and <a href="form.pl?<TMPL_IF NAME="cfg">cfg=<TMPL_VAR NAME="cfg">&</TMPL_IF>app=vendor&mode=new">input another record</a>.
+     </p>    
+</TMPL_IF>
+
+<TMPL_IF NAME="sql_error">
+     <h1>Your changes were not saved!</h1>
+     <p id="sql-error-text" style="width: 690px;">
+      An SQL Error occured (see below) and your changes were <b>not</b> inserted into the database. If you can tell what went wrong, correct it and resubmit the update. If not, save this page and contact your system administrator.
+     </p>
+</TMPL_IF>
+<TMPL_LOOP NAME="sql_error">
+     <ul style="color:red;">
+      <li><TMPL_VAR ESCAPE="html" NAME="error"></li>
+     </ul>
+</TMPL_LOOP>
+
+ <span id="page-title">Charles County Public Schools Vendor Number <TMPL_VAR NAME="vid"></span>
+ <form name="update" method="post" action="<TMPL_VAR NAME="self_url">">
+  <input type="hidden" name="app" value="vendor">
+  <input type="hidden" name="mode" value="update">
+
+  <input type="hidden" name="vid" value="<TMPL_VAR NAME="vid">" />
+
+ <div id="editablefields">
+  Vendor:  <input type="text" name="vendor_name" value="<TMPL_VAR NAME="vendor_name">" <TMPL_VAR NAME="error_vendor_name"> /><br />
+  Contact Information:<br />
+  <textarea rows="10" cols="30" name="vendor_contact_info" <TMPL_VAR NAME="error_vendor_contact_info">><TMPL_VAR NAME="vendor_contact_info"></textarea><br />
+ </div>
+ <input type="submit" value="Update">
+ </form>
+ </body>
+</html>

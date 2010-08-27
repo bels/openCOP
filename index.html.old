@@ -1,0 +1,27 @@
+<html>
+ <head>
+  <title>Charles County Public Schools Helpdesk</title>
+ </head>
+ <body>
+  <h1>Charles County Public Schools Helpdesk</h1>
+  <div id="sections">
+   <div id="section">
+    <a href="form.pl?mode=new&app=helpdesk">Input a new trouble ticket.</a>
+   </div>
+   <div id="section">
+    <a href="report.pl?app=helpdesk">Run a ticket report.</a>
+   </div>
+   <div id="section">
+    <a href="report.pl?app=inventory">Look up equipment.</a>
+   </div>
+  </div>
+  <div>
+   <form name="temporary" method="post" action="ticket.pl">
+    <input type="hidden" name="mode" value="edit">
+    <input type="hidden" name="app" value="helpdesk">
+    Enter ticket number: <input type="text" name="ticket" value="">
+    <input type="submit" value="View ticket">
+   </form>
+  </div>
+ </body>
+</html>

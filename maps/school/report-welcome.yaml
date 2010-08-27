@@ -1,0 +1,20 @@
+tables:
+ - school
+
+primarytable: school
+
+fields:
+ school:
+  - db_field: school.name
+    as: School
+
+where:
+ school:
+  table: schools
+  db_field: scid
+  comparison: is
+
+sort:
+ - school.name
+
+lists:

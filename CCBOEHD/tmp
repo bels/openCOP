@@ -1,0 +1,101 @@
+#-------------------------------#
+
+sub form_to_sql{
+	my $self = shift;
+	my $match = shift;
+	my $form = shift;
+
+	my $sql = 'select ';
+
+	# call _join_to_sql and _fields_to_sql to generate correct sql ...
+	my $joins = $self->form_join_to_sql($form->{'join'});
+	my $fields = $self->form_fields_to_sql($form->{'fields'});
+	my $tables = $self->form_tables_to_sql($form->{'tables'});
+	my $where = $self->form_where_to_sql($form->{'where'});
+	# In reality sort doesn't matter because everything assumes only one matching record.
+	my $sort = $self->form_order_to_sql($form->{'sort'});
+
+	# generate other necessary sql
+	
+	$sql .= $fields.' from '.$tables.' '.$joins.' where '.$where.' order by '.$sort.';';
+
+	return $sql;
+}
+
+sub firn_order_to_sql{
+	my $self = shift;
+	my $sobj = shift;
+	my @sort;
+	foreach my $field (@{$sobj}){
+		push(@sort,$field);
+	}
+	return join(', ',@sort);
+}
+
+
+sub form_where_to_sql{
+	my $self = shift;
+	my $wobj = shift;
+
+	my $sql = $wobj->{'table'}.'.'.$wobj->{'field'}.' '.$self->operator_txt_to_operator($qobj->{'comparison'});
+
+	return $sql;
+}
+
+sub form_tables_to_sql{
+	my $self = shift
+	my $tobj = shift;
+
+	my @tables;
+	foreach my $t (@{$tobj}){
+		push(@tables,$t);
+	}
+
+	return join(', ',@tables);
+}
+
+sub operator_txt_to_operator{
+	my $self = shift;
+	my $txt_op = shift;
+	my $ops = YAML::LoadFile('maps/generic.cmps'); # replace this with config ref later
+
+	my $sql_op = '='; # do actual lookup later
+	# will also need operator_sql_to_txt() and operator_txt_to_pattern() and operator_sql_to_pattern()
+
+	return $sql_op;
+}
+
+sub form_fields_to_sql{
+	my $self = shift;
+	my $fobj = shift;
+	# work on fields object to extract correct SQL ...
+	my (@fields,@tables);
+	foreach my $table (keys %{$fobj}){
+		foreach my $field (%{$fobj->{$table}}){
+			my $sql = $field{'db_field'}.' as '.$self->param('hddb')->quote($field{'as'});
+			push(@fields,$sql);
+		}
+		push(@tables,$table);
+	}
+
+# We don't want to get the tables from here. Some of these must be listed as joins.
+#	$sql = join(', ',@fields).' from '.join(', ',@tables);
+	return join(', ',@fields)
+}
+
+sub form_join_to_sql{
+	my $self = shift;
+	my $joinobj = shift;
+	my $sql = '';
+	# work on join object to extract correct SQL ... 
+	my @joins;
+	foreach my $join (@{$joinobj}){
+		my $operator = $self->sql_operator_name_to_operator($join{'on'}->{'comparison'});
+		my $sql = $join{'type'}.' join '.$join{'table'}.' on ('.$join{'on'}->{'source'}.' '.$operator.' '.$join{'on'}->{'dest'}.')';
+		push(@joins,$sql);
+	}
+	return join(' ',@joins);
+}
+
+
+1;

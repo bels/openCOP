@@ -1,0 +1,108 @@
+lists:
+ # select scid as txt, name as lbl, scid as sel from school where scid order by name;
+ school_loop:
+  # table the info is coming from
+  table: school
+  # what fields to select from that table. Note: txt, lbl and sel are currently MANDATORY names.
+  fields: scid as txt, name as lbl, scid as sel
+  # When populating loop, compare with this field's result for a match to determine what should be selected.
+  select_with: sel
+  # Default value to select if none is given by user in form submit (see value_from_html_field)
+  default_selected: -1
+  # Use where, comparison,whervalue to skip deleted, i.e. where school.deleted != 1
+  where: deleted
+  comparison: is not
+  wherevalue: 1
+  sort: name
+  # Get from the field 'school' in the form submit the value to match against in your where statement.
+  value_from_html_field: school
+  value_from_db_field: School
+  # How select_from_function_works:
+  # specify the name of a function which will be eval'd. It will return the value to select with instead 
+  # of default_selected or undef for default_selected to remain in effect. It will be passed the field value or name (depending)
+  select_from_function: school_from_ip
+ status_loop:
+  table: ticket_status
+  fields: tsid as txt, name as lbl, tsid as sel
+  select_with: sel
+  default_selected: 1
+  where:
+  comparison:
+  wherevalue:
+  selected: -1
+  sort: name
+  value_from_html_field: status
+  value_from_db_field: Status
+ priority_loop:
+  table: priority
+  fields: prid as txt, description as lbl, prid as sel
+  select_with: sel
+  where:
+  comparison: is
+  default_selected: 1
+  sort: severity
+  value_from_html_field: priority
+  value_from_db_field: Priority
+ section_loop:
+  table: section
+  fields: sid as txt, name as lbl, sid as sel
+  select_with: sel
+  where:
+  comparison: is
+  default_selected: 1
+  value_from_html_field: section
+  value_from_db_field: Section
+  sort: name
+
+ helpdesk:
+    # Database field from which to draw and update
+  - db_field: helpdesk.ticket
+    # Display name (if ever displayed). Do not assume this is unique!
+    as: Ticket
+  - db_field: helpdesk.school
+    as: School
+    html_field: school
+  - db_field: helpdesk.barcode
+    as: Barcode
+    html_field: barcode
+  - db_field: helpdesk.location
+    as: Location
+    html_field: location
+  - db_field: helpdesk.updated
+    as: Updated
+  - db_field: helpdesk.requested
+    as: Opened
+  - db_field: helpdesk.author
+    as: Author
+    html_field: author
+  - db_field: helpdesk.contact
+    as: Contact
+    html_field: contact
+  - db_field: helpdesk.contact_phone
+    as: Phone Number
+    html_field: phone
+  - db_field: helpdesk.email
+    as: Email
+    html_field: email
+  - db_field: helpdesk.problem
+    as: Problem Description
+    html_field: problem
+  - db_field: helpdesk.troubleshot
+    as: Troubleshooting Tried
+    html_field: troubleshoot
+  - db_field: helpdesk.notes
+    as: Notes
+  - db_field: helpdesk.tech
+    as: Processed By
+  - db_field: helpdesk.serial
+    as: Serial Number
+    html_field: serial
+  - db_field: helpdesk.status
+    as: Status
+  - db_field: helpdesk.priority
+    as: Priority
+    html_field: priority
+  - db_field: helpdesk.section
+    as: Section
+    html_field: section
+

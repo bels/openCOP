@@ -1,0 +1,96 @@
+--- Form.pm	2006-02-08 16:09:02.917773464 -0500
++++ Form.pm.break_it	2006-02-10 08:15:33.455075288 -0500
+@@ -187,31 +187,6 @@
+ #print $self->param('template')->output();
+ 	return $self->param('template')->output();
+ }
+-
+-sub form_file_sanity_check{
+-	my $self = shift;
+-
+-	my $file = $self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'pnd'}->{$self->param('app')}->{'form.pl'}->{$self->param('mode')}->{'form'};
+-	my $form = $self->param('form');
+-
+-	# May not have duplicate As parameters.
+-	my @as;
+-	foreach my $t (keys %{$form->{'fields'}} ){
+-		my $i = 0;
+-		foreach my $f ( @{$form->{'fields'}->{$t}} ){
+-			if($self->match_any(@as,$f->{'as'})){
+-				# Throw as collision error
+-				die "$file: fields: $t: $f->{'db_field'}: field $i: As collision on $f->{'as'}.\n";
+-			} else{
+-				push(@as,$f->{'as'});
+-			}
+-			$i++
+-		}
+-	}
+-	# just the one check for now.
+-
+-}
+-
+ sub view_mode{
+ 	my $self = shift;
+ 	$self->populate_params('form.pl');
+@@ -463,6 +438,9 @@
+ 	return @out;
+ }
+ 
++# This is a mixed Controller/View function. It parses CGI, which is Control, then fills template variables.
++# Better system: Parse CGI into stash and also load DB into stash. Then have a single function which populates
++# template from stash. Much cleaner!
+ sub form_fill{
+ 	my $self = shift;
+ 	my $cgi = shift;
+@@ -482,6 +460,9 @@
+ 	}
+ }
+ 
++
++# This is a definite View function. It takes data (from @err instead of stash, but still) and modifies the output.
++# Actually, in TT this would all be done in the template.
+ sub highlight_on_error{
+ 	my $self = shift;
+ 
+@@ -517,7 +498,7 @@
+ 	my $match = shift;
+ 	my $f = $self->param('form');
+ 
+-	return undef unless defined $match;
++	return undef unless defined $match; # must specify requested html field
+ 
+ #die Data::Dumper::Dumper $f;
+ 	foreach my $t (keys %{$f->{'fields'}}){
+@@ -647,6 +628,32 @@
+ }
+ 
+ 
++sub form_file_sanity_check{
++	my $self = shift;
++
++	my $file = $self->param('config')->{'config_dir'}.'/'.$self->param('config')->{'pnd'}->{$self->param('app')}->{'form.pl'}->{$self->param('mode')}->{'form'};
++	my $form = $self->param('form');
++
++	# May not have duplicate As parameters.
++	my @as;
++	foreach my $t (keys %{$form->{'fields'}} ){
++		my $i = 0;
++		foreach my $f ( @{$form->{'fields'}->{$t}} ){
++			if($self->match_any(@as,$f->{'as'})){
++				# Throw as collision error
++				die "$file: fields: $t: $f->{'db_field'}: field $i: As collision on $f->{'as'}.\n";
++			} else{
++				push(@as,$f->{'as'});
++			}
++			$i++
++		}
++	}
++	# just the one check for now.
++
++}
++
++
++
+ sub load_requirements{
+ 	my $self = shift;
+ 	my $file = shift;
