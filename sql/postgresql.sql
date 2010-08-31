@@ -51,3 +51,22 @@ CREATE TABLE replacement (original BIGINT references inventory(invid), replaceme
 DROP TABLE IF EXISTS section;
 CREATE TABLE section (sid SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));
 
+-- Permissions and stuff
+CREATE USER 'helpdesk' WITH PASSWORD 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON cost TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON vendor TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON hardware_type TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON os TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON office TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON equipment TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON grants TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ticket_status TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON school_level TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON school TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON purchase TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON status TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON inventory TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON replacement TO 'helpdesk';
+GRANT SELECT, INSERT, UPDATE, DELETE ON section TO 'helpdesk';
