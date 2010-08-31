@@ -73,7 +73,7 @@ sub auth_check{
 sub db_connect{
 	my $self = shift;
 	$self->param('hddb',
-			DBI->connect('dbi:mysql:'.$self->param('config')->{'db_name'}.';host=localhost',
+			DBI->connect('dbi:'. $self->param('config')->{'db_type'} .':'.$self->param('config')->{'db_name'}.';host=localhost',
 				$self->param('config')->{'db_user'},
 				$self->param('config')->{'db_password'},
 				{'RaiseError'=>1,'AutoCommit'=>1},
