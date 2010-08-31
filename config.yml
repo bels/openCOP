@@ -1,6 +1,6 @@
 template_dir: '/var/www/html/helpdesk-test/templates'
 config_dir: '/var/www/html/helpdesk-test/maps'
-db_type: pg
+db_type: Pg
 db_user: helpdesk
 db_password: helpdesk
 db_name: ccboehd

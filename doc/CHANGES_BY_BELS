@@ -2,3 +2,6 @@ Notes of what I had to change in openCOP
 
 - ccps is no longer the name of the inventory primary key
 - changed the name of the date column in the replacement table to replaced_on because date is a reserved word
+- made the program a little bit more flexible when it comes to databases by adding that as a configuration parameter in the config file
+- changed the grantid reference in the inventory table to have matching datatypes.  Before the inventory was varchar and the grantid in the grant table was BIGINT.
+- changed the grantid reference in the helpdesk table to have matching datatypes.  Before the inventory was varchar and the grantid in the grant table was BIGINT.
