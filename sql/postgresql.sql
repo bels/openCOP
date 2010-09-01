@@ -51,6 +51,12 @@ CREATE TABLE replacement (original BIGINT references inventory(invid), replaceme
 DROP TABLE IF EXISTS section;
 CREATE TABLE section (sid SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));
 
+DROP TABLE IF EXISTS auth;
+CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, uid VARCHAR(20));
+
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (id SERIAL, alias VARCHAR, email TEXT, password TEXT, active BOOLEAN);
+
 -- Permissions and stuff
 CREATE USER helpdesk WITH PASSWORD 'helpdesk';
 GRANT SELECT, INSERT, UPDATE, DELETE ON cost TO helpdesk;
@@ -70,3 +76,5 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON inventory TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON replacement TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON section TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;

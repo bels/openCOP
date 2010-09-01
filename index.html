@@ -6,7 +6,8 @@
 	<body>
 		<div id="logo_div"><img src="images/logo.png" id="logo"><!-- i'd like to make this a variable so if they don't have a logo it won't show up --><span id="company_name">%VARIABLE%</span></div>
 		<div id="login_box">
-			<form id="login_form">
+			<span id="login_title">Login</span>
+			<form id="login_form" action="authenticate.pl" method="POST">
 				<label for="username">Username:</label><input type="text" id="username" name="username"><br>
 				<label for="password">Password:</label><input type="password" id="password" name="password"><br>
 				<input type="submit" id="submit_button" value="Login">
