@@ -1,4 +1,5 @@
 ADD:
+	Rename CCBOEHD to LIBS or something like that since it actually contains perl modules
 	Field for State Room Classification
 	Field for E-911 Primary Phone (how? for every barcode? ick.)
 	maybe add a new table to hold locations... ick

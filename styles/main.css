@@ -1,0 +1,98 @@
+body{
+	margin: 0;
+	padding: 0;
+}
+
+#logo_div{
+	width: 100%;
+	height: 60px;
+	background: url('../images/header_bg.jpg');
+}
+
+#company_name{
+	float: right;
+}
+
+#menu{
+	width: 100%;
+	height: 25px;
+	background-color: #0000ca;
+	padding-top: 5px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+
+#menu a{
+	text-decoration: none;
+	font-weight: bold;
+	color: white;
+	margin-left: 35px;
+}
+
+#submenu{
+	width: 100%;
+	height: 25px;
+	background-color: #aeaedc;	
+}
+
+#submenu a{
+	text-decoration: none;
+	font-size: .9em;
+	font-weight: bold;
+	color: white;
+	width: 200px;
+	height: 100%;
+	padding-top: 2px;
+	display: inline-block;
+	text-align: center;
+}
+
+.hidden_menu{
+	display: none;
+}
+
+.highlighted_link{
+	background-color: black;
+}
+
+#server_status{
+	width: 250px;
+	height: 250px;
+	margin-top: 15px;
+	margin-left: 50px;
+	background-color: #bdbdd2;
+	border: 3px solid #9696a7;
+	display: inline-block;
+	float: left;
+}
+
+#current_critical{
+	width: 70%;
+	height:250px;
+	margin-top: 15px;
+	margin-left: 35px;
+	background-color: #bdbdd2;
+	border: 3px solid #9696a7;
+	float: left;
+}
+
+#agents_working{
+	width: 300px;
+	height: 250px;
+	margin-top: 15px;
+	margin-left: 50px;
+	background-color: #bdbdd2;
+	border: 3px solid #9696a7;
+	display: inline-block;
+	float: left;
+}
+
+#closure_info{
+	width: 65%;
+	height:250px;
+	margin-top: 15px;
+	margin-left: 35px;
+	background-color: #bdbdd2;
+	border: 3px solid #9696a7;
+	float: left;
+}

@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="styles/main.css" type="text/css" media="screen">
+		<script type="text/javascript" src="javascripts/jquery.js"></script>
+		<script type="text/javascript" src="javascripts/main.js"></script>
+		<title>%VARIABLE%</title>
+	</head>
+	<body>
+		<div id="logo_div"><img src="images/logo.png" id="logo"><!-- i'd like to make this a variable so if they don't have a logo it won't show up --><span id="company_name">%VARIABLE%</span></div>
+		<div id="menu"><a href="ticket.pl" id="ticket_link">Tickets</a><a href="reports.pl" id="report_link">Reports</a><a href="inventory.pl" id="inventory_link">Inventory</a><a href="admin.pl" id="admin_link">Admin</a></div>
+		<div id="submenu">
+			<span id="ticket_sub"><a href="#" class="sub_link">New Ticket</a><a href="#" class="sub_link">Ticket Lookup</a><a href="#" class="sub_link">New Work Order</a><a href="#" class="sub_link">Work Order Lookup</a><a href="#" class="sub_link">Ticket Queue</a><a href="#" class="sub_link">Work Order Queue</a></span>
+			<span id="report_sub" class="hidden_menu"><a href="#" class="sub_link">Ticket Closure</a><a href="#" class="sub_link">Ticket Trending</a><a href="#" class="sub_link">Inventory Report</a><a href="#" class="sub_link">P.O.</a><a href="#" class="sub_link">Grant</a><a href="#" class="sub_link">Vendor</a><a href="#" class="sub_link">Customer Satisfaction</a></span>
+			<span id="inventory_sub"  class="hidden_menu"><a href="#" class="sub_link">Add</a><a href="#" class="sub_link">Current</a><a href="#" class="sub_link">Remove</a></span>
+			<span id="admin_sub"  class="hidden_menu"><a href="#" class="sub_link">User Administration</a><a href="#" class="sub_link">Global Settings</a></span>
+		</div>
+		<div id="server_status">In this box will be current information about the server.  CPU usage, Memory Usage, Is the database running, etc....  It will be loaded by ajax from a little perl script.</div>
+		<div id="current_critical">This box will have a list of the current open critical items.  It will be loaded through ajax on a timer.</div>
+		<div id="agents_working">This box will show other agents/technicians logged in and working</div>
+		<div id="closure_info">This box will have closure information and possibly customer survey results.  I think it should have a tabbing system that allows the user to switch between Ticket Closure, Work Order Closure, Last 10 Customer Surveys</div>
+	</body>
+</html>
