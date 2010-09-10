@@ -9,6 +9,8 @@ echo "3. That psql is available in that user's PATH"
 echo "4. You are running this script from the same directory as postgresql.sql"
 
 echo "With that said, lets begin"
+echo "Dropping database in case it is there.  Remember this is a fresh start."
+dropdb $DATABASE
 echo "Creating database"
 createdb $DATABASE
 if [ $? != 0 ]

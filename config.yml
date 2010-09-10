@@ -1,9 +1,14 @@
 template_dir: '/usr/local/www/helpdesk/templates'
 config_dir: '/usr/local/www/helpdesk/maps'
+company_name: 'Test company'
 db_type: Pg
 db_user: helpdesk
 db_password: helpdesk
 db_name: ccboehd
+users_table: users
+auth_table: auth
+index_page: index.pl
+logo_image: images/logo.jpg
 date_format: '%W, %M %m, %Y'
 default_app: helpdesk
 comparisons: generic.cmps

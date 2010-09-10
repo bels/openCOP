@@ -1,0 +1,22 @@
+		<div id="menu"><a href="ticket.pl" id="ticket_link">Tickets</a><a href="reports.pl" id="report_link">Reports</a><a href="inventory.pl" id="inventory_link">Inventory</a><a href="admin.pl" id="admin_link">Admin</a></div>
+		<div id="submenu">
+			<span id="ticket_sub"><a href="#" class="sub_link">New Ticket</a><a href="#" class="sub_link">Ticket Lookup</a><a href="#" class="sub_link">New Work Order</a><a href="#" class="sub_link">Work Order Lookup</a><a href="#" class="sub_link">Ticket Queue</a><a href="#" class="sub_link">Work Order Queue</a></span>
+			<span id="report_sub" class="hidden_menu"><a href="#" class="sub_link">Ticket Closure</a><a href="#" class="sub_link">Ticket Trending</a><a href="#" class="sub_link">Inventory Report</a><a href="#" class="sub_link">P.O.</a><a href="#" class="sub_link">Grant</a><a href="#" class="sub_link">Vendor</a><a href="#" class="sub_link">Customer Satisfaction</a></span>
+			<span id="inventory_sub"  class="hidden_menu"><a href="#" class="sub_link">Add</a><a href="#" class="sub_link">Current</a><a href="#" class="sub_link">Remove</a></span>
+			<span id="admin_sub"  class="hidden_menu"><a href="user_admin.pl" class="sub_link">User Administration</a><a href="#" class="sub_link">Global Settings</a><a href="logout.pl" class="sub_link">Logout</a></span>
+		</div>
+		<div id="add_user_div">
+			[% IF duplicate == 1 %]
+				<span class="error">This username is already taken.  Please choose another.</span>
+			[% END %]
+			[% IF success == 1 %]
+				<span class="success">The user was created successfully.</span>
+			[% END %]
+			<h2>Add User</h2>
+			<form id="login_form" action="create_user.pl" method="POST">
+				<label for="username">Username:</label><input type="text" id="username" name="username"><br>
+				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br>
+				<label for="password2">Retype Password:</label><input type="password" id="password2" name="password2"><br>
+				<input type="submit" id="submit_button" value="Add User">
+			</form>
+		</div>

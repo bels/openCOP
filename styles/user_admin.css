@@ -1,5 +1,5 @@
-#login_box{
-	height: 180px;
+#add_user_div{
+	height: 210px;
 	width: 375px;
 	margin-right: auto;
 	margin-left: auto;
@@ -10,9 +10,15 @@
 	border: 3px solid #9696a7;
 }
 
+h2{
+	width: 125px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
 label{
 	display: inline-block;
-	width: 100px;
+	width: 170px;
 	margin-bottom: 10px;
 }
 
@@ -21,13 +27,4 @@ label{
 	width: 75px;
 	margin-left: auto;
 	margin-right: auto;
-}
-
-#login_title{
-	font-size: 1.1em;
-	font-weight: bold;
-	display: inline-block;
-	width: 75px;
-	margin-left: 150px;
-	margin-bottom: 10px;
 }

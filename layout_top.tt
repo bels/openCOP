@@ -1,0 +1,1 @@
+	<div id="logo_div"><img src="[% logo %]" id="logo"><!-- i'd like to make this a variable so if they don't have a logo it won't show up --><span id="company_name">[% company_name %]</span></div>

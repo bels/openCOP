@@ -56,25 +56,43 @@ CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curre
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (id SERIAL, alias VARCHAR, email TEXT, password TEXT, active BOOLEAN);
+INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);
 
 -- Permissions and stuff
 CREATE USER helpdesk WITH PASSWORD 'helpdesk';
 GRANT SELECT, INSERT, UPDATE, DELETE ON cost TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON cost_cid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON vendor TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON vendor_vid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON hardware_type TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON hardware_type_hwid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON os TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON os_osid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON office TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON office_offid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON equipment TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON equipment_eid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON grants TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON grants_gid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ticket_status TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ticket_status_stid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON school_level TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON school_level_slid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON school TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON school_scid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON purchase TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON purchase_pid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON status_stid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk_ticket_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON inventory TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON inventory_invid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON priority_prid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON replacement TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON section TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON section_sid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON users_id_seq TO helpdesk;

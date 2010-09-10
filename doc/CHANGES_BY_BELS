@@ -7,3 +7,4 @@ Notes of what I had to change in openCOP
 - changed the grantid reference in the helpdesk table to have matching datatypes.  Before the inventory was varchar and the grantid in the grant table was BIGINT.
 - changed the connection statement in base to work with postgresql.  I need to check it against mysql to make sure it didn't break there.
 - added an auth and users table for creating users/session management
+- added a dashboard

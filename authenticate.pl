@@ -1,9 +1,10 @@
 #!/usr/local/bin/perl
 
-use lib './CCBOEHD';
+use lib './libs';
 use strict;
 use CGI;
 use URI::Escape;
+use ReadConfig;
 use SessionFunctions;
 use Digest::MD5 qw(md5_hex);
 
@@ -13,19 +14,23 @@ my $password = uri_unescape($q->param('password')); #getting the password from t
 
 chomp($alias);
 chomp($password);
-#CHANGE THIS NEXT LINE.  THE DATABASE SHOULD BE READ FROM CONFIG FILE
-my $session = SessionFunctions->new(database=> 'ccboehd',user =>'helpdesk',password => 'helpdesk') or die "Couldn't connect to the database";
 
-my $success = $session->authenticate_user(alias => $alias, password => $password);
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+
+$config->read_config;
+
+my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'});
+
+my $success = $session->authenticate_user(users_table => $config->{'users_table'}, alias => $alias, password => $password);
 
 if($success)
 {
 	my $session_key = md5_hex(localtime);
 
-	my $session_id = $session->create_session_id(session_key => $session_key, uid => $alias) or die "Creating the session in the database failed";
+	my $session_id = $session->create_session_id(auth_table => $config->{'auth_table'}, session_key => $session_key, uid => $alias) or die "Creating the session in the database failed";
 	my $cookie = $q->cookie(-name=>'session',-value=>{'sid' => $session_id,'session_key' => $session_key},-expires=>'+1h') or die "Creating the cookie failed";
 
-	print $q->redirect(-cookie=>$cookie,-URL=>"main.html");
+	print $q->redirect(-cookie=>$cookie,-URL=>"main.pl");
 }
 else
 {

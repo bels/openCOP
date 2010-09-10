@@ -1,4 +1,8 @@
 ADD:
+	Improve the UserFunctions perl module
+	Improve the Session perl module
+	Make the site themeable
+	Make sure everything is using the config files for information like database type, username, company name, etc
 	Rename CCBOEHD to LIBS or something like that since it actually contains perl modules
 	Field for State Room Classification
 	Field for E-911 Primary Phone (how? for every barcode? ick.)
