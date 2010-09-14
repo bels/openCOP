@@ -12,7 +12,11 @@ echo "4. You are running this script from the same directory as postgresql.sql"
 echo "With that said, lets begin"
 echo "Creating database"
 
-echo psql dropdb createdb createlang\  | while read -d' ' program ; do  which $program >/dev/null || ( echo missing $program && exit ) ; done
+function missing {
+	echo missing $@
+	exit
+}
+while read -d' ' program ; do which $program >/dev/null || missing $program ; done <<< "$(echo psql dropdb createdb createlang)"
 
 dropdb $DATABASE 2>/dev/null
 createdb $DATABASE
@@ -33,5 +37,7 @@ if [ -f $sql ] ; then
 		echo "Couldn't import the database. Check my assumptions that I listed and then re-run this script."
 		exit 1
 	fi
+	echo "All Done. Enjoy!\n"
+else
+	echo $sql not found
 fi
-echo "All Done. Enjoy!\n"
