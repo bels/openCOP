@@ -1,6 +1,7 @@
-#!/usr/local/bin/bash
+#!/usr/bin/env bash
 
 DATABASE="ccboehd"
+sql=postgresql.sql
 
 echo "This script makes some assumptions.  Let me get them out of the way right now"
 echo "1. You are running this as a user that has superuser privileges in the database"
@@ -9,24 +10,28 @@ echo "3. That psql is available in that user's PATH"
 echo "4. You are running this script from the same directory as postgresql.sql"
 
 echo "With that said, lets begin"
-echo "Dropping database in case it is there.  Remember this is a fresh start."
-dropdb $DATABASE
 echo "Creating database"
+
+echo psql dropdb createdb createlang\  | while read -d' ' program ; do  which $program >/dev/null || ( echo missing $program && exit ) ; done
+
+dropdb $DATABASE 2>/dev/null
 createdb $DATABASE
 createlang plpgsql $DATABASE
-if [ $? != 0 ]
-then
-{
+
+# note: with test (aka [) != is for string comparison only (man test) and -ne 
+# is for integer comparison. You wont exactly get what you expect if you use 
+# != with numbers. Yes, this is exactly backwards from perl != and ne
+if [ $? -ne 0 ] ; then
 	echo "Couldn't create the database. Check my assumptions that I listed and then re-run this script."
 	exit 1
-} fi
+fi
 
-echo "Importing database schema\n"
-psql $DATABASE < postgresql.sql
-if [ $? != 0 ]
-then
-{
-	echo "Couldn't import the database. Check my assumptions that I listed and then re-run this script."
-	exit 1
-} fi
+if [ -f $sql ] ; then
+	echo "Importing database schema\n"
+	psql $DATABASE < $sql
+	if [ $? -ne 0 ] ; then
+		echo "Couldn't import the database. Check my assumptions that I listed and then re-run this script."
+		exit 1
+	fi
+fi
 echo "All Done. Enjoy!\n"
