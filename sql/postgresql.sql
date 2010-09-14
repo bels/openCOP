@@ -56,9 +56,18 @@ CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curre
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (id SERIAL, alias VARCHAR, email TEXT, password TEXT, active BOOLEAN);
+-- Adding admin user
 INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);
+-- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
+INSERT INTO priority(severity,description) values(0,'Low');
+INSERT INTO priority(severity,description) values(1,'Normal');
+INSERT INTO priority(severity,description) values(2,'High');
+INSERT INTO priority(severity,description) values(3,'Business Critical');
+INSERT INTO section(name,email) values('Helpdesk','helpdesk@testcompany.com');
+INSERT INTO section(name,email) values('CM','cm@testcompany.com');
+INSERT INTO section(name,email) values('App Dev','appdev@testcompany.com');
 
-CREATE OR REPLACE FUNCTION insert_ticket(site text, status text, barcode VARCHAR(255), location TEXT, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), troubleshot TEXT, section VARCHAR(255), problem TEXT, priority TEXT, serial VARCHAR(255), contact_email VARCHAR(255), free VARCHAR(255)) RETURNS INTEGER AS'
+CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_text text, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255)) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
 	site_val INTEGER;
@@ -67,54 +76,59 @@ DECLARE
 	last_id INTEGER;
 BEGIN
 	--Step 1. Translate priority, site, status, section into values from the other tables
-	priority_val = SELECT prid FROM priority WHERE description = priority;
-	site_val = SELECT scid FROM site WHERE name = site;
-	status_val = SELECT stid FROM ticket_status WHERE name = status;
-	section_val = SELECT sid FROM section WHERE name = section;
+	--SELECT priority_val = prid FROM priority WHERE description = priority_text;
+	--SELECT site_val = scid FROM site WHERE name = site_text;
+	--SELECT status_val = stid FROM ticket_status WHERE name = status_text;
+	--SELECT section_val = sid FROM section WHERE name = section_text;
+	SELECT INTO priority_val prid FROM priority WHERE description = priority_text;
+	SELECT INTO site_val scid FROM site WHERE name = site_text;
+	SELECT INTO status_val tsid FROM ticket_status WHERE name = status_text;
+	SELECT INTO section_val sid FROM section WHERE name = section_text;
 	
 	-- Step 2. Insert the ticket with the translated values
-	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, troubleshot, section, problem, priority, serial, contact_email) values (status_val, barcode, site_val, location, author, contact, contact_phone, troubleshot, section_val, problem, priority_val, serial, contact_email);
-	SELECT currval(''helpdesk_ticket_seq'') INTO last_id;
-	
+	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, troubleshot, section, problem, priority, serial, contact_email) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, troubleshot_val, section_val, problem_val, priority_val, serial_val, contact_email_val);
+	SELECT INTO last_id currval('helpdesk_ticket_seq');
+
 	RETURN last_id;
 END;
-' LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Permissions and stuff
+DROP USER helpdesk;
 CREATE USER helpdesk WITH PASSWORD 'helpdesk';
 GRANT SELECT, INSERT, UPDATE, DELETE ON cost TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON cost_cid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON cost_cid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON vendor TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON vendor_vid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON vendor_vid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON hardware_type TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON hardware_type_hwid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON hardware_type_hwid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON os TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON os_osid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON os_osid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON office TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON office_offid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON office_offid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON equipment TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON equipment_eid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON equipment_eid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON grants TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON grants_gid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON grants_gid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ticket_status TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ticket_status_stid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON ticket_status_tsid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON school_level TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON school_level_slid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON school_level_slid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON site_scid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON site_scid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON purchase TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON purchase_pid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON purchase_pid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON status_stid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON status_stid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk_ticket_seq TO helpdesk;
+GRANT SELECT, UPDATE ON helpdesk_ticket_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON inventory TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON inventory_invid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON inventory_invid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON priority_prid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON priority_prid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON replacement TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON section TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON section_sid_seq TO helpdesk;
+GRANT SELECT, UPDATE ON section_sid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON users_id_seq TO helpdesk;
+GRANT SELECT, UPDATE ON users_id_seq TO helpdesk;

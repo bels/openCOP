@@ -84,19 +84,13 @@ sub submit{
 	my $data = $args{'data'};
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
-	my $query = "insert into helpdesk (";
-	my $columns = "";
-	my $values = "";
-	foreach my $key (keys %{$data})
-	{
-		$columns = $columns . $key . ",";
-		$values = $values . "'" . $data->{$key} . "',";
-	}
-	chop($columns);
-	chop($values);
-	$query = $query . $columns . ") values(" . $values . ")";
+	my $free = 0; #free isn't used yet but the stored procedure is expecting it so i'm just going to pass it a 0 for now.
+	my $status = "New";
+	my $query = "select insert_ticket('$data->{'site'}','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free')";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute; #this will return the id of the insert record if we ever find a use for it
+	#warn $DBI::errstr;
+	my $id = $sth->fetchrow_hashref;
 }
 1;
 __END__
