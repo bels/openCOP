@@ -16,7 +16,7 @@ my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
 
-my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'});
+my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 my $q = CGI->new();
 my %cookie = $q->cookie('session');
 
@@ -34,7 +34,7 @@ if($authenticated == 1)
 {
 	my $file = "user_admin.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success,logo => $config->{'logo_image'}};
 	
 	print "Content-type: text/html\n\n";
 

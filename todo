@@ -1,4 +1,11 @@
 ADD:
+	Add the ability to enter what time you are free when entering a ticket
+	Add a SQL filter that takes things like ' and turns them into safe characters
+	Even though the website is references priority from the config file the database and inserting perl modules uses the database itself.  This needs to be moved over.
+	I started changing the names of things to be less school based and become more generic.  Needs lots of testing now.
+	Need to make sure all the tooltips on the Ticket input are still accurate
+	I moved some stuff out of the database into the configuration file and that is going to require some cleanup at some point
+	Change the barcode or serial part to something more generic like workstation id (or possibly something that is controlled by the config)
 	Improve the UserFunctions perl module
 	Improve the Session perl module
 	Make the site themeable

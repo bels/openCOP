@@ -1,16 +1,10 @@
 #!/usr/local/bin/perl
 
 use strict;
-use Template;
 use lib './libs';
+use Ticket;
 use CGI;
-use ReadConfig;
 use SessionFunctions;
-
-my @styles = ("styles/layout.css","styles/main.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/main.js");
-my $meta_keywords = "";
-my $meta_description = "";
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -29,15 +23,9 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $file = "main.tt";
-	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}};
-	
-	print "Content-type: text/html\n\n";
-
-	my $template = Template->new();
-	$template->process($file,$vars) || die $template->error();
-}
+	my $data = $q->Vars;
+	$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
+}	
 else
 {
 	print $q->redirect(-URL => $config->{'index_page'});

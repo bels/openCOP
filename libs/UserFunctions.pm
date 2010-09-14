@@ -38,7 +38,7 @@ sub new{
 	
 	my $self = bless({},$package);
 
-	$self->{'dbh'} = DBI->connect("dbi:Pg:dbname=$args{'db_name'}",$args{'user'},$args{'password'});
+	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'});
 	
 	return $self;
 }

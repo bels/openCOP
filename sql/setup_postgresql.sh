@@ -13,6 +13,7 @@ echo "Dropping database in case it is there.  Remember this is a fresh start."
 dropdb $DATABASE
 echo "Creating database"
 createdb $DATABASE
+createlang plpgsql $DATABASE
 if [ $? != 0 ]
 then
 {
