@@ -66,6 +66,14 @@ INSERT INTO priority(severity,description) values(3,'Business Critical');
 INSERT INTO section(name,email) values('Helpdesk','helpdesk@testcompany.com');
 INSERT INTO section(name,email) values('CM','cm@testcompany.com');
 INSERT INTO section(name,email) values('App Dev','appdev@testcompany.com');
+-- some starting ticket status
+INSERT INTO ticket_status (name) values ('New');
+INSERT INTO ticket_status (name) values ('In Progress');
+INSERT INTO ticket_status (name) values ('Waiting Customer');
+INSERT INTO ticket_status (name) values ('Waiting Vendor');
+INSERT INTO ticket_status (name) values ('Waiting Other');
+INSERT INTO ticket_status (name) values ('Closed');
+INSERT INTO ticket_status (name) values ('Completed');
 
 CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_text text, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255)) RETURNS INTEGER AS $$
 DECLARE

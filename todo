@@ -1,4 +1,5 @@
 ADD:
+	The UI references the config file for sites but the perl modules reference the database.  this needs to be fixed.
 	Add the ability to enter what time you are free when entering a ticket
 	Add a SQL filter that takes things like ' and turns them into safe characters
 	Even though the website is references priority from the config file the database and inserting perl modules uses the database itself.  This needs to be moved over.

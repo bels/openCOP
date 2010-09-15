@@ -7,8 +7,20 @@ $(document).ready(function(){
 			type: 'POST',
 			url: url,
 			data: the_data,
-			success: function(){alert("Added the ticket")},
+			success: function(){
+				alert("Added the ticket");
+				window.location = "ticket.pl?mode=new";
+				},
 			error: function(){alert("Big fail")}
 		});
 	});
+	
+	if($("#ticket_lookup").length)
+	{
+		/*This will have to be improved when we start actually caring about queues */
+		var url = "lookup_ticket.pl";
+		$.get(url,function(data){
+			$("#ticket_lookup").append(data);
+		});
+	}
 });
