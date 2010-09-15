@@ -3,9 +3,6 @@
 use CGI::Carp qw(fatalsToBrowser);;
 use strict;
 
-#use lib "($ENV{'HOME'}/src/CCBOE/app/HTML--Template";
-
-
 use Template;
 use lib './libs';
 use CGI;
