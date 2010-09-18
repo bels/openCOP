@@ -10,6 +10,7 @@ users_table: users
 auth_table: auth
 mail_server: localhost
 ticket_mail_account:tickets
+ticket_mail_password:password
 index_page: index.pl
 logo_image: images/logo.jpg
 sites:

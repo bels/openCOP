@@ -8,3 +8,5 @@
 		<div id="ticket_lookup">
 			<div id="header_row"><div id="ticket_number" class="header_row_item">Ticket Number</div><div id="ticket_status" class="header_row_item">Ticket Status</div><div id="ticket_contact" class="header_row_item">Ticket Contact</div></div>
 		</div>
+		<div id="ticket_details">
+		</div>
