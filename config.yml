@@ -1,12 +1,15 @@
 template_dir: '/usr/local/www/helpdesk/templates'
 config_dir: '/usr/local/www/helpdesk/maps'
 company_name: 'Test company'
+company_domain: test.com
 db_type: Pg
 db_user: helpdesk
 db_password: helpdesk
 db_name: ccboehd
 users_table: users
 auth_table: auth
+mail_server: localhost
+ticket_mail_account:tickets
 index_page: index.pl
 logo_image: images/logo.jpg
 sites:
