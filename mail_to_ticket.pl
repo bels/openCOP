@@ -15,17 +15,27 @@ my $imap = Mail::IMAPClient->new(Server => $config->{'mail_server'},User => $con
 
 #$imap->starttls() or die "Starttls failed in mail_to_ticket.pl"; #not needed right now but this does need to be an option in case the mail server only uses this
 
-$imap->select("INBOX") or die "Select 'Inbox' error: ", $imap->LastError, "\n";
+if($imap->exists("INBOX"))
+{
+        $imap->select("INBOX") or die "Select 'Inbox' error: ", $imap->LastError, "\n";
+}
+else
+{
+        die "Inbox doesn't exist\n";
+}
 
-my @msgs = $imap->search('ALL') or die "Couldn't get all messages\n";
+
+my $msgcount = $imap->message_count("INBOX");
+my @msgs = $imap->messages or die "Couldn't get all messages\n";
 
 my $email_file = "tickets.mail";
 
 open TICKETS, ">>$email_file" or die "Was not able to append to $email_file";
 
 foreach my $msg (@msgs) {
-	$imap->message_to_file(<TICKETS>, $msg) or die "Error writing email to file: $!";
-	$imap->delete_message($msg) or die "Couldn't delete message from server"; #Sets the Deleted flag
+        my $message = $imap->message_string($msg) or die "Could not message_string: $@\n";
+        print TICKETS $message;
+        $imap->delete_message(@msgs) or die "Couldn't delete message from server"; #Sets the Deleted flag
 }
 
 close(TICKETS);
