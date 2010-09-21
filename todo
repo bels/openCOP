@@ -1,4 +1,6 @@
 ADD:
+	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, etc..)
+	Add ability to click on a ticket in the ticket lookup and retrieve it's details
 	The UI references the config file for sites but the perl modules reference the database.  this needs to be fixed.
 	Add the ability to enter what time you are free when entering a ticket
 	Add a SQL filter that takes things like ' and turns them into safe characters
