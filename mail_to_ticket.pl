@@ -35,7 +35,7 @@ open TICKETS, ">>$email_file" or die "Was not able to append to $email_file";
 foreach my $msg (@msgs) {
         my $message = $imap->message_string($msg) or die "Could not message_string: $@\n";
         print TICKETS $message;
-	print TICKETS "\n$$$\n";
+	print TICKETS "\n\$\$\$\n";
         $imap->delete_message(@msgs) or die "Couldn't delete message from server"; #Sets the Deleted flag
 }
 
