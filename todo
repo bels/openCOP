@@ -1,4 +1,5 @@
 ADD:
+	Add a title(synopsis) field in the database that could act as a title used in areas that do not have the space to display the whole problem.
 	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, etc..)
 	Add ability to click on a ticket in the ticket lookup and retrieve it's details
 	The UI references the config file for sites but the perl modules reference the database.  this needs to be fixed.
