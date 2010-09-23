@@ -35,7 +35,9 @@ if($authenticated == 1)
 	print  qq(<label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span><br/>
 		<label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span><label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span><label for="contact">Contact:</label><span id="contact" name="contact">$results->{'contact'}</span><label for="contact_phone">Contact Phone:</label><span id="contact_phone" name="contact_phone">$results->{'contact_phone'}</span><br/>
 		<label for="status">Ticket Status:<span id="status" name="status">$ticket_statuses{$results->{'status'}}</span><label for="site">Site:</label><span id="site" name="site">$results->{'site'}</span><label for="location">Location:</label><span id="location" name="location">$results->{'location'}</span><label for="requested_on"><span id="requeseted_on" name="requested_on">$results->{'requested'}</span><label for="last_updated">Last Updated:</label><span id="last_updated" name="last_updated">$results->{'updated'}</span><br/>
-		
+		<label for="problem">Problem:</label><span id="problem" name="problem">$results->{'problem'}</span><br/>
+		<label for="troubleshoot">Troubleshooting Tried:</label><span id="troubleshooting" name="troubleshooting">$results->{'troubleshot'}</span><br/>
+		<label for="notes">Notes:</label><span id="notes" name="notes">$results->{'notes'}</span>
 	);
 }	
 else
