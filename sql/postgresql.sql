@@ -88,7 +88,7 @@ BEGIN
 	--SELECT site_val = scid FROM site WHERE name = site_text;
 	--SELECT status_val = stid FROM ticket_status WHERE name = status_text;
 	--SELECT section_val = sid FROM section WHERE name = section_text;
-	SELECT INTO priority_val prid FROM priority WHERE description = priority_text;
+	SELECT INTO priority_val severity FROM priority WHERE description = priority_text;
 	SELECT INTO site_val scid FROM site WHERE name = site_text;
 	SELECT INTO status_val tsid FROM ticket_status WHERE name = status_text;
 	SELECT INTO section_val sid FROM section WHERE name = section_text;

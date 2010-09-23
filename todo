@@ -1,11 +1,11 @@
 ADD:
+	Add a mechanism for adding sites into the database.  This isn't something I can statically add to the sql creation file
 	Add a title(synopsis) field in the database that could act as a title used in areas that do not have the space to display the whole problem.
 	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, etc..)
-	Add ability to click on a ticket in the ticket lookup and retrieve it's details
 	The UI references the config file for sites but the perl modules reference the database.  this needs to be fixed.
 	Add the ability to enter what time you are free when entering a ticket
 	Add a SQL filter that takes things like ' and turns them into safe characters
-	Even though the website is references priority from the config file the database and inserting perl modules uses the database itself.  This needs to be moved over.
+	Even though the website is referencing priority from the config file the database and inserting perl modules uses the database itself.  This needs to be moved over.
 	I started changing the names of things to be less school based and become more generic.  Needs lots of testing now.
 	Need to make sure all the tooltips on the Ticket input are still accurate
 	I moved some stuff out of the database into the configuration file and that is going to require some cleanup at some point
@@ -23,6 +23,7 @@ ADD:
 	room classification property in which it resides.)	
 	Clean up code to make it more MVC-like. In progress.
 
+*DONE* Add ability to click on a ticket in the ticket lookup and retrieve it's details
 *DONE*Type should be associated with Model not Inventory
 Cost should be associated with Purchase not Type
 

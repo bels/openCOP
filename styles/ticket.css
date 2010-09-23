@@ -68,3 +68,13 @@
 	width: 33%;
 	height: 30px;
 }
+
+#ticket_details{
+	display: none;
+	margin-top: 15px;
+	width: 90%;
+	height: 400px;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid black;
+}

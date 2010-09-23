@@ -23,4 +23,15 @@ $(document).ready(function(){
 			$("#ticket_lookup").append(data);
 		});
 	}
+	
+	$(".lookup_row").live("click",function(){
+		var ticket_number = $(this).children(".row_ticket_number").text();
+		var url = "ticket_details.pl?ticket_number=" + ticket_number;
+		$("#ticket_details").html("");
+		$("#ticket_details").append("<h2>Ticket Details</h2>");
+		$.get(url,function(data){
+			$("#ticket_details").append(data);
+		});
+		$("#ticket_details").css("display","block");
+	});
 });

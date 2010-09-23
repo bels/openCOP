@@ -98,10 +98,23 @@ sub lookup{
 	my %args = @_;
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
-	my $query = "select * from helpdesk where status <> 6"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+	my $query = "select * from helpdesk where status <> 6 order by ticket"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $results = $sth->fetchall_hashref('ticket');
+	
+	return $results;
+}
+
+sub details{
+	my $self = shift;
+	my %args = @_;
+	
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
+	my $query = "select * from helpdesk where ticket = '$args{'data'}'"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $results = $sth->fetchrow_hashref;
 	
 	return $results;
 }
