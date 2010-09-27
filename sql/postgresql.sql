@@ -84,10 +84,6 @@ DECLARE
 	last_id INTEGER;
 BEGIN
 	--Step 1. Translate priority, site, status, section into values from the other tables
-	--SELECT priority_val = prid FROM priority WHERE description = priority_text;
-	--SELECT site_val = scid FROM site WHERE name = site_text;
-	--SELECT status_val = stid FROM ticket_status WHERE name = status_text;
-	--SELECT section_val = sid FROM section WHERE name = section_text;
 	SELECT INTO priority_val severity FROM priority WHERE description = priority_text;
 	SELECT INTO site_val scid FROM site WHERE name = site_text;
 	SELECT INTO status_val tsid FROM ticket_status WHERE name = status_text;
@@ -97,6 +93,30 @@ BEGIN
 	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, troubleshot, section, problem, priority, serial, contact_email) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, troubleshot_val, section_val, problem_val, priority_val, serial_val, contact_email_val);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
 
+	RETURN last_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_ticket(ticket_number BIGINT, site_text text, location_val TEXT,  contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, contact_email_val VARCHAR(255), notes_val TEXT) RETURNS INTEGER AS $$
+DECLARE
+	priority_val INTEGER;
+	site_val INTEGER;
+	section_val INTEGER;
+	last_id INTEGER;
+BEGIN
+	--Step 1. Translate priority, site, status, section into values from the other tables
+	SELECT INTO site_val scid FROM site WHERE name = site_text;
+	
+	-- Step 2. Update all the columns
+	update helpdesk set updated = current_timestamp where ticket = ticket_number;
+	update helpdesk set contact = contact_val where ticket = ticket_number;
+	update helpdesk set contact_phone = contact_phone_val where ticket = ticket_number;
+	update helpdesk set site = site_val where ticket = ticket_number;
+	update helpdesk set location = location_val where ticket = ticket_number;
+	update helpdesk set troubleshot = troubleshot_val where ticket = ticket_number;
+	update helpdesk set notes = notes_val where ticket = ticket_number;
+	
+	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
 	RETURN last_id;
 END;
 $$ LANGUAGE plpgsql;

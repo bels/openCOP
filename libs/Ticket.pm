@@ -118,6 +118,20 @@ sub details{
 	
 	return $results;
 }
+
+sub update{
+	my $self = shift;
+	my %args = @_;
+	my $data = $args{'data'};
+	
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
+	
+	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}')";
+	my $sth = $dbh->prepare($query);
+	$sth->execute; #this will return the id of the insert record if we ever find a use for it
+	#warn $DBI::errstr;
+	my $id = $sth->fetchrow_hashref;
+}
 1;
 __END__
 # Below is stub documentation for your module. You'd better edit it!

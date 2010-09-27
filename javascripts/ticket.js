@@ -34,4 +34,5 @@ $(document).ready(function(){
 		});
 		$("#ticket_details").css("display","block");
 	});
+	
 });
