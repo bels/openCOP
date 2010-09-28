@@ -14,7 +14,7 @@ ADD:
 	Improve the Session perl module
 	Make the site themeable
 	Make sure everything is using the config files for information like database type, username, company name, etc
-	Rename CCBOEHD to LIBS or something like that since it actually contains perl modules
+	-----------------------------------------------
 	Field for State Room Classification
 	Field for E-911 Primary Phone (how? for every barcode? ick.)
 	maybe add a new table to hold locations... ick
@@ -23,6 +23,7 @@ ADD:
 	room classification property in which it resides.)	
 	Clean up code to make it more MVC-like. In progress.
 
+*DONE* Rename CCBOEHD to LIBS or something like that since it actually contains perl modules (the new site uses libs)
 *DONE* Add ability to click on a ticket in the ticket lookup and retrieve it's details
 *DONE*Type should be associated with Model not Inventory
 Cost should be associated with Purchase not Type
