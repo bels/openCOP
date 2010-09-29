@@ -11,6 +11,8 @@ auth_table: auth
 mail_server: localhost
 ticket_mail_account: newticket
 ticket_mail_password: password
+#possible values are database and ldap (only database works right now)
+customer_backend: database
 index_page: index.pl
 logo_image: images/logo.jpg
 sites:

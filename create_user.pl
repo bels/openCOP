@@ -6,7 +6,6 @@ use CGI;
 use URI::Escape;
 use ReadConfig;
 use UserFunctions;
-use Digest::MD5 qw(md5_hex);
 
 my $q = CGI->new(); #create CGI
 my $alias = uri_unescape($q->param('username')); #getting the username from the form
@@ -22,7 +21,7 @@ $config->read_config;
 
 my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 
-if($user->duplicate_check() > 0)
+if($user->duplicate_check(alias => $alias) > 0)
 {
 	my $errorpage = "user_admin.pl?duplicate=1";
 	print $q->redirect(-URL=>$errorpage);

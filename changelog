@@ -1,4 +1,15 @@
-Changes from 0.3.2 -> ?
+Changes from 0.3.3 -> 0.4 (beginning of the big feature add
+* added authentication on the admin side
+* added authentication on the client side
+* redid the interface
+* added the ability for the helpdesk system to be emailed for ticket creation
+* moved some things to the config file to make implementation easier for those who do not know SQL
+* switched to Template Toolkit
+* switched away from CGI::Application to using some Perl modules
+* broke 90% of all features
+* created a script that sets up a postgresql database for use with the system
+
+Changes from 0.3.2 -> 0.3.3
  * Report bookmarking uses shorter query strings.
  * 
 

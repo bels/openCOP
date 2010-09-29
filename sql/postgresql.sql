@@ -55,7 +55,12 @@ DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, uid VARCHAR(20));
 
 DROP TABLE IF EXISTS users;
-CREATE TABLE users (id SERIAL, alias VARCHAR, email TEXT, password TEXT, active BOOLEAN);
+CREATE TABLE users (id SERIAL, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN);
+
+-- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
+DROP TABLE IF EXISTS customers;
+CREATE TABLE customers(id SERIAL, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site varchar(200));
+
 -- Adding admin user
 INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);
 -- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
@@ -160,3 +165,5 @@ GRANT SELECT, UPDATE ON section_sid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
 GRANT SELECT, UPDATE ON users_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON customers TO helpdesk;
+GRANT SELECT, UPDATE ON customers_id_seq TO helpdesk;
