@@ -1,5 +1,6 @@
 ADD:
-	Move the menu into it's own Template Toolkit file
+	A notification library that can be used to send out different forms of notifications (email, sms, mms, etc...)
+	Add a navigation menu of some sort to allow customers to do things like view open tickets and logout.
 	Add a mechanism for adding sites into the database.  This isn't something I can statically add to the sql creation file
 	Add a title(synopsis) field in the database that could act as a title used in areas that do not have the space to display the whole problem.
 	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, etc..)
@@ -24,6 +25,7 @@ ADD:
 	room classification property in which it resides.)	
 	Clean up code to make it more MVC-like. In progress.
 
+*DONE* Move the menu into it's own Template Toolkit file
 *DONE* Rename CCBOEHD to LIBS or something like that since it actually contains perl modules (the new site uses libs)
 *DONE* Add ability to click on a ticket in the ticket lookup and retrieve it's details
 ---------------------------------------------------

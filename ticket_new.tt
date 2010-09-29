@@ -1,4 +1,5 @@
 [% INCLUDE header.tt %]
 [% INCLUDE layout_top.tt %]
+[% INCLUDE menu.tt %]
 [% INCLUDE ticket_new_body.tt %]
 [% INCLUDE footer.tt %]

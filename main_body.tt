@@ -1,10 +1,3 @@
-		<div id="menu"><a href="ticket.pl" id="ticket_link">Tickets</a><a href="reports.pl" id="report_link">Reports</a><a href="inventory.pl" id="inventory_link">Inventory</a><a href="admin.pl" id="admin_link">Admin</a></div>
-		<div id="submenu">
-			<span id="ticket_sub"><a href="ticket.pl?mode=new" class="sub_link">New Ticket</a><a href="ticket.pl?mode=lookup" class="sub_link">Ticket Lookup</a><a href="work_order.pl?mode=new" class="sub_link">New Work Order</a><a href="work_order.pl?mode=lookup" class="sub_link">Work Order Lookup</a><a href="#" class="sub_link">Ticket Queue</a><a href="#" class="sub_link">Work Order Queue</a></span>
-			<span id="report_sub" class="hidden_menu"><a href="#" class="sub_link">Ticket Closure</a><a href="#" class="sub_link">Ticket Trending</a><a href="#" class="sub_link">Inventory Report</a><a href="#" class="sub_link">P.O.</a><a href="#" class="sub_link">Grant</a><a href="#" class="sub_link">Vendor</a><a href="#" class="sub_link">Customer Satisfaction</a></span>
-			<span id="inventory_sub"  class="hidden_menu"><a href="#" class="sub_link">Add</a><a href="#" class="sub_link">Current</a><a href="#" class="sub_link">Remove</a></span>
-			<span id="admin_sub"  class="hidden_menu"><a href="user_admin.pl" class="sub_link">User Administration</a><a href="customer_admin.pl" class="sub_link">Customer Administration</a><a href="#" class="sub_link">Global Settings</a><a href="logout.pl" class="sub_link">Logout</a></span>
-		</div>
 		<div id="server_status">In this box will be current information about the server.  CPU usage, Memory Usage, Is the database running, etc....  It will be loaded by ajax from a little perl script.</div>
 		<div id="current_critical">This box will have a list of the current open critical items.  It will be loaded through ajax on a timer.</div>
 		<div id="agents_working">This box will show other agents/technicians logged in and working</div>
