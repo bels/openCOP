@@ -1,9 +1,15 @@
 ADD:
+	It would be nice if the notification library was able to send the customer portal as a link so a customer could check on their tickets.
+	Add customer satisfaction survey
+	It would also be nice if the notification library sent the customer satisfaction survey when a ticket was closed
+	It would be nice if the notification library would account for the ticket number when contacting the customer
+	Move the configuration files to a config directory and update all files that make use of configs.
+	Make customer logout redirect to customer page instead of admin page.
 	A notification library that can be used to send out different forms of notifications (email, sms, mms, etc...)
 	Add a navigation menu of some sort to allow customers to do things like view open tickets and logout.
 	Add a mechanism for adding sites into the database.  This isn't something I can statically add to the sql creation file
 	Add a title(synopsis) field in the database that could act as a title used in areas that do not have the space to display the whole problem.
-	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, etc..)
+	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, checks for known dependencies, etc..)
 	The UI references the config file for sites but the perl modules reference the database.  this needs to be fixed.
 	Add the ability to enter what time you are free when entering a ticket
 	Add a SQL filter that takes things like ' and turns them into safe characters

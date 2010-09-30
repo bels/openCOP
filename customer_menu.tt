@@ -1,0 +1,1 @@
+		<div id="menu"><a href="lookup_ticket.pl?customer_id=[% id %]&status=open">View your open tickets</a><a href="lookup_ticket.pl?customer_id=[% id %]&status=closed">View your closed tickets</a><a href="logout.pl">Logout</a></div>

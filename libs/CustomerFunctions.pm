@@ -131,7 +131,7 @@ sub upload_picture{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "update users set picture = '$args{'picture'}' where alias = '$args{'alias'}'";
+	my $query = "update customers set picture = '$args{'picture'}' where alias = '$args{'alias'}'";
 	my $sth = $self->{'dbh'}->prepare($query);
 	$sth->execute;
 }
@@ -140,7 +140,7 @@ sub get_user_id{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select id from users where alias = '$args{'alias'}'";
+	my $query = "select id from customers where alias = '$args{'alias'}'";
 	my $sth = $self->{'dbh'}->prepare($query);
 	$sth->execute;
 	my $result = $sth->fetchrow_hashref;

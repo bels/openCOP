@@ -6,6 +6,7 @@ use CGI;
 use URI::Escape;
 use ReadConfig;
 use SessionFunctions;
+use CustomerFunctions;
 use Digest::MD5 qw(md5_hex);
 
 my $q = CGI->new(); #create CGI
@@ -30,7 +31,9 @@ if($success)
 	my $session_id = $session->create_session_id(auth_table => $config->{'auth_table'}, session_key => $session_key, uid => $alias) or die "Creating the session in the database failed";
 	my $cookie = $q->cookie(-name=>'session',-value=>{'sid' => $session_id,'session_key' => $session_key},-expires=>'+1h') or die "Creating the cookie failed";
 
-	print $q->redirect(-cookie=>$cookie,-URL=>"customer.pl");
+	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $user->get_user_id(alias => $alias);
+	print $q->redirect(-cookie=>$cookie,-URL=>"customer.pl?id=$id");
 }
 else
 {
