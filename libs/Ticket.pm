@@ -10,6 +10,7 @@ use Template;
 use lib './libs';
 use ReadConfig;
 use DBI;
+use Notification;
 
 require Exporter;
 
@@ -91,6 +92,9 @@ sub submit{
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
 	#warn $DBI::errstr;
 	my $id = $sth->fetchrow_hashref;
+	my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});
+
+	$notify->by_email(mode => 'ticket_create', to => $data->{'email'});
 }
 
 sub lookup{

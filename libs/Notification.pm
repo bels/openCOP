@@ -5,7 +5,8 @@ use strict;
 use warnings;
 use lib './';
 use ReadConfig;
-use Net::SMTP::TLS;
+use Net::SMTP;
+use MIME::Base64;
 
 require Exporter;
 
@@ -39,7 +40,7 @@ sub new{
 	
 	my $self = bless({},$package);
 		
-	$self->{'config'} = ReadConfig->new(config_type =>'YAML',config_file => "../notification.yml");
+	$self->{'config'} = ReadConfig->new(config_type =>'YAML',config_file => "notification.yml");
 
 	$self->{'config'}->read_config;
 	
@@ -52,16 +53,19 @@ sub by_email{
 	my $self = shift;
 	my %args = @_;
 	
-	my $smtp = new Net::SMTP::TLS($self->{'config'}->{'mail_server'},User => $self->{'config'}->{'email_user'},Password => $self->{'config'}->{'email_password'}) or die "Couldn't connect to the smtp server";
+	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
 	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in notification.yml
 	my $email = $args{'to'};
+	
+	$smtp->auth($self->{'config'}->{'email_user'},$self->{'config'}->{'email_password'});
+		
 	$smtp->mail($self->{'config'}->{'from'}) || handle_failure( $smtp, 'mail' );
 	$smtp->to($email) || handle_failure( $smtp, 'to' );
+	
 	$smtp->data();
-    
-	$smtp->datasend("To: $email") || handle_failure( $smtp, 'data_send_to' );
-	$smtp->datasend("From: $self->{'config'}->{'from'}") || handle_failure( $smtp, 'data_send_from' ) ;
-	$smtp->datasend("Subject: Ticket #$self->{'ticket_number'}") || handle_failure( $smtp, 'data_send_subject' ) ;
+	$smtp->datasend("To: $email\n") || handle_failure( $smtp, 'data_send_to' );
+	$smtp->datasend("From: $self->{'config'}->{'from'}\n") || handle_failure( $smtp, 'data_send_from' ) ;
+	$smtp->datasend("Subject: Ticket # $self->{'ticket_number'}\n") || handle_failure( $smtp, 'data_send_subject' ) ;
 	$smtp->datasend("\n");
     
 	$smtp->datasend($message_body) || handle_failure( $smtp, 'data_send' );

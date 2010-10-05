@@ -1,8 +1,9 @@
 mail_server: localhost
+# this is used to set what server the mail shows it is coming from.  It should be set to the host name of where the helpdesk system lives.  It may be the same as the mail server.  If it is do not set this to localhost but instead the FQDN of the server
+sending_server: localhost
 email_user: notification
-email_password: password
-domain: test.com
-from: notification@test.com
+email_password: somepasssword
+from: notification@lfmcorp.com
 ticket_create: We have received your ticket and a technician will respond to you shortly.
 ticket_update: Your ticket has been updated.  If you would like to check the current status of your ticket please log into the helpdesk portal.
 ticket_close: Your ticket has been closed by our technicians.  If this is a mistake please contact us to have it reopened.  If your ticket was resolved please take our satisfaction survey.

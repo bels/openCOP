@@ -64,10 +64,10 @@ CREATE TABLE customers(id SERIAL, first VARCHAR(100), last VARCHAR(100), middle_
 -- Adding admin user
 INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);
 -- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
-INSERT INTO priority(severity,description) values(0,'Low');
-INSERT INTO priority(severity,description) values(1,'Normal');
-INSERT INTO priority(severity,description) values(2,'High');
-INSERT INTO priority(severity,description) values(3,'Business Critical');
+INSERT INTO priority(severity,description) values(1,'Low');
+INSERT INTO priority(severity,description) values(2,'Normal');
+INSERT INTO priority(severity,description) values(3,'High');
+INSERT INTO priority(severity,description) values(4,'Business Critical');
 INSERT INTO section(name,email) values('Helpdesk','helpdesk@testcompany.com');
 INSERT INTO section(name,email) values('CM','cm@testcompany.com');
 INSERT INTO section(name,email) values('App Dev','appdev@testcompany.com');
