@@ -1,4 +1,9 @@
 ADD:
+	Add historical work log
+	Add ticket lookup by number
+	Add queues and allow technicians to see other tickets in their queue
+	Make the ticket lookup show the technician who is logged in that is logged in
+	Add ability to assign a technician to tickets.
 	Need to add duplicate checking when adding sites or customers.
 	Go back through and update tooltips with a value of 0 to an actual tip
 	Possibly merge the config writing routines of add_sites.pl to ReadConfig and change ReadConfig to Config and have it perform both reading and writing functions.
