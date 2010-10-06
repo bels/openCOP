@@ -66,6 +66,7 @@ sub render{
 	my @site_list = $config->{'sites'};
 	my @priority_list = $config->{'priority'};
 	my @section_list = $config->{'sections'};
+	my @tech_list = $config->{'techs'};
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
@@ -73,7 +74,7 @@ sub render{
 	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js");
 	
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => @site_list, priority_list => @priority_list, section_list => @section_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => @site_list, priority_list => @priority_list, section_list => @section_list, tech_list => @tech_list};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
@@ -88,7 +89,7 @@ sub submit{
 	my $free = 0; #free isn't used yet but the stored procedure is expecting it so i'm just going to pass it a 0 for now.
 	my $status = "New";
 
-	my $query = "select insert_ticket('$data->{'site'}','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free')";
+	my $query = "select insert_ticket('$data->{'site'}','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free','$data->{'tech'}')";
 	my $sth = $dbh->prepare($query);
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
 	#warn $DBI::errstr;

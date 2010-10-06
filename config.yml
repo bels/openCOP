@@ -1,19 +1,41 @@
----
+--- !!perl/hash:ReadConfig
+'%W, %M %m, %Y': ~
+/usr/local/www/helpdesk/maps: ~
+/usr/local/www/helpdesk/templates: ~
+ARRAY(0x83db598): ~
+ARRAY(0x85dfc34): ~
+ARRAY(0x85dfc40): ~
+ARRAY(0x85dfc58): ~
+HASH(0x85df9a0): ~
+Pg: ~
+Test company: ~
+auth: ~
 auth_table: auth
+ccboehd: ~
 company_domain: test.com
 company_name: Test company
 comparisons: generic.cmps
 config_dir: /usr/local/www/helpdesk/maps
+config_file: config.yml
+config_type: YAML
 customer_backend: database
+database: ~
 date_format: '%W, %M %m, %Y'
 db_name: ccboehd
 db_password: helpdesk
 db_type: Pg
 db_user: helpdesk
 default_app: helpdesk
+generic.cmps: ~
+helpdesk: ~
+images/logo.jpg: ~
+index.pl: ~
 index_page: index.pl
+localhost: ~
 logo_image: images/logo.jpg
 mail_server: localhost
+newticket: ~
+password: ~
 pnd:
   equipment:
     form.pl:
@@ -256,10 +278,12 @@ sections:
   - CM
   - App Dev
 sites:
-  - Site A
-  - Corvus Largo
-  - Test HQ
+  - Test Site
+techs:
+  - admin
 template_dir: /usr/local/www/helpdesk/templates
+test.com: ~
 ticket_mail_account: newticket
 ticket_mail_password: password
+users: ~
 users_table: users

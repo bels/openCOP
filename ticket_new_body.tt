@@ -34,6 +34,14 @@
 					[% END %]
 				</select>
 				<a href="tips.pl?107" target="_tips">?</a>
+				<label for="tech" class="short_label">Section:</label>
+				<select name="tech" size="1" tabindex="10" id="tech">
+					<option></option>
+					[% FOREACH tech IN tech_list %]
+					<option value="[% tech %]">[% tech %]</option>
+					[% END %]
+				</select>
+				<a href="tips.pl?0" target="_tips">?</a>
 			</div>
 			<div id="problem_details">
 				<h3>Problem Details</h3>

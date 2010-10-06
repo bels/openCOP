@@ -28,6 +28,12 @@ if($user->duplicate_check(alias => $alias) > 0)
 }
 else
 {
+	my $techs = $config->{'techs'};
+	my @new_techs = @$techs; #sometype of evaluating needs to be done here.  If the sites array is empty in the config file this breaks.
+	push(@new_techs,$alias);
+	$config->{'techs'} = \@new_techs;
+
+	YAML::DumpFile("config.yml",$config);
 	$user->create_user(alias => $alias,password => $password, email => $email);
 	print $q->redirect(-URL => "user_admin.pl?success=1");
 }

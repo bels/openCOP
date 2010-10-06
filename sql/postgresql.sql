@@ -42,6 +42,9 @@ CREATE TABLE section (sid SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(2
 DROP TABLE IF EXISTS priority;
 CREATE TABLE priority (prid SERIAL PRIMARY KEY, severity INTEGER, description varchar(255));
 
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (uid SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN);
+
 DROP TABLE IF EXISTS helpdesk;
 CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), barcode VARCHAR(255), site INTEGER references site(scid), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), troubleshot TEXT, notes TEXT, section INT references section(sid), problem TEXT, priority INT references priority(prid), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), free VARCHAR(255), technician INTEGER references users(uid));
 
@@ -53,9 +56,6 @@ CREATE TABLE replacement (original BIGINT references inventory(invid), replaceme
 
 DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, uid VARCHAR(20));
-
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (uid SERIAL, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN);
 
 -- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
 DROP TABLE IF EXISTS customers;
@@ -79,6 +79,9 @@ INSERT INTO ticket_status (name) values ('Waiting Vendor');
 INSERT INTO ticket_status (name) values ('Waiting Other');
 INSERT INTO ticket_status (name) values ('Closed');
 INSERT INTO ticket_status (name) values ('Completed');
+-- test data to start with 
+INSERT INTO school_level(type) values ('test');
+INSERT INTO site (level,name) values (1,'Test Site');
 
 CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_text text, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255), tech_text VARCHAR(255)) RETURNS INTEGER AS $$
 DECLARE
@@ -166,6 +169,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON section TO helpdesk;
 GRANT SELECT, UPDATE ON section_sid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
-GRANT SELECT, UPDATE ON users_id_seq TO helpdesk;
+GRANT SELECT, UPDATE ON users_uid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON customers TO helpdesk;
 GRANT SELECT, UPDATE ON customers_id_seq TO helpdesk;

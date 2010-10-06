@@ -1,9 +1,11 @@
 ADD:
+	Display what technician is assigned to a ticket
+	*BUG*Fix whatever bels broke in ReadConfig while adding the ability to add technicians to tickets.  Check apache log for errors
+	Gather more information about the technicians when creating accounts so more than a login can be showed to the customer
 	Add historical work log
 	Add ticket lookup by number
 	Add queues and allow technicians to see other tickets in their queue
 	Make the ticket lookup show the technician who is logged in that is logged in
-	Add ability to assign a technician to tickets.
 	Need to add duplicate checking when adding sites or customers.
 	Go back through and update tooltips with a value of 0 to an actual tip
 	Possibly merge the config writing routines of add_sites.pl to ReadConfig and change ReadConfig to Config and have it perform both reading and writing functions.
@@ -40,6 +42,7 @@ ADD:
 	room classification property in which it resides.)	
 	Clean up code to make it more MVC-like. In progress.
 
+*DONE* Add ability to assign a technician to tickets.
 *DONE* Make it so the site in the ticket details is the site name and not the number.  It is currently the number because the database stores the site_id as a foriegn key and not the name.
 *DONE* It would be nice if the notification library would account for the ticket number when contacting the customer
 *DONE* Move the menu into it's own Template Toolkit file
