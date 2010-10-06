@@ -1,0 +1,19 @@
+		<div id="add_site_div">
+			<form action="add_site.pl" method="POST">
+				<h4>Add Site<a href="tips.pl?0" class="tooltip">?</a></h4>
+				<label for="site_name">Site Name:</label><input type="text" name="site_name" id="site_name"><a href="tips.pl?0" class="tooltip">?</a><br />
+				<label for="site_level">Site Level:</label><a href="tips.pl?0" class="tooltip">?</a>
+				<select name="site_level" size="1" tabindex="1" id="site_level">
+					[% FOREACH sitelevel IN site_level_list %]
+					<option value="[% sitelevel %]">[% sitelevel %]</option>
+					[% END %]
+				</select>
+				<br />
+				<input type="submit" value="Add" id="submit_button">
+			</form>
+			<form action="add_site_level.pl" method="POST">
+				<h4>Add Site Type/Level<a href="tips.pl?0" class="tooltip">?</a></h4>
+				<label for="site_level_name">Site Level Name:</label><input type="text" name="site_level_name" id="site_level_name"><a href="tips.pl?0" class="tooltip">?</a><br />
+				<input type="submit" value="Add" id="level_submit_button">
+			</form>
+		</div>

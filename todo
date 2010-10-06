@@ -1,8 +1,11 @@
 ADD:
+	Go back through and update tooltips with a value of 0 to an actual tip
+	Possibly merge the config writing routines of add_sites.pl to ReadConfig and change ReadConfig to Config and have it perform both reading and writing functions.
+	*BUG* tips don't work if they are not separated by a tab character.  Something like this shouldn't break the tips in case someone wants to add some down the road.
+	Add validation to most if not all of the forms.
 	It would be nice if the notification library was able to send the customer portal as a link so a customer could check on their tickets.
 	Add customer satisfaction survey
 	It would also be nice if the notification library sent the customer satisfaction survey when a ticket was closed
-	It would be nice if the notification library would account for the ticket number when contacting the customer
 	Move the configuration files to a config directory and update all files that make use of configs.
 	Make customer logout redirect to customer page instead of admin page.
 	A notification library that can be used to send out different forms of notifications (email, sms, mms, etc...)
@@ -31,6 +34,7 @@ ADD:
 	room classification property in which it resides.)	
 	Clean up code to make it more MVC-like. In progress.
 
+*DONE* It would be nice if the notification library would account for the ticket number when contacting the customer
 *DONE* Move the menu into it's own Template Toolkit file
 *DONE* Rename CCBOEHD to LIBS or something like that since it actually contains perl modules (the new site uses libs)
 *DONE* Add ability to click on a ticket in the ticket lookup and retrieve it's details

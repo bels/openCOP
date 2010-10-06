@@ -8,6 +8,8 @@ Changes from 0.3.3 -> 0.4 (beginning of the big feature add
 * switched away from CGI::Application to using some Perl modules
 * broke 90% of all features
 * created a script that sets up a postgresql database for use with the system
+* added a notification library (needs more features)
+* added ability for client to email the helpdesk system as a way of submitting tickets
 
 Changes from 0.3.2 -> 0.3.3
  * Report bookmarking uses shorter query strings.

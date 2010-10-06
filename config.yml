@@ -1,24 +1,251 @@
-template_dir: '/usr/local/www/helpdesk/templates'
-config_dir: '/usr/local/www/helpdesk/maps'
-company_name: 'Test company'
+---
+auth_table: auth
 company_domain: test.com
+company_name: Test company
+comparisons: generic.cmps
+config_dir: /usr/local/www/helpdesk/maps
+customer_backend: database
+date_format: '%W, %M %m, %Y'
+db_name: ccboehd
+db_password: helpdesk
 db_type: Pg
 db_user: helpdesk
-db_password: helpdesk
-db_name: ccboehd
-users_table: users
-auth_table: auth
-mail_server: localhost
-ticket_mail_account: newticket
-ticket_mail_password: password
-#possible values are database and ldap (only database works right now)
-customer_backend: database
+default_app: helpdesk
 index_page: index.pl
 logo_image: images/logo.jpg
-sites:
-  - Site A
-  - Site B
-  - Site C
+mail_server: localhost
+pnd:
+  equipment:
+    form.pl:
+      create:
+        error_template: equipment/create.html
+        form: equipment/create.form
+        requirements: equipment/create.req
+        template: equipment/submitted.html
+      edit:
+        form: equipment/edit.form
+        template: equipment/edit.html
+      new:
+        form: equipment/create.form
+        requirements: equipment/create.req
+        template: equipment/create.html
+      update:
+        form: equipment/edit.form
+        template: equipment/edit.html
+    report.pl:
+      custom:
+        rmap: equipment/report.rmap
+        template: equipment/report-view.html
+      report:
+        rmap: equipment/report.rmap
+        template: equipment/report-view.html
+      welcome:
+        rmap: equipment/report-welcome.yaml
+        template: equipment/report-welcome.html
+  grants:
+    form.pl:
+      create:
+        error_template: grants/create.html
+        form: grants/create.form
+        requirements: grants/create.req
+        template: grants/submitted.html
+      edit:
+        form: grants/edit.form
+        template: grants/edit.html
+      new:
+        form: grants/create.form
+        requirements: grants/create.req
+        template: grants/create.html
+      update:
+        form: grants/edit.form
+        template: grants/edit.html
+    report.pl:
+      custom:
+        rmap: grants/report.rmap
+        template: grants/report-view.html
+      report:
+        rmap: grants/report.rmap
+        template: grants/report-view.html
+      welcome:
+        rmap: grants/report-welcome.yaml
+        template: grants/report-welcome.html
+  hardware:
+    form.pl:
+      create:
+        error_template: hardware/create.html
+        form: hardware/create.form
+        requirements: hardware/create.req
+        template: hardware/submitted.html
+      edit:
+        form: hardware/edit.form
+        template: hardware/edit.html
+      new:
+        form: hardware/create.form
+        requirements: hardware/create.req
+        template: hardware/create.html
+      update:
+        form: hardware/edit.form
+        template: hardware/edit.html
+    report.pl:
+      custom:
+        rmap: hardware/report.rmap
+        template: hardware/report-view.html
+      report:
+        rmap: hardware/report.rmap
+        template: hardware/report-view.html
+      welcome:
+        rmap: hardware/report-welcome.yaml
+        template: hardware/report-welcome.html
+  helpdesk:
+    form.pl:
+      create:
+        error_template: ticket-new-create.html
+        form: ticket-new.form
+        requirements: ticket-new-create.req
+        template: ticket-new-submitted.html
+      edit:
+        form: ticket-edit.form
+        template: ticket-edit-view.html
+      new:
+        form: ticket-new.form
+        template: ticket-new-create.html
+      update:
+        error_template: ticket-edit-view.html
+        form: ticket-edit.form
+        smap: ticket-edit-update.yml
+        template: ticket-edit-view.html
+      view:
+        form: ticket-view-view.form
+        template: ticket-view-view.html
+    report.pl:
+      custom:
+        rmap: helpdesk-report.rmap
+        template: report-view.html
+      report:
+        rmap: helpdesk-report.rmap
+        template: report-view.html
+      welcome:
+        form: ticket-report-welcome.form
+        template: report-welcome.html
+  inventory:
+    form.pl:
+      create:
+        error_template: inventory/new-create.html
+        form: inventory/create.form
+        requirements: inventory/new-create.req
+        template: inventory/new-submitted.html
+      edit:
+        form: inventory/edit.form
+        template: inventory/edit.html
+      new:
+        form: inventory/new.form
+        requirements: inventory/new-create.req
+        template: inventory/new-create.html
+      update:
+        form: inventory/edit.form
+        template: inventory/edit.html
+    report.pl:
+      custom:
+        rmap: inventory/report.rmap
+        template: inventory/report-view.html
+      report:
+        rmap: inventory/report.rmap
+        template: inventory/report-view.html
+      welcome:
+        form: inventory/report-welcome.yaml
+        template: inventory/report-welcome.html
+  purchases:
+    form.pl:
+      create:
+        error_template: purchases/create.html
+        form: purchases/create.form
+        requirements: purchases/create.req
+        template: purchases/submitted.html
+      edit:
+        form: purchases/edit.form
+        template: purchases/edit.html
+      new:
+        form: purchases/create.form
+        requirements: purchases/create.req
+        template: purchases/create.html
+      update:
+        form: purchases/edit.form
+        template: purchases/edit.html
+    report.pl:
+      custom:
+        rmap: purchases/report.rmap
+        template: purchases/report-view.html
+      report:
+        rmap: purchases/report.rmap
+        template: purchases/report-view.html
+      welcome:
+        rmap: purchases/report-welcome.yaml
+        template: purchases/report-welcome.html
+  schools:
+    report.pl:
+      custom:
+        rmap: school/report.rmap
+        template: school/report-view.html
+      report:
+        rmap: school/report.rmap
+        template: school/report-view.html
+      welcome:
+        rmap: school/report-welcome.yaml
+        template: school/report-welcome.html
+  software:
+    form.pl:
+      create:
+        error_template: software/create.html
+        form: software/create.form
+        requirements: software/create.req
+        template: software/submitted.html
+      edit:
+        form: software/edit.form
+        template: software/edit.html
+      new:
+        form: software/create.form
+        requirements: software/create.req
+        template: software/create.html
+      update:
+        form: software/edit.form
+        template: software/edit.html
+    report.pl:
+      custom:
+        rmap: software/report.rmap
+        template: software/report-view.html
+      report:
+        rmap: software/report.rmap
+        template: software/report-view.html
+      welcome:
+        rmap: software/report-welcome.yaml
+        template: software/report-welcome.html
+  vendor:
+    form.pl:
+      create:
+        error_template: vendor/create.html
+        form: vendor/create.form
+        requirements: vendor/create.req
+        template: vendor/submitted.html
+      edit:
+        form: vendor/edit.form
+        template: vendor/edit.html
+      new:
+        form: vendor/create.form
+        requirements: vendor/create.req
+        template: vendor/create.html
+      update:
+        form: vendor/edit.form
+        template: vendor/edit.html
+    report.pl:
+      custom:
+        rmap: vendor/report.rmap
+        template: vendor/report-view.html
+      report:
+        rmap: vendor/report.rmap
+        template: vendor/report-view.html
+      welcome:
+        rmap: vendor/report-welcome.yaml
+        template: vendor/report-welcome.html
 priority:
   - Low
   - Normal
@@ -28,264 +255,10 @@ sections:
   - Helpdesk
   - CM
   - App Dev
-date_format: '%W, %M %m, %Y'
-default_app: helpdesk
-comparisons: generic.cmps
-pnd:
- helpdesk:
-  form.pl:
-   new:
-    template: ticket-new-create.html
-    form: ticket-new.form
-   create:
-    template: ticket-new-submitted.html
-    form: ticket-new.form
-    requirements: ticket-new-create.req
-    error_template: ticket-new-create.html
-#    smap: ticket-new-submitted.yml
-   view:
-    form: ticket-view-view.form
-    template: ticket-view-view.html
-   edit:
-    form: ticket-edit.form
-#    map: ticket-edit.yml
-    template: ticket-edit-view.html
-   update:
-    template: ticket-edit-view.html
-    form: ticket-edit.form
-    error_template: ticket-edit-view.html
-    smap: ticket-edit-update.yml
-  report.pl:
-   welcome:
-    template: report-welcome.html
-    form: ticket-report-welcome.form
-   custom:
-    template: report-view.html
-    rmap: helpdesk-report.rmap
-   report:
-    template: report-view.html
-    rmap: helpdesk-report.rmap
- inventory:
-  report.pl:
-   welcome:
-    template: inventory/report-welcome.html
-    form: inventory/report-welcome.yaml
-   custom:
-    template: inventory/report-view.html
-    rmap: inventory/report.rmap
-   report:
-    template: inventory/report-view.html
-    rmap: inventory/report.rmap
-  form.pl:
-   edit:
-    form: inventory/edit.form
-    template: inventory/edit.html
-   update:
-    template: inventory/edit.html
-    form: inventory/edit.form
-   new:
-    template: inventory/new-create.html
-    form: inventory/new.form
-    requirements: inventory/new-create.req
-   create:
-    template: inventory/new-submitted.html
-    form: inventory/create.form
-    requirements: inventory/new-create.req
-    error_template: inventory/new-create.html
- purchases:
-  report.pl:
-   welcome:
-    template: purchases/report-welcome.html
-    rmap: purchases/report-welcome.yaml
-   custom:
-    template: purchases/report-view.html
-    rmap: purchases/report.rmap
-   report:
-    template: purchases/report-view.html
-    rmap: purchases/report.rmap
-  form.pl:
-   edit:
-    form: purchases/edit.form
-    template: purchases/edit.html
-   update:
-    template: purchases/edit.html
-    form: purchases/edit.form
-   new:
-    template: purchases/create.html
-    form: purchases/create.form
-    requirements: purchases/create.req
-   create:
-    template: purchases/submitted.html
-    form: purchases/create.form
-    requirements: purchases/create.req
-    error_template: purchases/create.html
- equipment:
-  report.pl:
-   welcome:
-    template: equipment/report-welcome.html
-    rmap: equipment/report-welcome.yaml
-   custom:
-    template: equipment/report-view.html
-    rmap: equipment/report.rmap
-   report:
-    template: equipment/report-view.html
-    rmap: equipment/report.rmap
-  form.pl:
-   edit:
-    form: equipment/edit.form
-    template: equipment/edit.html
-   update:
-    template: equipment/edit.html
-    form: equipment/edit.form
-   new:
-    template: equipment/create.html
-    form: equipment/create.form
-    requirements: equipment/create.req
-   create:
-    template: equipment/submitted.html
-    form: equipment/create.form
-    requirements: equipment/create.req
-    error_template: equipment/create.html
- vendor:
-  report.pl:
-   welcome:
-    template: vendor/report-welcome.html
-    rmap: vendor/report-welcome.yaml
-   custom:
-    template: vendor/report-view.html
-    rmap: vendor/report.rmap
-   report:
-    template: vendor/report-view.html
-    rmap: vendor/report.rmap
-  form.pl:
-   edit:
-    form: vendor/edit.form
-    template: vendor/edit.html
-   update:
-    template: vendor/edit.html
-    form: vendor/edit.form
-   new:
-    template: vendor/create.html
-    form: vendor/create.form
-    requirements: vendor/create.req
-   create:
-    template: vendor/submitted.html
-    form: vendor/create.form
-    requirements: vendor/create.req
-    error_template: vendor/create.html
- grants:
-  report.pl:
-   welcome:
-    template: grants/report-welcome.html
-    rmap: grants/report-welcome.yaml
-   custom:
-    template: grants/report-view.html
-    rmap: grants/report.rmap
-   report:
-    template: grants/report-view.html
-    rmap: grants/report.rmap
-  form.pl:
-   edit:
-    form: grants/edit.form
-    template: grants/edit.html
-   update:
-    template: grants/edit.html
-    form: grants/edit.form
-   new:
-    template: grants/create.html
-    form: grants/create.form
-    requirements: grants/create.req
-   create:
-    template: grants/submitted.html
-    form: grants/create.form
-    requirements: grants/create.req
-    error_template: grants/create.html
- hardware:
-  report.pl:
-   welcome:
-    template: hardware/report-welcome.html
-    rmap: hardware/report-welcome.yaml
-   custom:
-    template: hardware/report-view.html
-    rmap: hardware/report.rmap
-   report:
-    template: hardware/report-view.html
-    rmap: hardware/report.rmap
-  form.pl:
-   edit:
-    form: hardware/edit.form
-    template: hardware/edit.html
-   update:
-    template: hardware/edit.html
-    form: hardware/edit.form
-   new:
-    template: hardware/create.html
-    form: hardware/create.form
-    requirements: hardware/create.req
-   create:
-    template: hardware/submitted.html
-    form: hardware/create.form
-    requirements: hardware/create.req
-    error_template: hardware/create.html
- software:
-  report.pl:
-   welcome:
-    template: software/report-welcome.html
-    rmap: software/report-welcome.yaml
-   custom:
-    template: software/report-view.html
-    rmap: software/report.rmap
-   report:
-    template: software/report-view.html
-    rmap: software/report.rmap
-  form.pl:
-   edit:
-    form: software/edit.form
-    template: software/edit.html
-   update:
-    template: software/edit.html
-    form: software/edit.form
-   new:
-    template: software/create.html
-    form: software/create.form
-    requirements: software/create.req
-   create:
-    template: software/submitted.html
-    form: software/create.form
-    requirements: software/create.req
-    error_template: software/create.html
- schools:
-  report.pl:
-   welcome:
-    template: school/report-welcome.html
-    rmap: school/report-welcome.yaml
-   custom:
-    template: school/report-view.html
-    rmap: school/report.rmap
-   report:
-    template: school/report-view.html
-    rmap: school/report.rmap
-#  form.pl:
-#   edit:
-#    form: hardware/edit.form
-#    template: hardware/edit.html
-#   update:
-#    template: hardware/edit.html
-#    form: hardware/edit.form
-#   new:
-#    template: hardware/create.html
-#    form: hardware/create.form
-#    requirements: hardware/create.req
-#   create:
-#    template: hardware/submitted.html
-#    form: hardware/create.form
-#    requirements: hardware/create.req
-#    error_template: hardware/create.html
-
-#pnd:
-# app:
-#  script.pl:
-#   template: templatefile.html
-#   form: ticked-edit-style_YML_mapfile.yml
-#   rmap: report-style_YML_mapfile.yml
-#   requirements: reqmap-style_YML_mapfile.yml
+sites:
+  - Site A
+  - Corvus Largo
+template_dir: /usr/local/www/helpdesk/templates
+ticket_mail_account: newticket
+ticket_mail_password: password
+users_table: users

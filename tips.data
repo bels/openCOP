@@ -1,3 +1,4 @@
+0	Tip is not yet defined.  Stop slacking and add some info about this item.
 100	Don't take any wooden coins. 100-series tips are for the helpdesk.
 101	The Author field should contain your name. No matter who you are or who you are putting the ticket in for, you are the author and your name is required.
 102	The Barcode field should contain the barcode of the computer or other piece of equipment that has the problem you are describing. If the device does not have a barcode but does have a serial number, use the Serial field instead. If there is no barcode do not put anything in the Barcode field.
