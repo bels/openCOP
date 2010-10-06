@@ -80,22 +80,24 @@ INSERT INTO ticket_status (name) values ('Waiting Other');
 INSERT INTO ticket_status (name) values ('Closed');
 INSERT INTO ticket_status (name) values ('Completed');
 
-CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_text text, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255)) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_text text, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255), tech_text VARCHAR(255)) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
 	site_val INTEGER;
 	status_val INTEGER;
 	section_val INTEGER;
 	last_id INTEGER;
+	tech_val INTEGER;
 BEGIN
 	--Step 1. Translate priority, site, status, section into values from the other tables
 	SELECT INTO priority_val severity FROM priority WHERE description = priority_text;
 	SELECT INTO site_val scid FROM site WHERE name = site_text;
 	SELECT INTO status_val tsid FROM ticket_status WHERE name = status_text;
 	SELECT INTO section_val sid FROM section WHERE name = section_text;
+	SELECT INTO tech_val uid FROM users WHERE alias = tech_text;
 	
 	-- Step 2. Insert the ticket with the translated values
-	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, troubleshot, section, problem, priority, serial, contact_email) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, troubleshot_val, section_val, problem_val, priority_val, serial_val, contact_email_val);
+	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, troubleshot, section, problem, priority, serial, contact_email, technician) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, troubleshot_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
 
 	RETURN last_id;
