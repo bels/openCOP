@@ -5,6 +5,7 @@ use strict;
 use CGI;
 use URI::Escape;
 use ReadConfig;
+use DBI;
 use CustomerFunctions;
 
 my $q = CGI->new(); #create CGI
@@ -32,6 +33,12 @@ if($user->duplicate_check(alias => $alias) > 0)
 }
 else
 {
-	$user->create_user(alias => $alias,password => $password, email => $email, first => $first, mi => $mi, last =>$last, site =>$site);
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
+	my $site_level = $q->param('site_level');
+	my $query = "select * from site where name = '$site'";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $results = $sth->fetchrow_hashref;
+	$user->create_user(alias => $alias,password => $password, email => $email, first => $first, mi => $mi, last =>$last, site =>$results->{'scid'});
 	print $q->redirect(-URL => "customer_admin.pl?success=1");
 }

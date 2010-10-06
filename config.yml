@@ -258,6 +258,7 @@ sections:
 sites:
   - Site A
   - Corvus Largo
+  - Test HQ
 template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password

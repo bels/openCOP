@@ -59,7 +59,7 @@ CREATE TABLE users (id SERIAL, alias VARCHAR(100), email VARCHAR(100), password 
 
 -- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
 DROP TABLE IF EXISTS customers;
-CREATE TABLE customers(id SERIAL, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site varchar(200));
+CREATE TABLE customers(id SERIAL, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site INTEGER references site(scid));
 
 -- Adding admin user
 INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);

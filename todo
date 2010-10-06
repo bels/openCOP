@@ -1,4 +1,5 @@
 ADD:
+	Need to add duplicate checking when adding sites or customers.
 	Go back through and update tooltips with a value of 0 to an actual tip
 	Possibly merge the config writing routines of add_sites.pl to ReadConfig and change ReadConfig to Config and have it perform both reading and writing functions.
 	*BUG* tips don't work if they are not separated by a tab character.  Something like this shouldn't break the tips in case someone wants to add some down the road.
@@ -34,6 +35,7 @@ ADD:
 	room classification property in which it resides.)	
 	Clean up code to make it more MVC-like. In progress.
 
+*DONE* Make it so the site in the ticket details is the site name and not the number.  It is currently the number because the database stores the site_id as a foriegn key and not the name.
 *DONE* It would be nice if the notification library would account for the ticket number when contacting the customer
 *DONE* Move the menu into it's own Template Toolkit file
 *DONE* Rename CCBOEHD to LIBS or something like that since it actually contains perl modules (the new site uses libs)
