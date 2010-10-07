@@ -1,0 +1,20 @@
+Roadmap.
+
+.4 - have a working helpdesk.  Won't have all the features but it will at least serve the basic function of a helpdesk
+.4.x - fix any bugs found from using the helpdesk
+.5 - Work on the layout and make the system very user friendly
+.5.x - bug fix
+.6 - Add a documentation module
+.6.x - bug fix
+.7 - Add an inventory module
+.7.x - bug fix
+.8 - add the Grant, PO, and Vendor modules
+.8.x - bug fix
+.9 - implement any features needed in the core helpdesk system from using it
+.9.x - bug fix
+1.0 RC 1 - code freeze and testing
+1.0 - publish
+1.0.x - any bug fixes found from wider testing audience
+1.5 - add additional backends (ie. LDAP) and other features that aren't too radical but are useful
+1.5.x - bug fix
+2.0 - to be discussed

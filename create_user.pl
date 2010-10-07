@@ -6,6 +6,7 @@ use CGI;
 use URI::Escape;
 use ReadConfig;
 use UserFunctions;
+use Data::Dumper;
 
 my $q = CGI->new(); #create CGI
 my $alias = uri_unescape($q->param('username')); #getting the username from the form
@@ -29,6 +30,15 @@ if($user->duplicate_check(alias => $alias) > 0)
 }
 else
 {
+	my $config;
+	if (-e "config.yml")
+	{
+		$config = YAML::LoadFile("config.yml");
+	}
+	else
+	{
+		die "Config file (config.yml) does not exist or the permissions on it are not correct.\n";
+	}
 	my $techs = $config->{'techs'};
 	my @new_techs = @$techs; #sometype of evaluating needs to be done here.  If the sites array is empty in the config file this breaks.
 	push(@new_techs,$alias);

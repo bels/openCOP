@@ -1,6 +1,9 @@
+---
 auth_table: auth
 company_domain: test.com
 company_name: Test company
+config_file: config.yml
+config_type: YAML
 date_format: '%W, %M %m, %Y'
 db_name: ccboehd
 db_password: helpdesk
@@ -20,6 +23,7 @@ sites:
   - Test Site
 techs:
   - admin
+  - jbelfield
 template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password

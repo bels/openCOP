@@ -7,9 +7,10 @@
 			[% END %]
 			<h2>Add User</h2>
 			<form id="login_form" action="create_user.pl" method="POST">
-				<label for="username">Username:</label><input type="text" id="username" name="username"><br>
-				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br>
-				<label for="password2">Retype Password:</label><input type="password" id="password2" name="password2"><br>
+				<label for="username">Username:</label><input type="text" id="username" name="username"><br />
+				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br />
+				<label for="password2">Retype Password:</label><input type="password" id="password2" name="password2"><br />
+				<label for="email">Email Address:</label><input type="text" id="email" name="email"><br />
 				<label for="section" class="short_label">Priority:</label>
 				<select name="section" size="1" id="section">
 					[% FOREACH section IN sections %]

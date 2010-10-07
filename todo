@@ -23,7 +23,7 @@ ADD:
 	Add a navigation menu of some sort to allow customers to do things like view open tickets and logout.
 	Add a mechanism for adding sites into the database.  This isn't something I can statically add to the sql creation file
 	Add a title(synopsis) field in the database that could act as a title used in areas that do not have the space to display the whole problem.
-	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, checks for known dependencies, etc..)
+	Create an install script that performs all installation tasks (ie. creates the database, creates cron jobs for maintenance scripts, checks for known dependencies, creates a fresh config file, etc..)
 	The UI references the config file for sites but the perl modules reference the database.  this needs to be fixed.
 	Add the ability to enter what time you are free when entering a ticket
 	Add a SQL filter that takes things like ' and turns them into safe characters
