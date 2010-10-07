@@ -69,8 +69,6 @@ INSERT INTO priority(severity,description) values(2,'Normal');
 INSERT INTO priority(severity,description) values(3,'High');
 INSERT INTO priority(severity,description) values(4,'Business Critical');
 INSERT INTO section(name,email) values('Helpdesk','helpdesk@testcompany.com');
-INSERT INTO section(name,email) values('CM','cm@testcompany.com');
-INSERT INTO section(name,email) values('App Dev','appdev@testcompany.com');
 -- some starting ticket status
 INSERT INTO ticket_status (name) values ('New');
 INSERT INTO ticket_status (name) values ('In Progress');

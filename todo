@@ -1,4 +1,6 @@
 ADD:
+	Make a way to edit the email addresses of the sections
+	Switch the SessionFunctions over to using user id numbers instead of name.  This would require finding out what files lookup that id and fix them as well.  If things are correct any file referencing the uid in the auth table should be using get_name_for_session.  If that fuction is fixed and renamed to something sane than this wouldn't be to hard.
 	Allow a technician to be in more than one section
 	Display what technician is assigned to a ticket
 	*BUG*Fix whatever bels broke in ReadConfig while adding the ability to add technicians to tickets.  Check apache log for errors

@@ -26,7 +26,15 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $data = $q->Vars;
-	my $results = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
+	
+	my $uid = $session->get_name_for_session(auth_table => $config->{'auth_table'},)
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
+	my $query = "select sections from users where alias = '$uid'";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $results = $sth->fetchrow_hashref;
+	my $section = $results->{'sections'}
+	my $results = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $section); #need to pass in hashref named data
 	print "Content-type: text/html\n\n";
 
 	my @hash_order = keys %$results;

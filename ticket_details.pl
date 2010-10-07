@@ -52,7 +52,8 @@ if($authenticated == 1)
 	print substr($results->{'updated'},0,19);
 	print qq(</span><br/>
 		<label for="problem">Problem:</label><span id="problem" name="problem">$results->{'problem'}</span><br/>
-		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting">$results->{'troubleshot'}</textarea><br/>
+		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting"></textarea><br/>
+		<label for="past_troubleshoot">Past Troubleshooting:</label><span id="past_troubleshoot" name="past_troubleshoot">$results->{'troubleshot'}</span><br />
 		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes">$results->{'notes'}</textarea><br/>
 		<input type="submit" value="Update">
 	);
