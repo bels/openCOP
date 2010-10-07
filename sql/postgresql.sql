@@ -43,7 +43,7 @@ DROP TABLE IF EXISTS priority;
 CREATE TABLE priority (prid SERIAL PRIMARY KEY, severity INTEGER, description varchar(255));
 
 DROP TABLE IF EXISTS users;
-CREATE TABLE users (uid SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN);
+CREATE TABLE users (uid SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN,sections VARCHAR(255));
 
 DROP TABLE IF EXISTS helpdesk;
 CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), barcode VARCHAR(255), site INTEGER references site(scid), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), troubleshot TEXT, notes TEXT, section INT references section(sid), problem TEXT, priority INT references priority(prid), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), free VARCHAR(255), technician INTEGER references users(uid));

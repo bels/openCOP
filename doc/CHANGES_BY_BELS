@@ -8,3 +8,9 @@ Notes of what I had to change in openCOP
 - changed the connection statement in base to work with postgresql.  I need to check it against mysql to make sure it didn't break there.
 - added an auth and users table for creating users/session management
 - added a dashboard
+- added a admin panel
+- added authentication for customers and technicians
+- added sections/queues for the technicians
+- created a notification library that allows the program to email the customers when needed
+- the helpdesk program can now be emailed
+- added extra definitions to the config file

@@ -32,9 +32,19 @@ my $success = $q->param('success');
 
 if($authenticated == 1)
 {
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
+	my $query = "select name from section";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $results = $sth->fetchall_arrayref;
+	my @temp = @$results; #required because fetchall_arrayref returns a reference to an array that has a reference to a 1 element array in each element
+	my @sections = ();
+	foreach my $section (@temp){
+		push(@sections,shift(@$section));
+	}
 	my $file = "user_admin.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success,logo => $config->{'logo_image'}};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success,logo => $config->{'logo_image'}, sections => \@sections};
 	
 	print "Content-type: text/html\n\n";
 

@@ -62,7 +62,7 @@ sub create_user{
 	#my $today = ($year + 1900) . "-" . ($month + 1) . "-" . $day; #replaced with using default values of current_time in postgresql
 	my $password = md5_hex($args{'password'});
 
-	my $query = "insert into users (alias,password,email, active) values ('$args{'alias'}','$password','$args{'email'}',TRUE)";
+	my $query = "insert into users (alias,password,email, active,sections) values ('$args{'alias'}','$password','$args{'email'}',TRUE,'$args{'section'}')";
 	my $sth = $self->{'dbh'}->prepare($query) or return undef;
 	$sth->execute or return undef;
 

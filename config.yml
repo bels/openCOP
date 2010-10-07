@@ -1,20 +1,33 @@
 --- !!perl/hash:ReadConfig
+'': ~
 '%W, %M %m, %Y': ~
 /usr/local/www/helpdesk/maps: ~
 /usr/local/www/helpdesk/templates: ~
+ARRAY(0x83da898): ~
+ARRAY(0x83da964): ~
 ARRAY(0x83db598): ~
+ARRAY(0x85df6d4): ~
+ARRAY(0x85df6ec): ~
+ARRAY(0x85df704): ~
+ARRAY(0x85df74c): ~
+ARRAY(0x85df764): ~
+ARRAY(0x85df77c): ~
 ARRAY(0x85dfc34): ~
 ARRAY(0x85dfc40): ~
 ARRAY(0x85dfc58): ~
+HASH(0x85df38c): ~
+HASH(0x85df3f8): ~
 HASH(0x85df9a0): ~
 Pg: ~
 Test company: ~
+YAML: ~
 auth: ~
 auth_table: auth
 ccboehd: ~
 company_domain: test.com
 company_name: Test company
 comparisons: generic.cmps
+config.yml: ~
 config_dir: /usr/local/www/helpdesk/maps
 config_file: config.yml
 config_type: YAML
@@ -279,8 +292,13 @@ sections:
   - App Dev
 sites:
   - Test Site
+  - Test
+  - Test2
+  - Test B
 techs:
   - admin
+  - test_user
+  - test_user
 template_dir: /usr/local/www/helpdesk/templates
 test.com: ~
 ticket_mail_account: newticket

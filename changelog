@@ -10,6 +10,7 @@ Changes from 0.3.3 -> 0.4 (beginning of the big feature add
 * created a script that sets up a postgresql database for use with the system
 * added a notification library (needs more features)
 * added ability for client to email the helpdesk system as a way of submitting tickets
+* added queues for the technicians
 
 Changes from 0.3.2 -> 0.3.3
  * Report bookmarking uses shorter query strings.

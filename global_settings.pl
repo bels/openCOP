@@ -29,19 +29,9 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
-	my $query = "select type from school_level";
-	my $sth = $dbh->prepare($query);
-	$sth->execute;
-	my $results = $sth->fetchall_arrayref;
-	my @temp = @$results; #required because fetchall_arrayref returns a reference to an array that has a reference to a 1 element array in each element
-	my @sites = ();
-	foreach my $site (@temp){
-		push(@sites,shift(@$site));
-	}
-	my $file = "sites.tt";
+	my $file = "global_settings.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@sites};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}};
 	
 	print "Content-type: text/html\n\n";
 

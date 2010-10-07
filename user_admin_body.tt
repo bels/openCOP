@@ -10,6 +10,12 @@
 				<label for="username">Username:</label><input type="text" id="username" name="username"><br>
 				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br>
 				<label for="password2">Retype Password:</label><input type="password" id="password2" name="password2"><br>
+				<label for="section" class="short_label">Priority:</label>
+				<select name="section" size="1" id="section">
+					[% FOREACH section IN sections %]
+					<option value="[% section %]">[% section %]</option>
+					[% END %]
+				</select>
 				<input type="submit" id="submit_button" value="Add User">
 			</form>
 		</div>

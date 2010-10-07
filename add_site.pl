@@ -5,7 +5,6 @@ use warnings;
 use YAML ();
 use CGI;
 use DBI;
-use Data::Dumper;
 
 my $q = CGI->new();
 
@@ -22,6 +21,7 @@ else
 my $sites = $config->{'sites'};
 my @new_sites = @$sites; #sometype of evaluating needs to be done here.  If the sites array is empty in the config file this breaks.
 push(@new_sites,$q->param('site_name'));
+
 $config->{'sites'} = \@new_sites;
 
 YAML::DumpFile("config.yml",$config);

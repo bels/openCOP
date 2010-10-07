@@ -1,4 +1,5 @@
 ADD:
+	Allow a technician to be in more than one section
 	Display what technician is assigned to a ticket
 	*BUG*Fix whatever bels broke in ReadConfig while adding the ability to add technicians to tickets.  Check apache log for errors
 	Gather more information about the technicians when creating accounts so more than a login can be showed to the customer
@@ -42,6 +43,8 @@ ADD:
 	room classification property in which it resides.)	
 	Clean up code to make it more MVC-like. In progress.
 
+*DONE* Add a way to specify which queues/sections a technician is in.
+*DONE* Add a way to add sections/queues
 *DONE* Add ability to assign a technician to tickets.
 *DONE* Make it so the site in the ticket details is the site name and not the number.  It is currently the number because the database stores the site_id as a foriegn key and not the name.
 *DONE* It would be nice if the notification library would account for the ticket number when contacting the customer

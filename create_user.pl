@@ -11,6 +11,7 @@ my $q = CGI->new(); #create CGI
 my $alias = uri_unescape($q->param('username')); #getting the username from the form
 my $password = uri_unescape($q->param('password1')); #getting the password from the form
 my $email = uri_unescape($q->param('email'));
+my $section = uri_unescape($q->param('section'));
 
 chomp($alias);
 chomp($password);
@@ -34,6 +35,6 @@ else
 	$config->{'techs'} = \@new_techs;
 
 	YAML::DumpFile("config.yml",$config);
-	$user->create_user(alias => $alias,password => $password, email => $email);
+	$user->create_user(alias => $alias,password => $password, email => $email,section => $section);
 	print $q->redirect(-URL => "user_admin.pl?success=1");
 }
