@@ -41,7 +41,10 @@ if($authenticated == 1)
 	my $stuff = $sth->fetchrow_hashref;
 	my $site = $stuff->{'name'};
 
-
+	$query = "select * from troubleshooting where tkid = '$ticket_number'";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $troubleshooting = $sth->fetchall_hashref('tid');
 	print  qq(<form action="update_ticket.pl" method="POST" id="update_form"><input type="hidden" name="ticket_number" value="$results->{'ticket'}"><label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span><br/>
 		<label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span><label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span><br/>
 		<label for="contact">Contact:</label><input type="text" id="contact" name="contact" value="$results->{'contact'}"><label for="contact_phone">Contact Phone:</label><input type="text" id="contact_phone" name="contact_phone" value="$results->{'contact_phone'}"><label for="contact_email">Contact Email:</label><input type="text" id="contact_email" name="contact_email" value="$results->{'contact_email'}"><br/>
@@ -53,7 +56,20 @@ if($authenticated == 1)
 	print qq(</span><br/>
 		<label for="problem">Problem:</label><span id="problem" name="problem">$results->{'problem'}</span><br/>
 		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting"></textarea><br/>
-		<label for="past_troubleshoot">Past Troubleshooting:</label><span id="past_troubleshoot" name="past_troubleshoot">$results->{'troubleshot'}</span><br />
+		<label for="past_troubleshoot">Past Troubleshooting:</label><span id="past_troubleshoot" name="past_troubleshoot">);
+	
+	my @hash_order = keys %$troubleshooting;
+	
+	@hash_order = sort {$b <=> $a} @hash_order;
+	
+	foreach my $t (@hash_order)
+	{
+		print "------------------------------------------------------<br />";
+		print $troubleshooting->{$t}->{'performed'} . "<br />";
+		print $troubleshooting->{$t}->{'troubleshooting'} . "<br />";
+	}
+	
+	print qq(</span><br />
 		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes">$results->{'notes'}</textarea><br/>
 		<input type="submit" value="Update">
 	);

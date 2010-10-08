@@ -1,7 +1,7 @@
 Roadmap.
 
 .4 - have a working helpdesk.  Won't have all the features but it will at least serve the basic function of a helpdesk
-.4.x - fix any bugs found from using the helpdesk
+.4.x - fix any bugs found from using the helpdesk and create an installer script
 .5 - Work on the layout and make the system very user friendly
 .5.x - bug fix
 .6 - Add a documentation module

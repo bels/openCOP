@@ -46,7 +46,10 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (uid SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN,sections VARCHAR(255));
 
 DROP TABLE IF EXISTS helpdesk;
-CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), barcode VARCHAR(255), site INTEGER references site(scid), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), troubleshot TEXT, notes TEXT, section INT references section(sid), problem TEXT, priority INT references priority(prid), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), free VARCHAR(255), technician INTEGER references users(uid));
+CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), barcode VARCHAR(255), site INTEGER references site(scid), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT references section(sid), problem TEXT, priority INT references priority(prid), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), free VARCHAR(255), technician INTEGER references users(uid));
+
+DROP TABLE IF EXISTS troubelshooting;
+CREATE TABLE troubleshooting(tid SERIAL PRIMARY KEY, tkid INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
 
 DROP TABLE IF EXISTS inventory;
 CREATE TABLE inventory (invid BIGSERIAL PRIMARY KEY, ccps BIGINT, hardware_type INTEGER references hardware_type(hwid), site INTEGER references site(scid), serial VARCHAR(255), model BIGINT references equipment(eid), mac varchar(32), ip varchar(255), name varchar(255), room varchar(255), software TEXT, assigned_to varchar(255), grantid BIGINT references grants(gid), status INTEGER references status(stid), installer varchar(255), port varchar(127), notes TEXT, os BIGINT references os(osid), office BIGINT references office(offid), hdd varchar(255), speed varchar(127), ram BIGINT, po BIGINT references purchase(pid), dept varchar(255), cost BIGINT references cost(cid), updated timestamp, deployed timestamp);
@@ -59,7 +62,7 @@ CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curre
 
 -- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
 DROP TABLE IF EXISTS customers;
-CREATE TABLE customers(id SERIAL, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site INTEGER references site(scid));
+CREATE TABLE customers(cid SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site INTEGER references site(scid));
 
 -- Adding admin user
 INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);
@@ -98,8 +101,11 @@ BEGIN
 	SELECT INTO tech_val uid FROM users WHERE alias = tech_text;
 	
 	-- Step 2. Insert the ticket with the translated values
-	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, troubleshot, section, problem, priority, serial, contact_email, technician) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, troubleshot_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val);
+		
+	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, section, problem, priority, serial, contact_email, technician) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
+
+	INSERT INTO troubleshooting (tkid,troubleshooting) values (last_id,troubleshot_val);
 
 	RETURN last_id;
 END;
@@ -121,8 +127,8 @@ BEGIN
 	update helpdesk set contact_phone = contact_phone_val where ticket = ticket_number;
 	update helpdesk set site = site_val where ticket = ticket_number;
 	update helpdesk set location = location_val where ticket = ticket_number;
-	update helpdesk set troubleshot = troubleshot_val where ticket = ticket_number;
 	update helpdesk set notes = notes_val where ticket = ticket_number;
+	insert into troubleshooting (tkid,troubleshooting) values(ticket_number,troubleshot_val);
 	
 	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
 	RETURN last_id;
@@ -169,4 +175,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
 GRANT SELECT, UPDATE ON users_uid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON customers TO helpdesk;
-GRANT SELECT, UPDATE ON customers_id_seq TO helpdesk;
+GRANT SELECT, UPDATE ON customers_cid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO helpdesk;
+GRANT SELECT, UPDATE ON troubleshooting_tid_seq TO helpdesk;
