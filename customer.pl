@@ -10,7 +10,7 @@ use ReadConfig;
 use SessionFunctions;
 
 my @styles = ("styles/layout.css", "styles/customer.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/main.js");
+my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js");
 my $meta_keywords = "";
 my $meta_description = "";
 
@@ -31,10 +31,13 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my @site_list = $config->{'sites'};
+	my @priority_list = $config->{'priority'};
+	my @section_list = $config->{'sections'};
 	my $id = $q->param('id');
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, id => $id};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, id => $id,site_list => @site_list, priority_list => @priority_list, section_list => @section_list};
 	
 	print "Content-type: text/html\n\n";
 

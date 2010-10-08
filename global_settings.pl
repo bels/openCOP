@@ -29,9 +29,11 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $duplicate = $q->param('duplicate');
+	my $success = $q->param('success');
 	my $file = "global_settings.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'},success => $success, duplicate => $duplicate};
 	
 	print "Content-type: text/html\n\n";
 

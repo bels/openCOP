@@ -21,4 +21,4 @@ my $query = "insert into section (name,email) values ('$section_name','$section_
 my $sth = $dbh->prepare($query);
 $sth->execute;
 
-print $q->redirect(-URL=> "global_settings.pl");
+print $q->redirect(-URL=> "global_settings.pl?success=1");

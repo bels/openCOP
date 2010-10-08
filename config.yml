@@ -21,6 +21,7 @@ sections:
   - Helpdesk
 sites:
   - Test Site
+  - Thomas Stone
 techs:
   - admin
   - jbelfield

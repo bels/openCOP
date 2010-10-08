@@ -1,3 +1,9 @@
+		[% IF duplicate == 1 %]
+			<span class="error">This username is already taken.  Please choose another.</span>
+		[% END %]
+		[% IF success == 1 %]
+			<span class="success">The user was created successfully.</span>
+		[% END %]
 		<div id="sections_div">
 			<form action="add_section.pl" method="POST">
 				<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name"><a href="tips.pl?0" class="tooltip">?</a><br />
