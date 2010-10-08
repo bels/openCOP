@@ -9,8 +9,16 @@ $(document).ready(function(){
 			data: the_data,
 			success: function(){
 				alert("Added the ticket");
-				window.location = "ticket.pl?mode=new";
-				},
+				var pathname = window.location.pathname;
+				if(pathname.match(/ticket\.pl/))
+				{
+					window.location = "ticket.pl?mode=new";
+				}
+				else
+				{
+					window.location = "customer.pl";
+				}
+			},
 			error: function(){alert("Big fail")}
 		});
 	});

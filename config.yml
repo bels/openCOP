@@ -24,7 +24,6 @@ sites:
   - Thomas Stone
 techs:
   - admin
-  - jbelfield
 template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password
