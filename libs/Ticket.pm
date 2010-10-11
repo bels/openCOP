@@ -87,7 +87,7 @@ sub submit{
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
 	my $free = 0; #free isn't used yet but the stored procedure is expecting it so i'm just going to pass it a 0 for now.
-	my $status = "New";
+	my $status = 1;
 
 	my $query = "select insert_ticket('$data->{'site'}','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free','$data->{'tech'}')";
 	my $sth = $dbh->prepare($query);
@@ -132,7 +132,7 @@ sub update{
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
 	
-	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}')";
+	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}')";
 	my $sth = $dbh->prepare($query);
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
 	#warn $DBI::errstr;

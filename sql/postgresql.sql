@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS customers;
 CREATE TABLE customers(cid SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site INTEGER references site(scid));
 
 -- Adding admin user
-INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);
+INSERT INTO users(alias,email,password,active,sections) values('admin','admin@localhost',MD5('admin'),true,'Helpdesk');
 -- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
@@ -84,11 +84,10 @@ INSERT INTO ticket_status (name) values ('Completed');
 INSERT INTO school_level(type) values ('test');
 INSERT INTO site (level,name) values (1,'Test Site');
 
-CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_text text, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255), tech_text VARCHAR(255)) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255), tech_text VARCHAR(255)) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
 	site_val INTEGER;
-	status_val INTEGER;
 	section_val INTEGER;
 	last_id INTEGER;
 	tech_val INTEGER;
@@ -96,7 +95,6 @@ BEGIN
 	--Step 1. Translate priority, site, status, section into values from the other tables
 	SELECT INTO priority_val severity FROM priority WHERE description = priority_text;
 	SELECT INTO site_val scid FROM site WHERE name = site_text;
-	SELECT INTO status_val tsid FROM ticket_status WHERE name = status_text;
 	SELECT INTO section_val sid FROM section WHERE name = section_text;
 	SELECT INTO tech_val uid FROM users WHERE alias = tech_text;
 	
@@ -111,7 +109,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION update_ticket(ticket_number BIGINT, site_text text, location_val TEXT,  contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, contact_email_val VARCHAR(255), notes_val TEXT) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION update_ticket(ticket_number BIGINT, site_text text, location_val TEXT,  contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, contact_email_val VARCHAR(255), notes_val TEXT, status_val INTEGER) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
 	site_val INTEGER;
@@ -128,6 +126,7 @@ BEGIN
 	update helpdesk set site = site_val where ticket = ticket_number;
 	update helpdesk set location = location_val where ticket = ticket_number;
 	update helpdesk set notes = notes_val where ticket = ticket_number;
+	update helpdesk set status = status_val where ticket = ticket_number;
 	insert into troubleshooting (tkid,troubleshooting) values(ticket_number,troubleshot_val);
 	
 	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
