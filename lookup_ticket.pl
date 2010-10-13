@@ -46,10 +46,11 @@ if($authenticated == 1)
 	
 	@hash_order = sort(@hash_order);
 	
+	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed");
 	foreach my $element (@hash_order)
 	{
 		#this needs to vastly improve.  this displays the html inside of the ticket box.
-		print "<div class=\"lookup_row\"><div class=\"row_ticket_number\">$results->{$element}->{'ticket'}</div><div class=\"row_ticket_status\">$results->{$element}->{'status'}</div><div class=\"row_ticket_contact\">$results->{$element}->{'contact'}</div></div>";
+		print "<div class=\"lookup_row\"><div class=\"row_ticket_number\">$results->{$element}->{'ticket'}</div><div class=\"row_ticket_status\">$ticket_statuses{$results->{$element}->{'status'}}</div><div class=\"row_ticket_contact\">$results->{$element}->{'contact'}</div></div>";
 	}
 }	
 else
