@@ -72,7 +72,7 @@ if [ $OSVER == "FreeBSD" ]; then
 	`cp -R ./* $INSTALL_DIR >>$INSTALL_LOG`
 	echo -en "done\nSetting permissions ... "
 	`find $INSTALL_DIR -type d -exec chmod 775 {} \;`
-	`find $INSTALL_DIR -type f -exec chmod 550 {} \;`
+	`find $INSTALL_DIR -type f -exec chmod 770 {} \;`
 	`chmod a+rx $INSTALL_DIR/sql/*`
 	chown -R www:www $INSTALL_DIR/*
 	#echo -en "done\nSetting up postgres ... "
