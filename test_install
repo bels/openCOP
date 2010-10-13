@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# EB
+# 2010.10.13
+# v0.5
+
+OSVER=(`uname`)			# Get operating system type
+INSTALL_DIR=("/usr/local/www/openCOP")
+INSTALL_LOG=("/tmp/test_install.log")
+declare -A REQHASH=(		# Define a list of required ports
+	["perl"]="perl"
+	["apache"]="apache22"
+	["postgresql-server"]="postgresql84-server"
+	["p5-DBI"]="p5-DBI"
+	["p5-DBD-Pg"]="p5-DBD-Pg"
+	["p5-Template-Toolkit"]="p5-Template-Toolkit"
+	["p5-YAML"]="p5-YAML"
+	["p5-URI-Escape-XS"]="p5-URI-Escape-XS"
+	["p5-Digest-MD5"]="p5-Digest-MD5"
+	["p5-Data-Dumper"]="p5-Data-Dumper"
+	["p5-Net-SMTP_auth"]="p5-Net-SMTP_auth"
+	["p5-Mail-IMAPClient"]="p5-Mail-IMAPClient"
+	["p5-Date-Manip"]="p5-Date-Manip"
+	["p5-Authen-SASL"]="p5-Authen-SASL"
+	["p5-libwww"]="p5-libwww"
+)
+
+function die() {
+	echo "$@" >&2
+	exit 1
+}
+
+if [ ! -f ./sql/setup_postgresql.sh ]; then
+	die "This script must be run from the root directory of the openCOP files"
+fi
+
+
+function checkFor_freebsd() {		# Check if it's installed under FreeBSD
+	if [ -z "$1" ]; then		
+		return
+	fi
+	echo -n "Checking for $1 ... "
+	for j in ${PKG[@]}; do
+		if [ $j == $1 ]; then
+#			echo "${[${j}]}"  # for version reporting
+			echo "yes"
+			return 0
+		fi
+	done
+	PKG_PATH=${REQHASH[${1}]}
+
+	CHDIR=`find /usr/ports/ -iname "$PKG_PATH" |awk '{print $0 "\n" }'`
+	`cd $CHDIR && make -DBATCH -DDISABLE_VULNERABILITIES install clean >$INSTALL_LOG` || echo "Could not install $1 at $CHDIR"; return 2
+#	echo "no"
+	return 1
+}
+
+if [ $OSVER == "FreeBSD" ]; then
+	echo "This install script relies on the apache22 and postgres84-server packages."
+	PKG=(`pkg_version|cut -d' ' -f 1`)
+	VER=(`pkg_version -v|cut -d'-' -f 2`)
+	
+	for i in ${!REQHASH[@]}; do
+		checkFor_freebsd $i
+	done
+	if [ $? == 2 ]; then
+		die "Dependant package failed to install"
+	fi
+	if [ ! -d $INSTALL_DIR ]; then
+		mkdir $INSTALL_DIR || die "Could not create $INSTALL_DIR. Do you have write permission?"
+	fi
+	echo -n "Copying files from `pwd` to $INSTALL_DIR ... "
+	`cp -R ./* $INSTALL_DIR >>$INSTALL_LOG`
+	echo -en "done\nSetting permissions ... "
+	`find $INSTALL_DIR -type d -exec chmod 775 {} \;`
+	`find $INSTALL_DIR -type f -exec chmod 550 {} \;`
+	`chmod a+rx $INSTALL_DIR/sql/*`
+	#echo -en "done\nSetting up postgres ... "
+	su - pgsql -c "cd $INSTALL_DIR/sql && ./setup_postgresql.sh" || die "Could not execute setup_postgresql.sh"
+	echo "done"
+elif [ $OSVER == "Linux" ]; then
+	echo "This is a Linux distribution"
+else
+	echo "Not FreeBSD/Linux"
+fi
+
+
+

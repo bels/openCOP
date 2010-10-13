@@ -21,7 +21,6 @@ sections:
   - Helpdesk
 sites:
   - Test Site
-  - Thomas Stone
 techs:
   - admin
 template_dir: /usr/local/www/helpdesk/templates
