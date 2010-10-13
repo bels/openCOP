@@ -135,6 +135,11 @@ sub update{
 	my %args = @_;
 	my $data = $args{'data'};
 	
+	foreach my $element (keys %$data)
+	{
+		$data->{$element} =~ s/\'/\'\'/g;
+	}
+	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
 	
 	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}')";
