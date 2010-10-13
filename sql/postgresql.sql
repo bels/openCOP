@@ -127,7 +127,9 @@ BEGIN
 	update helpdesk set location = location_val where ticket = ticket_number;
 	update helpdesk set notes = notes_val where ticket = ticket_number;
 	update helpdesk set status = status_val where ticket = ticket_number;
-	insert into troubleshooting (tkid,troubleshooting) values(ticket_number,troubleshot_val);
+	IF troubleshot_val NOT LIKE "" THEN
+		insert into troubleshooting (tkid,troubleshooting) values(ticket_number,troubleshot_val);
+	END IF;
 	
 	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
 	RETURN last_id;
