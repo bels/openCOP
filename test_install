@@ -74,6 +74,7 @@ if [ $OSVER == "FreeBSD" ]; then
 	`find $INSTALL_DIR -type d -exec chmod 775 {} \;`
 	`find $INSTALL_DIR -type f -exec chmod 550 {} \;`
 	`chmod a+rx $INSTALL_DIR/sql/*`
+	chown -R www:www $INSTALL_DIR/*
 	#echo -en "done\nSetting up postgres ... "
 	su - pgsql -c "cd $INSTALL_DIR/sql && ./setup_postgresql.sh" || die "Could not execute setup_postgresql.sh"
 	echo "done"
