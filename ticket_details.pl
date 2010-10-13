@@ -31,7 +31,7 @@ if($authenticated == 1)
 	print "Content-type: text/html\n\n";
 
 	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed"); 
-	my %priorities = (0 => "Low",1 =>"Normal",2 => "High",3=>"Business Critical");
+	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
 	my $site_id = $results->{'site'};
