@@ -45,6 +45,10 @@ if($authenticated == 1)
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $troubleshooting = $sth->fetchall_hashref('tid');
+	$query = "select * from notes where tkid = '$ticket_number'";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $notes = $sth->fetchall_hashref('nid');
 	print  qq(<form action="update_ticket.pl" method="POST" id="update_form"><input type="hidden" name="ticket_number" value="$results->{'ticket'}"><label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span>);
 	print qq(<label for="status">Ticket Status:</label><select id="status" name="status">);
 	my $i;
@@ -79,9 +83,21 @@ if($authenticated == 1)
 	}
 	
 	print qq(</span><br />
-		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes">$results->{'notes'}</textarea><br/>
-		<input type="submit" value="Update">
-	);
+		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes">$results->{'notes'}</textarea><br/>);
+
+	print qq(<label for="past_notes">Past Notes:</label><span id="past_notes" name="past_notes">);
+	@hash_order = keys %$notes;
+	
+	@hash_order = sort {$b <=> $a} @hash_order;
+	
+	foreach my $t (@hash_order)
+	{
+		print "------------------------------------------------------<br />";
+		print $notes->{$t}->{'performed'} . "<br />";
+		print $notes->{$t}->{'note'} . "<br />";
+	}
+	print qq(<input type="submit" value="Update">);
+	
 }	
 else
 {

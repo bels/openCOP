@@ -35,3 +35,7 @@ label{
 #customer_admin_form #submit_button{
 	width: 120px;
 }
+
+#problem_label{
+	width: 350px;
+}

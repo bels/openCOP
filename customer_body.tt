@@ -37,10 +37,8 @@
 			</div>
 			<div id="problem_details">
 				<h3>Problem Details</h3>
-				<label for="problem">Problem:</label><br />
+				<label for="problem" id="problem_label">Problem and Troubleshooting Tried:</label><br />
 				<textarea id="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
-				<label for="troubleshoot">Troubleshooting Tried:</label><br />
-				<textarea  id="troubleshoot" style="width: 690px;" cols="80" rows="5" name="troubleshoot" tabindex="12"></textarea> <br />
 				<button type="button" id="submit_button">Submit</button>
 			</div>
 		</form>

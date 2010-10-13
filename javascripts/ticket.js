@@ -44,5 +44,28 @@ $(document).ready(function(){
 		});
 		$("#ticket_details").css("display","block");
 	});
-	
+	$("#customer_submit_button").click(function(){
+		var url = "submit_ticket.pl?type=customer";
+		var the_data = $("#newticket").serialize();
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: the_data,
+			success: function(){
+				alert("Added the ticket");
+				var pathname = window.location.pathname;
+				if(pathname.match(/ticket\.pl/))
+				{
+					window.location = "ticket.pl?mode=new";
+				}
+				else
+				{
+					window.location = "customer.pl";
+				}
+			},
+			error: function(xml,text,error){
+				alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
+			}
+		});
+	});
 });

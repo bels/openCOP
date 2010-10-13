@@ -94,7 +94,7 @@ sub submit{
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
 	
-	my $query = "select insert_ticket('$data->{'site'}','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free','$data->{'tech'}')";
+	my $query = "select insert_ticket('$data->{'site'}','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free','$data->{'tech'}','$data->{'notes'}')";
 	my $sth = $dbh->prepare($query);
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
 	#warn $DBI::errstr;
