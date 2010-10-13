@@ -127,7 +127,7 @@ BEGIN
 	update helpdesk set location = location_val where ticket = ticket_number;
 	update helpdesk set notes = notes_val where ticket = ticket_number;
 	update helpdesk set status = status_val where ticket = ticket_number;
-	IF troubleshot_val NOT LIKE "" THEN
+	IF troubleshot_val NOT LIKE '' THEN
 		insert into troubleshooting (tkid,troubleshooting) values(ticket_number,troubleshot_val);
 	END IF;
 	
