@@ -19,7 +19,9 @@ $(document).ready(function(){
 					window.location = "customer.pl";
 				}
 			},
-			error: function(){alert("Big fail")}
+			error: function(xml,text,error){
+				alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
+			}
 		});
 	});
 	
