@@ -107,11 +107,11 @@ BEGIN
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
 
 	IF troubleshot_val NOT LIKE '' THEN
-		insert into troubleshooting (tkid,troubleshooting) values(ticket_number,troubleshot_val);
+		insert into troubleshooting (tkid,troubleshooting) values(last_id,troubleshot_val);
 	END IF;
 	
 	IF notes_val NOT LIKE '' THEN
-		insert into notes (tkid,note) values(ticket_number,notes_val);
+		insert into notes (tkid,note) values(last_id,notes_val);
 	END IF;
 
 	RETURN last_id;

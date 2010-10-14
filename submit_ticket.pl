@@ -26,10 +26,12 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $data = $q->Vars;
+	my $type = $q->url_param('type');
 	my $notes;
-	if($data->{'type'} eq "customer")
+	if($type eq "customer")
 	{
 		$notes = $q->param('problem');
+		$data->{'tech'} = "undefined";
 	}
 	else
 	{

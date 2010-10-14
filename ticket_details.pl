@@ -83,7 +83,7 @@ if($authenticated == 1)
 	}
 	
 	print qq(</span><br />
-		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes">$results->{'notes'}</textarea><br/>);
+		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes"></textarea><br/>);
 
 	print qq(<label for="past_notes">Past Notes:</label><span id="past_notes" name="past_notes">);
 	@hash_order = keys %$notes;

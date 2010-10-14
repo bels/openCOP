@@ -39,6 +39,6 @@
 				<h3>Problem Details</h3>
 				<label for="problem" id="problem_label">Problem and Troubleshooting Tried:</label><br />
 				<textarea id="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
-				<button type="button" id="submit_button">Submit</button>
+				<button type="button" id="customer_submit_button">Submit</button>
 			</div>
 		</form>
