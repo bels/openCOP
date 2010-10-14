@@ -96,7 +96,8 @@ if($authenticated == 1)
 		print $notes->{$t}->{'performed'} . "<br />";
 		print $notes->{$t}->{'note'} . "<br />";
 	}
-	print qq(<input type="submit" value="Update">);
+	print qq(</span><br />
+		<input type="submit" value="Update">);
 	
 }	
 else

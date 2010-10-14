@@ -28,7 +28,7 @@ if($authenticated == 1)
 	my $data = $q->Vars;
 	
 	my $uid = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
-	warn $uid;
+
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
 	my $query = "select sections from users where alias = '$uid'";
 	my $sth = $dbh->prepare($query);
