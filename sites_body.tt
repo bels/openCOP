@@ -1,3 +1,12 @@
+		[% IF duplicate == 1 %]
+			<span class="error">This site name is already in use.  Please choose another.</span>
+		[% END %]
+		[% IF success == 1 %]
+			<span class="success">The site was created successfully.</span>
+		[% END %]
+		[% IF level_success == 1 %]
+			<span class="success">The site level was created successfully.</span>
+		[% END %]
 		<div id="add_site_div">
 			<form action="add_site.pl" method="POST">
 				<h4>Add Site<a href="tips.pl?0" class="tooltip">?</a></h4>

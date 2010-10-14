@@ -134,10 +134,13 @@ BEGIN
 	update helpdesk set contact_phone = contact_phone_val where ticket = ticket_number;
 	update helpdesk set site = site_val where ticket = ticket_number;
 	update helpdesk set location = location_val where ticket = ticket_number;
-	update helpdesk set notes = notes_val where ticket = ticket_number;
 	update helpdesk set status = status_val where ticket = ticket_number;
 	IF troubleshot_val NOT LIKE '' THEN
 		insert into troubleshooting (tkid,troubleshooting) values(ticket_number,troubleshot_val);
+	END IF;
+	
+	IF notes_val NOT LIKE '' THEN
+		insert into notes (tkid,note) values(ticket_number,notes_val);
 	END IF;
 	
 	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val

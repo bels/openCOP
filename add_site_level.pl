@@ -20,4 +20,4 @@ my $query = "insert into school_level (type) values ('$site_level')";
 my $sth = $dbh->prepare($query);
 $sth->execute;
 
-print $q->redirect(-URL=> "sites.pl");
+print $q->redirect(-URL=> "sites.pl?level_success=1");

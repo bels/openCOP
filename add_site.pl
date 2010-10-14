@@ -38,4 +38,4 @@ $query = "insert into site (level,name) values ('$results->{'slid'}','$site_name
 $sth = $dbh->prepare($query);
 $sth->execute;
 
-print $q->redirect(-URL=> "sites.pl");
+print $q->redirect(-URL=> "sites.pl?success=1");

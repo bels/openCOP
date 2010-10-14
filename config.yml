@@ -21,6 +21,8 @@ sections:
   - Helpdesk
 sites:
   - Test Site
+  - asdf
+  - asfdsa
 techs:
   - admin
 template_dir: /usr/local/www/helpdesk/templates
