@@ -70,8 +70,8 @@ sub render{
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
-	my @styles = ("styles/layout.css","styles/ticket.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js");
+	my @styles = ("styles/jquery.jscrollpane.css","styles/layout.css","styles/ticket.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.min.js");
 	
 	print "Content-type: text/html\n\n";
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => @site_list, priority_list => @priority_list, section_list => @section_list, tech_list => @tech_list};

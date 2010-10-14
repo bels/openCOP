@@ -49,7 +49,8 @@ if($authenticated == 1)
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $notes = $sth->fetchall_hashref('nid');
-	print  qq(<form action="update_ticket.pl" method="POST" id="update_form"><input type="hidden" name="ticket_number" value="$results->{'ticket'}"><label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span>);
+	print qq(<h2>Ticket Details</h2>);
+	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><input type="hidden" name="ticket_number" value="$results->{'ticket'}"><label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span>);
 	print qq(<label for="status">Ticket Status:</label><select id="status" name="status">);
 	my $i;
 	for ($i = 1; $i <= keys(%ticket_statuses); $i++)

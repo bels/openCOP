@@ -47,6 +47,7 @@ if($authenticated == 1)
 	@hash_order = sort(@hash_order);
 	
 	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed");
+	print qq(<div id="header_row"><div id="ticket_number" class="header_row_item">Ticket Number</div><div id="ticket_status" class="header_row_item">Ticket Status</div><div id="ticket_contact" class="header_row_item">Ticket Contact</div></div>);
 	foreach my $element (@hash_order)
 	{
 		#this needs to vastly improve.  this displays the html inside of the ticket box.

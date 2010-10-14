@@ -27,9 +27,10 @@
 #ticket_lookup{
 	margin-top: 15px;
 	width: 90%;
-	height: 400px;
+	height: 200px;
 	margin-left: auto;
 	margin-right: auto;
+	overflow: auto;
 	border: 1px solid black;
 }
 
@@ -74,6 +75,7 @@
 	margin-top: 15px;
 	width: 90%;
 	height: 550px;
+	overflow: auto;
 	margin-left: auto;
 	margin-right: auto;
 	border: 1px solid black;
