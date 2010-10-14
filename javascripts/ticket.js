@@ -1,17 +1,15 @@
 $(document).ready(function(){
-	var pane = $("#ticket_lookup").jScrollPane({
-			showArrows:true,
-			maintainPosition: false
-	}).data('jsp');
-	var details_pane = $("#ticket_details").jScrollPane({
-			showArrows:true,
-			maintainPosition: false
-	}).data('jsp');
-	
-	
-	
+		
 	if($("#ticket_lookup").length)
 	{
+		var pane = $("#ticket_lookup").jScrollPane({
+			showArrows:true,
+			maintainPosition: false
+		}).data('jsp');
+		var details_pane = $("#ticket_details").jScrollPane({
+				showArrows:true,
+				maintainPosition: false
+		}).data('jsp');
 		/*This will have to be improved when we start actually caring about queues */
 		var url = "lookup_ticket.pl";
 		pane.getContentPane().load(url,function(data){
