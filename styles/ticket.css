@@ -42,7 +42,7 @@
 
 .header_row_item{
 	float: left;
-	width: 33%;
+	width: 25%;
 	height: 30px;
 }
 
@@ -54,19 +54,25 @@
 
 .row_ticket_number{
 	float: left;
-	width: 33%;
+	width: 25%;
 	height: 30px;
 }
 
 .row_ticket_status{
 	float: left;
-	width: 33%;
+	width: 25%;
 	height: 30px;
 }
 
 .row_ticket_contact{
 	float: left;
-	width: 33%;
+	width: 25%;
+	height: 30px;
+}
+
+.row_ticket_priority{
+	float: left;
+	width: 25%;
 	height: 30px;
 }
 
