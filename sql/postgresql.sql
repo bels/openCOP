@@ -27,8 +27,11 @@ CREATE TABLE ticket_status (tsid SERIAL PRIMARY KEY, name VARCHAR(255));
 DROP TABLE IF EXISTS school_level;
 CREATE TABLE school_level (slid SERIAL PRIMARY KEY, type VARCHAR(255));
 
+DROP TABLE IF EXISTS company;
+CREATE TABLE company (cpid SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN);
+
 DROP TABLE IF EXISTS site;
-CREATE TABLE site (scid SERIAL PRIMARY KEY, level INTEGER references school_level(slid), name VARCHAR(255), deleted smallint);
+CREATE TABLE site (scid SERIAL PRIMARY KEY, level INTEGER references school_level(slid), name VARCHAR(255), deleted smallint, cpid INTEGER references company(cpid));
 
 DROP TABLE IF EXISTS purchase;
 CREATE TABLE purchase (pid BIGSERIAL PRIMARY KEY, purchased timestamp, arrived timestamp, order_number varchar(255), notes text);
