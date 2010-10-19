@@ -7,7 +7,7 @@
 		[% IF level_success == 1 %]
 			<span class="success">The site level was created successfully.</span>
 		[% END %]
-		[% IF level_success == 1 %]
+		[% IF company_success == 1 %]
 			<span class="success">The company was created successfully.</span>
 		[% END %]
 		<div id="add_site_div">
@@ -32,7 +32,7 @@
 		<div id="add_company_div">
 			<form action="add_company.pl" method="POST">
 				<h4>Add Company<a href="tips.pl?0" class="tooltip">?</a></h4>
-				<label for="company_name">Company Name:</label><input type="text" name="company_name" id="company_name"><a href="tips.pl?0" class="tooltip">?</a><br />
+				<label for="company_name_input">Company Name:</label><input type="text" name="company_name_input" id="company_name_input"><a href="tips.pl?0" class="tooltip">?</a><br />
 				<input type="submit" value="Add" id="company_submit_button">
 			</form>
 		</div>

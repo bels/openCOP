@@ -41,9 +41,10 @@ if($authenticated == 1)
 	}
 	my $success = $q->param('success');
 	my $level_success = $q->param('level_success');
+	my $company_success = $q->param('company_success');
 	my $file = "sites.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@sites, success => $success,level_success => $level_success};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@sites, success => $success,level_success => $level_success,company_success => $company_success};
 	
 	print "Content-type: text/html\n\n";
 
