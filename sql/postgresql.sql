@@ -196,3 +196,5 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO helpdesk;
 GRANT SELECT, UPDATE ON troubleshooting_tid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON notes TO helpdesk;
 GRANT SELECT, UPDATE ON notes_nid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON company TO helpdesk;
+GRANT SELECT, UPDATE ON company_cpid_seq TO helpdesk;
