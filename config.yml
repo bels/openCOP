@@ -1,4 +1,5 @@
 ---
+version: .4
 auth_table: auth
 company_domain: test.com
 company_name: Test company

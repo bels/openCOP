@@ -80,7 +80,7 @@ sub handle_failure{
 	my $smtp_msg = ( $smtp->message )[-1];
 	chomp $smtp_msg;
 
-	die join( ':', $smtp->code, $call, $smtp_msg );
+	warn join( ':', $smtp->code, $call, $smtp_msg );
 }
 
 

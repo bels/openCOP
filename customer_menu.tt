@@ -1,1 +1,1 @@
-		<div id="menu"><a href="lookup_ticket.pl?customer_id=[% id %]&status=open">View your open tickets</a><a href="lookup_ticket.pl?customer_id=[% id %]&status=closed">View your closed tickets</a><a href="password.pl?id=[% id %]">Change Password</a><a href="customer_logout.pl">Logout</a></div>
+		<div id="menu"><a href="customer.pl">Enter a ticket</a><a href="customer_ticket.pl?status=open">View your open tickets</a><a href="customer_ticket.pl?status=closed">View your closed tickets</a><a href="password.pl">Change Password</a><a href="customer_logout.pl">Logout</a></div>

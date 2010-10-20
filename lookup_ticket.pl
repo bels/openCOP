@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use lib './libs';
@@ -29,7 +29,7 @@ if($authenticated == 1)
 	
 	my $uid = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
 
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in lookup_ticket.pl";
 	my $query = "select sections from users where alias = '$uid'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;

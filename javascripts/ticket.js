@@ -1,5 +1,4 @@
 $(document).ready(function(){
-		
 	if($("#ticket_lookup").length)
 	{
 		var pane = $("#ticket_lookup").jScrollPane({
@@ -18,29 +17,33 @@ $(document).ready(function(){
 	}
 	
 	$("#submit_button").click(function(){
-		var url = "submit_ticket.pl";
-		/*var the_data = "site=" + $("#site").val() + "&author=" + $("#author").val() + "&barcode=" + $("#barcode").val() + "&serial=" + $("#serial").val() + "&contact=" + $("#contact").val() + "&phone=" + $("#phone").val() + "&email=" + $("#email").val() + "&location=" +$("#location").val() + "&priority=" + $("#priority").val() + "&group=" + $("#group").val() + "&problem=" + $("#problem").val() + "&troubleshoot=" + $("#troubleshoot").val();*/
-		var the_data = $("#newticket").serialize();
-		$.ajax({
-			type: 'POST',
-			url: url,
-			data: the_data,
-			success: function(){
-				alert("Added the ticket");
-				var pathname = window.location.pathname;
-				if(pathname.match(/ticket\.pl/))
-				{
-					window.location = "ticket.pl?mode=new";
+		$("#newticket").validate();
+		$("#email").rules("add",{required: true,email:true});
+		if($("#newticket").valid())
+		{
+			var url = "submit_ticket.pl";
+			var the_data = $("#newticket").serialize();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: the_data,
+				success: function(){
+					alert("Added the ticket");
+					var pathname = window.location.pathname;
+					if(pathname.match(/ticket\.pl/))
+					{
+						window.location = "ticket.pl?mode=new";
+					}
+					else
+					{
+						window.location = "customer.pl";
+					}
+				},
+				error: function(xml,text,error){
+					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
 				}
-				else
-				{
-					window.location = "customer.pl";
-				}
-			},
-			error: function(xml,text,error){
-				alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
-			}
-		});
+			});
+		}
 	});
 	
 	$(".lookup_row").live("click",function(){
@@ -52,27 +55,32 @@ $(document).ready(function(){
 		$("#ticket_details").css("display","block");
 	});
 	$("#customer_submit_button").click(function(){
-		var url = "submit_ticket.pl?type=customer";
-		var the_data = $("#newticket").serialize();
-		$.ajax({
-			type: 'POST',
-			url: url,
-			data: the_data,
-			success: function(){
-				alert("Added the ticket");
-				var pathname = window.location.pathname;
-				if(pathname.match(/ticket\.pl/))
-				{
-					window.location = "ticket.pl?mode=new";
+		$("#newticket").validate();
+		$("#email").rules("add",{required: true,email:true});
+		if($("#newticket").valid())
+		{
+			var url = "submit_ticket.pl?type=customer";
+			var the_data = $("#newticket").serialize();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: the_data,
+				success: function(){
+					alert("Added the ticket");
+					var pathname = window.location.pathname;
+					if(pathname.match(/ticket\.pl/))
+					{
+						window.location = "ticket.pl?mode=new";
+					}
+					else
+					{
+						window.location = "customer.pl";
+					}
+				},
+				error: function(xml,text,error){
+					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
 				}
-				else
-				{
-					window.location = "customer.pl";
-				}
-			},
-			error: function(xml,text,error){
-				alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
-			}
-		});
-	});
+			});
+		}
+	});	
 });

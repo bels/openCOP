@@ -25,25 +25,17 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $data = $q->Vars;
-	my $type = $q->url_param('type');
-	my $notes;
-	my $submitter = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
-	if($type eq "customer")
-	{
-		$notes = $q->param('problem');
-		$data->{'tech'} = "undefined";
-	}
-	else
-	{
-		$notes = "";
-	}
-	
-	$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data, notes => $notes,submitter => $submitter); #need to pass in hashref named data
+	my $tkid = $q->param('tkid');
+	my $new_note = $q->param('new_note');
+
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in customer_update_ticket.pl";
+	my $query = "insert into notes (tkid, note) values($tkid,'$new_note')";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
 	
 	print "Content-type: text/html\n\n";
 }	
 else
 {
-	print $q->redirect(-URL => $config->{'index_page'});
+	print $q->redirect(-URL => $config->{'customer.pl'});
 }

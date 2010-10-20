@@ -39,3 +39,25 @@ label{
 #problem_label{
 	width: 350px;
 }
+
+#left{
+	float: left;
+	height: 600px;
+	width: 19%;
+	min-width: 275px;
+}
+
+#right{
+	float: left;
+	height: 600px;
+	width: 79.8%;
+	padding-top: 25px;
+}
+
+.ticket_link{
+	margin-left: 60px;
+}
+
+#right label{
+	width: 180px;
+}
