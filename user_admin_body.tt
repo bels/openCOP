@@ -11,7 +11,7 @@
 				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br />
 				<label for="password2">Retype Password:</label><input type="password" id="password2" name="password2"><br />
 				<label for="email">Email Address:</label><input type="text" id="email" name="email"><br />
-				<label for="section" class="short_label">Priority:</label>
+				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" id="section">
 					[% FOREACH section IN sections %]
 					<option value="[% section %]">[% section %]</option>
