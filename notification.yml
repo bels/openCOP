@@ -4,6 +4,7 @@ sending_server: localhost
 email_user: notification
 email_password: somepasssword
 from: notification@lfmcorp.com
-ticket_create: We have received your ticket and a technician will respond to you shortly.
+ticket_create: We have received your ticket and a technician will respond to you shortly.  You can check on the status of your ticket in the helpdesk portal.
 ticket_update: Your ticket has been updated.  If you would like to check the current status of your ticket please log into the helpdesk portal.
 ticket_close: Your ticket has been closed by our technicians.  If this is a mistake please contact us to have it reopened.  If your ticket was resolved please take our satisfaction survey.
+company_name: Test Company
