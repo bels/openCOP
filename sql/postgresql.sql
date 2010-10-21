@@ -112,7 +112,7 @@ BEGIN
 	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, section, problem, priority, serial, contact_email, technician,notes,submitter) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val,notes_val,submitter_val);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
 
-	INSERT INTO audit (status, site, location, author, contact, section, priority, contact_email, technician, notes, updater, ticket) values (status_val, site_val, location_val, author_val, contact_val, section_val, priority_val, contact_email_val, tech_val, notes_val, submitter_val, last_id);
+	INSERT INTO audit (status, site, location, contact, section, priority, contact_email, technician, notes, updater, ticket) values (status_val, site_val, location_val, contact_val, section_val, priority_val, contact_email_val, tech_val, notes_val, submitter_val, last_id);
 
 	IF troubleshot_val NOT LIKE '' THEN
 		insert into troubleshooting (tkid,troubleshooting) values(last_id,troubleshot_val);
