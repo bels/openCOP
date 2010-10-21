@@ -88,13 +88,23 @@ sub submit{
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
 	my $free = 0; #free isn't used yet but the stored procedure is expecting it so i'm just going to pass it a 0 for now.
 	my $status = 1;
-
+	my $site;
 	foreach my $element (keys %$data)
 	{
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
+	
+	if(defined($data->{'site'}))
+	{
+		$site = $data->{'site'};
+	}
+	else
+	{
+		$site = "undefined";
+	}
+	
 	$args{'notes'} =~ s/\'/\'\'/g;
-	my $query = "select insert_ticket('$data->{'site'}','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free','$data->{'tech'}','$args{'notes'}','$args{'submitter'}')";
+	my $query = "select insert_ticket('$site','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$free','$data->{'tech'}','$args{'notes'}','$args{'submitter'}')";
 	my $sth = $dbh->prepare($query);
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
 	#warn $DBI::errstr;

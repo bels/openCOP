@@ -90,3 +90,8 @@ td{
 	width: 170px;
 	margin-right: 5px;
 }
+
+.error{
+	color: red;
+	font-size: .7em;
+}

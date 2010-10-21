@@ -22,6 +22,9 @@ $(document).ready(function(){
 	$("#submit_button").click(function(){
 		$("#newticket").validate();
 		$("#email").rules("add",{required: true,email:true});
+		$("#author").rules("add",{required: true});
+		$("#contact").rules("add",{required: true});
+		
 		if($("#newticket").valid())
 		{
 			var url = "submit_ticket.pl";
@@ -60,6 +63,9 @@ $(document).ready(function(){
 	$("#customer_submit_button").click(function(){
 		$("#newticket").validate();
 		$("#email").rules("add",{required: true,email:true});
+		$("#author").rules("add",{required: true});
+		$("#contact").rules("add",{required: true});
+		
 		if($("#newticket").valid())
 		{
 			var url = "submit_ticket.pl?type=customer";

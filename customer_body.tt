@@ -2,14 +2,6 @@
 		<form id="newticket">
 			<div id="author_div">
 				<h3>General Information</h3>
-				<label for="site" class="short_label">Site:</label>
-				<select name="site" size="1" tabindex="1" id="site">
-					<option></option>
-					[% FOREACH site IN site_list %]
-					<option value="[% site %]">[% site %]</option>
-					[% END %]
-				</select>
-				<br />
 				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
 				<label for="barcode" class="short_label">Barcode:</label><input type="text" name="barcode" id="barcode" tabindex=3><a href="tips.pl?102" class="tooltip" target="_tips">?</a>
 				<label for="serial" class="short_label">Serial:</label><input type="text" name="serial" id="serial" tabindex=4><a href="tips.pl?102" class="tooltip" target="_tips">?</a><br />
@@ -20,17 +12,15 @@
 				<br />
 				<label for="priority" class="short_label">Priority:</label>
 				<select name="priority" size="1" tabindex="9" id="priority">
-					<option></option>
 					[% FOREACH priority IN priority_list %]
-					<option value="[% priority %]">[% priority %]</option>
+					<option [% IF priority == "Normal" %]SELECTED[% END %] value="[% priority %]">[% priority %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="10" id="section">
-					<option></option>
 					[% FOREACH section IN section_list %]
-					<option value="[% section %]">[% section %]</option>
+					<option [% IF section == "Helpdesk" %]SELECTED[% END %] value="[% section %]">[% section %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?108" class="tooltip" target="_tips">?</a>

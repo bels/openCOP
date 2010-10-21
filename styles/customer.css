@@ -61,3 +61,8 @@ label{
 #right label{
 	width: 180px;
 }
+
+.error{
+	color: red;
+	font-size: .7em;
+}
