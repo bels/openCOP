@@ -13,11 +13,28 @@ my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
 
-my $company_name = uri_unescape($q->param('company_name_input'));
+my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+my %cookie = $q->cookie('session');
 
-my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
-my $query = "insert into company (name,hidden) values ('$company_name',false)";
-my $sth = $dbh->prepare($query);
-$sth->execute;
+my $authenticated = 0;
 
-print $q->redirect(-URL=> "sites.pl?company_success=1");
+if(%cookie)
+{
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+}
+
+if($authenticated == 1)
+{
+	my $company_name = uri_unescape($q->param('company_name_input'));
+
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
+	my $query = "insert into company (name,hidden) values ('$company_name',false)";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+
+	print $q->redirect(-URL=> "sites.pl?company_success=1");
+}
+else
+{
+	print $q->redirect(-URL => $config->{'index_page'});
+}
