@@ -44,13 +44,12 @@ label{
 	float: left;
 	height: 600px;
 	width: 19%;
-	min-width: 275px;
+	min-width: 175px;
 }
 
 #right{
 	float: left;
 	height: 600px;
-	width: 79.8%;
 	padding-top: 25px;
 }
 
