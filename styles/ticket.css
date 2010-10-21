@@ -34,46 +34,32 @@
 	border: 1px solid black;
 }
 
-#header_row{
+table{
 	width: 100%;
-	height: 30px;
-	border-bottom: 1px solid black;
+	border-collapse:collapse;
 }
 
-.header_row_item{
-	float: left;
+th{
 	width: 25%;
 	height: 30px;
+	border-bottom: 1px solid black;
 }
 
-.lookup_row{
-	width: 100%;
+td{
+	width: 25%;
 	height: 30px;
-	border-bottom: 1px solid black;
 }
 
 .row_ticket_number{
-	float: left;
-	width: 25%;
-	height: 30px;
+	border-right: 1px solid black;
 }
 
 .row_ticket_status{
-	float: left;
-	width: 25%;
-	height: 30px;
-}
-
-.row_ticket_contact{
-	float: left;
-	width: 25%;
-	height: 30px;
+	border-right: 1px solid black;
 }
 
 .row_ticket_priority{
-	float: left;
-	width: 25%;
-	height: 30px;
+	border-right: 1px solid black;
 }
 
 #ticket_details{

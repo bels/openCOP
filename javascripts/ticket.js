@@ -14,6 +14,9 @@ $(document).ready(function(){
 		pane.getContentPane().load(url,function(data){
 			pane.reinitialise();
 		});
+		$("#ticket_summary").livequery(function(){
+			$("#ticket_summary").tablesorter();
+		});
 	}
 	
 	$("#submit_button").click(function(){
@@ -82,5 +85,5 @@ $(document).ready(function(){
 				}
 			});
 		}
-	});	
+	});
 });

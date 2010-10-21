@@ -48,12 +48,13 @@ if($authenticated == 1)
 	
 	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed");
 	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
-	print qq(<div id="header_row"><div id="ticket_number" class="header_row_item">Ticket Number</div><div id="ticket_status" class="header_row_item">Ticket Status</div><div id="ticket_contact" class="header_row_item">Ticket Priority</div><div id="ticket_contact" class="header_row_item">Ticket Contact</div></div>);
+	print qq(<table id="ticket_summary"><thead><tr id="header_row"><th id="ticket_number" class="header_row_item">Ticket Number</th><th id="ticket_status" class="header_row_item">Ticket Status</th><th id="ticket_contact" class="header_row_item">Ticket Priority</th><th id="ticket_contact" class="header_row_item">Ticket Contact</th></tr></thead><tbody>);
 	foreach my $element (@hash_order)
 	{
 		#this needs to vastly improve.  this displays the html inside of the ticket box.
-		print "<div class=\"lookup_row\"><div class=\"row_ticket_number\">$results->{$element}->{'ticket'}</div><div class=\"row_ticket_status\">$ticket_statuses{$results->{$element}->{'status'}}</div><div class=\"row_ticket_priority\">$priorities{$results->{$element}->{'priority'}}</div><div class=\"row_ticket_contact\">$results->{$element}->{'contact'}</div></div>";
+		print "<tr class=\"lookup_row\"><td class=\"row_ticket_number\">$results->{$element}->{'ticket'}</td><td class=\"row_ticket_status\">$ticket_statuses{$results->{$element}->{'status'}}</td><td class=\"row_ticket_priority\">$priorities{$results->{$element}->{'priority'}}</td><td class=\"row_ticket_contact\">$results->{$element}->{'contact'}</td></tr>";
 	}
+	print qq(</tbody></table>);
 }	
 else
 {
