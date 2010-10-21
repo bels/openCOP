@@ -13,6 +13,9 @@
 		[% IF associate_success == 1 %]
 			<span class="success">The company and site was successfully associated.</span>
 		[% END %]
+		[% IF delete_site_success == 1 %]
+			<span class="success">The site was deleted successfully.</span>
+		[% END %]
 		<div id="left_site">
 			<div id="add_site_div">
 				<form action="add_site.pl" method="POST">
@@ -38,6 +41,18 @@
 					<h4>Add Company<a href="tips.pl?0" class="tooltip">?</a></h4>
 					<label for="company_name_input">Company Name:</label><input type="text" name="company_name_input" id="company_name_input"><a href="tips.pl?0" class="tooltip">?</a><br />
 					<input type="submit" value="Add" id="company_submit_button">
+				</form>
+			</div>
+			<div id="delete_site_div">
+				<form action="delete_site.pl" method="POST">
+					<h4>Delete Site</h4>
+					<label for="delete_site_name">Site Name:</label>
+					<select name="delete_site_name" id="delete_site_name">
+					[% FOREACH site IN sites_list %]
+						<option value="[% site %]">[% site %]</option>
+					[% END %]
+					</select>
+					<input type="submit" value="Delete" id="delete_submit_button">
 				</form>
 			</div>
 		</div>
