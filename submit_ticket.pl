@@ -5,6 +5,7 @@ use lib './libs';
 use Ticket;
 use CGI;
 use SessionFunctions;
+use UserFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -28,7 +29,13 @@ if($authenticated == 1)
 	my $data = $q->Vars;
 	my $type = $q->url_param('type');
 	my $notes;
-	my $submitter = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	warn $alias;
+	my $uid = $user->get_user_info(alias => $alias);
+	my $submitter = $uid->{'uid'};
+
 	if($type eq "customer")
 	{
 		$notes = $q->param('problem');

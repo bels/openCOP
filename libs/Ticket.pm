@@ -71,7 +71,7 @@ sub render{
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
 	my @styles = ("styles/jquery.jscrollpane.css","styles/layout.css","styles/ticket.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery.tablesorter.js","javascripts/jquery.livequery.js","javascripts/jquery.blockui.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery.tablesorter.js","javascripts/jquery.livequery.js");
 	
 	print "Content-type: text/html\n\n";
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => @site_list, priority_list => @priority_list, section_list => @section_list, tech_list => @tech_list};
@@ -152,7 +152,7 @@ sub update{
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
 	
-	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}')";
+	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}',$data->{'tech'},$data->{'updater'})";
 	my $sth = $dbh->prepare($query);
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
 	#warn $DBI::errstr;
