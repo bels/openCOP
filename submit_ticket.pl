@@ -6,6 +6,7 @@ use Ticket;
 use CGI;
 use SessionFunctions;
 use UserFunctions;
+use CustomerFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -26,26 +27,32 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $user;
+	my $alias;
+	my $uid;
+	my $submitter;
 	my $data = $q->Vars;
 	my $type = $q->url_param('type');
 	my $notes;
-	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
-	warn $alias;
-	my $uid = $user->get_user_info(alias => $alias);
-	my $submitter = $uid->{'uid'};
+	$alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
 
 	if($type eq "customer")
 	{
+		$user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+		$uid = $user->get_user_info(alias => $alias);
+		$submitter = $uid->{'cid'};
 		$notes = $q->param('problem');
 		$data->{'tech'} = "undefined";
 	}
 	else
 	{
+		$user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+		$uid = $user->get_user_info(alias => $alias);
+		$submitter = $uid->{'uid'};
 		$notes = "";
 	}
-	
+
 	$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data, notes => $notes,submitter => $submitter); #need to pass in hashref named data
 	
 	print "Content-type: text/html\n\n";
