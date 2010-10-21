@@ -9,11 +9,6 @@ use ReadConfig;
 use SessionFunctions;
 use CustomerFunctions;
 
-my @styles = ("styles/layout.css", "styles/customer.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js");
-my $meta_keywords = "";
-my $meta_description = "";
-
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
@@ -31,6 +26,11 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my @styles = ("styles/layout.css", "styles/customer.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js");
+	my $meta_keywords = "";
+	my $meta_description = "";
+
 	my @site_list = $config->{'sites'};
 	my @priority_list = $config->{'priority'};
 	my @section_list = $config->{'sections'};
@@ -46,6 +46,11 @@ if($authenticated == 1)
 }
 else
 {
+	my @styles = ("styles/layout.css", "styles/customer.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js");
+	my $meta_keywords = "";
+	my $meta_description = "";
+	
 	my $file = "customer_login.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
