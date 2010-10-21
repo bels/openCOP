@@ -7,11 +7,6 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 
-my @styles = ("styles/layout.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/main.js");
-my $meta_keywords = "";
-my $meta_description = "";
-
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
@@ -35,16 +30,44 @@ if($authenticated == 1)
 	$sth->execute;
 	my $results = $sth->fetchall_arrayref;
 	my @temp = @$results; #required because fetchall_arrayref returns a reference to an array that has a reference to a 1 element array in each element
+	my @site_levels = ();
+	foreach my $site (@temp){
+		push(@site_levels,shift(@$site));
+	}
+	
+	$query = "select name from site";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	$results = $sth->fetchall_arrayref;
+	@temp = @$results; #required because fetchall_arrayref returns a reference to an array that has a reference to a 1 element array in each element
 	my @sites = ();
 	foreach my $site (@temp){
 		push(@sites,shift(@$site));
 	}
+	
+	$query = "select name from company";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	$results = $sth->fetchall_arrayref;
+	@temp = @$results; #required because fetchall_arrayref returns a reference to an array that has a reference to a 1 element array in each element
+	my @companies = ();
+	foreach my $company (@temp){
+		push(@companies,shift(@$company));
+	}
+	
 	my $success = $q->param('success');
 	my $level_success = $q->param('level_success');
 	my $company_success = $q->param('company_success');
+	my $associate_success = $q->param('associate_success');
+	
+	my @styles = ("styles/layout.css", "styles/sites.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js");
+	my $meta_keywords = "";
+	my $meta_description = "";
+
 	my $file = "sites.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@sites, success => $success,level_success => $level_success,company_success => $company_success};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@site_levels, success => $success,level_success => $level_success,company_success => $company_success, sites_list => \@sites, company_list => \@companies, associate_success => $associate_success};
 	
 	print "Content-type: text/html\n\n";
 

@@ -27,6 +27,7 @@ $(document).ready(function(){
 		
 		if($("#newticket").valid())
 		{
+			$.blockUI({message: "Submitting"});
 			var url = "submit_ticket.pl";
 			var the_data = $("#newticket").serialize();
 			$.ajax({
@@ -35,18 +36,12 @@ $(document).ready(function(){
 				data: the_data,
 				success: function(){
 					alert("Added the ticket");
-					var pathname = window.location.pathname;
-					if(pathname.match(/ticket\.pl/))
-					{
-						window.location = "ticket.pl?mode=new";
-					}
-					else
-					{
-						window.location = "customer.pl";
-					}
+					window.location = "ticket.pl?mode=new";
+					$.unblockUI();
 				},
 				error: function(xml,text,error){
-					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
+					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
+					$.unblockUI();
 				}
 			});
 		}
@@ -68,6 +63,7 @@ $(document).ready(function(){
 		
 		if($("#newticket").valid())
 		{
+			$.blockUI({message: "Submitting"});
 			var url = "submit_ticket.pl?type=customer";
 			var the_data = $("#newticket").serialize();
 			$.ajax({
@@ -76,18 +72,12 @@ $(document).ready(function(){
 				data: the_data,
 				success: function(){
 					alert("Added the ticket");
-					var pathname = window.location.pathname;
-					if(pathname.match(/ticket\.pl/))
-					{
-						window.location = "ticket.pl?mode=new";
-					}
-					else
-					{
-						window.location = "customer.pl";
-					}
+					window.location = "customer.pl";
+					$.unblockUI();
 				},
 				error: function(xml,text,error){
-					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error)
+					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
+					$.unblockUI();
 				}
 			});
 		}
