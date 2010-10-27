@@ -5,4 +5,9 @@
 				<label for="password">Password:</label><input type="password" id="password" name="password"><br>
 				<input type="submit" id="submit_button" value="Login">
 			</form>
+			[% IF errorcode == 1 %]
+			<div id="login_error_message_div">
+				<span id="login_error_message">An error has occured while processing your login attempt. Please check your username and try again.</span>
+			</div>
+			[% END %]
 		</div>

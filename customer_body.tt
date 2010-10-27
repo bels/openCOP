@@ -2,7 +2,7 @@
 		<form id="newticket">
 			<div id="author_div">
 				<h3>General Information</h3>
-				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
+				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2 value="[% author %]" readonly="readonly"><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
 				<label for="barcode" class="short_label">Barcode:</label><input type="text" name="barcode" id="barcode" tabindex=3><a href="tips.pl?102" class="tooltip" target="_tips">?</a>
 				<label for="serial" class="short_label">Serial:</label><input type="text" name="serial" id="serial" tabindex=4><a href="tips.pl?102" class="tooltip" target="_tips">?</a><br />
 				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" tabindex=5><a href="tips.pl?103" class="tooltip" target="_tips">?</a>

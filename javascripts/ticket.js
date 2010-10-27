@@ -20,11 +20,7 @@ $(document).ready(function(){
 	}
 	
 	$("#submit_button").click(function(){
-		$("#newticket").validate();
-		$("#email").rules("add",{required: true,email:true});
-		$("#author").rules("add",{required: true});
-		$("#contact").rules("add",{required: true});
-		
+		validateTicket();		
 		if($("#newticket").valid())
 		{
 			$.blockUI({message: "Submitting"});
@@ -56,11 +52,7 @@ $(document).ready(function(){
 		$("#ticket_details").css("display","block");
 	});
 	$("#customer_submit_button").click(function(){
-		$("#newticket").validate();
-		$("#email").rules("add",{required: true,email:true});
-		$("#author").rules("add",{required: true});
-		$("#contact").rules("add",{required: true});
-		
+		validateTicket();		
 		if($("#newticket").valid())
 		{
 			$.blockUI({message: "Submitting"});
@@ -78,6 +70,33 @@ $(document).ready(function(){
 				error: function(xml,text,error){
 					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
 					$.unblockUI();
+				}
+			});
+		}
+		function validateTicket(){
+			$('#newticket').validate({
+				rules: {
+					contact: "required",
+					email: {
+						email: true,
+						required: true
+					},
+					problem: "required"
+				},
+				messages: {
+					author: {
+						required: "*"
+					},
+					contact: {
+						required: "*"
+					},
+					email: {
+						email: "*",
+						required: "*"
+					},
+					problem: {
+						required: "*"
+					}
 				}
 			});
 		}

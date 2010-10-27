@@ -35,7 +35,7 @@ if($authenticated == 1)
 		push(@site_levels,shift(@$site));
 	}
 	
-	$query = "select name from site where deleted <> 1";
+	$query = "select name from site where deleted != '1' or deleted is null";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	$results = $sth->fetchall_arrayref;

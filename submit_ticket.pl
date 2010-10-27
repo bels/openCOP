@@ -53,6 +53,12 @@ if($authenticated == 1)
 		$notes = "";
 	}
 
+	if(defined($data->{'tech'})){
+		$user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+		$uid = $user->get_user_info(alias => $data->{'tech'});
+		$data->{'tech_email'} = $uid->{'email'};
+	}
+
 	$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data, notes => $notes,submitter => $submitter); #need to pass in hashref named data
 	
 	print "Content-type: text/html\n\n";

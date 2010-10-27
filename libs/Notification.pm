@@ -70,7 +70,7 @@ sub by_email{
 	$smtp->datasend("\n");
     
 	$smtp->datasend($message_body) || handle_failure( $smtp, 'data_send' );
-	$smtp->datasend("\n\nThanks you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend("\n\nThank you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
 	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
 	$smtp->quit || handle_failure( $smtp, 'quit' );
 }

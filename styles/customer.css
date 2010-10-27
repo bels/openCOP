@@ -61,7 +61,22 @@ label{
 	width: 180px;
 }
 
-.error{
+label.error{
+	color: red;
+	font-size: .6em;
+	width: auto;
+}
+
+input.error{
+	color: red;
+}
+
+#login_error_message_div{
+	margin-top: 10px;
+	margin-right: 30px;
+}
+
+#login_error_message{
 	color: red;
 	font-size: .7em;
 }
