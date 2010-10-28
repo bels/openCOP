@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	var config = {
-		interval: 200,
+		interval: 150,
 		over: hideMenus,
 		out: doNothing
 	};
