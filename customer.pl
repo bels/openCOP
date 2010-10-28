@@ -40,10 +40,11 @@ if($authenticated == 1)
 	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $cid = $user->get_user_info(alias => $alias);
 	my $submitter = $cid->{'first'} . " " . $cid->{'last'};
+	my $email = $cid->{'email'};
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter, customer_email => $email};
 	
 	print "Content-type: text/html\n\n";
 
