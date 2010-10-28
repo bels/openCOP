@@ -5,6 +5,7 @@ use warnings;
 use lib './libs';
 use Ticket;
 use ReadConfig;
+use DBI;
 
 my $email_file = "tickets.mail";
 
@@ -27,23 +28,27 @@ $config->read_config; #I am doing this because we have to call submit on the tic
 
 my $ticket = Ticket->new(mode => "new");
 
-open LOG, ">>log.txt";
+#open LOG, ">>log.txt";
 
 for my $line (@mail_data)
 {
-
-	if($line =~ /Sender:\s+(.+@.+)/)
-	{
-		$sender = $1;
-	}
-	if($line =~ /Subject:\s+(.*)/)
-	{
-		$subject = $1;
-	}
-	if($line =~ /Body:\s+(.*)/ || $line !~ /Sender:/ || $line !~ /Subject:/) #theory is all header lines start with something: or something-else: where the body doesn't.  So unless someone starts the message something: we should be good.  This is a hack for now.
-	{
-		$body = $body . " $1";
-	}
+	
+	if($line =~ /Sender:.*<(.+@.+)>/)
+        {
+                $sender = $1;
+        }
+        if($line =~ /Subject:\s+(.*)/)
+        {
+                $subject = $1;
+        }
+        if($line =~ /Body:\s+(.*)/) #theory is all header lines start with something: or something-else: where the body doesn't.  So unless someone starts the message something: we should be good.  This is a hack for now.
+        {
+                $body = $1;
+        }
+        if($line !~ m/^Subject:/ && $line !~ m/^Sender:/ && $line !~ m/^Body:/)
+        {
+                $body = $body . " $line";
+        }
 	
 	if($line =~ /\$\$\$/)
 	{
@@ -53,13 +58,19 @@ for my $line (@mail_data)
 	if($new_message == 1)
 	{
 		$body =~ s/\$\$\$//;
-		my $data = {site => "",barcode => "",location =>"",author => $sender,contact => $sender,troubelshoot=> "",section=>"",problem=>$body,priority =>"Normal",serial=>"",email=>$sender}; #This part will need to be improved.  Right now I am leaving a lot of fields blank that with some investigation could be filled out.  For example, I won't know what site someone is sending the ticket in from
+
+		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
+		my $query = "select alias from customers where email = '$sender'";
+		my $sth = $dbh->prepare($query);
+		$sth->execute;
+		my $alias = $sth->fetchrow_hashref;
+		my $data = {site => "",barcode => "",location =>"",author => $sender,contact => $sender,phone => "",troubelshoot=> "",section=>"",problem=>$body,priority =>"Normal",serial=>"",email=>$sender,tech => "", notes => "", submitter  => $alias->{'alias'}}; #This part will need to be improved.  Right now I am leaving a lot of fields blank that with some investigation could be filled out.  For example, I won't know what site someone is sending the ticket in from
 								#unless I lookup in the database for a matching email address and then checking what site that person is at.  Also, the persons name could be looked up by email address.  This is something that isn't feasible now but should be in the future
-		#$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data);
+		$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data);
 		
-		print LOG "$sender\n";
-		print LOG "$subject\n";
-		print LOG "$body\n\n";
+		#print LOG "$sender\n";
+		#print LOG "$subject\n";
+		#print LOG "$body\n\n";
 		
 		$subject = "";
 		$sender = "";
@@ -67,4 +78,4 @@ for my $line (@mail_data)
 		$new_message = 0;
 	}
 }
-close LOG;
+#close LOG;

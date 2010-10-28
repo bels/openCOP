@@ -34,7 +34,7 @@ open TICKETS, ">>$email_file" or die "Was not able to append to $email_file";
 
 foreach my $msg (@msgs) {
 	my $envelope = $imap->get_envelope($msg) or die "Could not get envelope: $@\n";
-	my $sender = $envelope->{'sender'} or die "Could not get sender from envelope: $@\n";
+	my $sender = $envelope->sender_addresses or die "Could not get sender from envelope: $@\n";
 	my $subject = $imap->subject($msg) or die "Could not get subject: $@\n";
 	my $body = $imap->body_string($msg) or die "Could not get body string: $@\n";
 	
