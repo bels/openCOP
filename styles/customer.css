@@ -45,12 +45,25 @@ label{
 	height: 600px;
 	width: 19%;
 	min-width: 175px;
+	border-right: 2px black solid;
+	border-bottom: 1px black solid;
+}
+
+#right_holder{
+	float: left;
+	height: 575px;
+	width: 75%;
+	padding-top: 25px;
+	padding-left: 25px;
+	border-right: 2px black solid;
+	border-bottom: 1px black solid;
 }
 
 #right{
 	float: left;
-	height: 600px;
-	padding-top: 25px;
+	height: 100%;
+	overflow: auto;
+	width: 100%;
 }
 
 .ticket_link{
@@ -79,6 +92,15 @@ input.error{
 #login_error_message{
 	color: red;
 	font-size: .7em;
+}
+
+.even{
+	background-color: #efefef;
+}
+
+.odd{
+	background-color: #dcdcdc;
+
 }
 
 #welcome_message{

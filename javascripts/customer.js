@@ -5,6 +5,12 @@ $(document).ready(function(){
 		$("#right").load(url);
 	});
 
+		$('right_holder').jScrollPane({
+			showArrows:true,
+			maintainPosition: false
+		});
+
+
 	$("#update_ticket_button").live("click",function(){
 		$('#add_notes_form').validate({
 			rules: {
