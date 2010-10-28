@@ -1,38 +1,36 @@
 $(document).ready(function(){
-	$("#report_link").mouseover(function(){
-		$("#ticket_sub").addClass("hidden_menu");
-		$("#inventory_sub").addClass("hidden_menu");
-		$("#admin_sub").addClass("hidden_menu");
-		$("#report_sub").removeClass("hidden_menu");
-	});
-	$("#ticket_link").mouseover(function(){
-		$("#report_sub").addClass("hidden_menu");
-		$("#inventory_sub").addClass("hidden_menu");
-		$("#admin_sub").addClass("hidden_menu");
-		$("#ticket_sub").removeClass("hidden_menu");
-	});
-	$("#inventory_link").mouseover(function(){
-		$("#ticket_sub").addClass("hidden_menu");
-		$("#report_sub").addClass("hidden_menu");
-		$("#admin_sub").addClass("hidden_menu");
-		$("#inventory_sub").removeClass("hidden_menu");
-	});
-	$("#admin_link").mouseover(function(){
-		$("#ticket_sub").addClass("hidden_menu");
-		$("#inventory_sub").addClass("hidden_menu");
-		$("#report_sub").addClass("hidden_menu");
-		$("#admin_sub").removeClass("hidden_menu");
-	});
+	var config = {
+		interval: 200,
+		over: hideMenus,
+		out: doNothing
+	};
+
+	$("#ticket_link").hoverIntent(config);
+	$("#report_link").hoverIntent(config);
+	$("#inventory_link").hoverIntent(config);
+	$("#admin_link").hoverIntent(config);
 	
-	$(".menu_link").hoverIntent(function(){
+	$(".sub_link").hover(function(){
 		$(this).addClass("highlighted_link");
 	},function(){
 		$(this).removeClass("highlighted_link");
 	});
 	
-	$(".customer_link").hoverIntent(function(){
+	$(".customer_link").hover(function(){
 		$(this).addClass("highlighted_link");
 	},function(){
 		$(this).removeClass("highlighted_link");
 	});
 });
+
+function hideMenus(){
+		var sublink = $(this).attr("id");
+		$('.sub').each(function(){
+			$(this).addClass("hidden_menu");
+		});
+		$('#sub_' + sublink).removeClass("hidden_menu");	
+}
+
+function doNothing(){
+	return true;
+}
