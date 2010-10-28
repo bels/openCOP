@@ -7,11 +7,6 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 
-my @styles = ("styles/layout.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/main.js");
-my $meta_keywords = "";
-my $meta_description = "";
-
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
@@ -29,6 +24,10 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my @styles = ("styles/layout.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
+	my $meta_keywords = "";
+	my $meta_description = "";
 	my $duplicate = $q->param('duplicate');
 	my $success = $q->param('success');
 	my $file = "global_settings.tt";

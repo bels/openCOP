@@ -7,11 +7,6 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 
-my @styles = ("styles/layout.css","styles/main.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/main.js");
-my $meta_keywords = "";
-my $meta_description = "";
-
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
@@ -29,6 +24,10 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my @styles = ("styles/layout.css","styles/main.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
+	my $meta_keywords = "";
+	my $meta_description = "";
 	my $file = "main.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}};

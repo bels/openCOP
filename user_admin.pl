@@ -7,11 +7,6 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 
-my @styles = ("styles/layout.css","styles/user_admin.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/user_admin.js");
-my $meta_keywords = "";
-my $meta_description = "";
-
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
@@ -32,6 +27,10 @@ my $success = $q->param('success');
 
 if($authenticated == 1)
 {
+	my @styles = ("styles/layout.css","styles/user_admin.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/user_admin.js","javascripts/jquery.hoverIntent.minified.js");
+	my $meta_keywords = "";
+	my $meta_description = "";
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
 	my $query = "select name from section";
 	my $sth = $dbh->prepare($query);

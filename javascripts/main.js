@@ -24,11 +24,15 @@ $(document).ready(function(){
 		$("#admin_sub").removeClass("hidden_menu");
 	});
 	
-	$(".sub_link").mouseover(function(){
+	$(".sub_link").hoverIntent(function(){
 		$(this).addClass("highlighted_link");
+	},function(){
+		$(this).removeClass("highlighted_link");
 	});
 	
-	$(".sub_link").mouseout(function(){
+	$(".customer_link").hoverIntent(function(){
+		$(this).addClass("highlighted_link");
+	},function(){
 		$(this).removeClass("highlighted_link");
 	});
 });
