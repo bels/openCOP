@@ -111,7 +111,10 @@ sub submit{
 	my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});
 
 	$notify->by_email(mode => 'ticket_create', to => $data->{'email'});
-	$notify->by_email(mode => 'notify_tech', to => $data->{'tech_email'});
+	if(defined($data->{'tech_email'})
+	{
+		$notify->by_email(mode => 'notify_tech', to => $data->{'tech_email'});
+	}
 }
 
 sub lookup{

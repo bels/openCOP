@@ -75,7 +75,7 @@ for my $line (@mail_data)
 			$temp = $sth->fetchrow_hashref;
 			$alias = $temp->{'uid'};
 		}
-		my $data = {site => "",barcode => "",location =>"",author => $sender,contact => $sender,phone => "",troubelshoot=> "",section=>"",problem=>$body,priority =>"Normal",serial=>"",email=>$sender,tech => "", notes => $body, submitter  => $alias}; #This part will need to be improved.  Right now I am leaving a lot of fields blank that with some investigation could be filled out.  For example, I won't know what site someone is sending the ticket in from
+		my $data = {site => "",barcode => "",location =>"",author => $sender,contact => $sender,phone => "",troubelshoot=> "",section=>"1",problem=>$subject,priority =>"Normal",serial=>"",email=>$sender,tech => "", notes => $body, submitter  => $alias}; #This part will need to be improved.  Right now I am leaving a lot of fields blank that with some investigation could be filled out.  For example, I won't know what site someone is sending the ticket in from
 								#unless I lookup in the database for a matching email address and then checking what site that person is at.  Also, the persons name could be looked up by email address.  This is something that isn't feasible now but should be in the future
 		$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data);
 		
