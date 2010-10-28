@@ -55,8 +55,8 @@ if($authenticated == 1)
 	$sth->execute;
 	my $results = $sth->fetchall_arrayref;
 	
-	my @styles = ("styles/layout.css", "styles/customer.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/customer.js","javascripts/jquery.validate.js");
+	my @styles = ("styles/layout.css", "styles/customer.css","styles/jquery.jscrollpane.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/customer.js","javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

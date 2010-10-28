@@ -5,5 +5,7 @@
 				<a href="#" id=[% ticket.0 %] class="ticket_link">[% ticket.0 %]</a><br />
 			[% END %]
 		</div>
-		<div id="right">
+		<div id="right_holder">
+			<div id="right">
+			</div>
 		</div>

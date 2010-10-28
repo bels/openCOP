@@ -41,11 +41,17 @@ if($authenticated == 1)
 	print "<div class=\"ticket_details\"><label>Ticket Number:</label>$results->{'ticket'}<br /><label>Ticket Status:</label>$ticket_statuses{$results->{'status'}}<br /><label>Ticket Priority:</label>$priorities{$results->{'priority'}}<br />";
 	print qq(<form id="add_notes_form"><input type="hidden" name="tkid" id="tkid" value=$ticket_number><label for="new_note">Update your ticket</label><br /><textarea id="new_note" name="new_note" cols="80" rows="5"></textarea><br /><button type="button" id="update_ticket_button">Update</button><br />);
 	print qq(<h4>Previous Notes</h4>);
+	my $zebra = "even";
 	foreach my $note (@$notes)
 	{
-		print qq(<span class="note_date">);
+		if ($zebra eq "even"){
+			$zebra = "odd";
+		} elsif ($zebra eq "odd") {
+			$zebra = "even";
+		}
+		print qq(<div class="note_div $zebra"><span class="note_date">);
 		print substr(@$note[3],0,19);
-		print qq(: </span><span class="note">@$note[2]</span><br />);
+		print qq(: </span><span class="note">@$note[2]</span></div>);
 	}
 	print "</div>";
 }	
