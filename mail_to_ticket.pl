@@ -33,8 +33,14 @@ my $email_file = "tickets.mail";
 open TICKETS, ">>$email_file" or die "Was not able to append to $email_file";
 
 foreach my $msg (@msgs) {
-        my $message = $imap->message_string($msg) or die "Could not message_string: $@\n";
-        print TICKETS $message;
+	my $envelope = $imap->get_envelope($msg) or die "Could not get envelope: $@\n";
+	my $sender = $envelope->{'sender'} or die "Could not get sender from envelope: $@\n";
+	my $subject = $imap->subject($msg) or die "Could not get subject: $@\n";
+	my $body = $imap->bodystring($msg) or die "Could not get body string: $@\n";
+	
+        print TICKETS "Sender: $sender\n";
+	print TICKETS "Subject: $subject\n";
+	print TICKETS "Body: $body";
 	print TICKETS "\n\$\$\$\n";
         $imap->delete_message(@msgs) or die "Couldn't delete message from server"; #Sets the Deleted flag
 }
