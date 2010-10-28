@@ -4,6 +4,7 @@ body{
 	height: 100%;
 	width: 100%;
 	min-width: 900px;
+	font-family: tahoma,georgia,verdana;
 }
 
 #logo_div{
