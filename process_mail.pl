@@ -32,7 +32,7 @@ open LOG, ">>log.txt";
 for my $line (@mail_data)
 {
 
-	if($line =~ /Sender:\s+<(.+@.+)>/)
+	if($line =~ /Sender:\s+(.+@.+)/)
 	{
 		$sender = $1;
 	}
@@ -40,7 +40,7 @@ for my $line (@mail_data)
 	{
 		$subject = $1;
 	}
-	if($line !~ /Body:\s+(.*)/) #theory is all header lines start with something: or something-else: where the body doesn't.  So unless someone starts the message something: we should be good.  This is a hack for now.
+	if($line =~ /Body:\s+(.*)/ || $line !~ /Sender:/ || $line !~ /Subject:/) #theory is all header lines start with something: or something-else: where the body doesn't.  So unless someone starts the message something: we should be good.  This is a hack for now.
 	{
 		$body = $body . " $1";
 	}
