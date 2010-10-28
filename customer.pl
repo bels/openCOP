@@ -44,7 +44,7 @@ if($authenticated == 1)
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter, customer_email => $email};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter, customer_email => $email, display_author => $config->{'display_author'}, display_barcode => $config->{'display_barcode'}, display_serial => $config->{'display_serial'}, display_location => $config->{'display_location'}};
 	
 	print "Content-type: text/html\n\n";
 

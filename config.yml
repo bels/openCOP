@@ -30,3 +30,8 @@ users_table: users
 version: .5
 support_email: support@company.com
 support_phone_number: 000-000-0000
+#toggle switches for fields to display in the customer ticketing portal. 0 = off, 1 = on
+display_barcode: 1
+display_serial: 0
+display_location: 1
+display_author: 0
