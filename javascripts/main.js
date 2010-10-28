@@ -24,7 +24,7 @@ $(document).ready(function(){
 		$("#admin_sub").removeClass("hidden_menu");
 	});
 	
-	$(".sub_link").hoverIntent(function(){
+	$(".menu_link").hoverIntent(function(){
 		$(this).addClass("highlighted_link");
 	},function(){
 		$(this).removeClass("highlighted_link");
