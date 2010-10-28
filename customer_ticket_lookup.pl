@@ -38,7 +38,7 @@ if($authenticated == 1)
 	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed");
 	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
 	
-	print "<div class=\"ticket_details\"><label>Ticket Number:</label>$results->{'ticket'}<br /><label>Ticket Status:</label>$ticket_statuses{$results->{'status'}}<br /><label>Ticket Priority:</label>$priorities{$results->{'priority'}}<br />";
+	print "<div class=\"ticket_details\"><label>Ticket Contact:</label>$results->{'contact'}<br /><label>Ticket Number:</label>$results->{'ticket'}<br /><label>Ticket Status:</label>$ticket_statuses{$results->{'status'}}<br /><label>Ticket Priority:</label>$priorities{$results->{'priority'}}<br />";
 	print qq(<form id="add_notes_form"><input type="hidden" name="tkid" id="tkid" value=$ticket_number><label for="new_note">Update your ticket</label><br /><textarea id="new_note" name="new_note" cols="80" rows="5"></textarea><br /><button type="button" id="update_ticket_button">Update</button><br />);
 	print qq(<h4>Previous Notes</h4>);
 	my $zebra = "even";
