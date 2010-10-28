@@ -62,13 +62,13 @@ for my $line (@mail_data)
 		$body =~ s/\$\$\$//;
 
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
-		my $query = "select alias from customers where email = '$sender'";
+		my $query = "select cid from customers where email = '$sender'";
 		my $sth = $dbh->prepare($query);
 		$sth->execute;
 		my $alias = $sth->fetchrow_hashref;
 		if(!defined($alias)) #this allows technicians to submit tickets through email. if the email can't be found in the customers table it then searches the users(technicians)
 		{
-			$query = "select alias from users where email = '$sender'";
+			$query = "select uid from users where email = '$sender'";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			$alias = $sth->fetchrow_hashref;
