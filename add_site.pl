@@ -24,9 +24,9 @@ push(@new_sites,$q->param('site_name'));
 
 $config->{'sites'} = \@new_sites;
 
-YAML::DumpFile("config.yml",$config);
+YAML::DumpFile('config.yml', $config);
 
-my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
+my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 my $site_level = $q->param('site_level');
 my $query = "select * from school_level where type = '$site_level'";
 my $sth = $dbh->prepare($query);

@@ -56,6 +56,7 @@ sub by_email{
 	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
 	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in notification.yml
 	my $email = $args{'to'};
+	my $company_name = $self->{'config'}->{'company_name'};
 	
 	$smtp->auth($self->{'config'}->{'email_user'},$self->{'config'}->{'email_password'});
 		
@@ -69,6 +70,7 @@ sub by_email{
 	$smtp->datasend("\n");
     
 	$smtp->datasend($message_body) || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend("\n\nThank you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
 	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
 	$smtp->quit || handle_failure( $smtp, 'quit' );
 }

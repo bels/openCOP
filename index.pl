@@ -35,10 +35,16 @@ if($authenticated == 1)
 }
 else
 {
+	my $vars;
 	my $file = "index.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
-	
+	my $errorcode = $q->param('errorcode');
+	if($errorcode == 1){
+		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},'errorcode' => $errorcode};
+	} else {
+		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
+	}
+
 	print "Content-type: text/html\n\n";
 
 	my $template = Template->new();

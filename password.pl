@@ -26,7 +26,6 @@ my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 $config->read_config;
 
 my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-my $q = CGI->new();
 my %cookie = $q->cookie('session');
 
 my $authenticated = 0;
@@ -45,14 +44,19 @@ if($authenticated == 1)
 		$file = "customer_password.tt";
 		$customer = 1;
 		my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-		$id = $user->get_user_id(alias => $alias)
+		$id = $user->get_user_id(alias => $alias);
+	} else {
+		$file = "password.tt";
+		$customer = 0;
+		my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+		$id = $user->get_user_id(alias => $alias);
 	}
 	
-	#this does not work for tecnician password changes.  Much more work needs to be done for that to work.
+	#this does not work for technician password changes.  Much more work needs to be done for that to work.
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my @styles = ("styles/layout.css", "styles/password.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/password.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/password.js","javascripts/main.js");
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},customer => $customer,id => $id, success => $success};

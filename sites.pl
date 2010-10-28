@@ -35,7 +35,7 @@ if($authenticated == 1)
 		push(@site_levels,shift(@$site));
 	}
 	
-	$query = "select name from site";
+	$query = "select name from site where deleted != '1' or deleted is null";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	$results = $sth->fetchall_arrayref;
@@ -59,6 +59,7 @@ if($authenticated == 1)
 	my $level_success = $q->param('level_success');
 	my $company_success = $q->param('company_success');
 	my $associate_success = $q->param('associate_success');
+	my $delete_site_success = $q->param('delete_site_success');
 	
 	my @styles = ("styles/layout.css", "styles/sites.css");
 	my @javascripts = ("javascripts/jquery.js","javascripts/main.js");
@@ -67,7 +68,7 @@ if($authenticated == 1)
 
 	my $file = "sites.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@site_levels, success => $success,level_success => $level_success,company_success => $company_success, sites_list => \@sites, company_list => \@companies, associate_success => $associate_success};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@site_levels, success => $success,level_success => $level_success,company_success => $company_success, sites_list => \@sites, company_list => \@companies, associate_success => $associate_success,delete_site_success => $delete_site_success};
 	
 	print "Content-type: text/html\n\n";
 

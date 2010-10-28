@@ -1,5 +1,4 @@
 ---
-version: .4
 auth_table: auth
 company_domain: test.com
 company_name: Test company
@@ -22,9 +21,13 @@ sections:
   - Helpdesk
 sites:
   - Test Site
+  - test3
+  - tset4
+  - asdf
 techs:
   - admin
 template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password
 users_table: users
+version: .4

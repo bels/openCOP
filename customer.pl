@@ -35,9 +35,15 @@ if($authenticated == 1)
 	my @priority_list = $config->{'priority'};
 	my @section_list = $config->{'sections'};
 
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+
+	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $cid = $user->get_user_info(alias => $alias);
+	my $submitter = $cid->{'first'} . " " . $cid->{'last'};
+
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter};
 	
 	print "Content-type: text/html\n\n";
 
@@ -46,15 +52,22 @@ if($authenticated == 1)
 }
 else
 {
+	my $errorcode = $q->param('errorcode');
+	my $vars;
 	my @styles = ("styles/layout.css", "styles/customer.css");
 	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
-	
-	my $file = "customer_login.tt";
+
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
 	
+	if ($errorcode == 1){
+		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},'errorcode' => $errorcode};		
+	} else {
+		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
+	}
+
+	my $file = "customer_login.tt";
 	print "Content-type: text/html\n\n";
 
 	my $template = Template->new();

@@ -5,6 +5,7 @@ use lib './libs';
 use Ticket;
 use CGI;
 use SessionFunctions;
+use CustomerFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -26,8 +27,15 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $data = $q->Vars;
+	my $userid;
 	
-	my $uid = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	my $userid = $user->get_user_info(alias => $alias);
+
+	my $data = $q->Vars;
+	my $uid = $userid->{'cid'};
 	
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in customer_ticket.pl";
 	my $query;
@@ -48,7 +56,7 @@ if($authenticated == 1)
 	my $results = $sth->fetchall_arrayref;
 	
 	my @styles = ("styles/layout.css", "styles/customer.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/customer.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/customer.js","javascripts/jquery.validate.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

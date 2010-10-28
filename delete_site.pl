@@ -26,14 +26,14 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $company_name = uri_unescape($q->param('company_name_input'));
+	my $site_name = uri_unescape($q->param('delete_site_name'));
 
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
-	my $query = "insert into company (name,hidden) values ('$company_name',false)";
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in delete_site.pl";
+	my $query = "update site set delete = 1 where name = '$site_name'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 
-	print $q->redirect(-URL=> "sites.pl?company_success=1");
+	print $q->redirect(-URL=> "sites.pl?delete_site_success=1");
 }
 else
 {

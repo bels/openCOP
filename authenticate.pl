@@ -34,6 +34,6 @@ if($success)
 }
 else
 {
-	my $errorpage = "error.pl?errorcode=1";
+	my $errorpage = "index.pl?errorcode=1";
 	print $q->redirect(-URL=>$errorpage);
 }
