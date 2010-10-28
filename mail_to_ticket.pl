@@ -36,7 +36,7 @@ foreach my $msg (@msgs) {
 	my $envelope = $imap->get_envelope($msg) or die "Could not get envelope: $@\n";
 	my $sender = $envelope->{'sender'} or die "Could not get sender from envelope: $@\n";
 	my $subject = $imap->subject($msg) or die "Could not get subject: $@\n";
-	my $body = $imap->bodystring($msg) or die "Could not get body string: $@\n";
+	my $body = $imap->body_string($msg) or die "Could not get body string: $@\n";
 	
         print TICKETS "Sender: $sender\n";
 	print TICKETS "Subject: $subject\n";
