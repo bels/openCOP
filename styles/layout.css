@@ -71,3 +71,7 @@ body{
 .highlighted_link{
 	background-color: black;
 }
+
+.tooltip{
+	vertical-align: top;
+}
