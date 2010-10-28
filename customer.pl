@@ -62,9 +62,9 @@ else
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
 	if ($errorcode == 1){
-		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},'errorcode' => $errorcode};		
+		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, support_email => $config->{'support_email'}, support_phone_number => $config->{'support_phone_number'},'errorcode' => $errorcode};		
 	} else {
-		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
+		$vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, support_email => $config->{'support_email'}, support_phone_number => $config->{'support_phone_number'}};
 	}
 
 	my $file = "customer_login.tt";

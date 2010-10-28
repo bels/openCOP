@@ -11,3 +11,6 @@
 			</div>
 			[% END %]
 		</div>
+		<div id="welcome_message">
+			Welcome to the <b>[% company_name %] ticketing system</b>.  After login you will be able to create, review and update your tickets.  If you are unable to login please email support at: <a href="mailto://[% support_email %]">[% support_email %]</a> or call them at [% support_phone_number %].
+		</div>

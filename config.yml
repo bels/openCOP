@@ -21,13 +21,12 @@ sections:
   - Helpdesk
 sites:
   - Test Site
-  - test3
-  - tset4
-  - asdf
 techs:
   - admin
 template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password
 users_table: users
-version: .4
+version: .5
+support_email: support@company.com
+support_phone_number: 000-000-0000

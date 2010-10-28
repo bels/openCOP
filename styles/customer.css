@@ -80,3 +80,12 @@ input.error{
 	color: red;
 	font-size: .7em;
 }
+
+#welcome_message{
+	width: 500px;
+	margin-top: 15px;
+	margin-right:auto;
+	margin-left: auto;
+	text-align: center;
+	font-size: .9em;
+}
