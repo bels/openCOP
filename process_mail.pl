@@ -36,10 +36,12 @@ for my $line (@mail_data)
 	if($line =~ /Sender:.*<(.+@.+)>/)
         {
                 $sender = $1;
+		chomp $sender;
         }
         if($line =~ /Subject:\s+(.*)/)
         {
                 $subject = $1;
+		chomp $subject;
         }
         if($line =~ /Body:\s+(.*)/) #theory is all header lines start with something: or something-else: where the body doesn't.  So unless someone starts the message something: we should be good.  This is a hack for now.
         {
@@ -70,6 +72,7 @@ for my $line (@mail_data)
 			$sth->execute;
 			$alias = $sth->fetchrow_hashref;
 		}
+		warn $alias;
 		my $data = {site => "",barcode => "",location =>"",author => $sender,contact => $sender,phone => "",troubelshoot=> "",section=>"",problem=>$body,priority =>"Normal",serial=>"",email=>$sender,tech => "", notes => "", submitter  => $alias->{'alias'}}; #This part will need to be improved.  Right now I am leaving a lot of fields blank that with some investigation could be filled out.  For example, I won't know what site someone is sending the ticket in from
 								#unless I lookup in the database for a matching email address and then checking what site that person is at.  Also, the persons name could be looked up by email address.  This is something that isn't feasible now but should be in the future
 		$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data);

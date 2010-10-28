@@ -59,7 +59,9 @@ if($authenticated == 1)
 		$data->{'tech_email'} = $uid->{'email'};
 	}
 
-	$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data, notes => $notes,submitter => $submitter); #need to pass in hashref named data
+	$data->{'submitter'} = $submitter;
+	$data->{'notes'} = $notes;
+	$ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
 	
 	print "Content-type: text/html\n\n";
 }	
