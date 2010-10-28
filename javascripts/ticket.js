@@ -73,32 +73,34 @@ $(document).ready(function(){
 				}
 			});
 		}
-		function validateTicket(){
-			$('#newticket').validate({
-				rules: {
-					contact: "required",
-					email: {
-						email: true,
-						required: true
-					},
-					problem: "required"
-				},
-				messages: {
-					author: {
-						required: "*"
-					},
-					contact: {
-						required: "*"
-					},
-					email: {
-						email: "*",
-						required: "*"
-					},
-					problem: {
-						required: "*"
-					}
-				}
-			});
-		}
+		
 	});
+	
+	function validateTicket(){
+		$('#newticket').validate({
+			rules: {
+				contact: "required",
+				email: {
+					email: true,
+					required: true
+				},
+				problem: "required"
+			},
+			messages: {
+				author: {
+					required: "*"
+				},
+				contact: {
+					required: "*"
+				},
+				email: {
+					email: "*",
+					required: "*"
+				},
+				problem: {
+					required: "*"
+				}
+			}
+		});
+	}
 });
