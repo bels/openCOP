@@ -55,7 +55,7 @@ if($authenticated == 1)
 	#this does not work for technician password changes.  Much more work needs to be done for that to work.
 	my $meta_keywords = "";
 	my $meta_description = "";
-	my @styles = ("styles/layout.css", "styles/password.css");
+	my @styles = ("styles/layout.css", "styles/password.css","styles/customer.css");
 	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/password.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
