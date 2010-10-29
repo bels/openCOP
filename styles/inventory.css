@@ -1,0 +1,54 @@
+.wrapper{
+	border: 1px black solid;
+	margin-top: 25px;
+	margin-left: 25px;
+	margin-bottom: 25px;
+	margin-right: 25px;
+}
+
+.ip_div{
+	border: 1px red solid;
+	width: 700px;
+	height: 30px;
+}
+
+.submit_ip_div{
+	border: 1px blue solid;
+	width: 80px;
+	height: 25px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ip_select{
+	float: left;
+}
+
+label{
+	border: 1px green solid;	
+	display: block;
+	float: left;
+	min-width: 70px;
+	height: 25px;
+	padding-left: 4px;
+	padding-top: 4px;
+
+}
+
+input{
+	float: left;
+	margin-left: 4px;
+	margin-top: 4px;
+}
+
+select{
+	margin-left: 4px;
+	margin-top: 4px;
+}
+
+button{
+	float: right;
+	margin-left: 4px;
+	margin-right: 4px;
+	margin-top: 4px;
+}

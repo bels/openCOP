@@ -1,9 +1,54 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
+
+use CGI::Carp qw(fatalsToBrowser);;
 use strict;
-use warnings;
-use lib "($ENV{'HOME'}/src/CCBOE/app/HTML--Template";
+use Template;
+use lib './libs';
+use CGI;
+use ReadConfig;
+use SessionFunctions;
 
-use CCBOEHD::Inventory;
-my $cgiapp = new CCBOEHD::Inventory;
-$cgiapp->run;
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
+$config->read_config;
+
+my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+my $q = CGI->new();
+my %cookie = $q->cookie('session');
+
+my $authenticated = 0;
+
+if(%cookie)
+{
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+}
+
+if($authenticated == 1)
+{
+	my $title;
+	my $mode = $q->param('mode');
+	if ($mode eq "add"){
+		$title = $config->{'company_name'} . " - Inventory Add";
+	} elsif ($mode eq "current"){
+		$title = $config->{'company_name'} . " - Inventory Current";
+	} elsif ($mode eq "remove"){
+		$title = $config->{'company_name'} . " - Inventory Remove";
+	} elsif ($mode eq "configure"){
+		$title = $config->{'company_name'} . " - Inventory Configure.";
+	} else {
+		$title = $config->{'company_name'} . " - Inventory Index";
+	}
+	my $file = "inventory.tt";
+	my @styles = ("styles/layout.css", "styles/inventory.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/inventory.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js");
+
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
+
+	print "Content-type: text/html\n\n";
+
+	my $template = Template->new();
+	$template->process($file,$vars) || die $template->error();
+
+} else {
+	print $q->redirect(-URL => $config->{'index_page'});
+}

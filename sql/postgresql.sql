@@ -69,6 +69,72 @@ CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curre
 DROP TABLE IF EXISTS audit;
 CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), site INTEGER references site(scid), location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT references section(sid), priority INT references priority(prid), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(uid), closing_tech INTEGER references users(uid), free VARCHAR(255), updater INTEGER, ticket INTEGER references helpdesk(ticket));
 
+DROP TABLE IF EXISTS item;
+CREATE TABLE item (id BIGSERIAL PRIMARY KEY, item VARCHAR(255), UNIQUE (item));
+
+DROP TABLE IF EXISTS property;
+CREATE TABLE property (id BIGSERIAL PRIMARY KEY, property VARCHAR(255), UNIQUE (property));
+
+DROP TABLE IF EXISTS value;
+CREATE TABLE value (id BIGSERIAL PRIMARY KEY, value VARCHAR(255));
+
+DROP TABLE IF EXISTS item_property;
+CREATE TABLE item_property (id BIGSERIAL PRIMARY KEY, item_id INTEGER references item(id), property_id INTEGER references property(id));
+
+DROP TABLE IF EXISTS property_value;
+CREATE TABLE property_value (id BIGSERIAL PRIMARY KEY, property_id INTEGER references property(id), value_id INTEGER references value(id));
+
+DROP TABLE IF EXISTS company_item;
+CREATE TABLE company_item (id BIGSERIAL PRIMARY KEY, company_id INTEGER references company(cpid), item_id INTEGER references item(id));
+
+-- Default data types
+INSERT INTO item(item) values('server');
+INSERT INTO item(item) values('cert');
+INSERT INTO item(item) values('domain_name');
+INSERT INTO item(item) values('firewall');
+INSERT INTO item(item) values('router');
+INSERT INTO item(item) values('switch');
+INSERT INTO item(item) values('ldap_domain');
+INSERT INTO item(item) values('printer');
+INSERT INTO item(item) values('wap');
+INSERT INTO item(item) values('isp');
+
+-- Default data properties
+INSERT INTO property(property) values('name');
+INSERT INTO property(property) values('type');
+INSERT INTO property(property) values('description');
+INSERT INTO property(property) values('cpu');
+INSERT INTO property(property) values('ram');
+INSERT INTO property(property) values('hard_drive');
+INSERT INTO property(property) values('video_card');
+INSERT INTO property(property) values('sound_card');
+INSERT INTO property(property) values('vendor');
+INSERT INTO property(property) values('model');
+INSERT INTO property(property) values('specialty_card');
+INSERT INTO property(property) values('username');
+INSERT INTO property(property) values('password');
+INSERT INTO property(property) values('ip_address');
+INSERT INTO property(property) values('role');
+INSERT INTO property(property) values('startup_services');
+INSERT INTO property(property) values('members');
+INSERT INTO property(property) values('rac_address');
+INSERT INTO property(property) values('rac_username');
+INSERT INTO property(property) values('rac_password');
+INSERT INTO property(property) values('vpn_type');
+INSERT INTO property(property) values('expiration_date');
+INSERT INTO property(property) values('owa_url');
+INSERT INTO property(property) values('owa_boolean');
+INSERT INTO property(property) values('owa_proxy_address');
+INSERT INTO property(property) values('mail_connection_type');
+INSERT INTO property(property) values('bis_username');
+INSERT INTO property(property) values('bis_password');
+INSERT INTO property(property) values('bis_provider');
+INSERT INTO property(property) values('special_notes');
+INSERT INTO property(property) values('os');
+INSERT INTO property(property) values('scan_to_type');
+INSERT INTO property(property) values('bandwitdh');
+INSERT INTO property(property) values('application_version');
+
 -- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
 DROP TABLE IF EXISTS customers;
 CREATE TABLE customers(cid SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site INTEGER references site(scid));
@@ -208,3 +274,15 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON company TO helpdesk;
 GRANT SELECT, UPDATE ON company_cpid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON audit TO helpdesk;
 GRANT SELECT, UPDATE ON audit_record_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON item TO helpdesk;
+GRANT SELECT, UPDATE ON item_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON property TO helpdesk;
+GRANT SELECT, UPDATE ON property_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON value TO helpdesk;
+GRANT SELECT, UPDATE ON value_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON item_property TO helpdesk;
+GRANT SELECT, UPDATE ON item_property_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON property_value TO helpdesk;
+GRANT SELECT, UPDATE ON property_value_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON company_item TO helpdesk;
+GRANT SELECT, UPDATE ON company_item_id_seq TO helpdesk;
