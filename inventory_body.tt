@@ -16,27 +16,44 @@
 	</div>
 	[% ELSIF title.match('Configure') %]
 	<div id="configure_wrapper" class="wrapper">
-		<div id="add_ip_div" class="ip_div">
-			<form id="add_ip_form">
-				<label for="ip" class="add">Add </label>
-				<select id="add_ip_select" class="add ip_select">
-					<option value="item">Item</option>
-					<option value="property">Property</option>
-				</select>
-				<input id="add_ip" type="text" class="add">
-			</form>
-			<button id="submit_add_button" mode="add_ip">Submit</button>
+		<div id="configure_top" class="top">
+			<div id="configure_top_header" class="header_text">
+				<span id="configure_top_header_text">Add and remove types and properties</span>
+			</div>
+			<div id="add_tp_div" class="tp_div">
+				<form id="add_tp_form">
+					<label for="tp_select" class="add">Add </label>
+					<select id="add_tp_select" class="add tp_select">
+						<option value="type">Type</option>
+						<option value="property">Property</option>
+					</select>
+					<input id="add_tp" type="text" class="add">
+				</form>
+				<button id="submit_add_button" mode="add_tp" class="submit_button">Submit</button>
+			</div>
+			<div id="del_tp_div" class="tp_div">
+				<form id="del_tp_form">
+					<label for="tp_select" class="del">Remove </label>
+					<select id="del_tp_select" class="del tp_select">
+						<option value="type">Type</option>
+						<option value="property">Property</option>
+					</select>
+					<input id="del_tp" type="text" class="del">
+				</form>
+				<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
+			</div>
 		</div>
-		<div id="del_ip_div" class="ip_div">
-			<form id="del_ip_form">
-				<label for="ip" class="del">Remove </label>
-				<select id="del_ip_select" class="del ip_select">
-					<option value="item">Item</option>
-					<option value="property">Property</option>
-				</select>
-				<input id="del_ip" type="text" class="del">
-			</form>
-			<button id="submit_del_button" mode="del_ip">Submit</button>
+		<div id="configure_bottom" class="bottom">
+			<div id="configure_bottom_header" class="header_text">
+				<span id="configure_bottom_header_text">Associate text here</span>
+			</div>
+				<button id="submit_a_tp" mode="a_tp">Associate</button>
+			<div id="associate_tp_div">
+				<div id="onload_append_div">
+				</div>
+				<div id="a_tp_append_div">
+				</div>
+			</div>
 		</div>
 	</div>
 	[% END %]	

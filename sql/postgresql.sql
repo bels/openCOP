@@ -69,35 +69,45 @@ CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curre
 DROP TABLE IF EXISTS audit;
 CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), site INTEGER references site(scid), location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT references section(sid), priority INT references priority(prid), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(uid), closing_tech INTEGER references users(uid), free VARCHAR(255), updater INTEGER, ticket INTEGER references helpdesk(ticket));
 
-DROP TABLE IF EXISTS item;
-CREATE TABLE item (id BIGSERIAL PRIMARY KEY, item VARCHAR(255), UNIQUE (item));
-
-DROP TABLE IF EXISTS property;
-CREATE TABLE property (id BIGSERIAL PRIMARY KEY, property VARCHAR(255), UNIQUE (property));
-
-DROP TABLE IF EXISTS value;
-CREATE TABLE value (id BIGSERIAL PRIMARY KEY, value VARCHAR(255));
-
-DROP TABLE IF EXISTS item_property;
-CREATE TABLE item_property (id BIGSERIAL PRIMARY KEY, item_id INTEGER references item(id), property_id INTEGER references property(id));
-
+DROP TABLE IF EXISTS type CASCADE;
+DROP TABLE IF EXISTS property CASCADE; 
+DROP TABLE IF EXISTS value CASCADE;
+DROP TABLE IF EXISTS object CASCADE;
+DROP TABLE IF EXISTS type_property;
 DROP TABLE IF EXISTS property_value;
-CREATE TABLE property_value (id BIGSERIAL PRIMARY KEY, property_id INTEGER references property(id), value_id INTEGER references value(id));
+DROP TABLE IF EXISTS object_value;
+DROP TABLE IF EXISTS object_type;
+DROP TABLE IF EXISTS object_company;
 
-DROP TABLE IF EXISTS company_item;
-CREATE TABLE company_item (id BIGSERIAL PRIMARY KEY, company_id INTEGER references company(cpid), item_id INTEGER references item(id));
+CREATE TABLE type (tid BIGSERIAL PRIMARY KEY, type VARCHAR(255), UNIQUE (type));
+
+CREATE TABLE property (pid BIGSERIAL PRIMARY KEY, property VARCHAR(255), UNIQUE (property));
+
+CREATE TABLE value (vid BIGSERIAL PRIMARY KEY, value VARCHAR(255));
+
+CREATE TABLE object (oid BIGSERIAL PRIMARY KEY, object INTEGER, value_id INTEGER references value(vid));
+
+CREATE TABLE type_property (tpid BIGSERIAL PRIMARY KEY, type_id INTEGER references type(tid) ON DELETE CASCADE, property_id INTEGER references property(pid) ON DELETE CASCADE);
+
+CREATE TABLE property_value (pvid BIGSERIAL PRIMARY KEY, property_id INTEGER references property(pid) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
+
+CREATE TABLE object_value (ovid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(oid) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
+
+CREATE TABLE object_type (otid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(oid) ON DELETE CASCADE, type_id INTEGER references type(tid) ON DELETE CASCADE);
+
+CREATE TABLE object_company (ocid BIGSERIAL PRIMARY KEY, company_id INTEGER references company(cpid) ON DELETE CASCADE, object_id INTEGER references object(oid) ON DELETE CASCADE);
 
 -- Default data types
-INSERT INTO item(item) values('server');
-INSERT INTO item(item) values('cert');
-INSERT INTO item(item) values('domain_name');
-INSERT INTO item(item) values('firewall');
-INSERT INTO item(item) values('router');
-INSERT INTO item(item) values('switch');
-INSERT INTO item(item) values('ldap_domain');
-INSERT INTO item(item) values('printer');
-INSERT INTO item(item) values('wap');
-INSERT INTO item(item) values('isp');
+INSERT INTO type(type) values('server');
+INSERT INTO type(type) values('cert');
+INSERT INTO type(type) values('domain_name');
+INSERT INTO type(type) values('firewall');
+INSERT INTO type(type) values('router');
+INSERT INTO type(type) values('switch');
+INSERT INTO type(type) values('ldap_domain');
+INSERT INTO type(type) values('printer');
+INSERT INTO type(type) values('wap');
+INSERT INTO type(type) values('isp');
 
 -- Default data properties
 INSERT INTO property(property) values('name');
@@ -132,7 +142,7 @@ INSERT INTO property(property) values('bis_provider');
 INSERT INTO property(property) values('special_notes');
 INSERT INTO property(property) values('os');
 INSERT INTO property(property) values('scan_to_type');
-INSERT INTO property(property) values('bandwitdh');
+INSERT INTO property(property) values('bandwidth');
 INSERT INTO property(property) values('application_version');
 
 -- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
@@ -274,15 +284,21 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON company TO helpdesk;
 GRANT SELECT, UPDATE ON company_cpid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON audit TO helpdesk;
 GRANT SELECT, UPDATE ON audit_record_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON item TO helpdesk;
-GRANT SELECT, UPDATE ON item_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON type TO helpdesk;
+GRANT SELECT, UPDATE ON type_tid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON property TO helpdesk;
-GRANT SELECT, UPDATE ON property_id_seq TO helpdesk;
+GRANT SELECT, UPDATE ON property_pid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON value TO helpdesk;
-GRANT SELECT, UPDATE ON value_id_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON item_property TO helpdesk;
-GRANT SELECT, UPDATE ON item_property_id_seq TO helpdesk;
+GRANT SELECT, UPDATE ON value_vid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON object TO helpdesk;
+GRANT SELECT, UPDATE ON object_oid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON type_property TO helpdesk;
+GRANT SELECT, UPDATE ON type_property_tpid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON property_value TO helpdesk;
-GRANT SELECT, UPDATE ON property_value_id_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON company_item TO helpdesk;
-GRANT SELECT, UPDATE ON company_item_id_seq TO helpdesk;
+GRANT SELECT, UPDATE ON property_value_pvid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON object_value TO helpdesk;
+GRANT SELECT, UPDATE ON object_value_ovid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON object_type TO helpdesk;
+GRANT SELECT, UPDATE ON object_type_otid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON object_company TO helpdesk;
+GRANT SELECT, UPDATE ON object_company_ocid_seq TO helpdesk;

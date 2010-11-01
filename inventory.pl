@@ -7,6 +7,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -25,7 +26,13 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $query;
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
+	my $sth;
 	my $title;
+	my $types;
+	my $properties;
+
 	my $mode = $q->param('mode');
 	if ($mode eq "add"){
 		$title = $config->{'company_name'} . " - Inventory Add";
@@ -39,10 +46,10 @@ if($authenticated == 1)
 		$title = $config->{'company_name'} . " - Inventory Index";
 	}
 	my $file = "inventory.tt";
-	my @styles = ("styles/layout.css", "styles/inventory.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/inventory.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js");
+	my @styles = ("styles/layout.css", "styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/inventory.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/ui.multiselect.js","javascripts/jquery.livequery.js");
 
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, types => $types};
 
 	print "Content-type: text/html\n\n";
 
