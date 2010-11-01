@@ -5,6 +5,7 @@
 	margin-left: 25px;
 	margin-bottom: 25px;
 	margin-right: 25px;
+	min-width: 700px;
 }
 
 #configure_top{
@@ -18,13 +19,12 @@
 }
 
 .tp_div{
-	border: 1px red solid;
+	_border: 1px red solid;
 	width: 700px;
 	height: 30px;
 }
 
 .submit_tp_div{
-	border: 1px blue solid;
 	width: 80px;
 	height: 25px;
 	margin-left: auto;
@@ -36,7 +36,7 @@
 }
 
 label{
-	border: 1px green solid;	
+	_border: 1px green solid;	
 	display: block;
 	float: left;
 	min-width: 70px;
@@ -104,3 +104,15 @@ select{
 	float: left;
 }
 
+.object_form_div{
+	float: left;
+	min-width; 400px;
+}
+
+.object_form_input{
+	float: left;
+}
+
+.object_form_label{
+	float: left;
+}

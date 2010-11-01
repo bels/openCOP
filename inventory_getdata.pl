@@ -121,6 +121,20 @@ if($authenticated == 1)
 		}
 		$data .= qq(</select>);
 		print $data;
+	} elsif ($vars->{'mode'} eq "object_onload"){
+		$query = "select * from type;";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		my $results = $sth->fetchall_hashref('tid');
+		$data = qq(
+				<select id="object_type_select">
+					<option value="" selected="selected"></option>
+		);
+		foreach my $key (keys %$results){
+			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'type'}</option>);
+		}
+		$data .= qq(</select>);
+		print $data;
 	} elsif ($vars->{'mode'} eq "onload_more"){
 		$query = "select * from type;";
 		$sth = $dbh->prepare($query);
@@ -149,6 +163,24 @@ if($authenticated == 1)
 		}
 		$data .= qq(</select>);
 		print $data;
+	} elsif ($vars->{'mode'} eq "populate_create_form"){
+		my $type = $vars->{'type'};
+		$query = "select property.property,type_property.tpid,type_property.property_id from type_property join property on type_property.property_id = property.pid where type_id = '$type';";
+		warn $query;
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		my $results = $sth->fetchall_hashref('tpid');
+		$data .= "\n";
+		foreach my $key (keys %$results){
+			$data .= qq(
+				<div id="$results->{$key}->{'tpid'}" class="object_form_div"><label class="object_form_label">$results->{$key}->{'property'}</label><input id="$results->{$key}->{'property_id'}" class="object_form_input"></div>
+			);
+		}
+		print "Content-type: text/html\n\n";
+		print $data;
+	} else {
+		print "Content-type: text/html\n\n";
+		print "You should never see this!";
 	}
 
 } else {

@@ -4,7 +4,19 @@
 	</div>
 	[% ELSIF title.match('Add') %]
 	<div id="add_wrapper" class="wrapper">
-		This is the add page.
+		<div id="add_top" class="top">
+			<div id="add_top_header" class="header_text">
+				<span id="add_top_header_text">Create new objects</span>
+			</div>
+			<div id="add_object_div" class="object_div">
+				<form id="add_object_form">
+					<label for="" class="add type_select">Create </label>
+					<div id="object_type_append_div">
+					</div>
+				</form>
+				<button id="submit_create_object_button" class="submit_button">Create</submit>
+			</div>
+		</div
 	</div>
 	[% ELSIF title.match('Current') %]
 	<div id="current_wrapper" class="wrapper">
@@ -22,7 +34,7 @@
 			</div>
 			<div id="add_tp_div" class="tp_div">
 				<form id="add_tp_form">
-					<label for="tp_select" class="add">Add </label>
+					<label for="add_tp_select" class="add">Add </label>
 					<select id="add_tp_select" class="add tp_select">
 						<option value="type" selected="selected">Type</option>
 						<option value="property">Property</option>
@@ -33,7 +45,7 @@
 			</div>
 			<div id="del_tp_div" class="tp_div">
 				<form id="del_tp_form">
-					<label for="tp_select" class="del">Remove </label>
+					<label for="del_tp_select" class="del">Remove </label>
 					<select id="del_tp_select" class="del tp_select">
 						<option value="type" selected="selected">Type</option>
 						<option value="property">Property</option>
@@ -46,7 +58,7 @@
 		</div>
 		<div id="configure_bottom" class="bottom">
 			<div id="configure_bottom_header" class="header_text">
-				<span id="configure_bottom_header_text">Associate text here</span>
+				<span id="configure_bottom_header_text">Associate properties with types</span>
 			</div>
 				<button id="submit_a_tp" mode="a_tp">Associate</button>
 			<div id="associate_tp_div">

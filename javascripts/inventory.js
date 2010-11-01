@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	load_types();
 	load_types2();
+	load_types3();
 
 	$('#add_tp_form').validate({
 		rules: {
@@ -23,6 +24,46 @@ $(document).ready(function(){
 		$('.ui-multiselect').show();
 	});
 
+	$('#submit_create_object_button').bind('click', function(){
+		var type = $('#object_type_select').val();
+		var mode = "create";
+		$.blockUI({message: "Submitting"});
+		$.ajax({
+			type: 'POST',
+			url: 'inventory_getdata.pl',
+			data: {type: type, mode: mode},
+			success: function(data){
+				$('#add_object_form').append(data);
+				$.unblockUI();
+			},
+			error: function(){
+				alert("Error");
+				$.unblockUI();
+			}
+		});
+	});
+
+	$('#object_type_select').livequery(function(){
+		$('#object_type_select').change(function(){
+			var type = $('#object_type_select').val();
+			var mode = "populate_create_form";
+			$.blockUI({message: "Submitting"});
+			$.ajax({
+				type: 'POST',
+				url: 'inventory_getdata.pl',
+				data: {type: type, mode: mode},
+				success: function(data){
+					$('#add_object_form').append(data);
+					$.unblockUI();
+				},
+				error: function(){
+					alert("Error");
+					$.unblockUI();
+				}
+			});
+		});
+	});
+
 	$('#del_tp_select').livequery(function(){
 		$('#del_tp_select').change(function(){
 			if($('#del_tp_select').val() == "property"){
@@ -38,8 +79,6 @@ $(document).ready(function(){
 			load_associations();
 		});
 	});
-
-	
 
 	$('#submit_a_tp').bind('click', function(){
 		var tp_select_string = "";
@@ -76,8 +115,6 @@ $(document).ready(function(){
 			}
 		});
 	});
-
-
 });
 
 function load_associations(){
@@ -145,6 +182,22 @@ function load_types2(){
 	});
 }
 
+function load_types3(){
+	var mode = "object_onload";
+	$.ajax({
+			type: 'POST',
+			url: 'inventory_getdata.pl',
+			data: {mode: mode},
+			success: function(data){
+				$('#object_type_append_div').text("");
+				$('#object_type_append_div').append(data);
+			},
+			error: function(){
+				alert("Error");
+			}
+	});
+}
+
 function submit_tp(button){
 	which = button.attr("mode");
 	value = $('#' + which).val();
@@ -186,6 +239,5 @@ function submit_tp(button){
 					$.unblockUI();
 				}
 			});
-
 	}
 }
