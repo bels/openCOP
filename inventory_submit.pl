@@ -48,12 +48,18 @@ if($authenticated == 1)
 				print "1";
 			}
 		} elsif($vars->{'action'} =~ m/del/){
-			$query = "select $vars->{'type'} from $vars->{'type'} where $vars->{'type'} ilike '$vars->{'value'}';";
+			my $id;
+			if($vars->{'type'} eq "type"){
+				$id = "tid";
+			} elsif($vars->{'type'} eq "property"){
+				$id = "pid";
+			}
+			$query = "select $vars->{'type'} from $vars->{'type'} where $id = '$vars->{'value'}';";
 			$sth = $dbh->prepare($query) or die "Could not prepare query in $0";
 			$sth->execute;
 			my $result = $sth->fetchrow_hashref;
 			if ($result->{$vars->{'type'}}) {
-				$query = "delete from $vars->{'type'} $vars->{'type'} where $vars->{'type'} ilike '$vars->{'value'}';";
+				$query = "delete from $vars->{'type'} $vars->{'type'} where $id = '$vars->{'value'}';";
 				$sth = $dbh->prepare($query) or die "Could not prepare query in $0";
 				$sth->execute;
 				print "Content-type: text/html\n\n";

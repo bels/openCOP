@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	load_types();
+	load_types2();
+
 	$('#add_tp_form').validate({
 		rules: {
 			add_tp: {
@@ -18,13 +20,26 @@ $(document).ready(function(){
 
 	$('.multiselect').livequery(function(){
 		$('.multiselect').multiselect();
+		$('.ui-multiselect').show();
 	});
 
-	$('#type_select').livequery(function(){
-		$('#type_select').change(function(){
+	$('#del_tp_select').livequery(function(){
+		$('#del_tp_select').change(function(){
+			if($('#del_tp_select').val() == "property"){
+				load_properties();
+			} else {
+				load_types2();
+			}
+		});
+	});
+
+	$('.type_select').livequery(function(){
+		$('.type_select').change(function(){
 			load_associations();
 		});
 	});
+
+	
 
 	$('#submit_a_tp').bind('click', function(){
 		var tp_select_string = "";
@@ -50,7 +65,6 @@ $(document).ready(function(){
 				var error = data.substr(0,1);
 				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
-					alert("Successfully modified");
 				} else if(error == "1"){
 					var str = data.replace(/^[\d\s]/,'');
 				}
@@ -83,6 +97,22 @@ function load_associations(){
 	});
 }
 
+function load_properties(){
+	var mode = "load_properties";
+	$.ajax({
+			type: 'POST',
+			url: 'inventory_getdata.pl',
+			data: {mode: mode},
+			success: function(data){
+				$('#t_tp_append_div').text("");
+				$('#t_tp_append_div').append(data);
+			},
+			error: function(){
+				alert("Error");
+			}
+	});
+}
+
 function load_types(){
 	var mode = "onload";
 	$.ajax({
@@ -92,6 +122,22 @@ function load_types(){
 			success: function(data){
 				$('#onload_append_div').text("");
 				$('#onload_append_div').append(data);
+			},
+			error: function(){
+				alert("Error");
+			}
+	});
+}
+
+function load_types2(){
+	var mode = "onload_more";
+	$.ajax({
+			type: 'POST',
+			url: 'inventory_getdata.pl',
+			data: {mode: mode},
+			success: function(data){
+				$('#t_tp_append_div').text("");
+				$('#t_tp_append_div').append(data);
 			},
 			error: function(){
 				alert("Error");
@@ -120,14 +166,17 @@ function submit_tp(button){
                                                 var str = data.replace(/^[\d\s]/,'');
 						$('#' + which).val("");
 						$('#' + which).focus();
+						$('.tp_return').remove();
 						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo('#' + which + '_form');
 						load_types();
 						load_associations();
 					} else if(error == "1"){
                                                 var str = data.replace(/^[\d\s]/,'');
+						$('.tp_return').remove();
 						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' already exists</label>').appendTo('#' + which + '_form');
 					} else if(error == "2"){
                                                 var str = data.replace(/^[\d\s]/,'');
+						$('.tp_return').remove();
 						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' does not exist</label>').appendTo('#' + which + '_form');
 					}
 					$.unblockUI();

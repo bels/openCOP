@@ -24,7 +24,7 @@
 				<form id="add_tp_form">
 					<label for="tp_select" class="add">Add </label>
 					<select id="add_tp_select" class="add tp_select">
-						<option value="type">Type</option>
+						<option value="type" selected="selected">Type</option>
 						<option value="property">Property</option>
 					</select>
 					<input id="add_tp" type="text" class="add">
@@ -35,10 +35,11 @@
 				<form id="del_tp_form">
 					<label for="tp_select" class="del">Remove </label>
 					<select id="del_tp_select" class="del tp_select">
-						<option value="type">Type</option>
+						<option value="type" selected="selected">Type</option>
 						<option value="property">Property</option>
 					</select>
-					<input id="del_tp" type="text" class="del">
+					<div id="t_tp_append_div">
+					</div>
 				</form>
 				<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
 			</div>
@@ -49,7 +50,7 @@
 			</div>
 				<button id="submit_a_tp" mode="a_tp">Associate</button>
 			<div id="associate_tp_div">
-				<div id="onload_append_div">
+				<div id="onload_append_div" class="onload_append">
 				</div>
 				<div id="a_tp_append_div">
 				</div>

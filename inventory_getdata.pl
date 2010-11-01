@@ -35,7 +35,8 @@ if($authenticated == 1)
 		$query = "select property.property,type_property.tpid,type_property.property_id from type_property join property on type_property.property_id = property.pid where type_id = '$type';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $used_properties = $sth->fetchall_hashref('tpid');
+		my $used_properties;
+
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
@@ -45,9 +46,13 @@ if($authenticated == 1)
 		$data .= qq(
 			<select id="associate_tp" class="multiselect" multiple="multiple" name="tp_select_array[]">
 		);
-		foreach my $key (keys %$used_properties){
-			push(@used_properties,$used_properties->{$key}->{'property_id'});
-			$data .= qq(<option selected="selected" value="$used_properties->{$key}->{'property_id'}">$used_properties->{$key}->{'property'}</option>);
+
+		if(defined($used_properties->{'tpid'})){
+			$used_properties = $sth->fetchall_hashref('tpid');
+			foreach my $key (keys %$used_properties){
+				push(@used_properties,$used_properties->{$key}->{'property_id'});
+				$data .= qq(<option selected="selected" value="$used_properties->{$key}->{'property_id'}">$used_properties->{$key}->{'property'}</option>);
+			}
 		}
 		foreach my $key (keys %$all_properties){
 			foreach (@used_properties){
@@ -108,11 +113,39 @@ if($authenticated == 1)
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('tid');
 		$data = qq(
-				<select id="type_select">
+				<select id="type_select" class="type_select">
 					<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$results){
 			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'type'}</option>);
+		}
+		$data .= qq(</select>);
+		print $data;
+	} elsif ($vars->{'mode'} eq "onload_more"){
+		$query = "select * from type;";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		my $results = $sth->fetchall_hashref('tid');
+		$data = qq(
+				<select id="del_tp" class="type_select">
+					<option value="" selected="selected"></option>
+		);
+		foreach my $key (keys %$results){
+			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'type'}</option>);
+		}
+		$data .= qq(</select>);
+		print $data;
+	} elsif ($vars->{'mode'} eq "load_properties"){
+		$query = "select * from property;";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		my $results = $sth->fetchall_hashref('pid');
+		$data = qq(
+				<select id="del_tp">
+					<option value="" selected="selected"></option>
+		);
+		foreach my $key (keys %$results){
+			$data .= qq(<option value="$results->{$key}->{'pid'}">$results->{$key}->{'property'}</option>);
 		}
 		$data .= qq(</select>);
 		print $data;
