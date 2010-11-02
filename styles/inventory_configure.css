@@ -1,0 +1,55 @@
+
+#configure_top{
+	float: left;
+	width: 750px;
+}
+
+#configure_bottom{
+	float: right;
+	width: 500px;
+}
+
+.tp_div{
+	_border: 1px red solid;
+	width: 700px;
+	height: 30px;
+}
+
+.submit_tp_div{
+	width: 80px;
+	height: 25px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.tp_select{
+	float: left;
+}
+
+.multiselect{
+	width: 460px;
+	height: 400px;
+	display: none;
+}        
+
+#submit_a_tp{
+	float: right;
+	margin-right: 40px;
+}
+
+.onload_append{
+	float: left;
+}
+
+#a_tp_append_div{
+	float: left;
+}
+
+#t_tp_append_div{
+	float: left;
+}
+
+.tp_return{
+	float: left;
+	color: red;
+}

@@ -25,7 +25,6 @@
 			<span id="sub_inventory_link"  class="hidden_menu sub">
 				<a href="inventory.pl?mode=add" class="sub_link">Add</a>
 				<a href="inventory.pl?mode=current" class="sub_link">Current</a>
-				<a href="inventory.pl?mode=remove" class="sub_link">Remove</a>
 				<a href="inventory.pl?mode=configure" class="sub_link">Configure</a>
 			</span>
 			<span id="sub_admin_link"  class="hidden_menu sub">

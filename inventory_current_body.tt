@@ -1,0 +1,7 @@
+	<div id="current_wrapper" class="wrapper">
+		<div id="current_top" class="top">
+			<div id="current_object_div" class="current_object">
+			</div>
+		</div>
+
+	</div>

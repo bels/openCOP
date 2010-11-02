@@ -1,0 +1,13 @@
+	<div id="add_wrapper" class="wrapper">
+		<div id="add_top" class="top">
+			<div id="left_add_object_div" class="object_div left">
+				<div id="add_top_header" class="header_text">
+					<span id="add_top_header_text">Create new objects</span>
+				</div>
+			</div>
+			<div id="center_add_object_div" class="object_div center">
+				<form id="center_create_object_form">
+				</form>
+			</div>
+		</div>
+	</div>

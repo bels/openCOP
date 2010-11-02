@@ -32,23 +32,33 @@ if($authenticated == 1)
 	my $title;
 	my $types;
 	my $properties;
+	my $file;
+
+	my @styles = ("styles/layout.css","styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/ui.multiselect.js","javascripts/jquery.livequery.js");
 
 	my $mode = $q->param('mode');
 	if ($mode eq "add"){
 		$title = $config->{'company_name'} . " - Inventory Add";
+		$file = "inventory_add.tt";
+		push(@styles,"styles/inventory_add.css");
+		push(@javascripts,"javascripts/inventory_add.js");
 	} elsif ($mode eq "current"){
 		$title = $config->{'company_name'} . " - Inventory Current";
-	} elsif ($mode eq "remove"){
-		$title = $config->{'company_name'} . " - Inventory Remove";
+		$file = "inventory_current.tt";
+		push(@styles,"styles/inventory_current.css");
+		push(@javascripts,"javascripts/inventory_current.js");
 	} elsif ($mode eq "configure"){
 		$title = $config->{'company_name'} . " - Inventory Configure.";
+		$file = "inventory_configure.tt";
+		push(@styles,"styles/inventory_configure.css");
+		push(@javascripts,"javascripts/inventory_configure.js");
 	} else {
 		$title = $config->{'company_name'} . " - Inventory Index";
+		$file = "inventory_index.tt";
+		push(@styles,"styles/inventory_index.css");
+		push(@javascripts,"javascripts/inventory_index.js");
 	}
-	my $file = "inventory.tt";
-	my @styles = ("styles/layout.css", "styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/inventory.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/ui.multiselect.js","javascripts/jquery.livequery.js");
-
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, types => $types};
 
 	print "Content-type: text/html\n\n";
