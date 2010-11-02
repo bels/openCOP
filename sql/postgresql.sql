@@ -85,17 +85,17 @@ CREATE TABLE property (pid BIGSERIAL PRIMARY KEY, property VARCHAR(255), UNIQUE 
 
 CREATE TABLE value (vid BIGSERIAL PRIMARY KEY, value VARCHAR(255));
 
-CREATE TABLE object (oid BIGSERIAL PRIMARY KEY, object INTEGER, value_id INTEGER references value(vid));
+CREATE TABLE object (oid BIGSERIAL PRIMARY KEY, active BOOLEAN DEFAULT true);
 
 CREATE TABLE type_property (tpid BIGSERIAL PRIMARY KEY, type_id INTEGER references type(tid) ON DELETE CASCADE, property_id INTEGER references property(pid) ON DELETE CASCADE);
 
 CREATE TABLE property_value (pvid BIGSERIAL PRIMARY KEY, property_id INTEGER references property(pid) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
 
-CREATE TABLE object_value (ovid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(oid) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
+CREATE TABLE object_value (ovid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(object) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
 
-CREATE TABLE object_type (otid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(oid) ON DELETE CASCADE, type_id INTEGER references type(tid) ON DELETE CASCADE);
+CREATE TABLE object_type (otid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(object) ON DELETE CASCADE, type_id INTEGER references type(tid) ON DELETE CASCADE);
 
-CREATE TABLE object_company (ocid BIGSERIAL PRIMARY KEY, company_id INTEGER references company(cpid) ON DELETE CASCADE, object_id INTEGER references object(oid) ON DELETE CASCADE);
+CREATE TABLE object_company (ocid BIGSERIAL PRIMARY KEY, company_id INTEGER references company(cpid) ON DELETE CASCADE, object_id INTEGER references object(object) ON DELETE CASCADE);
 
 -- Default data types
 INSERT INTO type(type) values('server');
@@ -168,6 +168,37 @@ INSERT INTO ticket_status (name) values ('Completed');
 -- test data to start with 
 INSERT INTO school_level(type) values ('test');
 INSERT INTO site (level,name) values (1,'Test Site');
+
+CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN, type_val INTEGER, company_val INTEGER) RETURNS INTEGER AS $$
+DECLARE
+	last_oid INTEGER;
+BEGIN
+	INSERT INTO object (active) values(active_val);
+	SELECT INTO last_oid currval('object_oid_seq');
+
+	INSERT INTO object_type (object_id,type_id) values(last_oid, type_val);
+	INSERT INTO object_company (object_id,company_id) values(last_oid, company_val);
+
+	RETURN last_oid;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_object_value(value_val VARCHAR(255), property_val INTEGER) RETURNS INTEGER AS $$
+DECLARE
+	last_vid INTEGER;
+	last_oid INTEGER;
+BEGIN
+	INSERT INTO value (value) values(value_val);
+
+	SELECT INTO last_vid currval('value_vid_seq');
+	SELECT INTO last_oid currval('object_oid_seq');
+
+	INSERT INTO property_value (property_id,value_id) values(property_val, last_vid);
+	INSERT INTO object_value (object_id,value_id) values(last_oid, last_vid);
+
+	RETURN last_vid;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255), tech_text VARCHAR(255), notes_val TEXT, submitter_val INTEGER) RETURNS INTEGER AS $$
 DECLARE

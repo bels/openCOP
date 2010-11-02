@@ -38,6 +38,7 @@ if($authenticated == 1)
 			$sth->execute;
 			my $result = $sth->fetchrow_hashref;
 			if (!$result->{$vars->{'type'}}) {
+				$vars->{'value'} =~ s/'/''/g;
 				$query = "insert into $vars->{'type'}($vars->{'type'}) values('$vars->{'value'}');";
 				$sth = $dbh->prepare($query) or die "Could not prepare query in $0";
 				$sth->execute;

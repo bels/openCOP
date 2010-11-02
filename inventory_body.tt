@@ -5,18 +5,16 @@
 	[% ELSIF title.match('Add') %]
 	<div id="add_wrapper" class="wrapper">
 		<div id="add_top" class="top">
-			<div id="add_top_header" class="header_text">
-				<span id="add_top_header_text">Create new objects</span>
+			<div id="left_add_object_div" class="object_div left">
+				<div id="add_top_header" class="header_text">
+					<span id="add_top_header_text">Create new objects</span>
+				</div>
 			</div>
-			<div id="add_object_div" class="object_div">
-				<form id="add_object_form">
-					<label for="" class="add type_select">Create </label>
-					<div id="object_type_append_div">
-					</div>
+			<div id="center_add_object_div" class="object_div center">
+				<form id="center_create_object_form">
 				</form>
-				<button id="submit_create_object_button" class="submit_button">Create</submit>
 			</div>
-		</div
+		</div>
 	</div>
 	[% ELSIF title.match('Current') %]
 	<div id="current_wrapper" class="wrapper">
