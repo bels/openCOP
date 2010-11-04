@@ -170,6 +170,7 @@ function submit_tp(button){
 						$('.tp_return').remove();
 						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo('#' + which + '_form');
 						load_types();
+						load_types2();
 						load_associations();
 					} else if(error == "1"){
                                                 var str = data.replace(/^[\d\s]/,'');

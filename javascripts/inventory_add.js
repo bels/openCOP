@@ -14,29 +14,26 @@ $(document).ready(function(){
 		$('#submit_create_object_button').bind('click', function(){
 					var type = $('#object_type_select').val();
 					var company = $('#object_company_select').val();
-					if( type !== "" && company !== ""){
+					var name = $('#object_name').val();
+					var tpid = $('#object_type_select :selected').attr("tpid");
+					var cpid = $('#object_company_select :selected').attr("cpid");
+					var npid = $('#object_name').attr("npid");
+					if( type !== "" && company !== "" && name !== ""){
 						var mode = "create_object";
 						var submitvalue = "";
 						var submitproperty = "";
 						var error;
-							$('.object_form_input').each(function(){
-								if($(this).val() !== "" ){
-									submitvalue += $(this).val() + ":";
-									submitproperty += $(this).attr('id') + ":";
-								//	alert($(this).val());
-								} else {
-									error = 1;
-								}
-							});
-						if(error == 1){
-							$('#left_add_object_div label.error').remove();
-							$('#left_add_object_div').append("<label id=\"validate_error\" class=\"error\">Please fill in all fields</label>");
-						} else {
+						$('.object_form_input').each(function(){
+								submitvalue += $(this).val() + ":";
+								submitproperty += $(this).attr('id') + ":";
+						});
+							submitvalue += type + ":" + company + ":" + name;
+							submitproperty += tpid + ":" + cpid + ":" + npid;
 							$.blockUI({message: "Submitting"});
 							$.ajax({
 								type: 'POST',
 								url: 'inventory_getdata.pl',
-								data: {type: type, company: company, mode: mode, value: submitvalue, property: submitproperty},
+								data: {mode: mode, value: submitvalue, property: submitproperty},
 								success: function(data){
 									alert("Success");
 									$.unblockUI();
@@ -46,7 +43,6 @@ $(document).ready(function(){
 									$.unblockUI();
 								}
 							});
-						}
 					}
 		});
 	});

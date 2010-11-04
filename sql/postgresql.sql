@@ -69,17 +69,17 @@ CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curre
 DROP TABLE IF EXISTS audit;
 CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), site INTEGER references site(scid), location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT references section(sid), priority INT references priority(prid), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(uid), closing_tech INTEGER references users(uid), free VARCHAR(255), updater INTEGER, ticket INTEGER references helpdesk(ticket));
 
-DROP TABLE IF EXISTS type CASCADE;
+DROP TABLE IF EXISTS template CASCADE;
 DROP TABLE IF EXISTS property CASCADE; 
 DROP TABLE IF EXISTS value CASCADE;
 DROP TABLE IF EXISTS object CASCADE;
-DROP TABLE IF EXISTS type_property;
-DROP TABLE IF EXISTS property_value;
+DROP TABLE IF EXISTS template_property;
+DROP TABLE IF EXISTS value_property;
 DROP TABLE IF EXISTS object_value;
 DROP TABLE IF EXISTS object_type;
 DROP TABLE IF EXISTS object_company;
 
-CREATE TABLE type (tid BIGSERIAL PRIMARY KEY, type VARCHAR(255), UNIQUE (type));
+CREATE TABLE template (tid BIGSERIAL PRIMARY KEY, template VARCHAR(255), UNIQUE (template));
 
 CREATE TABLE property (pid BIGSERIAL PRIMARY KEY, property VARCHAR(255), UNIQUE (property));
 
@@ -87,31 +87,31 @@ CREATE TABLE value (vid BIGSERIAL PRIMARY KEY, value VARCHAR(255));
 
 CREATE TABLE object (oid BIGSERIAL PRIMARY KEY, active BOOLEAN DEFAULT true);
 
-CREATE TABLE type_property (tpid BIGSERIAL PRIMARY KEY, type_id INTEGER references type(tid) ON DELETE CASCADE, property_id INTEGER references property(pid) ON DELETE CASCADE);
+CREATE TABLE template_property (tpid BIGSERIAL PRIMARY KEY, template_id INTEGER references template(tid) ON DELETE CASCADE, property_id INTEGER references property(pid) ON DELETE CASCADE);
 
-CREATE TABLE property_value (pvid BIGSERIAL PRIMARY KEY, property_id INTEGER references property(pid) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
+CREATE TABLE value_property (pvid BIGSERIAL PRIMARY KEY, property_id INTEGER references property(pid) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
 
-CREATE TABLE object_value (ovid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(object) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
+CREATE TABLE object_value (ovid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(oid) ON DELETE CASCADE, value_id INTEGER references value(vid) ON DELETE CASCADE);
 
-CREATE TABLE object_type (otid BIGSERIAL PRIMARY KEY, object_id INTEGER references object(object) ON DELETE CASCADE, type_id INTEGER references type(tid) ON DELETE CASCADE);
-
-CREATE TABLE object_company (ocid BIGSERIAL PRIMARY KEY, company_id INTEGER references company(cpid) ON DELETE CASCADE, object_id INTEGER references object(object) ON DELETE CASCADE);
-
--- Default data types
-INSERT INTO type(type) values('server');
-INSERT INTO type(type) values('cert');
-INSERT INTO type(type) values('domain_name');
-INSERT INTO type(type) values('firewall');
-INSERT INTO type(type) values('router');
-INSERT INTO type(type) values('switch');
-INSERT INTO type(type) values('ldap_domain');
-INSERT INTO type(type) values('printer');
-INSERT INTO type(type) values('wap');
-INSERT INTO type(type) values('isp');
+-- Default data templates
+INSERT INTO template(template) values('server');
+INSERT INTO template(template) values('cert');
+INSERT INTO template(template) values('domain_name');
+INSERT INTO template(template) values('firewall');
+INSERT INTO template(template) values('router');
+INSERT INTO template(template) values('switch');
+INSERT INTO template(template) values('ldap_domain');
+INSERT INTO template(template) values('printer');
+INSERT INTO template(template) values('wap');
+INSERT INTO template(template) values('isp');
 
 -- Default data properties
-INSERT INTO property(property) values('name');
 INSERT INTO property(property) values('type');
+INSERT INTO property(property) values('company');
+INSERT INTO property(property) values('name');
+INSERT INTO property(property) values('po');
+INSERT INTO property(property) values('grant_type');
+INSERT INTO property(property) values('grant_code');
 INSERT INTO property(property) values('description');
 INSERT INTO property(property) values('cpu');
 INSERT INTO property(property) values('ram');
@@ -169,15 +169,12 @@ INSERT INTO ticket_status (name) values ('Completed');
 INSERT INTO school_level(type) values ('test');
 INSERT INTO site (level,name) values (1,'Test Site');
 
-CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN, type_val INTEGER, company_val INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
 	last_oid INTEGER;
 BEGIN
 	INSERT INTO object (active) values(active_val);
 	SELECT INTO last_oid currval('object_oid_seq');
-
-	INSERT INTO object_type (object_id,type_id) values(last_oid, type_val);
-	INSERT INTO object_company (object_id,company_id) values(last_oid, company_val);
 
 	RETURN last_oid;
 END;
@@ -193,7 +190,7 @@ BEGIN
 	SELECT INTO last_vid currval('value_vid_seq');
 	SELECT INTO last_oid currval('object_oid_seq');
 
-	INSERT INTO property_value (property_id,value_id) values(property_val, last_vid);
+	INSERT INTO value_property (property_id,value_id) values(property_val, last_vid);
 	INSERT INTO object_value (object_id,value_id) values(last_oid, last_vid);
 
 	RETURN last_vid;
@@ -315,21 +312,17 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON company TO helpdesk;
 GRANT SELECT, UPDATE ON company_cpid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON audit TO helpdesk;
 GRANT SELECT, UPDATE ON audit_record_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON type TO helpdesk;
-GRANT SELECT, UPDATE ON type_tid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON template TO helpdesk;
+GRANT SELECT, UPDATE ON template_tid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON property TO helpdesk;
 GRANT SELECT, UPDATE ON property_pid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON value TO helpdesk;
 GRANT SELECT, UPDATE ON value_vid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON object TO helpdesk;
 GRANT SELECT, UPDATE ON object_oid_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON type_property TO helpdesk;
-GRANT SELECT, UPDATE ON type_property_tpid_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON property_value TO helpdesk;
-GRANT SELECT, UPDATE ON property_value_pvid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON template_property TO helpdesk;
+GRANT SELECT, UPDATE ON template_property_tpid_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON value_property TO helpdesk;
+GRANT SELECT, UPDATE ON value_property_pvid_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON object_value TO helpdesk;
 GRANT SELECT, UPDATE ON object_value_ovid_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON object_type TO helpdesk;
-GRANT SELECT, UPDATE ON object_type_otid_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON object_company TO helpdesk;
-GRANT SELECT, UPDATE ON object_company_ocid_seq TO helpdesk;

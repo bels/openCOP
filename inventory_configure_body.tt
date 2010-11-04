@@ -7,7 +7,7 @@
 				<form id="add_tp_form">
 					<label for="add_tp_select" class="add">Add </label>
 					<select id="add_tp_select" class="add tp_select">
-						<option value="type" selected="selected">Type</option>
+						<option value="template" selected="selected">Template</option>
 						<option value="property">Property</option>
 					</select>
 					<input id="add_tp" type="text" class="add">
@@ -18,7 +18,7 @@
 				<form id="del_tp_form">
 					<label for="del_tp_select" class="del">Remove </label>
 					<select id="del_tp_select" class="del tp_select">
-						<option value="type" selected="selected">Type</option>
+						<option value="template" selected="selected">Template</option>
 						<option value="property">Property</option>
 					</select>
 					<div id="t_tp_append_div">

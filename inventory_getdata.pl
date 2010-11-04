@@ -28,14 +28,17 @@ if($authenticated == 1)
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $sth;
 	my $data;
+	my $used_properties;
 	
 	my $vars = $q->Vars;
 	if ($vars->{'mode'} eq "init"){
 		my $type = $vars->{'type'};
-		$query = "select property.property,type_property.tpid,type_property.property_id from type_property join property on type_property.property_id = property.pid where type_id = '$type';";
-		$sth = $dbh->prepare($query);
-		$sth->execute;
-		my $used_properties;
+		if($type){
+			$query = "select property.property,template_property.tpid,template_property.property_id from template_property join property on template_property.property_id = property.pid where template_id = '$type';";
+			$sth = $dbh->prepare($query);
+			$sth->execute;
+			$used_properties = $sth->fetchall_hashref('tpid');
+		}
 
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
@@ -47,11 +50,12 @@ if($authenticated == 1)
 			<select id="associate_tp" class="multiselect" multiple="multiple" name="tp_select_array[]">
 		);
 
-		if(defined($used_properties->{'tpid'})){
-			$used_properties = $sth->fetchall_hashref('tpid');
+		if(defined($used_properties)){
 			foreach my $key (keys %$used_properties){
-				push(@used_properties,$used_properties->{$key}->{'property_id'});
-				$data .= qq(<option selected="selected" value="$used_properties->{$key}->{'property_id'}">$used_properties->{$key}->{'property'}</option>);
+				unless($used_properties->{$key}->{'property'} eq "type" || $used_properties->{$key}->{'property'} eq "company" || $used_properties->{$key}->{'property'} eq "name",) {
+					push(@used_properties,$used_properties->{$key}->{'property_id'});
+					$data .= qq(<option selected="selected" value="$used_properties->{$key}->{'property_id'}">$used_properties->{$key}->{'property'}</option>);
+				}
 			}
 		}
 		foreach my $key (keys %$all_properties){
@@ -61,7 +65,9 @@ if($authenticated == 1)
 				}
 			}
 			if($all_properties->{$key}){
-				$data .= qq(<option value="$all_properties->{$key}->{'pid'}">$all_properties->{$key}->{'property'}</option>);
+				unless($used_properties->{$key}->{'property'} eq "type" || $used_properties->{$key}->{'property'} eq "company" || $used_properties->{$key}->{'property'} eq "name") {
+					$data .= qq(<option value="$all_properties->{$key}->{'pid'}">$all_properties->{$key}->{'property'}</option>);
+				}
 			}
 		}
 		$data .= qq(</select>);
@@ -80,21 +86,21 @@ if($authenticated == 1)
 		my @unselected = split(":",$unselected_string);
 
 		for my $i (@unselected) {
-			$query = "delete from type_property where type_id = '$type' and property_id = '$i';";
+			$query = "delete from template_property where template_id = '$type' and property_id = '$i';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 		}
 
 		for my $i (@selected) {
-			$query = "delete from type_property where type_id = '$type' and property_id = '$i';";
+			$query = "delete from template_property where template_id = '$type' and property_id = '$i';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			$query = "select count(*) from type_property where type_id = '$type' and property_id = '$i';";
+			$query = "select count(*) from template_property where template_id = '$type' and property_id = '$i';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			my $count = $sth->fetchrow_hashref;
 			unless($count->{'count'}){
-				$query = "insert into type_property(type_id,property_id) values('$type','$i');";
+				$query = "insert into template_property(template_id,property_id) values('$type','$i');";
 				$sth = $dbh->prepare($query);
 				$sth->execute;
 			} else {
@@ -108,7 +114,7 @@ if($authenticated == 1)
 			print "0";
 		}
 	} elsif ($vars->{'mode'} eq "onload"){
-		$query = "select * from type;";
+		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('tid');
@@ -117,12 +123,12 @@ if($authenticated == 1)
 					<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$results){
-			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'type'}</option>);
+			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'template'}</option>);
 		}
 		$data .= qq(</select>);
 		print $data;
 	} elsif ($vars->{'mode'} eq "object_onload"){
-		$query = "select * from type;";
+		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('tid');
@@ -137,6 +143,11 @@ if($authenticated == 1)
 		$sth->execute;
 		my $companies= $sth->fetchall_hashref('cpid');
 
+		$query = "select pid,property from property where property = 'type' or property = 'company' or property = 'name';";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		my $special_case = $sth->fetchall_hashref('property');
+
 		$data = qq(
 				<form id="add_object_form">
 					<label for="object_type_select" class="add type_select">Create </label>
@@ -145,7 +156,7 @@ if($authenticated == 1)
 					<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$results){
-			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'type'}</option>);
+			$data .= qq(<option tpid="$special_case->{'type'}->{'pid'}" value="$results->{$key}->{'tid'}">$results->{$key}->{'template'}</option>);
 		}
 		$data .= qq(	</select>);
 
@@ -156,9 +167,16 @@ if($authenticated == 1)
 						<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$companies){
-			$data .= qq(<option value="$companies->{$key}->{'cpid'}">$companies->{$key}->{'name'}</option>);
+			$data .= qq(<option cpid="$special_case->{'company'}->{'pid'}" value="$companies->{$key}->{'cpid'}">$companies->{$key}->{'name'}</option>);
 		}
 		$data .= qq(	</select>
+				</div>
+		);
+
+		$data .= qq(
+				<div id="object_name_input_div">
+					<label for="object_name" class="add">Name </label>
+					<input npid="$special_case->{'name'}->{'pid'}" id="object_name" type="text">
 				</div>
 		);
 
@@ -170,7 +188,9 @@ if($authenticated == 1)
 					<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$properties){
-			$data .= qq(<option value="$properties->{$key}->{'pid'}">$properties->{$key}->{'property'}</option>);
+			unless($properties->{$key}->{'property'} eq "company" || $properties->{$key}->{'property'} eq "type" || $properties->{$key}->{'property'} eq "name"){
+				$data .= qq(<option value="$properties->{$key}->{'pid'}">$properties->{$key}->{'property'}</option>);
+			}
 		}
 		$data .= qq(	</select>
 				</div>
@@ -187,7 +207,7 @@ if($authenticated == 1)
 		);
 		print $data;
 	} elsif ($vars->{'mode'} eq "onload_more"){
-		$query = "select * from type;";
+		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('tid');
@@ -196,7 +216,7 @@ if($authenticated == 1)
 					<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$results){
-			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'type'}</option>);
+			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'template'}</option>);
 		}
 		$data .= qq(</select>);
 		print $data;
@@ -216,7 +236,8 @@ if($authenticated == 1)
 		print $data;
 	} elsif ($vars->{'mode'} eq "populate_create_form"){
 		my $type = $vars->{'type'};
-		$query = "select property.property,type_property.tpid,type_property.property_id from type_property join property on type_property.property_id = property.pid where type_id = '$type';";
+		warn $type;
+		$query = "select property.property,template_property.tpid,template_property.property_id from template_property join property on template_property.property_id = property.pid where template_id = '$type';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('tpid');
@@ -238,10 +259,9 @@ if($authenticated == 1)
 		print $data;
 		
 	} elsif ($vars->{'mode'} eq "create_object"){
-		$query = "select insert_object('true','$vars->{'type'}','$vars->{'company'}');";
+		$query = "select insert_object('true');";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		warn $DBI::errstr;
 
 		for($vars->{'value'},$vars->{'property'}){
 			$_ =~ s/:$//;
@@ -254,13 +274,10 @@ if($authenticated == 1)
 			$query = "select insert_object_value('$value[$i]','$property[$i]')";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			warn $DBI::errstr;
 			warn $query;
 		}
 		print "Content-type: text/html\n\n";
 		print "0";
-	} elsif ($vars->{'mode'} eq "current"){
-		$query ="select object.oid as object, object.active, value.value, property.property, type.type, company.name as company from object join object_type on object.oid = object_type.object_id join type on type.tid = object_type.type_id join object_value on object.oid = object_value.object_id join value on object_value.value_id = value.vid join property_value on object_value.value_id = property_value.value_id join property on property_value.property_id = property.pid join object_company on object.oid = object_company.object_id join company on object_company.company_id = company.cpid;";
 	} else {
 		print "Content-type: text/html\n\n";
 		print "You should never see this!";

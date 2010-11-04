@@ -103,3 +103,7 @@ label.error{
 	float: right;
 	color: red;
 }
+
+#object_name_input_div{
+	clear: left;
+}

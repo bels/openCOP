@@ -50,7 +50,7 @@ if($authenticated == 1)
 			}
 		} elsif($vars->{'action'} =~ m/del/){
 			my $id;
-			if($vars->{'type'} eq "type"){
+			if($vars->{'type'} eq "template"){
 				$id = "tid";
 			} elsif($vars->{'type'} eq "property"){
 				$id = "pid";
