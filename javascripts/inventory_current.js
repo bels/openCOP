@@ -17,6 +17,9 @@ $(document).ready(function(){
 
 	$('#by_property').livequery(function(){
 		$('#by_property').change(function(){
+			$('#table_body').text("");
+			$('#update_object_button').remove();
+			$('#update_object_form').remove();
 			if($('#by_property').val() !== ""){
 				var pid = $('#by_property').val();
 				var property = $('#by_property :selected').text();
@@ -41,6 +44,8 @@ $(document).ready(function(){
 	$('#property_search_button').livequery(function(){
 		$('#property_search_button').bind('click', function(){
 			if($('#property_search').val() !== ""){
+				$('#update_object_button').remove();
+				$('#update_object_form').remove();
 				var property = $('#by_property :selected').text();
 				var search = $('#property_search').val();
 				var mode = "search";
@@ -62,6 +67,9 @@ $(document).ready(function(){
 
 	$('#company_select').livequery(function(){
 		$('#company_select').change(function(){
+			$('#table_body').text("");
+			$('#update_object_button').remove();
+			$('#update_object_form').remove();
 			if($('#company_select').val() !== ""){
 				if($("#object_lookup").length)
 				{
@@ -88,6 +96,9 @@ $(document).ready(function(){
 
 	$('#template_select').livequery(function(){
 		$('#template_select').change(function(){
+			$('#table_body').text("");
+			$('#update_object_button').remove();
+			$('#update_object_form').remove();
 			if($('#template_select').val() !== ""){
 				if($("#object_lookup").length)
 				{
@@ -120,6 +131,34 @@ $(document).ready(function(){
 				details_pane.reinitialise();			
 			});
 			$("#object_details").css("display","block");
+		});
+	});
+	$("#update_object_button").livequery(function(){
+		$("#update_object_button").bind('click', function(){
+						var mode = "update_object";
+						var submitvalue = "";
+						var submitvid = "";
+						$('input.object_detail').each(function(){
+								if($(this).prev().text() != "type" && $(this).prev().text() != "company"){
+									submitvalue += $(this).val() + ":";
+									submitvid += $(this).attr("id") + ":";
+								}
+						});
+							$.blockUI({message: "Submitting"});
+							$.ajax({
+								type: 'POST',
+								url: 'inventory_getdata.pl',
+								data: {mode: mode, value: submitvalue, vid: submitvid},
+								success: function(data){
+									alert("Success");
+									$.unblockUI();
+								},
+								error: function(){
+									alert("Error");
+									$.unblockUI();
+								}
+							});
+
 		});
 	});
 });

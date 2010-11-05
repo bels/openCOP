@@ -29,7 +29,8 @@ if($authenticated == 1)
 	my $sth;
 	my $data;
 	my $used_properties;
-	
+	my @used_properties_order;
+
 	my $vars = $q->Vars;
 	if ($vars->{'mode'} eq "init"){
 		my $type = $vars->{'type'};
@@ -38,12 +39,14 @@ if($authenticated == 1)
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			$used_properties = $sth->fetchall_hashref('tpid');
+			@used_properties_order = sort (keys %$used_properties);
 		}
 
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $all_properties  = $sth->fetchall_hashref('pid');
+		my @all_properties_order = sort (keys %$all_properties);
 		my @used_properties;
 
 		$data .= qq(
@@ -51,14 +54,14 @@ if($authenticated == 1)
 		);
 
 		if(defined($used_properties)){
-			foreach my $key (keys %$used_properties){
+			foreach my $key (@used_properties_order){
 				unless($used_properties->{$key}->{'property'} eq "type" || $used_properties->{$key}->{'property'} eq "company" || $used_properties->{$key}->{'property'} eq "name",) {
 					push(@used_properties,$used_properties->{$key}->{'property_id'});
 					$data .= qq(<option selected="selected" value="$used_properties->{$key}->{'property_id'}">$used_properties->{$key}->{'property'}</option>);
 				}
 			}
 		}
-		foreach my $key (keys %$all_properties){
+		foreach my $key (@all_properties_order){
 			foreach (@used_properties){
 				if($_ =~ m/$all_properties->{$key}->{'pid'}/) {
 					delete($all_properties->{$key});
@@ -215,7 +218,8 @@ if($authenticated == 1)
 				<select id="del_tp" class="type_select">
 					<option value="" selected="selected"></option>
 		);
-		foreach my $key (keys %$results){
+		my @hash_order = sort (keys %$results);
+		foreach my $key (@hash_order){
 			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'template'}</option>);
 		}
 		$data .= qq(</select>);
@@ -229,7 +233,8 @@ if($authenticated == 1)
 				<select id="del_tp">
 					<option value="" selected="selected"></option>
 		);
-		foreach my $key (keys %$results){
+		my @hash_order = sort (keys %$results);
+		foreach my $key (@hash_order){
 			$data .= qq(<option value="$results->{$key}->{'pid'}">$results->{$key}->{'property'}</option>);
 		}
 		$data .= qq(</select>);
@@ -241,7 +246,8 @@ if($authenticated == 1)
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('tpid');
-		foreach my $key (keys %$results){
+		my @hash_order = sort (keys %$results);
+		foreach my $key (@hash_order){
 			$data .= qq(
 				<br><label class="object_form_label object_form">$results->{$key}->{'property'}</label><input id="$results->{$key}->{'property_id'}" class="object_form_input object_form required"><button class="object_form object_remove_property_button">Remove</button>
 			);
@@ -272,6 +278,22 @@ if($authenticated == 1)
 		for (my $i = 0; $i <= $#value; $i++){
 			$value[$i] =~ s/'/''/g;
 			$query = "select insert_object_value('$value[$i]','$property[$i]')";
+			$sth = $dbh->prepare($query);
+			$sth->execute;
+			warn $query;
+		}
+		print "Content-type: text/html\n\n";
+		print "0";
+	} elsif ($vars->{'mode'} eq "update_object"){
+		for($vars->{'value'},$vars->{'vid'}){
+			$_ =~ s/:$//;
+		}
+
+		my @value = split(":",$vars->{'value'});
+		my @vid = split(":",$vars->{'vid'});
+		for (my $i = 0; $i <= $#value; $i++){
+			$value[$i] =~ s/'/''/g;
+			$query = "select update_object_value('$value[$i]','$vid[$i]')";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			warn $query;

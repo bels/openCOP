@@ -37,13 +37,12 @@ if($authenticated == 1)
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $object = $sth->fetchall_hashref('ovid');
-	YAML::DumpFile("object.yaml",$object);
 
 	my $new_object = {};
 	foreach my $key (keys %$object){
-		$new_object->{$object->{$key}->{'object'}}->{$object->{$key}->{'property'}} = $object->{$key}->{'value'};
+		$new_object->{$object->{$key}->{'object'}}->{$object->{$key}->{'property'}} =[ $object->{$key}->{'value'},$object->{$key}->{'ovid'}];
 	}
-	YAML::DumpFile("new_object_orig.yaml",$new_object);
+	YAML::DumpFile("new_object.yaml",%$new_object);
 	my @hash_order = keys %$new_object;
 	
 	@hash_order = sort(@hash_order);
@@ -67,26 +66,26 @@ if($authenticated == 1)
 					<th id="object_type" class="header_row_item">Type</th>
 				</tr>
 			</thead>
-		<tbody>
+		<tbody id="table_body">
 		);
 		foreach my $element (@hash_order)
 		{
 			my $type;
 			my $name;
 
-			if ($new_object->{$element}->{'type'}){
-				$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}';";
+			if ($new_object->{$element}->{'type'}[0]){
+				$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}[0]';";
 				$sth = $dbh->prepare($query);
 				$sth->execute;
 				my $tid = $sth->fetchrow_hashref;
 				$type = $tid->{'template'};
 			}
 
-			if ($new_object->{$element}->{'company'} == $cpid){
+			if ($new_object->{$element}->{'company'}[0] == $cpid){
 				print qq(
 					<tr class="object_row">
 						<td class="row_object object_id">$element</td>
-						<td class="row_object object_name">$new_object->{$element}->{'name'}</td>
+						<td class="row_object object_name">$new_object->{$element}->{'name'}[0]</td>
 						<td class="row_object object_type">$type</td>
 					</tr>
 				);
@@ -105,25 +104,25 @@ if($authenticated == 1)
 					<th id="object_company" class="header_row_item">Company</th>
 				</tr>
 			</thead>
-		<tbody>
+		<tbody id="table_body">
 		);
 		foreach my $element (@hash_order)
 		{
 			my $company;
 			my $name;
-			if ($new_object->{$element}->{'company'}){
-				$query = "select name,cpid from company where cpid = '$new_object->{$element}->{'company'}';";
+			if ($new_object->{$element}->{'company'}[0]){
+				$query = "select name,cpid from company where cpid = '$new_object->{$element}->{'company'}[0]';";
 				$sth = $dbh->prepare($query);
 				$sth->execute;
 				my $cpid = $sth->fetchrow_hashref;
 				$company = $cpid->{'name'};
 			}
 
-			if ($new_object->{$element}->{'type'} == $tid){
+			if ($new_object->{$element}->{'type'}[0] == $tid){
 				print qq(
 					<tr class="object_row">
 						<td class="row_object object_id">$element</td>
-						<td class="row_object object_name">$new_object->{$element}->{'name'}</td>
+						<td class="row_object object_name">$new_object->{$element}->{'name'}[0]</td>
 						<td class="row_object object_company">$company</td>
 					</tr>
 				);
@@ -183,40 +182,47 @@ if($authenticated == 1)
 
 
 		print qq(<h2>Item Details</h2>);
+		print qq(<button id="update_object_button">Save</button>);
 		print qq(<form id="update_object_form">);
 		foreach my $element (@hash_order){
-			foreach my $key (keys %{$new_object->{$element}}){
-				if($element == $object_id){
+			if($element == $object_id){
+				foreach my $key (keys %{$new_object->{$element}}){
 					if ($key eq "type"){
-						$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}';";
+						$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}[0]';";
 						$sth = $dbh->prepare($query);
 						$sth->execute;
 						my $tid = $sth->fetchrow_hashref;
 						$type = $tid->{'template'};
 						print qq(
 							<label class="object_detail" for=") . $key . qq(_input">$key</label>
-							<input class="object_detail" type="text" id=") . $key . qq(_input" value="$type">
+							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$type" readonly="readonly">
 						);
 					} elsif ($key eq "company"){
-						$query = "select name,cpid from company where cpid = '$new_object->{$element}->{'company'}';";
+						$query = "select name,cpid from company where cpid = '$new_object->{$element}->{'company'}[0]';";
 						$sth = $dbh->prepare($query);
 						$sth->execute;
 						my $cpid = $sth->fetchrow_hashref;
 						$company = $cpid->{'name'};
 						print qq(
 							<label class="object_detail" for=") . $key . qq(_input">$key</label>
-							<input class="object_detail" type="text" id=") . $key . qq(_input" value="$company">
+							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$company" readonly="readonly">
 						);
-					} else {
+					} elsif ($key eq "vid"){
+					}
+					else {
 						print qq(
 							<label class="object_detail" for=") . $key . qq(_input">$key</label>
-							<input class="object_detail" type="text" id=") . $key . qq(_input" value="$new_object->{$element}->{$key}">
+							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$new_object->{$element}->{$key}[0]">
 							<br>
 						);
-					}
 				}
+					}
 			}
 		}
+		print qq(
+			</form>
+		);
+
 	} elsif ($vars->{'mode'} eq "init"){
 		$query = "select pid,property from property;";
 		$sth = $dbh->prepare($query);
@@ -252,7 +258,7 @@ if($authenticated == 1)
 					<th id="object_company" class="header_row_item">Company</th>
 				</tr>
 			</thead>
-		<tbody>
+		<tbody id="table_body">
 		);
 		$query = "select object_value.ovid, object.oid as object, object.active, value.value, property.property from object join object_value on object.oid = object_value.object_id join value on object_value.value_id = value.vid join value_property on value.vid = value_property.value_id join property on value_property.property_id = property.pid where value ilike '%" . $vars->{'search'} . "%';";
 		$sth = $dbh->prepare($query);
@@ -268,8 +274,9 @@ if($authenticated == 1)
 			}
 		}
 	
-		YAML::DumpFile("new_object.yaml",$new_object);
 		my @new_hash_order = keys %$newer_object;
+
+		@new_hash_order = sort(@new_hash_order);
 
 		foreach my $element (@new_hash_order)
 		{
@@ -279,7 +286,7 @@ if($authenticated == 1)
 
 	
 			if ($new_object->{$element}->{'type'}){
-				$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}';";
+				$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}[0]';";
 				$sth = $dbh->prepare($query);
 				$sth->execute;
 				my $tid = $sth->fetchrow_hashref;
@@ -287,7 +294,7 @@ if($authenticated == 1)
 			}
 
 			if ($new_object->{$element}->{'company'}){
-				$query = "select name,cpid from company where cpid = '$new_object->{$element}->{'company'}';";
+				$query = "select name,cpid from company where cpid = '$new_object->{$element}->{'company'}[0]';";
 				$sth = $dbh->prepare($query);
 				$sth->execute;
 				my $cpid = $sth->fetchrow_hashref;
@@ -297,7 +304,7 @@ if($authenticated == 1)
 				print qq(
 					<tr class="object_row">
 						<td class="row_object object_id">$element</td>
-						<td class="row_object object_name">$new_object->{$element}->{'name'}</td>
+						<td class="row_object object_name">$new_object->{$element}->{'name'}[0]</td>
 						<td class="row_object object_type">$type</td>
 						<td class="row_object object_company">$company</td>
 					</tr>

@@ -197,6 +197,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION update_object_value(value_val VARCHAR(255), vid_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	UPDATE value set value = value_val where vid = vid_val;
+
+	RETURN 1;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255), tech_text VARCHAR(255), notes_val TEXT, submitter_val INTEGER) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
