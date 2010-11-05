@@ -12,40 +12,40 @@ $(document).ready(function(){
 
 	$('#submit_create_object_button').livequery(function(){
 		$('#submit_create_object_button').bind('click', function(){
-					var type = $('#object_type_select').val();
-					var company = $('#object_company_select').val();
-					var name = $('#object_name').val();
-					var tpid = $('#object_type_select :selected').attr("tpid");
-					var cpid = $('#object_company_select :selected').attr("cpid");
-					var npid = $('#object_name').attr("npid");
-					if( type !== "" && company !== "" && name !== ""){
-						var mode = "create_object";
-						var submitvalue = "";
-						var submitproperty = "";
-						var error;
-						$('.object_form_input').each(function(){
-								submitvalue += $(this).val() + ":";
-								submitproperty += $(this).attr('id') + ":";
-								alert($(this).val());
-						});
-							submitvalue += type + ":" + company + ":" + name;
-							submitproperty += tpid + ":" + cpid + ":" + npid;
-							alert(submitvalue + " and " + submitproperty);
-							$.blockUI({message: "Submitting"});
-							$.ajax({
-								type: 'POST',
-								url: 'inventory_getdata.pl',
-								data: {mode: mode, value: submitvalue, property: submitproperty},
-								success: function(data){
-									alert("Success");
-									$.unblockUI();
-								},
-								error: function(){
-									alert("Error");
-									$.unblockUI();
-								}
-							});
+			var type = $('#object_type_select').val();
+			var company = $('#object_company_select').val();
+			var name = $('#object_name').val();
+			var tpid = $('#object_type_select :selected').attr("tpid");
+			var cpid = $('#object_company_select :selected').attr("cpid");
+			var npid = $('#object_name').attr("npid");
+			if( type !== "" && company !== "" && name !== ""){
+				var mode = "create_object";
+				var submitvalue = "";
+				var submitproperty = "";
+				var error;
+				$('.object_form_input').each(function(){
+					$(this).val() = $(this).val().replace(/:/g, "AbsolutelyNotAColon");
+					submitvalue += $(this).val() + ":";
+					submitproperty += $(this).attr('id') + ":";
+					alert($(this).val());
+				});
+				submitvalue += type + ":" + company + ":" + name;
+				submitproperty += tpid + ":" + cpid + ":" + npid;
+				$.blockUI({message: "Submitting"});
+				$.ajax({
+					type: 'POST',
+					url: 'inventory_getdata.pl',
+					data: {mode: mode, value: submitvalue, property: submitproperty},
+					success: function(data){
+						alert("Success");
+						$.unblockUI();
+					},
+					error: function(){
+						alert("Error");
+						$.unblockUI();
 					}
+				});
+			}
 		});
 	});
 

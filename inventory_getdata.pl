@@ -270,7 +270,9 @@ if($authenticated == 1)
 
 		for($vars->{'value'},$vars->{'property'}){
 			$_ =~ s/:$//;
+			$_ =~ s/AbsolutelyNotAColon/:/g;
 		}
+		
 
 		my @value = split(":",$vars->{'value'});
 		my @property = split(":",$vars->{'property'});
