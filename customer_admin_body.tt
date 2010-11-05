@@ -1,23 +1,25 @@
-		[% IF duplicate == 1 %]
-			<span class="error">This username is already taken.  Please choose another.</span>
-		[% END %]
-		[% IF success == 1 %]
-			<span class="success">The user was created successfully.</span>
-		[% END %]
-		<form action="add_customer.pl" method="POST" id="customer_admin_form">
-			<label for="site" class="short_label">Site:</label>
-			<select name="site" size="1" tabindex="1" id="site">
-				<option></option>
-				[% FOREACH site IN site_list %]
-				<option value="[% site %]">[% site %]</option>
-				[% END %]
-			</select>
-			<label for="first">First Name:</label><input type="text" name="first" id="first">
-			<label for="middle_initial">Middle Initial:</label><input type="text" name="middle_initial" id="middle_initial">
-			<label for="last">Last Name:</label><input type="text" name="last" id="last">
-			<label for="email">Email Address:</label><input type="text" name="email" id="email">
-			<label for="username">Username:</label><input type="text" name="username" id="username">
-			<label for="password1">Password:</label><input type="password" name="password1" id="password1">
-			<label for="password2">Confirm Password:</label><input type="password" name="password2" id="password2">
-			<input type="submit" value="Create Account" id="submit_button">
-		</form>
+		<div id="add_customer_div">
+			[% IF duplicate == 1 %]
+				<span class="error">This username is already taken.  Please choose another.</span>
+			[% END %]
+			[% IF success == 1 %]
+				<span class="success">The user was created successfully.</span>
+			[% END %]
+			<form action="add_customer.pl" method="POST" id="customer_admin_form">
+				<label for="first">First Name:</label><input type="text" name="first" id="first">
+				<label for="middle_initial">Middle Initial:</label><input type="text" name="middle_initial" id="middle_initial">
+				<label for="last">Last Name:</label><input type="text" name="last" id="last">
+				<label for="email">Email Address:</label><input type="text" name="email" id="email">
+				<label for="username">Username:</label><input type="text" name="username" id="username">
+				<label for="password1">Password:</label><input type="password" name="password1" id="password1">
+				<label for="password2">Confirm Password:</label><input type="password" name="password2" id="password2">
+				<label for="site" class="short_label">Site:</label>
+				<select name="site" size="1" tabindex="1" id="site">
+					<option></option>
+					[% FOREACH site IN site_list %]
+					<option value="[% site %]">[% site %]</option>
+					[% END %]
+				</select>
+				<input type="submit" value="Create Account" id="submit_button">
+			</form>
+		</div>

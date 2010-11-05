@@ -38,10 +38,6 @@ input{
 	margin-bottom: 10px;
 }
 
-#customer_admin_form #submit_button{
-	width: 120px;
-}
-
 #problem_label{
 	width: 350px;
 }
@@ -128,4 +124,35 @@ input.error{
 	padding-top: 5px;
 	display: inline-block;
 	text-align: center;
+}
+
+#add_customer_div{
+	height: 320px;
+	width: 375px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 100px;
+	padding-top: 20px;
+	padding-left: 25px;
+	background-color: #bdbdd2;
+	border: 3px solid #9696a7;
+}
+
+#customer_admin_form h2{
+	width: 125px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#customer_admin_form label{
+	display: inline-block;
+	width: 170px;
+	margin-bottom: 10px;
+}
+
+#customer_admin_form #submit_button{
+	width: 120px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }

@@ -14,10 +14,11 @@ my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
 
-my $old_password = uri_unescape($q->param('old_password'));
+my $old_password1 = uri_unescape($q->param('old_password'));
 my $password1 = uri_unescape($q->param('password1'));
 my $password2 = uri_unescape($q->param('password2'));
 
+my $old_password = md5_hex($old_password1);
 my $password = md5_hex($password1);
 my $id = $q->param('id');
 my $id_field;
@@ -37,9 +38,17 @@ else
 	$id_field = "uid";
 	$type = "user";
 }
-my $query = "update $var set password = '$password' where $id_field = $id";
 
+my $query = "select password from $var where $id_field = $id;";
 my $sth = $dbh->prepare($query);
 $sth->execute;
+my $old_password_ref = $sth->fetchrow_hashref;
 
-print $q->redirect(-URL=> "password.pl?success=1&id=$id&type=$type");
+if($old_password eq $old_password_ref->{'password'}){
+	my $query = "update $var set password = '$password' where $id_field = $id";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	print $q->redirect(-URL=> "password.pl?success=1&id=$id&type=$type");
+} else {
+	print $q->redirect(-URL=> "password.pl?success=0&id=$id&type=$type");
+}
