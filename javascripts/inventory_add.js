@@ -26,9 +26,11 @@ $(document).ready(function(){
 						$('.object_form_input').each(function(){
 								submitvalue += $(this).val() + ":";
 								submitproperty += $(this).attr('id') + ":";
+								alert($(this).val());
 						});
 							submitvalue += type + ":" + company + ":" + name;
 							submitproperty += tpid + ":" + cpid + ":" + npid;
+							alert(submitvalue + " and " + submitproperty);
 							$.blockUI({message: "Submitting"});
 							$.ajax({
 								type: 'POST',

@@ -53,9 +53,6 @@ if($authenticated == 1)
 		my $cpid = $vars->{'cpid'};
 
 #		$query = "select value from value where vid = (select value_property.value_id from value_property join object_value on value_property.value_id = object_value.value_id where property_id = (select (select pid from property where property = 'company')) and object_value.object_id = '$cpid');";
-#		$sth = $dbh->prepare($query);
-#		$sth->execute;
-#		my $cpid_ref = $sth->fetchrow_hashref;
 		
 		print qq(
 		<table id="object_summary_header">
@@ -180,13 +177,17 @@ if($authenticated == 1)
 		my $type;
 		my $company;
 
-
 		print qq(<h2>Item Details</h2>);
-		print qq(<button id="update_object_button">Save</button>);
+		print qq(<button id="update_object_button" object="$object_id">Save</button>);
+		print qq(<button id="disable_object_button" object="$object_id">Disable</button>);
+		print qq(<button id="delete_object_button" object="$object_id">Delete</button>);
 		print qq(<form id="update_object_form">);
 		foreach my $element (@hash_order){
+			warn "$element : $object_id";
 			if($element == $object_id){
+				warn "hit1";
 				foreach my $key (keys %{$new_object->{$element}}){
+					warn "hit2";
 					if ($key eq "type"){
 						$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}[0]';";
 						$sth = $dbh->prepare($query);
@@ -215,8 +216,8 @@ if($authenticated == 1)
 							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$new_object->{$element}->{$key}[0]">
 							<br>
 						);
-				}
 					}
+				}
 			}
 		}
 		print qq(

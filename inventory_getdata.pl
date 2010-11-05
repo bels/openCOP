@@ -241,7 +241,6 @@ if($authenticated == 1)
 		print $data;
 	} elsif ($vars->{'mode'} eq "populate_create_form"){
 		my $type = $vars->{'type'};
-		warn $type;
 		$query = "select property.property,template_property.tpid,template_property.property_id from template_property join property on template_property.property_id = property.pid where template_id = '$type';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
@@ -282,6 +281,18 @@ if($authenticated == 1)
 			$sth->execute;
 			warn $query;
 		}
+		print "Content-type: text/html\n\n";
+		print "0";
+	} elsif ($vars->{'mode'} eq "delete_object"){
+		$query = "delete from object where oid = '$vars->{'object'}';";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		print "Content-type: text/html\n\n";
+		print "0";
+	} elsif ($vars->{'mode'} eq "disable_object"){
+		$query = "update object set active = false where oid = '$vars->{'object'}';";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
 		print "Content-type: text/html\n\n";
 		print "0";
 	} elsif ($vars->{'mode'} eq "update_object"){
