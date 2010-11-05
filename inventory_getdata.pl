@@ -67,8 +67,8 @@ if($authenticated == 1)
 					delete($all_properties->{$key});
 				}
 			}
-			if($all_properties->{$key}){
-				unless($used_properties->{$key}->{'property'} eq "type" || $used_properties->{$key}->{'property'} eq "company" || $used_properties->{$key}->{'property'} eq "name") {
+			if(defined($all_properties->{$key})){
+				unless($all_properties->{$key}->{'property'} eq "type" || $all_properties->{$key}->{'property'} eq "company" || $all_properties->{$key}->{'property'} eq "name") {
 					$data .= qq(<option value="$all_properties->{$key}->{'pid'}">$all_properties->{$key}->{'property'}</option>);
 				}
 			}
@@ -270,12 +270,13 @@ if($authenticated == 1)
 
 		for($vars->{'value'},$vars->{'property'}){
 			$_ =~ s/:$//;
-			$_ =~ s/AbsolutelyNotAColon/:/g;
 		}
 		
-
 		my @value = split(":",$vars->{'value'});
 		my @property = split(":",$vars->{'property'});
+		foreach (@value){
+			$_ =~ s/AbsolutelyNotAColon/:/g;
+		}
 		for (my $i = 0; $i <= $#value; $i++){
 			$value[$i] =~ s/'/''/g;
 			$query = "select insert_object_value('$value[$i]','$property[$i]')";

@@ -51,7 +51,7 @@ CREATE TABLE users (uid SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(10
 DROP TABLE IF EXISTS helpdesk;
 CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), barcode VARCHAR(255), site INTEGER references site(scid), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT references section(sid), problem TEXT, priority INT references priority(prid), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), free VARCHAR(255), technician INTEGER references users(uid), submitter INTEGER);
 
-DROP TABLE IF EXISTS troubelshooting;
+DROP TABLE IF EXISTS troubleshooting;
 CREATE TABLE troubleshooting(tid SERIAL PRIMARY KEY, tkid INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
 
 DROP TABLE IF EXISTS notes;

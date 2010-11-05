@@ -181,11 +181,8 @@ if($authenticated == 1)
 		print qq(<button id="delete_object_button" object="$object_id">Delete</button>);
 		print qq(<form id="update_object_form">);
 		foreach my $element (@hash_order){
-			warn "$element : $object_id";
 			if($element == $object_id){
-				warn "hit1";
 				foreach my $key (keys %{$new_object->{$element}}){
-					warn "hit2";
 					if ($key eq "type"){
 						$query = "select template,tid from template where tid = '$new_object->{$element}->{'type'}[0]';";
 						$sth = $dbh->prepare($query);

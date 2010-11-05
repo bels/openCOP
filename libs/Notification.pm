@@ -107,7 +107,7 @@ sub new_user{
     
 	$smtp->datasend("Hello " . $args{'first'} . " " . $args{'mi'} . " " . $args{'last'} . ",\n") || handle_failure( $smtp, 'data_send' );
 	$smtp->datasend($message_body) || handle_failure( $smtp, 'data_send' );
-	$smtp->datasend("Username: " . $args{'alias'} . "\nPassword: " . $args{'password'}) || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend("\n\nUsername: " . $args{'alias'} . "\nPassword: " . $args{'password'}) || handle_failure( $smtp, 'data_send' );
 	$smtp->datasend("\n\nThank you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
 	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
 	$smtp->quit || handle_failure( $smtp, 'quit' );

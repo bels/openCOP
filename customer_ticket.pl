@@ -47,7 +47,7 @@ if($authenticated == 1)
 	}
 	if($data->{'status'} eq "closed")
 	{
-		$query = "select * from helpdesk where submitter = '$uid' and status = 6 or status = 7";
+		$query = "select * from helpdesk where submitter = '$uid' and status = 6;";
 		$closed = 1;
 	}
 	

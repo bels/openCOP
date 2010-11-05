@@ -24,8 +24,9 @@ $(document).ready(function(){
 				var submitproperty = "";
 				var error;
 				$('.object_form_input').each(function(){
-					$(this).val() = $(this).val().replace(/:/g, "AbsolutelyNotAColon");
-					submitvalue += $(this).val() + ":";
+					var thisval = $(this).val();
+					thisval = thisval.replace(/:/g, "AbsolutelyNotAColon");
+					submitvalue += thisval + ":";
 					submitproperty += $(this).attr('id') + ":";
 					alert($(this).val());
 				});
