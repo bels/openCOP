@@ -48,3 +48,10 @@ input{
 	color: red;
 	font-size: .7em;
 }
+
+#low_resolution_warning{
+	margin-top: 10px;
+	font-size: 1.1em;
+	text-align: center;
+	display: none;
+}

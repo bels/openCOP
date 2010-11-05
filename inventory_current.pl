@@ -6,7 +6,6 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 use DBI;
-use YAML;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -42,7 +41,6 @@ if($authenticated == 1)
 	foreach my $key (keys %$object){
 		$new_object->{$object->{$key}->{'object'}}->{$object->{$key}->{'property'}} =[ $object->{$key}->{'value'},$object->{$key}->{'ovid'}];
 	}
-	YAML::DumpFile("new_object.yaml",%$new_object);
 	my @hash_order = keys %$new_object;
 	
 	@hash_order = sort(@hash_order);

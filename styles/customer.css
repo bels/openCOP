@@ -42,6 +42,13 @@ input{
 	width: 350px;
 }
 
+#low_resolution_warning{
+	margin-top: 10px;
+	font-size: 1.1em;
+	text-align: center;
+	display: none;
+}
+
 #left{
 	float: left;
 	height: 600px;

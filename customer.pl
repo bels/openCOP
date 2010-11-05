@@ -56,7 +56,7 @@ else
 	my $errorcode = $q->param('errorcode');
 	my $vars;
 	my @styles = ("styles/layout.css", "styles/customer.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/customer_login.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

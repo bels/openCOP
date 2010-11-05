@@ -4,7 +4,6 @@ $(document).ready(function(){
 		over: hideMenus,
 		out: doNothing
 	};
-
 	$("#ticket_link").hoverIntent(config);
 	$("#report_link").hoverIntent(config);
 	$("#inventory_link").hoverIntent(config);
