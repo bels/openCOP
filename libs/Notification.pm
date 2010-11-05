@@ -85,6 +85,33 @@ sub handle_failure{
 	warn join( ':', $smtp->code, $call, $smtp_msg );
 }
 
+sub new_user{
+	my $self = shift;
+	my %args = @_;
+	
+	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
+	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in notification.yml
+	my $email = $args{'to'};
+	my $company_name = $self->{'config'}->{'company_name'};
+	
+	$smtp->auth($self->{'config'}->{'email_user'},$self->{'config'}->{'email_password'});
+		
+	$smtp->mail($self->{'config'}->{'from'}) || handle_failure( $smtp, 'mail' );
+	$smtp->to($email) || handle_failure( $smtp, 'to' );
+	
+	$smtp->data();
+	$smtp->datasend("To: $email\n") || handle_failure( $smtp, 'data_send_to' );
+	$smtp->datasend("From: $self->{'config'}->{'from'}\n") || handle_failure( $smtp, 'data_send_from' ) ;
+	$smtp->datasend("Subject: Welcome to $company_name Helpdesk\n") || handle_failure( $smtp, 'data_send_subject' ) ;
+	$smtp->datasend("\n");
+    
+	$smtp->datasend("Hello " . $args{'first'} . " " . $args{'mi'} . " " . $args{'last'} . ",\n") || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend($message_body) || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend("Username: " . $args{'alias'} . "\nPassword: " . $args{'password'}) || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend("\n\nThank you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
+	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
+	$smtp->quit || handle_failure( $smtp, 'quit' );
+}
 
 1;
 __END__

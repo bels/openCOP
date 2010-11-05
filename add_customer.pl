@@ -7,6 +7,7 @@ use URI::Escape;
 use ReadConfig;
 use DBI;
 use CustomerFunctions;
+use Notification;
 
 my $q = CGI->new(); #create CGI
 my $alias = uri_unescape($q->param('username')); #getting the username from the form
@@ -40,5 +41,7 @@ else
 	$sth->execute;
 	my $results = $sth->fetchrow_hashref;
 	$user->create_user(alias => $alias,password => $password, email => $email, first => $first, mi => $mi, last =>$last, site =>$results->{'scid'});
-	print $q->redirect(-URL => "customer_admin.pl?success=1");
+	my $notify = Notification->new(ticket_number => '1');
+	$notify->new_user(mode => 'new_user', to => $email, first => $first, mi => $mi, last =>$last, password => $password, alias => $alias);
+	print $q->redirect(-URL => "customer_admin.pl?success=1");	
 }
