@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	var logoutTimer = window.setTimeout('logout()', '3600000');
 	var config = {
 		interval: 120,
 		over: hideMenus,
@@ -32,4 +33,9 @@ function hideMenus(){
 
 function doNothing(){
 	return true;
+}
+
+function logout(){
+	$.cookie("session", null, { path: '/' });
+	location.href = 'logout.pl';
 }
