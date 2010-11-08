@@ -1,9 +1,21 @@
 .change_div{
-	height: 300px;
+	height: 150px;
 	width: 450px;
 	margin-right: auto;
 	margin-left: auto;
-	margin-top: 100px;
+	margin-top: 50px;
+	padding-top: 20px;
+	padding-left: 25px;
+	background-color: #bdbdd2;
+	border: 3px solid #9696a7;
+}
+
+#select_customer_div{
+	height: 50px;
+	width: 450px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
 	padding-top: 20px;
 	padding-left: 25px;
 	background-color: #bdbdd2;
@@ -12,9 +24,16 @@
 
 label.error{
 	color: red;
+	font-size: .6em;
 }
 
 .change_form label{
+	display: inline-block;
+	width: 200px;
+	text-align: right;
+}
+
+#select_customer_div label{
 	display: inline-block;
 	width: 200px;
 	text-align: right;
@@ -34,3 +53,4 @@ label.error{
 	margin-left: auto;
 	margin-right: auto;
 }
+

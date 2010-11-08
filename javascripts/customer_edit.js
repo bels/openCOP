@@ -1,6 +1,5 @@
 $(document).ready(function(){
 	$("#password_form").validate();
-	$("#old_password").rules("add",{required: true});
 	$("#password1").rules("add",{required: true});
 	$("#password2").rules("add",{required: true});
 	$("#password2").rules("add",{equalTo: "#password1"});
@@ -9,5 +8,8 @@ $(document).ready(function(){
 	$("#email1").rules("add",{required: true, email: true});
 	$("#email2").rules("add",{required: true, email: true});
 	$("#email2").rules("add",{equalTo: "#email1"});
-	$("#password").rules("add",{required: true});
+
+	$('.change_form').submit(function(){
+		$(this).find('#id').val($('#select_customer_select').val());
+	});
 });
