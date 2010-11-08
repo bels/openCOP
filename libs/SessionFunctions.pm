@@ -37,7 +37,6 @@ sub new{
 	my %args = @_;
 	
 	my $self = bless({},$package);
-
 	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}) or die "SessionFunctions::new: Database connection error: ".$DBI::errstr;
 	
 	return $self;

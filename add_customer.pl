@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 
 use lib './libs';
 use strict;
@@ -34,7 +34,7 @@ if($user->duplicate_check(alias => $alias) > 0)
 }
 else
 {
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in add_sites.pl";
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $site_level = $q->param('site_level');
 	my $query = "select * from site where name = '$site'";
 	my $sth = $dbh->prepare($query);

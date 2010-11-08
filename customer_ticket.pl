@@ -37,7 +37,7 @@ if($authenticated == 1)
 	my $data = $q->Vars;
 	my $uid = $userid->{'cid'};
 	
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in customer_ticket.pl";
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $query;
 	my $closed; #used to toggle something in the template file
 	if($data->{'status'} eq "open")

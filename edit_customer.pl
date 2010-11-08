@@ -15,7 +15,7 @@ my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 $config->read_config;
 
 my $id = $q->param('id');
-my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
+my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 my $var = "customers";
 my $id_field = "cid";
 

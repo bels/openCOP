@@ -85,7 +85,7 @@ sub submit{
 	my %args = @_;
 	my $data = $args{'data'};
 	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
 	my $status = 1;
 	my $site;
 	foreach my $element (keys %$data)
@@ -101,11 +101,27 @@ sub submit{
 	{
 		$site = "undefined";
 	}
+
+	if(defined($data->{'free_date'}))
+	{
+	}
+	else
+	{
+		$data->{'free_date'} = "01/01/1970";
+	}
+
+	if(defined($data->{'free_time'}))
+	{
+	}
+	else
+	{
+		$data->{'free_time'} = "00:00:00";
+	}
 	
 	my $query = "select insert_ticket('$site','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$data->{'tech'}','$data->{'notes'}','$data->{'submitter'}','$data->{'free_date'}','$data->{'free_time'}')";
 	my $sth = $dbh->prepare($query);
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
-	#warn $DBI::errstr;
+	#warn $wDBI::errstr;
 	my $id = $sth->fetchrow_hashref;
 	my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});
 
@@ -120,7 +136,7 @@ sub lookup{
 	my $self = shift;
 	my %args = @_;
 	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
 	my $query = "select * from helpdesk where status <> 6 and status <> 7 and section = '$args{'section'}' order by ticket"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
@@ -133,7 +149,7 @@ sub details{
 	my $self = shift;
 	my %args = @_;
 	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
 	my $query = "select * from helpdesk where ticket = '$args{'data'}'"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
@@ -152,7 +168,7 @@ sub update{
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
 	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in Ticket.pm";
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
 	
 	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}',$data->{'tech'},$data->{'updater'})";
 	my $sth = $dbh->prepare($query);

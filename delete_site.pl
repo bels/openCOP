@@ -28,7 +28,7 @@ if($authenticated == 1)
 {
 	my $site_name = uri_unescape($q->param('delete_site_name'));
 
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in delete_site.pl";
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query = "update site set delete = 1 where name = '$site_name'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
