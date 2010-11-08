@@ -1,20 +1,27 @@
 $(document).ready(function(){
 
 	$("#free_date").live('focus', function(){
-		$("#free_date").datepicker();
+		if($(this).attr("readonly") === true){
+		} else {
+			$("#free_date").datepicker();
+		}
 	});
 	$("#free_time").live('focus', function(){
-		$('#free_time').timepicker({
-			hourGrid: 4,
-			minuteGrid: 10,
-			ampm: true,
-			timeFormat: 'hh:mm TT'
-		});
+		if($(this).attr("readonly") === true){
+		} else {
+			$('#free_time').timepicker({
+				hourGrid: 4,
+				minuteGrid: 10,
+				ampm: true,
+				timeFormat: 'hh:mm TT'
+			});
+		}
 	});
 
 	$(".ticket_link").click(function(){
 		var ticket_number = $(this).attr("id");
-		var url = "customer_ticket_lookup.pl?ticket_number=" + ticket_number;
+		var oc = $('h4#oc').attr("value");
+		var url = "customer_ticket_lookup.pl?ticket_number=" + ticket_number + "&oc=" + oc;
 		$("#right").load(url);
 	});
 

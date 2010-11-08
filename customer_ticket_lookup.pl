@@ -25,6 +25,7 @@ if($authenticated == 1)
 {
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in customer_ticket_lookup.pl";
 	my $ticket_number = $q->param('ticket_number');
+	my $oc = $q->param('oc');
 	my $query = "select * from helpdesk where ticket = '$ticket_number'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
@@ -48,8 +49,21 @@ if($authenticated == 1)
 	print qq(
 			<form id="add_notes_form">
 				<input type="hidden" name="tkid" id="tkid" value=$ticket_number>
-				<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" value="$results->{'free_date'}"><br>
-				<label for="free_time" class="short_label">Time Free:</label><input type="time" name="free_time" id="free_time" value="$results->{'free_time'}"><br>
+	);
+	if($oc eq "open"){
+		print qq(
+				<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" value="$results->{'free_date'}" title="Click to edit"><br>
+				<label for="free_time" class="short_label">Time Free:</label><input type="time" name="free_time" id="free_time" value="$results->{'free_time'}" title="Click to edit"><br>
+		);
+	} elsif ($oc eq "closed"){
+		print qq(
+				<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" value="$results->{'free_date'}" readonly="readonly"><br>
+				<label for="free_time" class="short_label">Time Free:</label><input type="time" name="free_time" id="free_time" value="$results->{'free_time'}" readonly="readonly"><br>
+		);
+	} else {
+		print qq(You should never see this);
+	}
+	print qq(
 				<label for="new_note">Update your ticket</label><br>
 				<textarea id="new_note" name="new_note" cols="80" rows="5"></textarea><br>
 				<button type="button" id="update_ticket_button">Update</button><br>
