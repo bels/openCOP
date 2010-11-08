@@ -55,8 +55,8 @@ if($authenticated == 1)
 	$sth->execute;
 	my $results = $sth->fetchall_arrayref;
 	
-	my @styles = ("styles/layout.css", "styles/customer.css","styles/jquery.jscrollpane.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/customer.js","javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js");
+	my @styles = ("styles/layout.css", "styles/customer.css","styles/jquery.jscrollpane.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/customer.js","javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery-ui-timepicker-addon.min.js","javascripts/jquery.livequery.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

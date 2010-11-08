@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (uid SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN,sections VARCHAR(255));
 
 DROP TABLE IF EXISTS helpdesk;
-CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), barcode VARCHAR(255), site INTEGER references site(scid), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT references section(sid), problem TEXT, priority INT references priority(prid), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), free VARCHAR(255), technician INTEGER references users(uid), submitter INTEGER);
+CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), barcode VARCHAR(255), site INTEGER references site(scid), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT references section(sid), problem TEXT, priority INT references priority(prid), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(uid), submitter INTEGER, free_date DATE, free_time TIME);
 
 DROP TABLE IF EXISTS troubleshooting;
 CREATE TABLE troubleshooting(tid SERIAL PRIMARY KEY, tkid INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
@@ -57,17 +57,11 @@ CREATE TABLE troubleshooting(tid SERIAL PRIMARY KEY, tkid INTEGER references hel
 DROP TABLE IF EXISTS notes;
 CREATE TABLE notes(nid SERIAL PRIMARY KEY, tkid INTEGER references helpdesk(ticket), note TEXT, performed TIMESTAMP DEFAULT current_timestamp);
 
-DROP TABLE IF EXISTS inventory;
-CREATE TABLE inventory (invid BIGSERIAL PRIMARY KEY, ccps BIGINT, hardware_type INTEGER references hardware_type(hwid), site INTEGER references site(scid), serial VARCHAR(255), model BIGINT references equipment(eid), mac varchar(32), ip varchar(255), name varchar(255), room varchar(255), software TEXT, assigned_to varchar(255), grantid BIGINT references grants(gid), status INTEGER references status(stid), installer varchar(255), port varchar(127), notes TEXT, os BIGINT references os(osid), office BIGINT references office(offid), hdd varchar(255), speed varchar(127), ram BIGINT, po BIGINT references purchase(pid), dept varchar(255), cost BIGINT references cost(cid), updated timestamp, deployed timestamp);
-
-DROP TABLE IF EXISTS replacement;
-CREATE TABLE replacement (original BIGINT references inventory(invid), replacement BIGINT references inventory(invid), replaced_on timestamp);
-
 DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (sid BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, uid VARCHAR(20));
 
 DROP TABLE IF EXISTS audit;
-CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), site INTEGER references site(scid), location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT references section(sid), priority INT references priority(prid), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(uid), closing_tech INTEGER references users(uid), free VARCHAR(255), updater INTEGER, ticket INTEGER references helpdesk(ticket));
+CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(tsid), site INTEGER references site(scid), location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT references section(sid), priority INT references priority(prid), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(uid), closing_tech INTEGER references users(uid), updater INTEGER, ticket INTEGER references helpdesk(ticket));
 
 DROP TABLE IF EXISTS template CASCADE;
 DROP TABLE IF EXISTS property CASCADE; 
@@ -205,7 +199,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), free_val VARCHAR(255), tech_text VARCHAR(255), notes_val TEXT, submitter_val INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), tech_text VARCHAR(255), notes_val TEXT, submitter_val INTEGER, free_date_val DATE, free_time_val TIME) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
 	site_val INTEGER;
@@ -221,7 +215,7 @@ BEGIN
 	
 	-- Step 2. Insert the ticket with the translated values
 		
-	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, section, problem, priority, serial, contact_email, technician,notes,submitter) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val,notes_val,submitter_val);
+	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, section, problem, priority, serial, contact_email, technician, notes, submitter, free_date, free_time) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val,notes_val,submitter_val,free_date_val,free_time_val);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
 
 	INSERT INTO audit (status, site, location, contact, section, priority, contact_email, technician, notes, updater, ticket) values (status_val, site_val, location_val, contact_val, section_val, priority_val, contact_email_val, tech_val, notes_val, submitter_val, last_id);

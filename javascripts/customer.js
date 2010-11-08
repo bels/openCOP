@@ -1,15 +1,27 @@
 $(document).ready(function(){
+
+	$("#free_date").live('focus', function(){
+		$("#free_date").datepicker();
+	});
+	$("#free_time").live('focus', function(){
+		$('#free_time').timepicker({
+			hourGrid: 4,
+			minuteGrid: 10,
+			ampm: true,
+			timeFormat: 'hh:mm TT'
+		});
+	});
+
 	$(".ticket_link").click(function(){
 		var ticket_number = $(this).attr("id");
 		var url = "customer_ticket_lookup.pl?ticket_number=" + ticket_number;
 		$("#right").load(url);
 	});
 
-		$('right_holder').jScrollPane({
-			showArrows:true,
-			maintainPosition: false
-		});
-
+	$('right_holder').jScrollPane({
+		showArrows:true,
+		maintainPosition: false
+	});
 
 	$("#update_ticket_button").live("click",function(){
 		$('#add_notes_form').validate({

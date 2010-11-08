@@ -26,8 +26,9 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $tkid = $q->param('tkid');
-	my $new_note = $q->param('new_note');
+	my $vars = $q->Vars;
+	my $tkid = $vars->{'tkid'};
+	my $new_note = $vars->{'new_note'};
 
 	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 
@@ -38,6 +39,9 @@ if($authenticated == 1)
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $query = "insert into notes (tkid, note) values($tkid,'$new_note')";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $query = "update helpdesk set free_date='$vars->{'free_date'}', free_time='$vars->{'free_time'}' where ticket = '$tkid'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	$query = "insert into audit (notes,updater,ticket) values('$new_note','$updater','$tkid')";

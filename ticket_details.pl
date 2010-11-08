@@ -60,17 +60,31 @@ if($authenticated == 1)
 		print qq(>$ticket_statuses{$i}</option>);
 	}	
 	print qq(</select>);
-	print qq(<br/><label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span><label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span><br/>
-		<label for="contact">Contact:</label><input type="text" id="contact" name="contact" value="$results->{'contact'}"><label for="contact_phone">Contact Phone:</label><input type="text" id="contact_phone" name="contact_phone" value="$results->{'contact_phone'}"><label for="contact_email">Contact Email:</label><input type="text" id="contact_email" name="contact_email" value="$results->{'contact_email'}"><br/>
-		<label for="site">Site:</label><input type="text" id="site" name="site" value="$site"><label for="location">Location:</label><input type="text" id="location" name="location" value="$results->{'location'}"><br/>
+	print qq(
+		<br>
+		<label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span>
+		<label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span>
+		<br>
+		<label for="contact">Contact:</label><input type="text" id="contact" name="contact" value="$results->{'contact'}">
+		<label for="contact_phone">Contact Phone:</label><input type="text" id="contact_phone" name="contact_phone" value="$results->{'contact_phone'}">
+		<label for="contact_email">Contact Email:</label><input type="text" id="contact_email" name="contact_email" value="$results->{'contact_email'}">
+		<br>
+		<label for="site">Site:</label><input type="text" id="site" name="site" value="$site">
+		<label for="location">Location:</label><input type="text" id="location" name="location" value="$results->{'location'}">
+		<br>
+		<label for="free">Free:</label><span id="free" name="free">$results->{'free_date'} $results->{'free_time'}</span>
+		<br>
 		<label for="requested_on">Requested On:</label><span id="requeseted_on" name="requested_on">);
 	print substr($results->{'requested'},0,19);
 	print qq(</span><label for="last_updated">Last Updated:</label><span id="last_updated" name="last_updated">);
 	print substr($results->{'updated'},0,19);
-	print qq(</span><br/>
-		<label for="problem">Problem:</label><span id="problem" name="problem">$results->{'problem'}</span><br/>
-		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting"></textarea><br/>
-		<label for="past_troubleshoot">Past Troubleshooting:</label><span id="past_troubleshoot" name="past_troubleshoot">);
+	print qq(
+		</span>
+		<br>
+		<label for="problem">Problem:</label><span id="problem" name="problem">$results->{'problem'}</span><br>
+		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting"></textarea><br>
+		<label for="past_troubleshoot">Past Troubleshooting:</label><span id="past_troubleshoot" name="past_troubleshoot">
+	);
 	
 	my @hash_order = keys %$troubleshooting;
 	
@@ -84,7 +98,8 @@ if($authenticated == 1)
 	}
 	
 	print qq(</span><br />
-		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes"></textarea><br/>);
+		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes"></textarea><br/>
+	);
 
 	print qq(<label for="past_notes">Past Notes:</label><span id="past_notes" name="past_notes">);
 	@hash_order = keys %$notes;
@@ -98,7 +113,8 @@ if($authenticated == 1)
 		print $notes->{$t}->{'note'} . "<br />";
 	}
 	print qq(</span><br />
-		<input type="submit" value="Update">);
+		<input type="submit" value="Update">
+	);
 	
 }	
 else

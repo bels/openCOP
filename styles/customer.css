@@ -163,3 +163,7 @@ input.error{
 	margin-left: auto;
 	margin-right: auto;
 }
+
+#ui-datepicker-div{
+	font-size: 80%;
+}

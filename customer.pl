@@ -26,8 +26,8 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my @styles = ("styles/layout.css", "styles/customer.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.hoverIntent.minified.js");
+	my @styles = ("styles/layout.css", "styles/customer.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery-ui-timepicker-addon.min.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 
@@ -44,7 +44,7 @@ if($authenticated == 1)
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter, customer_email => $email, display_author => $config->{'display_author'}, display_barcode => $config->{'display_barcode'}, display_serial => $config->{'display_serial'}, display_location => $config->{'display_location'}};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter, customer_email => $email, display_author => $config->{'display_author'}, display_barcode => $config->{'display_barcode'}, display_serial => $config->{'display_serial'}, display_location => $config->{'display_location'}, display_free_date => $config->{'display_free_date'}, display_free_time => $config->{'display_free_time'}};
 	
 	print "Content-type: text/html\n\n";
 

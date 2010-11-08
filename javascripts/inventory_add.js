@@ -28,7 +28,6 @@ $(document).ready(function(){
 					thisval = thisval.replace(/:/g, "AbsolutelyNotAColon");
 					submitvalue += thisval + ":";
 					submitproperty += $(this).attr('id') + ":";
-					alert($(this).val());
 				});
 				submitvalue += type + ":" + company + ":" + name;
 				submitproperty += tpid + ":" + cpid + ":" + npid;
@@ -38,7 +37,6 @@ $(document).ready(function(){
 					url: 'inventory_getdata.pl',
 					data: {mode: mode, value: submitvalue, property: submitproperty},
 					success: function(data){
-						alert("Success");
 						$.unblockUI();
 					},
 					error: function(){

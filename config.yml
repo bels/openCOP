@@ -35,3 +35,5 @@ display_barcode: 1
 display_serial: 1
 display_location: 1
 display_author: 1
+display_free_date: 1
+display_free_time: 1
