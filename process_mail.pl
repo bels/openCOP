@@ -62,18 +62,18 @@ for my $line (@mail_data)
 		$body =~ s/\$\$\$//;
 
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-		my $query = "select cid from customers where email = '$sender'";
+		my $query = "select id from customers where email = '$sender'";
 		my $sth = $dbh->prepare($query);
 		$sth->execute;
 		my $temp = $sth->fetchrow_hashref;
-		my $alias = $temp->{'cid'};
+		my $alias = $temp->{'id'};
 		if(!defined($alias)) #this allows technicians to submit tickets through email. if the email can't be found in the customers table it then searches the users(technicians)
 		{
-			$query = "select uid from users where email = '$sender'";
+			$query = "select id from users where email = '$sender'";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			$temp = $sth->fetchrow_hashref;
-			$alias = $temp->{'uid'};
+			$alias = $temp->{'id'};
 		}
 		my $data = {site => "",barcode => "",location =>"",author => $sender,contact => $sender,phone => "",troubelshoot=> "",section=>"Helpdesk",problem=>$subject,priority =>"Normal",serial=>"",email=>$sender,tech => "", notes => $body, submitter  => $alias}; #This part will need to be improved.  Right now I am leaving a lot of fields blank that with some investigation could be filled out.  For example, I won't know what site someone is sending the ticket in from
 								#unless I lookup in the database for a matching email address and then checking what site that person is at.  Also, the persons name could be looked up by email address.  This is something that isn't feasible now but should be in the future

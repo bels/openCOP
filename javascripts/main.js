@@ -1,4 +1,7 @@
 $(document).ready(function(){
+	$.ajaxSetup({
+		cache: false
+	});
 	var logoutTimer = window.setTimeout('logout()', '3600000');
 	var config = {
 		interval: 120,

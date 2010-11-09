@@ -22,41 +22,41 @@ my $ticket = Ticket->new(mode => "");
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
 {
 	my $user;
 	my $alias;
-	my $uid;
+	my $id;
 	my $submitter;
 	my $data = $q->Vars;
 	my $type = $q->url_param('type');
 	my $notes;
 
-	$alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	$alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
 	if($type eq "customer")
 	{
 		$user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-		$uid = $user->get_user_info(alias => $alias);
-		$submitter = $uid->{'cid'};
+		$id = $user->get_user_info(alias => $alias);
+		$submitter = $id->{'id'};
 		$notes = $q->param('problem');
 		$data->{'tech'} = "undefined";
 	}
 	else
 	{
 		$user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-		$uid = $user->get_user_info(alias => $alias);
-		$submitter = $uid->{'uid'};
+		$id = $user->get_user_info(alias => $alias);
+		$submitter = $id->{'id'};
 		$notes = "";
 	}
 
 	if(defined($data->{'tech'})){
 		$user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-		$uid = $user->get_user_info(alias => $data->{'tech'});
-		$data->{'tech_email'} = $uid->{'email'};
+		$id = $user->get_user_info(alias => $data->{'tech'});
+		$data->{'tech_email'} = $id->{'email'};
 	}
 
 	$data->{'submitter'} = $submitter;

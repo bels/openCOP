@@ -19,7 +19,7 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -35,17 +35,17 @@ if($authenticated == 1)
 	if ($vars->{'mode'} eq "init"){
 		my $type = $vars->{'type'};
 		if($type){
-			$query = "select property.property,template_property.tpid,template_property.property_id from template_property join property on template_property.property_id = property.pid where template_id = '$type';";
+			$query = "select property.property,template_property.id,template_property.property_id from template_property join property on template_property.property_id = property.id where template_id = '$type';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			$used_properties = $sth->fetchall_hashref('tpid');
+			$used_properties = $sth->fetchall_hashref('id');
 			@used_properties_order = sort (keys %$used_properties);
 		}
 
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $all_properties  = $sth->fetchall_hashref('pid');
+		my $all_properties  = $sth->fetchall_hashref('id');
 		my @all_properties_order = sort (keys %$all_properties);
 		my @used_properties;
 
@@ -63,13 +63,13 @@ if($authenticated == 1)
 		}
 		foreach my $key (@all_properties_order){
 			foreach (@used_properties){
-				if($_ =~ m/$all_properties->{$key}->{'pid'}/) {
+				if($_ =~ m/$all_properties->{$key}->{'id'}/) {
 					delete($all_properties->{$key});
 				}
 			}
 			if(defined($all_properties->{$key})){
 				unless($all_properties->{$key}->{'property'} eq "type" || $all_properties->{$key}->{'property'} eq "company" || $all_properties->{$key}->{'property'} eq "name") {
-					$data .= qq(<option value="$all_properties->{$key}->{'pid'}">$all_properties->{$key}->{'property'}</option>);
+					$data .= qq(<option value="$all_properties->{$key}->{'id'}">$all_properties->{$key}->{'property'}</option>);
 				}
 			}
 		}
@@ -120,13 +120,13 @@ if($authenticated == 1)
 		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('tid');
+		my $results = $sth->fetchall_hashref('id');
 		$data = qq(
 				<select id="type_select" class="type_select">
 					<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$results){
-			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'template'}</option>);
+			$data .= qq(<option value="$results->{$key}->{'id'}">$results->{$key}->{'template'}</option>);
 		}
 		$data .= qq(</select>);
 		print $data;
@@ -134,19 +134,19 @@ if($authenticated == 1)
 		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('tid');
+		my $results = $sth->fetchall_hashref('id');
 
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $properties = $sth->fetchall_hashref('pid');
+		my $properties = $sth->fetchall_hashref('id');
 
 		$query = "select * from company where hidden = false;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $companies= $sth->fetchall_hashref('cpid');
+		my $companies= $sth->fetchall_hashref('id');
 
-		$query = "select pid,property from property where property = 'type' or property = 'company' or property = 'name';";
+		$query = "select id,property from property where property = 'type' or property = 'company' or property = 'name';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $special_case = $sth->fetchall_hashref('property');
@@ -159,7 +159,7 @@ if($authenticated == 1)
 					<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$results){
-			$data .= qq(<option tpid="$special_case->{'type'}->{'pid'}" value="$results->{$key}->{'tid'}">$results->{$key}->{'template'}</option>);
+			$data .= qq(<option tpid="$special_case->{'type'}->{'id'}" value="$results->{$key}->{'id'}">$results->{$key}->{'template'}</option>);
 		}
 		$data .= qq(	</select>);
 
@@ -170,7 +170,7 @@ if($authenticated == 1)
 						<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$companies){
-			$data .= qq(<option cpid="$special_case->{'company'}->{'pid'}" value="$companies->{$key}->{'cpid'}">$companies->{$key}->{'name'}</option>);
+			$data .= qq(<option cpid="$special_case->{'company'}->{'id'}" value="$companies->{$key}->{'id'}">$companies->{$key}->{'name'}</option>);
 		}
 		$data .= qq(	</select>
 				</div>
@@ -179,7 +179,7 @@ if($authenticated == 1)
 		$data .= qq(
 				<div id="object_name_input_div">
 					<label for="object_name" class="add">Name </label>
-					<input npid="$special_case->{'name'}->{'pid'}" id="object_name" type="text">
+					<input npid="$special_case->{'name'}->{'id'}" id="object_name" type="text">
 				</div>
 		);
 
@@ -192,7 +192,7 @@ if($authenticated == 1)
 		);
 		foreach my $key (keys %$properties){
 			unless($properties->{$key}->{'property'} eq "company" || $properties->{$key}->{'property'} eq "type" || $properties->{$key}->{'property'} eq "name"){
-				$data .= qq(<option value="$properties->{$key}->{'pid'}">$properties->{$key}->{'property'}</option>);
+				$data .= qq(<option value="$properties->{$key}->{'id'}">$properties->{$key}->{'property'}</option>);
 			}
 		}
 		$data .= qq(	</select>
@@ -213,14 +213,14 @@ if($authenticated == 1)
 		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('tid');
+		my $results = $sth->fetchall_hashref('id');
 		$data = qq(
 				<select id="del_tp" class="type_select">
 					<option value="" selected="selected"></option>
 		);
 		my @hash_order = sort (keys %$results);
 		foreach my $key (@hash_order){
-			$data .= qq(<option value="$results->{$key}->{'tid'}">$results->{$key}->{'template'}</option>);
+			$data .= qq(<option value="$results->{$key}->{'id'}">$results->{$key}->{'template'}</option>);
 		}
 		$data .= qq(</select>);
 		print $data;
@@ -228,38 +228,46 @@ if($authenticated == 1)
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('pid');
+		my $results = $sth->fetchall_hashref('id');
 		$data = qq(
 				<select id="del_tp">
 					<option value="" selected="selected"></option>
 		);
 		my @hash_order = sort (keys %$results);
 		foreach my $key (@hash_order){
-			$data .= qq(<option value="$results->{$key}->{'pid'}">$results->{$key}->{'property'}</option>);
+			$data .= qq(<option value="$results->{$key}->{'id'}">$results->{$key}->{'property'}</option>);
 		}
 		$data .= qq(</select>);
 		print $data;
 	} elsif ($vars->{'mode'} eq "populate_create_form"){
 		my $type = $vars->{'type'};
-		$query = "select property.property,template_property.tpid,template_property.property_id from template_property join property on template_property.property_id = property.pid where template_id = '$type';";
+		$query = "select property.property,template_property.id,template_property.property_id from template_property join property on template_property.property_id = property.id where template_id = '$type';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('tpid');
+		my $results = $sth->fetchall_hashref('id');
 		my @hash_order = sort (keys %$results);
+		my $i = $#hash_order;
 		foreach my $key (@hash_order){
+			$i++;
 			$data .= qq(
-				<br><label class="object_form_label object_form">$results->{$key}->{'property'}</label><input id="$results->{$key}->{'property_id'}" class="object_form_input object_form required"><button class="object_form object_remove_property_button">Remove</button>
+				<br><label class="object_form_label object_form">$results->{$key}->{'property'}</label>	<input id="$results->{$key}->{'property_id'}" class="object_form_input object_form required" tabindex="$i">
 			);
+			$i--;
+			$data .= qq(
+				<button class="object_form object_remove_property_button" tabindex="$i">Remove</button>
+			);
+			$i++;
+			$i++;
 		}
 		print "Content-type: text/html\n\n";
 		print $data;
 	} elsif ($vars->{'mode'} eq "add_property_field"){
 		my $property = $vars->{'property'};
-		$query = "select * from property where pid = '$property';";
+		$query = "select * from property where id = '$property';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchrow_hashref;
-		$data = qq(<br><label class="object_form_label object_form">$results->{'property'}</label><input id="$results->{'pid'}" class="object_form_input object_form required"><button class="object_form object_remove_property_button">Remove</button>);
+		$data = qq(<br><label class="object_form_label object_form">$results->{'property'}</label><input id="$results->{'id'}" class="object_form_input object_form required"><button class="object_form object_remove_property_button">Remove</button>);
 		print "Content-type: text/html\n\n";
 		print $data;
 		
@@ -282,18 +290,17 @@ if($authenticated == 1)
 			$query = "select insert_object_value('$value[$i]','$property[$i]')";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			warn $query;
 		}
 		print "Content-type: text/html\n\n";
 		print "0";
 	} elsif ($vars->{'mode'} eq "delete_object"){
-		$query = "delete from object where oid = '$vars->{'object'}';";
+		$query = "delete from object where id = '$vars->{'object'}';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		print "Content-type: text/html\n\n";
 		print "0";
 	} elsif ($vars->{'mode'} eq "disable_object"){
-		$query = "update object set active = false where oid = '$vars->{'object'}';";
+		$query = "update object set active = false where id = '$vars->{'object'}';";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		print "Content-type: text/html\n\n";

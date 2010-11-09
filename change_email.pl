@@ -29,13 +29,13 @@ my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$c
 if($q->param('customer') == 1)
 {
 	$var = "customers";
-	$id_field = "cid";
+	$id_field = "id";
 	$type = "customer"
 }
 else
 {
 	$var = "users";
-	$id_field = "uid";
+	$id_field = "id";
 	$type = "user";
 }
 

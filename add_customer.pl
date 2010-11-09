@@ -40,7 +40,7 @@ else
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $results = $sth->fetchrow_hashref;
-	$user->create_user(alias => $alias,password => $password, email => $email, first => $first, mi => $mi, last =>$last, site =>$results->{'scid'});
+	$user->create_user(alias => $alias,password => $password, email => $email, first => $first, mi => $mi, last =>$last, site =>$results->{'id'});
 	my $notify = Notification->new(ticket_number => '1');
 	$notify->new_user(mode => 'new_user', to => $email, first => $first, mi => $mi, last =>$last, password => $password, alias => $alias);
 	print $q->redirect(-URL => "customer_admin.pl?success=1");	

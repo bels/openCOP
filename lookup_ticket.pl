@@ -20,25 +20,25 @@ my $ticket = Ticket->new(mode => "");
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
 {
 	my $data = $q->Vars;
 	
-	my $uid = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	my $id = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select sections from users where alias = '$uid'";
+	my $query = "select sections from users where alias = '$id'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $results = $sth->fetchrow_hashref;
-	$query = "select sid from section where name = '$results->{'sections'}'";
+	$query = "select id from section where name = '$results->{'sections'}'";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	$results = $sth->fetchrow_hashref;
-	my $section = $results->{'sid'};
+	my $section = $results->{'id'};
 	my $results = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $section); #need to pass in hashref named data
 	print "Content-type: text/html\n\n";
 

@@ -1,4 +1,7 @@
 $(document).ready(function(){
+	$.ajaxSetup({
+		cache: false
+	});
 
 	$("#free_date").live('focus', function(){
 		if($(this).attr("readonly") === true){

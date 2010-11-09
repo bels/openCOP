@@ -18,7 +18,7 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -30,11 +30,13 @@ if($authenticated == 1)
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $results = $sth->fetchrow_hashref;
-	$query = "select * from notes where tkid = '$ticket_number' ORDER BY nid DESC";
+	$query = "select * from notes where ticket_id = '$ticket_number' ORDER BY id DESC";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $notes = $sth->fetchall_arrayref;
 	print "Content-type: text/html\n\n";
+
+	$results->{'free_time'} = substr($results->{'free_time'},0,8);
 
 	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed");
 	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");

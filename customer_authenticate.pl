@@ -27,8 +27,8 @@ if($success)
 {
 	my $session_key = md5_hex(localtime);
 
-	my $session_id = $session->create_session_id(auth_table => $config->{'auth_table'}, session_key => $session_key, uid => $alias) or die "Creating the session in the database failed";
-	my $cookie = $q->cookie(-name=>'session',-value=>{'sid' => $session_id,'session_key' => $session_key},-expires=>'+1h') or die "Creating the cookie failed";
+	my $session_id = $session->create_session_id(auth_table => $config->{'auth_table'}, session_key => $session_key, user_id => $alias) or die "Creating the session in the database failed";
+	my $cookie = $q->cookie(-name=>'session',-value=>{'id' => $session_id,'session_key' => $session_key},-expires=>'+1h') or die "Creating the cookie failed";
 	
 	print $q->redirect(-cookie=>$cookie,-URL=>"customer.pl");
 }

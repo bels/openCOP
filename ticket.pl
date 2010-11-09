@@ -19,7 +19,7 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'},db_type => $config->{'db_type'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'},db_type => $config->{'db_type'});
 }
 
 if($authenticated == 1)

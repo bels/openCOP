@@ -21,7 +21,7 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -35,12 +35,12 @@ if($authenticated == 1)
 	my @priority_list = $config->{'priority'};
 	my @section_list = $config->{'sections'};
 
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
 	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $cid = $user->get_user_info(alias => $alias);
-	my $submitter = $cid->{'first'} . " " . $cid->{'last'};
-	my $email = $cid->{'email'};
+	my $id = $user->get_user_info(alias => $alias);
+	my $submitter = $id->{'first'} . " " . $id->{'last'};
+	my $email = $id->{'email'};
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";

@@ -22,7 +22,7 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -32,12 +32,12 @@ if($authenticated == 1)
 	chomp($site_name);
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select cpid from company where name = '$company_name'";
+	my $query = "select id from company where name = '$company_name'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $result = $sth->fetchrow_hashref;
 	
-	$query = "update site company set cpid = $result->{'cpid'} where name = '$site_name'";
+	$query = "update site company set id = $result->{'id'} where name = '$site_name'";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 

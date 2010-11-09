@@ -1,0 +1,2 @@
+5 * * * * /usr/bin/env perl /usr/local/www/openCOP/mail_to_ticket.pl
+5 * * * * /usr/bin/env perl /usr/local/www/openCOP/process_mail.pl

@@ -102,23 +102,24 @@ sub submit{
 		$site = "undefined";
 	}
 
-	if(defined($data->{'free_date'}))
+	if($data->{'free_date'})
 	{
 	}
 	else
 	{
-		$data->{'free_date'} = "01/01/1970";
+		$data->{'free_date'} = "now";
 	}
 
-	if(defined($data->{'free_time'}))
+	if($data->{'free_time'})
 	{
 	}
 	else
 	{
-		$data->{'free_time'} = "00:00:00";
+		$data->{'free_time'} = "now";
 	}
 	
 	my $query = "select insert_ticket('$site','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$data->{'tech'}','$data->{'notes'}','$data->{'submitter'}','$data->{'free_date'}','$data->{'free_time'}')";
+	warn $query;
 	my $sth = $dbh->prepare($query);
 	$sth->execute; #this will return the id of the insert record if we ever find a use for it
 	#warn $wDBI::errstr;

@@ -28,13 +28,13 @@ YAML::DumpFile('config.yml', $config);
 
 my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 my $site_level = $q->param('site_level');
-my $query = "select * from school_level where type = '$site_level'";
+my $query = "select * from site_level where type = '$site_level'";
 my $sth = $dbh->prepare($query);
 $sth->execute;
 my $results = $sth->fetchrow_hashref;
 
 my $site_name = $q->param('site_name');
-$query = "insert into site (level,name) values ('$results->{'slid'}','$site_name')";
+$query = "insert into site (level,name) values ('$results->{'id'}','$site_name')";
 $sth = $dbh->prepare($query);
 $sth->execute;
 

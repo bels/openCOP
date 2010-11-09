@@ -20,7 +20,7 @@ my $email_success = $q->param('email_success');
 my $file;
 my $customer;
 my $type = uri_unescape($q->param('type'));
-chomp $type;
+if(defined($type))){chomp $type};
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -33,12 +33,12 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
 {
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 	my $id;
 	if($previous =~ m/customer/i || $type eq "customer")
 	{
@@ -53,7 +53,6 @@ if($authenticated == 1)
 		$id = $user->get_user_id(alias => $alias);
 	}
 	
-	#this does not work for technician password changes.  Much more work needs to be done for that to work.
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my @styles = ("styles/layout.css", "styles/password.css","styles/customer.css");

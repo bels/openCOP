@@ -26,16 +26,16 @@ my $var;
 my $type;
 
 my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-if($q->param('customer') == 1)
-{
-	$var = "customers";
-	$id_field = "cid";
-	$type = "customer"
-}
-else
-{
+if(defined($q->param('customer'))){
+	if($q->param('customer') == 1)
+	{
+		$var = "customers";
+		$id_field = "id";
+		$type = "customer"
+	}
+} else	{
 	$var = "users";
-	$id_field = "uid";
+	$id_field = "id";
 	$type = "user";
 }
 

@@ -140,12 +140,12 @@ sub get_user_id{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select cid from customers where alias = '$args{'alias'}'";
+	my $query = "select id from customers where alias = '$args{'alias'}'";
 	my $sth = $self->{'dbh'}->prepare($query);
 	$sth->execute;
 	my $result = $sth->fetchrow_hashref;
 	
-	return $result->{'cid'};
+	return $result->{'id'};
 }
 
 1;

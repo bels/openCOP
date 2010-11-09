@@ -3,7 +3,7 @@
 			<select id="select_customer_select">
 				<option value=""></option>
 				[% FOREACH customer IN customers.keys %]
-				<option value="[% customers.$customer.cid %]">[% customers.$customer.alias %]</option>
+				<option value="[% customers.$customer.id %]">[% customers.$customer.alias %]</option>
 				[% END %]
 			</select>
 		</div>

@@ -31,12 +31,12 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
 {
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 	my $id;
 	$file = "customer_edit.tt";
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
@@ -45,7 +45,7 @@ if($authenticated == 1)
 	my $query = "select * from customers;";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
-	my $customers = $sth->fetchall_hashref('cid');
+	my $customers = $sth->fetchall_hashref('id');
 
 	my $meta_keywords = "";
 	my $meta_description = "";

@@ -17,24 +17,24 @@ my %cookie = $q->cookie('session');
 
 my $authenticated = 0;
 my $alias;
-my $uid;
+my $id;
 
 my $ticket = Ticket->new(mode => "");
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
 {
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 
-	$alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
-	$uid = $user->get_user_info(alias => $alias);
+	$alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	$id = $user->get_user_info(alias => $alias);
 
 	my $data = $q->Vars;
-	$data->{'updater'} = $uid->{'uid'};
+	$data->{'updater'} = $id->{'id'};
 
 	$ticket->update(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
 	print $q->redirect(-URL=>"ticket.pl?mode=lookup");

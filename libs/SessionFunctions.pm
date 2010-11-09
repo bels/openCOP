@@ -65,7 +65,7 @@ sub create_session_id{
 	srand(time ^ $$ ^ unpack "%L*", `ps axww | gzip`);
 	my $random_number = int(rand(10000));
 
-	my $query = "select count(*) from $args{'auth_table'} where sid = $random_number";
+	my $query = "select count(*) from $args{'auth_table'} where id = $random_number";
 	my $sth = $self->{'dbh'}->prepare($query)  or die "Preparing the query for create_session_id in SessionFunctions";
 	$sth->execute  or die "Executing the query for create_session_id in SessionFunctions";
 	my $result = $sth->fetchrow_hashref  or die "Fetching the results for create_session_id in SessionFunctions";
@@ -74,7 +74,7 @@ sub create_session_id{
 	{
 		my($sec,$min,$hour,$day,$month,$year) = (localtime)[0,1,2,3,4,5];
 		my $today = ($year + 1900) . "-" . ($month + 1) . "-" . $day . " $hour:$min:$sec";
-		$query = "insert into $args{'auth_table'} (sid,uid,session_key,created) values($random_number,'$args{'uid'}','$args{'session_key'}','$today')";
+		$query = "insert into $args{'auth_table'} (id,user_id,session_key,created) values($random_number,'$args{'user_id'}','$args{'session_key'}','$today')";
 		$sth= $self->{'dbh'}->prepare($query)  or die "Preparing the second query for create_session_id in SessionFunctions";
 		$sth->execute  or die "Executing the second query for create_session_id in SessionFunctions";
 		return $random_number;
@@ -89,7 +89,7 @@ sub is_logged_in{
 	my $self = shift;
 	my %args = @_;
 
-	my $query = "select count(*) from $args{'auth_table'} where sid = $args{'sid'} and session_key = '$args{'session_key'}'";
+	my $query = "select count(*) from $args{'auth_table'} where id = $args{'id'} and session_key = '$args{'session_key'}'";
 	my $sth = $self->{'dbh'}->prepare($query);
 	$sth->execute;
 	my $result = $sth->fetchrow_hashref;
@@ -108,19 +108,19 @@ sub get_name_for_session{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select uid from $args{'auth_table'} where sid = $args{'sid'}";
+	my $query = "select user_id from $args{'auth_table'} where id = $args{'id'}";
 	my $sth = $self->{'dbh'}->prepare($query);
 	$sth->execute;
 	my $result = $sth->fetchrow_hashref;
 	
-	return $result->{'uid'};
+	return $result->{'user_id'};
 }
 
 sub logout{
 	my $self = shift;
 	my %args =@_;
 	
-	my $query = "delete from $args{'auth_table'} where sid = $args{'sid'}";
+	my $query = "delete from $args{'auth_table'} where id = $args{'id'}";
 	my $sth = $self->{'dbh'}->prepare($query);
 	$sth->execute;
 }

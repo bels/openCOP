@@ -9,6 +9,12 @@ db_name: ccboehd
 db_password: helpdesk
 db_type: Pg
 db_user: helpdesk
+display_author: 1
+display_barcode: 1
+display_free_date: 1
+display_free_time: 1
+display_location: 1
+display_serial: 1
 index_page: index.pl
 logo_image: images/logo.jpg
 mail_server: localhost
@@ -21,6 +27,11 @@ sections:
   - Helpdesk
 sites:
   - Test Site
+  - test2
+  - test2
+  - test1
+support_email: support@company.com
+support_phone_number: 000-000-0000
 techs:
   - admin
 template_dir: /usr/local/www/helpdesk/templates
@@ -28,12 +39,3 @@ ticket_mail_account: newticket
 ticket_mail_password: password
 users_table: users
 version: .5
-support_email: support@company.com
-support_phone_number: 000-000-0000
-#toggle switches for fields to display in the customer ticketing portal. 0 = off, 1 = on
-display_barcode: 1
-display_serial: 1
-display_location: 1
-display_author: 1
-display_free_date: 1
-display_free_time: 1

@@ -75,11 +75,21 @@ if [ $OSVER == "FreeBSD" ]; then
 	`find $INSTALL_DIR -type f -exec chmod 770 {} \;`
 	`chmod a+rx $INSTALL_DIR/sql/*`
 	chown -R www:www $INSTALL_DIR/*
-	#echo -en "done\nSetting up postgres ... "
+	echo -en "done\nSetting up postgres ... "
 	su - pgsql -c "cd $INSTALL_DIR/sql && ./setup_postgresql.sh" || die "Could not execute setup_postgresql.sh"
+	echo "done"
+	echo -en "Creating crontab entry for mail-to-ticket processing ... "
+	chown www opencrop_crontab
+	cp opencop_crontab /var/cron/ >>$INSTALL_LOG
+	crontab /var/cron/opencop_crontab
 	echo "done"
 elif [ $OSVER == "Linux" ]; then
 	echo "This is a Linux distribution"
+#	echo -en "Creating crontab entry for mail-to-ticket processing ... "
+#	chown www opencrop_crontab
+#	cp opencop_crontab /etc/cron.d/ >>$INSTALL_LOG
+#	crontab /etc/cron.d/opencop_crontab
+#	echo "done"
 else
 	echo "Not FreeBSD/Linux"
 fi

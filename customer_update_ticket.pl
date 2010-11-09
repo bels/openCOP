@@ -21,7 +21,7 @@ my $ticket = Ticket->new(mode => "");
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -30,15 +30,19 @@ if($authenticated == 1)
 	my $tkid = $vars->{'tkid'};
 	my $new_note = $vars->{'new_note'};
 
+	foreach ($new_note){
+		$_  =~ s/\'/\'\'/g;
+	}
+
 	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},sid => $cookie{'sid'});
-	my $uid = $user->get_user_info(alias => $alias);
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $id = $user->get_user_info(alias => $alias);
 
-	my $updater = $uid->{'cid'};
+	my $updater = $id->{'id'};
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
-	my $query = "insert into notes (tkid, note) values($tkid,'$new_note')";
+	my $query = "insert into notes (ticket_id, note) values($tkid,'$new_note')";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $query = "update helpdesk set free_date='$vars->{'free_date'}', free_time='$vars->{'free_time'}' where ticket = '$tkid'";

@@ -21,7 +21,7 @@ my $ticket = Ticket->new(mode => "");
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -35,20 +35,23 @@ if($authenticated == 1)
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $site_id = $results->{'site'};
-	my $query = "select * from site where scid = '$site_id'";
+	my $query = "select * from site where id = '$site_id'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $stuff = $sth->fetchrow_hashref;
 	my $site = $stuff->{'name'};
 
-	$query = "select * from troubleshooting where tkid = '$ticket_number'";
+	$query = "select * from troubleshooting where ticket_id = '$ticket_number'";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $troubleshooting = $sth->fetchall_hashref('tid');
-	$query = "select * from notes where tkid = '$ticket_number'";
+	my $troubleshooting = $sth->fetchall_hashref('id');
+	$query = "select * from notes where ticket_id = '$ticket_number'";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $notes = $sth->fetchall_hashref('nid');
+	my $notes = $sth->fetchall_hashref('id');
+
+	$results->{'free_time'} = substr($results->{'free_time'},0,8);
+
 	print qq(<h2>Ticket Details</h2>);
 	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><input type="hidden" name="tech" value="1"><input type="hidden" name="ticket_number" value="$results->{'ticket'}"><label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span>);
 	print qq(<label for="status">Ticket Status:</label><select id="status" name="status">);

@@ -21,7 +21,7 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -51,9 +51,9 @@ if($authenticated == 1)
 		} elsif($vars->{'action'} =~ m/del/){
 			my $id;
 			if($vars->{'type'} eq "template"){
-				$id = "tid";
+				$id = "id";
 			} elsif($vars->{'type'} eq "property"){
-				$id = "pid";
+				$id = "id";
 			}
 			$query = "select $vars->{'type'} from $vars->{'type'} where $id = '$vars->{'value'}';";
 			$sth = $dbh->prepare($query) or die "Could not prepare query in $0";
