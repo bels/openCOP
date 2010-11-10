@@ -1,0 +1,44 @@
+<div id="wrapper">
+	<div id="user_to_group" class="associate_div">
+		<div id="associate_user_group_header" class="header_text">
+			<span id="associate_user_group_header_text">Add groups to users</span>
+		</div>
+		<div id="select_user_div" class="select_div">
+			<span id="select_user_header">User</span>
+			<select id="select_user_select">
+				<option value="" selected="selected"></option>
+			[% FOREACH id IN users.keys %]
+				<option value="[% users.$id.id %]">[% users.$id.alias %]</option>
+			[% END %]
+			</select>
+			<button id="submit_a_ug" mode="a_ug" class="associate">Save</button>
+		</div>
+		<div id="associate_user_group_div">
+			<div id="onload_append_div" class="onload_append">
+			</div>
+			<div id="a_ug_append_div">
+			</div>
+		</div>
+	</div>
+	<div id="group_to_user" class="associate_div">
+		<div id="associate_group_user_header" class="header_text">
+			<span id="associate_group_user_header_text">Add users to groups</span>
+		</div>
+		<div id="select_group_div" class="select_div">
+			<span id="select_group_header">Group</span>
+			<select id="select_group_select">
+				<option value="" selected="selected"></option>
+			[% FOREACH id IN groups.keys %]
+				<option value="[% groups.$id.id %]">[% groups.$id.name %]</option>
+			[% END %]
+			</select>
+			<button id="submit_a_gu" mode="a_gu" class="associate">Save</button>
+		</div>
+		<div id="associate_group_user_div">
+			<div id="onload_append_div" class="onload_append">
+			</div>
+			<div id="a_gu_append_div">
+			</div>
+		</div>
+	</div>
+</div>

@@ -95,9 +95,9 @@ if($authenticated == 1)
 		}
 
 		for my $i (@selected) {
-			$query = "delete from template_property where template_id = '$type' and property_id = '$i';";
-			$sth = $dbh->prepare($query);
-			$sth->execute;
+		#	$query = "delete from template_property where template_id = '$type' and property_id = '$i';";
+		#	$sth = $dbh->prepare($query);
+		#	$sth->execute;
 			$query = "select count(*) from template_property where template_id = '$type' and property_id = '$i';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;

@@ -34,6 +34,7 @@ support_email: support@company.com
 support_phone_number: 000-000-0000
 techs:
   - admin
+  - user2
 template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password

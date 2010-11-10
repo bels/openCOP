@@ -147,6 +147,52 @@ sub get_user_id{
 	return $result->{'id'};
 }
 
+sub get_groups{
+	my $self = shift;
+	my %args = @_;
+	my $query = "select distinct(alias_aclgroup.aclgroup_id),name from alias_aclgroup join aclgroup on alias_aclgroup.aclgroup_id = aclgroup.id where (alias_id = '$args{'id'}');";
+	my $sth = $self->{'dbh'}->prepare($query);
+	$sth->execute;
+	my $group = $sth->fetchall_hashref('aclgroup_id');
+	return $group;
+}
+
+sub get_permissions{
+	my $self = shift;
+	my %args = @_;
+
+	sub isequal($$){
+		if(defined($_[0]) && $_[0] == 0){
+			return $_[0];
+		} else {
+			return $_[1];
+		}
+	}
+	my $permissions = {};
+
+	my $query = "select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}');";
+	my $sth = $self->{'dbh'}->prepare($query);
+	$sth->execute;
+	my $group = $sth->fetchall_hashref('aclgroup_id');
+	foreach (keys %$group){
+		$query = "select * from section_aclgroup where aclgroup_id = '$_';";
+		$sth = $self->{'dbh'}->prepare($query);
+		$sth->execute;
+		my $results = $sth->fetchall_hashref('id');
+		foreach (keys %$results){
+			$permissions->{$results->{$_}->{'section_id'}} = {
+				'read'		=>	isequal($permissions->{$results->{$_}->{'section_id'}}->{'read'},$results->{$_}->{'aclread'}),
+				'create'	=>	isequal($permissions->{$results->{$_}->{'section_id'}}->{'create'},$results->{$_}->{'aclcreate'}),
+				'update'	=>	isequal($permissions->{$results->{$_}->{'section_id'}}->{'update'},$results->{$_}->{'aclupdate'}),
+				'delete'	=>	isequal($permissions->{$results->{$_}->{'section_id'}}->{'delete'},$results->{$_}->{'acldelete'}),
+			};
+		}
+	}
+
+	return $permissions;
+}
+
+
 1;
 __END__
 # Below is stub documentation for your module. You'd better edit it!

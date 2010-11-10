@@ -2,8 +2,8 @@
 			<a href="ticket.pl" id="ticket_link" class="menu_link">Tickets</a>
 			<a href="reports.pl" id="report_link" class="menu_link">Reports</a>
 			<a href="inventory.pl" id="inventory_link" class="menu_link">Inventory</a>
-			<a href="admin.pl" id="admin_link" class="menu_link">Admin</a>
 			<a href="customer_admin.pl" id="customer_admin_link" class="menu_link">Customer Admin</a>
+			<a href="admin.pl" id="admin_link" class="menu_link">Admin</a>
 		</div>
 		<div id="submenu">
 			<span id="sub_ticket_link" class="sub">
@@ -33,6 +33,8 @@
 				<a href="sites.pl" class="sub_link">Companies/Sites</a>
 				<a href="global_settings.pl" class="sub_link">Global Settings</a>
 				<a href="password.pl" class="sub_link">Change Password</a>
+				<a href="groups.pl" class="sub_link">Groups</a>
+				<a href="permissions.pl" class="sub_link">Permissions</a>
 				<a href="logout.pl" class="sub_link">Logout</a>
 			</span>
 			<span id="sub_customer_admin_link"  class="hidden_menu sub">

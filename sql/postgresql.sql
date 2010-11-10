@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS priority;
 CREATE TABLE priority (id SERIAL PRIMARY KEY, severity INTEGER, description varchar(255));
 
 DROP TABLE IF EXISTS users;
-CREATE TABLE users (id SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN,sections VARCHAR(255));
+CREATE TABLE users (id SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN);
 
 DROP TABLE IF EXISTS ticket_status;
 CREATE TABLE ticket_status (id BIGSERIAL PRIMARY KEY, name VARCHAR(255));
@@ -62,6 +62,18 @@ CREATE TABLE template_property (id BIGSERIAL PRIMARY KEY, template_id INTEGER re
 CREATE TABLE value_property (id BIGSERIAL PRIMARY KEY, property_id INTEGER references property(id) ON DELETE CASCADE, value_id INTEGER references value(id) ON DELETE CASCADE);
 
 CREATE TABLE object_value (id BIGSERIAL PRIMARY KEY, object_id INTEGER references object(id) ON DELETE CASCADE, value_id INTEGER references value(id) ON DELETE CASCADE);
+
+DROP TABLE IF EXISTS aclgroup;
+CREATE TABLE aclgroup (id BIGSERIAL PRIMARY KEY, name VARCHAR(255), UNIQUE (name));
+
+DROP TABLE IF EXISTS alias_aclgroup;
+CREATE TABLE alias_aclgroup (id BIGSERIAL PRIMARY KEY, alias_id INTEGER, aclgroup_id INTEGER references aclgroup(id));
+
+DROP TABLE IF EXISTS section_aclgroup;
+CREATE TABLE section_aclgroup (id BIGSERIAL PRIMARY KEY, aclgroup_id INTEGER references aclgroup(id), section INTEGER references section(id), aclread BOOLEAN DEFAULT false, aclcreate BOOLEAN DEFAULT false, aclupdate BOOLEAN DEFAULT false, acldelete BOOLEAN DEFAULT false);
+
+
+
 
 -- Default data templates
 INSERT INTO template(template) values('server');
@@ -285,3 +297,9 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON value_property TO helpdesk;
 GRANT SELECT, UPDATE ON value_property_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON object_value TO helpdesk;
 GRANT SELECT, UPDATE ON object_value_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON aclgroup TO helpdesk;
+GRANT SELECT, UPDATE ON aclgroup_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON alias_aclgroup TO helpdesk;
+GRANT SELECT, UPDATE ON alias_aclgroup_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON section_aclgroup TO helpdesk;
+GRANT SELECT, UPDATE ON section_aclgroup_id_seq TO helpdesk;

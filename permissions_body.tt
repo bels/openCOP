@@ -1,0 +1,64 @@
+<div id="wrapper">
+	<div id="group_to_section">
+		<div id="associate_group_section_header" class="header_text">
+			<span id="associate_group_section_header_text">Grant groups permissions to sections</span>
+		</div>
+		<table id="permissions_table">
+			<thead>
+				<tr>
+				<th><label for="select_group" class="new_permission">Group</label></th>
+				<th><label for="select_section" class="new_permission">Section</label></th>
+				<th><label for="read" class="new_permission">Read</label></th>
+				<th><label for="create" class="new_permission">Create</label></th>
+				<th><label for="update" class="new_permission">Update</label></th>
+				<th><label for="delete" class="new_permission">Delete</label></th>
+				</tr>
+			</thead>
+			<tbody id="permissions_body">
+				<tr id="add_permission">
+						<td>
+							<select id="select_group" class="new_permission">
+								<option value=""</option>
+							[% FOREACH id IN groups.keys %]
+								<option value="[% groups.$id.id %]">[% groups.$id.name %]</option>
+							[% END %]
+							</select>
+						</td>
+						<td>
+							<select id="select_section" class="new_permission">
+								<option value=""</option>
+							[% FOREACH id IN sections.keys %]
+								<option value="[% sections.$id.id %]">[% sections.$id.name %]</option>
+							[% END %]
+							</select>
+						</td>
+						<td><input type="checkbox" name="read" id="read" checked="checked" class="new_permission" title="Read"></td>
+						<td><input type="checkbox" name="create" id="create" class="new_permission" title="Create"></td>
+						<td><input type="checkbox" name="update" id="update" class="new_permission" title="Update"></td>
+						<td><input type="checkbox" name="delete" id="delete" class="new_permission" title="Delete"></td>
+						<td><button id="submit_a_gs" mode="a_gs" class="associate">Add</button></td>
+				</tr>
+				[% zebra = "even" %]
+				[% FOREACH id IN gsp.keys %]
+					[% IF zebra == "even" %]
+						[% zebra = "odd" %]
+					[% ELSIF zebra == "odd" %]
+						[% zebra = "even" %]
+					[% END %]
+					[% gid = gsp.$id.aclgroup_id %]
+					[% sid = gsp.$id.section_id %]
+				<tr gid="[% gid %]" sid="[% sid %]" class="[% zebra %]">
+					<td>[% groups.$gid.name %]</td>
+					<td>[% sections.$sid.name %]</td>
+					<td><input  type="checkbox" name="read" id="read" [% IF gsp.$id.aclread == 1 %] checked="checked" [% END %] class="new_permission" title="Read"></td>
+					<td><input  type="checkbox" name="create" id="create" [% IF gsp.$id.aclcreate == 1 %] checked="checked" [% END %] class="new_permission" title="Create"></td>
+					<td><input  type="checkbox" name="update" id="update" [% IF gsp.$id.aclupdate == 1 %] checked="checked" [% END %] class="new_permission" title="Update"></td>
+					<td><input  type="checkbox" name="delete" id="delete" [% IF gsp.$id.acldelete == 1 %] checked="checked" [% END %] class="new_permission" title="Delete"></td>
+					<td><button id="[% id %]" class="update_button">Save</button></td>
+					<td><button id="[% id %]" class="delete_button">Delete</button></td>
+				</tr>
+				[% END %]
+			</tbody>
+		</table>
+	</div>
+</div>

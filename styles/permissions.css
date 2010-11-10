@@ -1,0 +1,47 @@
+#wrapper{
+	float: left;
+	margin-top: 25px;
+	margin-left: 25px;
+	margin-bottom: 25px;
+	margin-right: 25px;
+	min-width: 900px;
+	width: 95%;
+}
+
+.header_text{
+	padding-top: 4px;
+	padding-left: 4px;
+	padding-bottom: 4px;
+	padding-right: 4px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+#group_to_section{
+	width: 100%;
+	float: left;
+}
+
+button.associate{
+	display: inline-block;
+}
+
+.select_div{
+	width: 457px;
+}
+
+.new_permission{
+	min-width: 150px;
+}
+
+.even{
+	background-color: #efefef;
+}
+
+.odd{
+	background-color: #dcdcdc;
+
+}
+
+
