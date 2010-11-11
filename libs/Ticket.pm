@@ -51,30 +51,48 @@ sub new{
 
 sub render{
 	my $self = shift;
+	my %args = @_;
 	
 	my %templates = (
 		"new" => "ticket_new.tt",
 		"lookup" => "ticket_lookup.tt",
-		"edit" => "ticket_edit.tt");
-		
+		"edit" => "ticket_edit.tt"
+	);
+
 	my $file = $templates{$self->{'mode'}};
 	
 	my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 	$config->read_config;
 
-	my @site_list = $config->{'sites'};
-	my @priority_list = $config->{'priority'};
-	my @section_list = $config->{'sections'};
-	my @tech_list = $config->{'techs'};
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+	my $query = "select name,section_aclgroup.section_id from section_aclgroup join section on section.id = section_aclgroup.section_id where aclgroup_id in (select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}') );";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $section_list = $sth->fetchall_hashref('section_id');
+
+	$query = "select * from priority;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $priority_list = $sth->fetchall_hashref('id');
+
+	$query = "select * from site where not deleted;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $site_list = $sth->fetchall_hashref('id');
+
+	$query = "select id,alias from users where active;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $tech_list = $sth->fetchall_hashref('id');
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
 	my @styles = ("styles/jquery.jscrollpane.css","styles/layout.css","styles/ticket.css");
 	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery.tablesorter.js","javascripts/jquery.livequery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.blockui.js");
-	
+
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => @site_list, priority_list => @priority_list, section_list => @section_list, tech_list => @tech_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
@@ -85,72 +103,88 @@ sub submit{
 	my %args = @_;
 	my $data = $args{'data'};
 	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
+	my $results;
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+
 	my $status = 1;
 	my $site;
-	foreach my $element (keys %$data)
-	{
+	foreach my $element (keys %$data){
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
 	
-	if(defined($data->{'site'}))
-	{
+	if(defined($data->{'site'})){
 		$site = $data->{'site'};
-	}
-	else
-	{
+	} else {
 		$site = "undefined";
 	}
 
-	if($data->{'free_date'})
-	{
-	}
-	else
-	{
+	if($data->{'free_date'}){
+	} else {
 		$data->{'free_date'} = "now";
 	}
 
-	if($data->{'free_time'})
-	{
-	}
-	else
-	{
+	if($data->{'free_time'}){
+	} else {
 		$data->{'free_time'} = "now";
 	}
-	
-	my $query = "select insert_ticket('$site','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$data->{'tech'}','$data->{'notes'}','$data->{'submitter'}','$data->{'free_date'}','$data->{'free_time'}')";
-	warn $query;
-	my $sth = $dbh->prepare($query);
-	$sth->execute; #this will return the id of the insert record if we ever find a use for it
-	#warn $wDBI::errstr;
-	my $id = $sth->fetchrow_hashref;
-	my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});
 
-	$notify->by_email(mode => 'ticket_create', to => $data->{'email'});
-	if(defined($data->{'tech_email'}))
-	{
-		$notify->by_email(mode => 'notify_tech', to => $data->{'tech_email'});
+	my $query = "select bool_or(section_aclgroup.aclcreate) as access from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$data->{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$data->{'submitter'}') );";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $access = $sth->fetchrow_hashref;
+	if($access->{'access'}){
+		$query = "select insert_ticket('$site','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$data->{'tech'}','$data->{'notes'}','$data->{'submitter'}','$data->{'free_date'}','$data->{'free_time'}')";
+		warn $query;
+		$sth = $dbh->prepare($query);
+		$sth->execute; #this will return the id of the insert record if we ever find a use for it
+		#warn $wDBI::errstr;
+		my $id = $sth->fetchrow_hashref;
+		my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});
+
+		$notify->by_email(mode => 'ticket_create', to => $data->{'email'});
+		if(defined($data->{'tech_email'}))
+		{
+			$notify->by_email(mode => 'notify_tech', to => $data->{'tech_email'});
+		}
+		return $results = {
+			'error'		=>	"0",
+		};
+	} else {
+		return $results = {
+			'error'		=>	"1",
+		};
 	}
 }
 
 sub lookup{
 	my $self = shift;
 	my %args = @_;
-	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
-	my $query = "select * from helpdesk where status <> 6 and status <> 7 and section = '$args{'section'}' order by ticket"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+
+	my $results;
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+	my $query = "select bool_or(section_aclgroup.aclread) as access from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$args{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$args{'id'}') );";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
-	my $results = $sth->fetchall_hashref('ticket');
+	my $access = $sth->fetchrow_hashref;
+	if($access->{'access'}){
+		$query = "select * from helpdesk where status not in ('6','7') and section = '$args{'section'}' order by ticket"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		$results = $sth->fetchall_hashref('ticket');
 	
-	return $results;
+		return $results;
+	} else {
+		return $results = {
+			'error'		=>	"1",
+		};
+	}
 }
 
 sub details{
 	my $self = shift;
 	my %args = @_;
 	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query = "select * from helpdesk where ticket = '$args{'data'}'"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
@@ -169,7 +203,7 @@ sub update{
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
 	
-	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'})  or die "Database connection failed in $0";
+	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	
 	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}',$data->{'tech'},$data->{'updater'})";
 	my $sth = $dbh->prepare($query);

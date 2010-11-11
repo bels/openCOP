@@ -59,6 +59,39 @@ $(document).ready(function(){
 		});
 	});
 
+	$('#add_group_button').bind('click', function(){
+		var groupname = $('input#group_name').val();
+		var mode = "add_group";
+		$.blockUI({message: "Submitting"});
+		$.ajax({
+			type: 'POST',
+			url: 'groups_submit.pl',
+			data: {groupname: groupname, mode: mode},
+			success: function(data){
+				var error = data.substr(0,1);
+				if(error == "0"){
+					var str = data.replace(/^[\d\s]/,'');
+				} else if(error == "1"){
+					var str = data.replace(/^[\d\s]/,'');
+					alert("Duplicate entry encountered");
+				} else if(error == "2"){
+					var str = data.replace(/^[\d\s]/,'');
+					alert("Error executing insert statement");
+				}
+				if($('#select_group_select').val()){
+					load_associations_ug();
+					load_associations_gu();
+					location.reload(true);
+				}
+				$.unblockUI();
+			},
+			error: function(){
+				alert("Error");
+				$.unblockUI();
+			}
+		});
+	});
+
 	$('#submit_a_gu').bind('click', function(){
 		var gu_select_string = "";
 		var gu_unselect_string = "";

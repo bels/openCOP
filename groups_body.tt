@@ -1,4 +1,16 @@
 <div id="wrapper">
+	<div id="add_group_div">
+		<div id="add_group_header" class="header_text">
+			<span id="add_group_header_text">Add new group</span>
+		</div>
+		<div id="add_group_form_div">
+			<form id="add_group_form">
+				<input id="group_name" class="add_group_input">
+				<button id="add_group_button">Add</button>
+			</form>
+		</div>
+	</div>
+
 	<div id="user_to_group" class="associate_div">
 		<div id="associate_user_group_header" class="header_text">
 			<span id="associate_user_group_header_text">Add groups to users</span>

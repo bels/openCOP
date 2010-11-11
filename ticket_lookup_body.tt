@@ -1,4 +1,6 @@
-		<div id="ticket_lookup">
+	[% FOREACH id IN section_list.keys %]
+		<div class="ticket_lookup" id="[% section_list.$id.section_id %]">
 		</div>
+	[% END %]
 		<div id="ticket_details">
 		</div>

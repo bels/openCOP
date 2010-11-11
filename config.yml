@@ -18,23 +18,8 @@ display_serial: 1
 index_page: index.pl
 logo_image: images/logo.jpg
 mail_server: localhost
-priority:
-  - Low
-  - Normal
-  - High
-  - Business Critical
-sections:
-  - Helpdesk
-sites:
-  - Test Site
-  - test2
-  - test2
-  - test1
 support_email: support@company.com
 support_phone_number: 000-000-0000
-techs:
-  - admin
-  - user2
 template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password

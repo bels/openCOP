@@ -5,8 +5,8 @@
 				<label for="site" class="short_label">Site:</label>
 				<select name="site" size="1" tabindex="1" id="site">
 					<option></option>
-					[% FOREACH site IN site_list %]
-					<option value="[% site %]">[% site %]</option>
+					[% FOREACH site IN site_list.keys %]
+					<option value="[% site %]">[% site_list.$site.name %]</option>
 					[% END %]
 				</select>
 				<br />
@@ -21,24 +21,24 @@
 				<label for="priority" class="short_label">Priority:</label>
 				<select name="priority" size="1" tabindex="9" id="priority">
 					<option></option>
-					[% FOREACH priority IN priority_list %]
-					<option value="[% priority %]">[% priority %]</option>
+					[% FOREACH priority IN priority_list.keys %]
+					<option value="[% priority_list.$priority.severity %]">[% priority_list.$priority.description %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="10" id="section">
 					<option></option>
-					[% FOREACH section IN section_list %]
-					<option value="[% section %]">[% section %]</option>
+					[% FOREACH section IN section_list.keys %]
+					<option value="[% section %]">[% section_list.$section.name %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?108" class="tooltip" target="_tips">?</a>
 				<label for="tech" class="short_label">Tech:</label>
 				<select name="tech" size="1" tabindex="10" id="tech">
 					<option></option>
-					[% FOREACH tech IN tech_list %]
-					<option value="[% tech %]">[% tech %]</option>
+					[% FOREACH tech IN tech_list.keys %]
+					<option value="[% tech %]">[% tech_list.$tech.alias %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?111" class="tooltip" target="_tips">?</a>

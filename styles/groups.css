@@ -38,3 +38,8 @@ button.associate{
 .select_div{
 	width: 457px;
 }
+
+#add_group_div{
+	max-width: 500px;
+	text-align: center;
+}

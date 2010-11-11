@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS company;
 CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN);
 
 DROP TABLE IF EXISTS site;
-CREATE TABLE site (id SERIAL PRIMARY KEY, level INTEGER references site_level(id), name VARCHAR(255), deleted smallint, company_id INTEGER references company(id));
+CREATE TABLE site (id SERIAL PRIMARY KEY, level INTEGER references site_level(id), name VARCHAR(255), deleted BOOLEAN DEFAULT false, company_id INTEGER references company(id));
 
 DROP TABLE IF EXISTS status;
 CREATE TABLE status (id SERIAL PRIMARY KEY, status VARCHAR(255));
@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS ticket_status;
 CREATE TABLE ticket_status (id BIGSERIAL PRIMARY KEY, name VARCHAR(255));
 
 DROP TABLE IF EXISTS helpdesk;
-CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id), location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT references section(id), problem TEXT, priority INT references priority(id), serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(id), submitter INTEGER, free_date DATE, free_time TIME);
+CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id) DEFAULT '1', location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT references section(id) DEFAULT '1', problem TEXT, priority INT references priority(id) DEFAULT '2', serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(id) DEFAULT '1', submitter INTEGER, free_date DATE, free_time TIME);
 
 DROP TABLE IF EXISTS troubleshooting;
 CREATE TABLE troubleshooting(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
@@ -187,22 +187,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insert_ticket(site_text text, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_text VARCHAR(255), problem_val TEXT, priority_text TEXT, serial_val VARCHAR(255), contact_email_val VARCHAR(255), tech_text VARCHAR(255), notes_val TEXT, submitter_val INTEGER, free_date_val DATE, free_time_val TIME) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insert_ticket(site_val INTEGER, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_val INTEGER, problem_val TEXT, priority_val INTEGER, serial_val VARCHAR(255), contact_email_val VARCHAR(255), tech_val INTEGER, notes_val TEXT, submitter_val INTEGER, free_date_val DATE, free_time_val TIME) RETURNS INTEGER AS $$
 DECLARE
-	priority_val INTEGER;
-	site_val INTEGER;
-	section_val INTEGER;
 	last_id INTEGER;
-	tech_val INTEGER;
 BEGIN
-	--Step 1. Translate priority, site, status, section into values from the other tables
-	SELECT INTO priority_val severity FROM priority WHERE description = priority_text;
-	SELECT INTO site_val id FROM site WHERE name = site_text;
-	SELECT INTO section_val id FROM section WHERE name = section_text;
-	SELECT INTO tech_val id FROM users WHERE alias = tech_text;
-	
-	-- Step 2. Insert the ticket with the translated values
-		
 	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, section, problem, priority, serial, contact_email, technician, notes, submitter, free_date, free_time) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val,notes_val,submitter_val,free_date_val,free_time_val);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
 
