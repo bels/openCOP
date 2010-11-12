@@ -1,4 +1,7 @@
 	[% FOREACH id IN section_list.keys %]
+		<div id="section_[% section_list.$id.section_id %]" class="section_header_div">
+			<span>[% section_list.$id.name %]</span>
+		</div>
 		<div class="ticket_lookup" id="[% section_list.$id.section_id %]">
 		</div>
 	[% END %]

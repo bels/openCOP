@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS company;
 CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN);
 
 DROP TABLE IF EXISTS site;
-CREATE TABLE site (id SERIAL PRIMARY KEY, level INTEGER references site_level(id), name VARCHAR(255), deleted BOOLEAN DEFAULT false, company_id INTEGER references company(id));
+CREATE TABLE site (id SERIAL PRIMARY KEY, level INTEGER references site_level(id) ON DELETE CASCADE, name VARCHAR(255), deleted BOOLEAN DEFAULT false, company_id INTEGER references company(id) ON DELETE CASCADE);
 
 DROP TABLE IF EXISTS status;
 CREATE TABLE status (id SERIAL PRIMARY KEY, status VARCHAR(255));
@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS ticket_status;
 CREATE TABLE ticket_status (id BIGSERIAL PRIMARY KEY, name VARCHAR(255));
 
 DROP TABLE IF EXISTS helpdesk;
-CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id) DEFAULT '1', location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT references section(id) DEFAULT '1', problem TEXT, priority INT references priority(id) DEFAULT '2', serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(id) DEFAULT '1', submitter INTEGER, free_date DATE, free_time TIME);
+CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id) DEFAULT '1', location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT DEFAULT '1', problem TEXT, priority INT  DEFAULT '2', serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER DEFAULT '1', submitter INTEGER, free_date DATE, free_time TIME);
 
 DROP TABLE IF EXISTS troubleshooting;
 CREATE TABLE troubleshooting(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20));
 
 DROP TABLE IF EXISTS audit;
-CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), site INTEGER references site(id), location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT references section(id), priority INT references priority(id), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER references users(id), closing_tech INTEGER references users(id), updater INTEGER, ticket INTEGER references helpdesk(ticket));
+CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER, site INTEGER, location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT, priority INT, tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER, closing_tech INTEGER, updater INTEGER, ticket INTEGER);
 
 DROP TABLE IF EXISTS template CASCADE;
 DROP TABLE IF EXISTS property CASCADE; 
@@ -67,10 +67,10 @@ DROP TABLE IF EXISTS aclgroup;
 CREATE TABLE aclgroup (id BIGSERIAL PRIMARY KEY, name VARCHAR(255), UNIQUE (name));
 
 DROP TABLE IF EXISTS alias_aclgroup;
-CREATE TABLE alias_aclgroup (id BIGSERIAL PRIMARY KEY, alias_id INTEGER, aclgroup_id INTEGER references aclgroup(id));
+CREATE TABLE alias_aclgroup (id BIGSERIAL PRIMARY KEY, alias_id INTEGER, aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE);
 
 DROP TABLE IF EXISTS section_aclgroup;
-CREATE TABLE section_aclgroup (id BIGSERIAL PRIMARY KEY, aclgroup_id INTEGER references aclgroup(id), section INTEGER references section(id), aclread BOOLEAN DEFAULT false, aclcreate BOOLEAN DEFAULT false, aclupdate BOOLEAN DEFAULT false, acldelete BOOLEAN DEFAULT false);
+CREATE TABLE section_aclgroup (id BIGSERIAL PRIMARY KEY, aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE, section INTEGER references section(id) ON DELETE CASCADE, aclread BOOLEAN DEFAULT false, aclcreate BOOLEAN DEFAULT false, aclupdate BOOLEAN DEFAULT false, aclclose BOOLEAN DEFAULT false);
 
 
 
@@ -129,7 +129,7 @@ INSERT INTO property(property) values('application_version');
 
 -- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
 DROP TABLE IF EXISTS customers;
-CREATE TABLE customers(id SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site INTEGER references site(id));
+CREATE TABLE customers(id SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN, site INTEGER);
 
 -- Adding admin user
 INSERT INTO users(alias,email,password,active,sections) values('admin','admin@localhost',MD5('admin'),true,'Helpdesk');

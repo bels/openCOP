@@ -47,7 +47,7 @@ if($authenticated == 1)
 	$sth->execute;
 	my $gsp = $sth->fetchall_hashref('id');
 
-#	$query = "select section.name,aclgroup.name,section_aclgroup.id,section_aclgroup.aclgroup_id,section_aclgroup.section_id,section_aclgroup.aclread,section_aclgroup.aclcreate,section_aclgroup.aclupdate,section_aclgroup.acldelete from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id;";
+#	$query = "select section.name,aclgroup.name,section_aclgroup.id,section_aclgroup.aclgroup_id,section_aclgroup.section_id,section_aclgroup.aclread,section_aclgroup.aclcreate,section_aclgroup.aclupdate,section_aclgroup.aclcomplete from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id;";
 
 	my $meta_keywords = "";
 	my $meta_description = "";

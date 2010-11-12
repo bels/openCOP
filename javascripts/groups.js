@@ -92,6 +92,35 @@ $(document).ready(function(){
 		});
 	});
 
+	$('#del_group_button').bind('click', function(){
+		var group = $('select#delete_group_select').val();
+		var mode = "del_group";
+		$.blockUI({message: "Submitting"});
+		$.ajax({
+			type: 'POST',
+			url: 'groups_submit.pl',
+			data: {group: group, mode: mode},
+			success: function(data){
+				var error = data.substr(0,1);
+				if(error == "0"){
+					var str = data.replace(/^[\d\s]/,'');
+				} else if(error == "1"){
+					alert("Error executing delete statement");
+				}
+				if($('#select_group_select').val()){
+					load_associations_ug();
+					load_associations_gu();
+					location.reload(true);
+				}
+				$.unblockUI();
+			},
+			error: function(){
+				alert("Error");
+				$.unblockUI();
+			}
+		});
+	});
+
 	$('#submit_a_gu').bind('click', function(){
 		var gu_select_string = "";
 		var gu_unselect_string = "";

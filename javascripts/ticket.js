@@ -10,19 +10,20 @@ $(document).ready(function(){
 		});
 	}
 
+
+	$('.section_header_div').bind('click',function(){
+		$(this).next(".ticket_lookup").toggle();
+	});
+
 	if($(".ticket_lookup").length){
-	//	alert("We have a div");
 		$('.ticket_lookup').each(function(){
-		//	alert($(this).attr("id"));
 			var section = $(this).attr("id");
 			var pane = $(this).jScrollPane({
-				showArrows:true,
+				showArrows: true,
 				maintainPosition: false
 			}).data('jsp');
 			var url = "lookup_ticket.pl?section=" + section;
-		//	alert(url);
 			pane.getContentPane().load(url,function(data){
-		//		alert (data);
 				pane.reinitialise();
 			});
 			$('.ticket_summary').livequery(function(){
@@ -33,9 +34,9 @@ $(document).ready(function(){
 				showArrows:true,
 				maintainPosition: false
 		}).data('jsp');
-		/*This will have to be improved when we start actually caring about queues */
 	}
-	
+	$('.ticket_lookup').first().show();
+
 	$("#submit_button").click(function(){
 		validateTicket();		
 		if($("#newticket").valid())
@@ -70,6 +71,10 @@ $(document).ready(function(){
 	$(".lookup_row").live("click",function(){
 		var ticket_number = $(this).children(".row_ticket_number").text();
 		var url = "ticket_details.pl?ticket_number=" + ticket_number;
+		var details_pane = $("#ticket_details").jScrollPane({
+				showArrows:true,
+				maintainPosition: false
+		}).data('jsp');
 		details_pane.getContentPane().load(url,function(data){
 			details_pane.reinitialise();			
 		});

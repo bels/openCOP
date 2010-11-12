@@ -11,7 +11,7 @@
 				<th><label for="read" class="new_permission">Read</label></th>
 				<th><label for="create" class="new_permission">Create</label></th>
 				<th><label for="update" class="new_permission">Update</label></th>
-				<th><label for="delete" class="new_permission">Delete</label></th>
+				<th><label for="complete" class="new_permission">Complete</label></th>
 				</tr>
 			</thead>
 			<tbody id="permissions_body">
@@ -35,7 +35,7 @@
 						<td><input type="checkbox" name="read" id="read" checked="checked" class="new_permission" title="Read"></td>
 						<td><input type="checkbox" name="create" id="create" class="new_permission" title="Create"></td>
 						<td><input type="checkbox" name="update" id="update" class="new_permission" title="Update"></td>
-						<td><input type="checkbox" name="delete" id="delete" class="new_permission" title="Delete"></td>
+						<td><input type="checkbox" name="complete" id="complete" class="new_permission" title="Complete"></td>
 						<td><button id="submit_a_gs" mode="a_gs" class="associate">Add</button></td>
 				</tr>
 				[% zebra = "even" %]
@@ -53,7 +53,7 @@
 					<td><input  type="checkbox" name="read" id="read" [% IF gsp.$id.aclread == 1 %] checked="checked" [% END %] class="new_permission" title="Read"></td>
 					<td><input  type="checkbox" name="create" id="create" [% IF gsp.$id.aclcreate == 1 %] checked="checked" [% END %] class="new_permission" title="Create"></td>
 					<td><input  type="checkbox" name="update" id="update" [% IF gsp.$id.aclupdate == 1 %] checked="checked" [% END %] class="new_permission" title="Update"></td>
-					<td><input  type="checkbox" name="delete" id="delete" [% IF gsp.$id.acldelete == 1 %] checked="checked" [% END %] class="new_permission" title="Delete"></td>
+					<td><input  type="checkbox" name="complete" id="complete" [% IF gsp.$id.aclcomplete == 1 %] checked="checked" [% END %] class="new_permission" title="Complete"></td>
 					<td><button id="[% id %]" class="update_button">Save</button></td>
 					<td><button id="[% id %]" class="delete_button">Delete</button></td>
 				</tr>

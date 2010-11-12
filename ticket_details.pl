@@ -34,17 +34,26 @@ if($authenticated == 1)
 	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+
 	my $site_id = $results->{'site'};
-	my $query = "select * from site where id = '$site_id'";
-	my $sth = $dbh->prepare($query);
-	$sth->execute;
-	my $stuff = $sth->fetchrow_hashref;
-	my $site = $stuff->{'name'};
+
+		my $query = "select * from site where id = '$site_id'";
+		my $sth = $dbh->prepare($query);
+		$sth->execute;
+		my $stuff = $sth->fetchrow_hashref;
+		my $site = $stuff->{'name'};
+	
 
 	$query = "select * from troubleshooting where ticket_id = '$ticket_number'";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $troubleshooting = $sth->fetchall_hashref('id');
+
+	$query = "select * from section;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $section_list = $sth->fetchall_hashref('id');
+
 	$query = "select * from notes where ticket_id = '$ticket_number'";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
@@ -53,8 +62,19 @@ if($authenticated == 1)
 	$results->{'free_time'} = substr($results->{'free_time'},0,8);
 
 	print qq(<h2>Ticket Details</h2>);
-	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><input type="hidden" name="tech" value="1"><input type="hidden" name="ticket_number" value="$results->{'ticket'}"><label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span>);
-	print qq(<label for="status">Ticket Status:</label><select id="status" name="status">);
+	print qq(
+		<form action="update_ticket.pl" method="POST" id="update_form">
+			<input type="hidden" name="tech" value="1">
+			<input type="hidden" name="section" value="$section_list->{$results->{'section'}}->{'id'}">
+			<input type="hidden" name="ticket_number" value="$results->{'ticket'}">
+			<label for="priority">Priority:</label><span id="priority" name="priority">$priorities{$results->{'priority'}}</span>
+		);
+	print qq(
+		<br>
+		<label for="section">Section:</label><span id="section" name="section">$section_list->{$results->{'section'}}->{'name'}</span>
+		<br>
+		<label for="status">Ticket Status:</label><select id="status" name="status">
+	);
 	my $i;
 	for ($i = 1; $i <= keys(%ticket_statuses); $i++)
 	{
@@ -77,7 +97,7 @@ if($authenticated == 1)
 		<br>
 		<label for="free">Free:</label><span id="free" name="free">$results->{'free_date'} $results->{'free_time'}</span>
 		<br>
-		<label for="requested_on">Requested On:</label><span id="requeseted_on" name="requested_on">);
+		<label for="requested_on">Requested On:</label><span id="requested_on" name="requested_on">);
 	print substr($results->{'requested'},0,19);
 	print qq(</span><label for="last_updated">Last Updated:</label><span id="last_updated" name="last_updated">);
 	print substr($results->{'updated'},0,19);

@@ -66,10 +66,20 @@ sub render{
 	$config->read_config;
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select name,section_aclgroup.section_id from section_aclgroup join section on section.id = section_aclgroup.section_id where aclgroup_id in (select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}') );";
+	my $query = "select name,section_aclgroup.section_id from section_aclgroup join section on section.id = section_aclgroup.section_id where aclgroup_id in (select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}') ) and section_aclgroup.aclread;";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('section_id');
+
+	$query = "select name,section_aclgroup.section_id from section_aclgroup join section on section.id = section_aclgroup.section_id where aclgroup_id in (select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}') ) and section_aclgroup.aclcreate;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $section_create_list = $sth->fetchall_hashref('section_id');
+
+	$section_list->{'pseudo'} = {
+		'section_id'	=>	"pseudo",
+		'name'		=>	"Tickets assigned directly",
+	};
 
 	$query = "select * from priority;";
 	$sth = $dbh->prepare($query);
@@ -89,10 +99,10 @@ sub render{
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
 	my @styles = ("styles/jquery.jscrollpane.css","styles/layout.css","styles/ticket.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery.tablesorter.js","javascripts/jquery.livequery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.blockui.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.livequery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.blockui.js");
 
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
@@ -115,7 +125,12 @@ sub submit{
 	if(defined($data->{'site'})){
 		$site = $data->{'site'};
 	} else {
-		$site = "undefined";
+		$site = "1";
+	}
+
+	if(defined($data->{'priority'})){
+	} else {
+		$data->{'priority'} = "2";
 	}
 
 	if($data->{'free_date'}){
@@ -185,7 +200,7 @@ sub details{
 	my %args = @_;
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select * from helpdesk where ticket = '$args{'data'}'"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+	my $query = "select * from helpdesk where ticket = '$args{'data'}'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $results = $sth->fetchrow_hashref;
@@ -197,7 +212,11 @@ sub update{
 	my $self = shift;
 	my %args = @_;
 	my $data = $args{'data'};
-	
+	my $results;
+	my $query;
+	my $sth;
+	my $access;
+
 	foreach my $element (keys %$data)
 	{
 		$data->{$element} =~ s/\'/\'\'/g;
@@ -205,11 +224,37 @@ sub update{
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	
-	my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}',$data->{'tech'},$data->{'updater'})";
-	my $sth = $dbh->prepare($query);
-	$sth->execute; #this will return the id of the insert record if we ever find a use for it
-	#warn $DBI::errstr;
-	my $id = $sth->fetchrow_hashref;
+	$query = "select bool_or(section_aclgroup.aclupdate) as access from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$data->{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$data->{'updater'}') );";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	$access = $sth->fetchrow_hashref;
+
+	$query = "select count(ticket) from helpdesk where technician = '$data->{'updater'}' and ticket = '$data->{'ticket_number'}';";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $explicit_access = $sth->fetchrow_hashref;
+	$access->{'access'} = $explicit_access->{'count'};
+
+	if($data->{'status'} == "7"){
+		$query = "select bool_or(section_aclgroup.aclcomplete) as access from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$data->{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$data->{'updater'}') );";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		$access = $sth->fetchrow_hashref;
+	}
+
+	if($access->{'access'}){
+		my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}',$data->{'tech'},$data->{'updater'})";
+		my $sth = $dbh->prepare($query);
+		$sth->execute; #this will return the id of the insert record if we ever find a use for it
+		#warn $DBI::errstr;
+		my $results = $sth->fetchrow_hashref;
+
+		return $results;
+	} else {
+		return $results = {
+			'error'		=>	"1",
+		};
+	}
 }
 1;
 __END__

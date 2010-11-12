@@ -39,7 +39,16 @@ button.associate{
 	width: 457px;
 }
 
-#add_group_div{
+#del_group_div{
+	_float: right;
+}
+
+.modify_group_div{
+	margin-left: 50px;
+	float: left;
 	max-width: 500px;
 	text-align: center;
+}
+.div_wrapper{
+	height: 50px;
 }

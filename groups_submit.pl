@@ -49,6 +49,24 @@ if($authenticated == 1)
 
 		print "Content-type: text/html\n\n";
 		print $error;
+	} elsif ($vars->{'mode'} eq "del_group"){
+		my $group = $vars->{'group'};
+		my $error = 0;
+
+		$query = "select count(*) from aclgroup where id = '$group';";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		my $count = $sth->fetchrow_hashref;
+		if($count->{'count'}){
+			$query = "delete from aclgroup where id = '$group';";
+			$sth = $dbh->prepare($query);
+			$sth->execute or $error = 2;
+		} else {
+			$error = 1;
+		}
+
+		print "Content-type: text/html\n\n";
+		print $error;
 	} else {
 		print "Content-type: text/html\n\n";
 		print "You should never see this!";

@@ -95,3 +95,14 @@ td{
 	color: red;
 	font-size: .7em;
 }
+
+.ticket_lookup{
+	display: none;
+}
+
+.section_header_div{
+	margin-left: 50px;
+	text-align: justify;
+	font-weight: bold;
+	font-size: 1.1em;
+}

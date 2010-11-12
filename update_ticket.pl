@@ -36,7 +36,10 @@ if($authenticated == 1)
 	my $data = $q->Vars;
 	$data->{'updater'} = $id->{'id'};
 
-	$ticket->update(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
+	my $access = $ticket->update(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
+	if($access->{'error'}){
+		warn "Access denied to section " .  $data->{'section'} . " for user " . $data->{'submitter'};
+	}
 	print $q->redirect(-URL=>"ticket.pl?mode=lookup");
 }	
 else

@@ -20,7 +20,7 @@ my $email_success = $q->param('email_success');
 my $file;
 my $customer;
 my $type = uri_unescape($q->param('type'));
-if(defined($type))){chomp $type};
+if(defined($type)){chomp $type};
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 

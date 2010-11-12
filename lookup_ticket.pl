@@ -27,7 +27,6 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $data = $q->Vars;
-	warn $data->{'section'};
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 
 	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed");
@@ -41,11 +40,23 @@ if($authenticated == 1)
 
 	print "Content-type: text/html\n\n";
 
-	$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id) or die "What?"; #need to pass in hashref named data
+	my $query = "select id,name from section;";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $section_list = $sth->fetchall_hashref('id');
+
+	unless($data->{'section'} eq "pseudo"){
+		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id) or die "What?"; #need to pass in hashref named data
+	} else {
+		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+		$query = "select * from helpdesk where status not in ('6','7') and technician = '$id' and section not in (select section_id from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$id') and aclread) ) order by ticket";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
+	}
 	if($section->{$data->{'section'}}->{'error'}) {
 		warn "Access denied to section " .  $data->{'section'} . " for user $id";
 	} else {
-		warn $section->{$data->{'section'}};
 		my @hash_order = (keys %{$section->{$data->{'section'}}});
 		
 		@hash_order = sort(@hash_order);
@@ -63,7 +74,6 @@ if($authenticated == 1)
 				<tbody>
 		);
 		foreach my $element (@hash_order){
-			warn $section->{$data->{'section'}}->{$element};
 		#this needs to vastly improve.  this displays the html inside of the ticket box.
 			print qq(
 					<tr class="lookup_row">

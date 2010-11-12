@@ -48,7 +48,7 @@ if($authenticated == 1)
 		$sth->execute;
 		my $count = $sth->fetchrow_hashref;
 		unless($count->{'count'}){
-			$query = "insert into section_aclgroup(section_id,aclgroup_id,aclread,aclcreate,aclupdate,acldelete) values('$sid','$gid','$permission[0]','$permission[1]','$permission[2]','$permission[3]');";
+			$query = "insert into section_aclgroup(section_id,aclgroup_id,aclread,aclcreate,aclupdate,aclcomplete) values('$sid','$gid','$permission[0]','$permission[1]','$permission[2]','$permission[3]');";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 		} else {
@@ -75,7 +75,7 @@ if($authenticated == 1)
 
 		my @permission = split(":",$permission_string);
 
-		$query = "update section_aclgroup set aclread = '$permission[0]', aclcreate = '$permission[1]', aclupdate = '$permission[2]', acldelete = '$permission[3]' where id = '$id';";
+		$query = "update section_aclgroup set aclread = '$permission[0]', aclcreate = '$permission[1]', aclupdate = '$permission[2]', aclcomplete = '$permission[3]' where id = '$id';";
 		$sth = $dbh->prepare($query);
 		$sth->execute or $error = 1;
 		print "Content-type: text/html\n\n";
