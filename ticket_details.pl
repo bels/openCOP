@@ -34,15 +34,21 @@ if($authenticated == 1)
 	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+	my $query;
+	my $sth;
 
+	my $site;
 	my $site_id = $results->{'site'};
 
-		my $query = "select * from site where id = '$site_id'";
-		my $sth = $dbh->prepare($query);
+	if(defined($site_id)){
+		$query = "select * from site where id = '$site_id'";
+		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $stuff = $sth->fetchrow_hashref;
-		my $site = $stuff->{'name'};
-	
+		$site = $stuff->{'name'};
+	} else {
+		$site = "";
+	}
 
 	$query = "select * from troubleshooting where ticket_id = '$ticket_number'";
 	$sth = $dbh->prepare($query);
