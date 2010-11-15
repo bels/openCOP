@@ -26,13 +26,13 @@ if($authenticated == 1)
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $ticket_number = $q->param('ticket_number');
 	my $oc = $q->param('oc');
-	my $query = "select * from helpdesk where ticket = '$ticket_number'";
+	my $query = "select * from helpdesk where ticket = ?";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($ticket_number);
 	my $results = $sth->fetchrow_hashref;
-	$query = "select * from notes where ticket_id = '$ticket_number' ORDER BY id DESC";
+	$query = "select * from notes where ticket_id = ? ORDER BY id DESC";
 	$sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($ticket_number);
 	my $notes = $sth->fetchall_arrayref;
 	print "Content-type: text/html\n\n";
 

@@ -47,9 +47,9 @@ sub duplicate_check{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select count(*) from customers where alias = '$args{'alias'}'";
+	my $query = "select count(*) from customers where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query) or die $!;
-	$sth->execute or die $!;
+	$sth->execute($args{'alias'}) or die $!;
 	my $result = $sth->fetchrow_hashref or die $!;
 	
 	return $result->{'count'};
@@ -62,9 +62,35 @@ sub create_user{
 	#my $today = ($year + 1900) . "-" . ($month + 1) . "-" . $day; #replaced with using default values of current_time in postgresql
 	my $password = md5_hex($args{'password'});
 
-	my $query = "insert into customers (alias,password,email, active,first, middle_initial, last, site) values ('$args{'alias'}','$password','$args{'email'}',TRUE,'$args{'first'}','$args{'mi'}','$args{'last'}','$args{'site'}')";
+	my $query = "
+		insert into customers (
+			alias,
+			password,
+			email,
+			first,
+			middle_initial,
+			last,
+			site
+		) values (
+			?,
+			?,
+			?,
+			?,
+			?,
+			?,
+			?
+		);
+	";
 	my $sth = $self->{'dbh'}->prepare($query) or return undef;
-	$sth->execute or return undef;
+	$sth->execute(
+		$args{'alias'},
+		$password,
+		$args{'email'},
+		$args{'first'},
+		$args{'mi'},
+		$args{'last'},
+		$args{'site'}
+	) or return undef;
 
 }
 
@@ -72,9 +98,9 @@ sub delete_user{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "delete from customers where alias = '$args{'alias'}'";
+	my $query = "delete from customers where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'alias'});
 }
 
 sub reset_password{
@@ -83,21 +109,21 @@ sub reset_password{
 	
 	my $password = md5_hex($args{'password'});
 	
-	my $query = "update customers set password = '$password' where name = '$args{'alias'}'";
+	my $query = "update customers set password = ? where name = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($password,$args{'alias'});
 }
 
 sub get_user_info{
 	my $self = shift;
 	my %args = @_;
 
-	my $query = "select * from customers where alias = '$args{'alias'}'";
+	my $query = "select * from customers where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'alias'});
 
 	my $results = $sth->fetchrow_hashref;
-#need to get the number of views, friends, followers? and add it to the results hashref that is passing back.  Need to implement these things first though
+	#need to get the number of views, friends, followers? and add it to the results hashref that is passing back.  Need to implement these things first though
 	return $results;
 }
 
@@ -131,18 +157,18 @@ sub upload_picture{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "update customers set picture = '$args{'picture'}' where alias = '$args{'alias'}'";
+	my $query = "update customers set picture = ? where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'picture'},$args{'alias'});
 }
 
 sub get_user_id{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select id from customers where alias = '$args{'alias'}'";
+	my $query = "select id from customers where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'alias'});
 	my $result = $sth->fetchrow_hashref;
 	
 	return $result->{'id'};

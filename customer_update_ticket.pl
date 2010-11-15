@@ -42,15 +42,15 @@ if($authenticated == 1)
 	my $updater = $id->{'id'};
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
-	my $query = "insert into notes (ticket_id, note) values($tkid,'$new_note')";
+	my $query = "insert into notes (ticket_id, note) values(?,?)";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
-	my $query = "update helpdesk set free_date='$vars->{'free_date'}', free_time='$vars->{'free_time'}' where ticket = '$tkid'";
+	$sth->execute($tkid,$new_note);
+	my $query = "update helpdesk set free_date = ?, free_time = ? where ticket = ?";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
-	$query = "insert into audit (notes,updater,ticket) values('$new_note','$updater','$tkid')";
+	$sth->execute($vars->{'free_date'},$vars->{'free_time'},$tkid);
+	$query = "insert into audit (notes,updater,ticket) values(?,?,?)";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($new_note,$updater,$tkid);
 	
 	print "Content-type: text/html\n\n";
 }	

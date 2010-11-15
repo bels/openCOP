@@ -182,7 +182,7 @@
 					elem.removeClass('jspScrollable');
 					pane.css({
 						'top': 0,
-						'width': paneWidth - originalPaddingTotalWidth
+						'width': container.width() - originalPaddingTotalWidth
 					});
 					removeMousewheel();
 					removeFocusHandler();

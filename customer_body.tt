@@ -1,5 +1,6 @@
 		<h2>[% company_name %] Helpdesk - Input a new ticket</h2>
 		<form id="newticket">
+			<input type="hidden" value="[% site %]" name="site" id="site">
 			<div id="author_div">
 				<h3>General Information</h3>
 [% IF display_author == 1 %]<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2 value="[% author %]" readonly="readonly"><a href="tips.pl?101" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="author" id="author" value="[% author %]">[% END %]
@@ -14,15 +15,15 @@
 				<br />
 				<label for="priority" class="short_label">Priority:</label>
 				<select name="priority" size="1" tabindex="11" id="priority">
-					[% FOREACH priority IN priority_list %]
-					<option [% IF priority == "Normal" %]SELECTED[% END %] value="[% priority %]">[% priority %]</option>
+					[% FOREACH priority IN priority_list.keys %]
+					<option [% IF priority_list.$priority.description == "Normal" %]SELECTED[% END %] value="[% priority_list.$priority.id %]">[% priority_list.$priority.description %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="12" id="section">
-					[% FOREACH section IN section_list %]
-					<option [% IF section == "Helpdesk" %]SELECTED[% END %] value="[% section %]">[% section %]</option>
+					[% FOREACH section IN section_list.keys %]
+					<option [% IF section_list.$section.name == "Helpdesk" %]SELECTED[% END %] value="[% section_list.$section.id %]">[% section_list.$section.name %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?108" class="tooltip" target="_tips">?</a>

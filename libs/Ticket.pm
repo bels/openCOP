@@ -66,14 +66,53 @@ sub render{
 	$config->read_config;
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select name,section_aclgroup.section_id from section_aclgroup join section on section.id = section_aclgroup.section_id where aclgroup_id in (select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}') ) and section_aclgroup.aclread;";
+	my $query = "
+		select
+			name,
+			section_aclgroup.section_id
+		from
+			section_aclgroup
+			join section on section.id = section_aclgroup.section_id
+		where
+			aclgroup_id in (
+				select
+					distinct(aclgroup_id)
+				from
+					alias_aclgroup
+				where (
+					alias_id = ?
+				)
+			)
+		and
+			section_aclgroup.aclread;
+	";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'id'});
 	my $section_list = $sth->fetchall_hashref('section_id');
 
-	$query = "select name,section_aclgroup.section_id from section_aclgroup join section on section.id = section_aclgroup.section_id where aclgroup_id in (select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}') ) and section_aclgroup.aclcreate;";
+	$query = "
+		select
+			name,
+			section_aclgroup.section_id
+		from
+			section_aclgroup
+			join
+				section on section.id = section_aclgroup.section_id
+		where
+			aclgroup_id in (
+				select
+					distinct(aclgroup_id)
+				from
+					alias_aclgroup
+				where (
+					alias_id = ?
+				)
+			)
+		and
+			section_aclgroup.aclcreate;
+	";
 	$sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'id'});
 	my $section_create_list = $sth->fetchall_hashref('section_id');
 
 	$section_list->{'pseudo'} = {
@@ -112,7 +151,9 @@ sub submit{
 	my $self = shift;
 	my %args = @_;
 	my $data = $args{'data'};
-	
+
+	my $query;
+	my $sth;	
 	my $results;
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 
@@ -126,6 +167,11 @@ sub submit{
 		$site = $data->{'site'};
 	} else {
 		$site = "1";
+	}
+
+	if(defined($data->{'section'})){
+	} else {
+		$data->{'section'} = "0";
 	}
 
 	if(defined($data->{'priority'})){
@@ -142,15 +188,103 @@ sub submit{
 	} else {
 		$data->{'free_time'} = "now";
 	}
-
-	my $query = "select bool_or(section_aclgroup.aclcreate) as access from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$data->{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$data->{'submitter'}') );";
-	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	if($args{'customer'}){
+		$query = "
+			select
+				bool_or(section_aclgroup.aclcreate) as access
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = ?
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						aclgroup
+					where
+						name = ?
+				)
+			);
+		";
+		$sth = $dbh->prepare($query);
+		$sth->execute($data->{'section'},"customers");
+	} else {
+		$query = "
+			select
+				bool_or(section_aclgroup.aclcreate) as access
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = ?
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = ?
+				)
+			);
+		";
+		$sth = $dbh->prepare($query);
+		$sth->execute($data->{'section'},$data->{'submitter'});
+	}
 	my $access = $sth->fetchrow_hashref;
 	if($access->{'access'}){
-		$query = "select insert_ticket('$site','$status','$data->{'barcode'}','$data->{'location'}','$data->{'author'}','$data->{'contact'}','$data->{'phone'}','$data->{'troubleshoot'}','$data->{'section'}','$data->{'problem'}','$data->{'priority'}','$data->{'serial'}','$data->{'email'}','$data->{'tech'}','$data->{'notes'}','$data->{'submitter'}','$data->{'free_date'}','$data->{'free_time'}')";
+		$query = "
+			select
+				insert_ticket(
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?
+				);
+		";
 		$sth = $dbh->prepare($query);
-		$sth->execute; #this will return the id of the insert record if we ever find a use for it
+		$sth->execute(
+			$site,
+			$status,
+			$data->{'barcode'},
+			$data->{'location'},
+			$data->{'author'},
+			$data->{'contact'},
+			$data->{'phone'},
+			$data->{'troubleshoot'},
+			$data->{'section'},
+			$data->{'problem'},
+			$data->{'priority'},
+			$data->{'serial'},
+			$data->{'email'},
+			$data->{'tech'},
+			$data->{'notes'},
+			$data->{'submitter'},
+			$data->{'free_date'},
+			$data->{'free_time'}
+		) or die $sth->errstr; #this will return the id of the insert record if we ever find a use for it
 		my $id = $sth->fetchrow_hashref;
 		my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});
 
@@ -173,23 +307,97 @@ sub lookup{
 	my $self = shift;
 	my %args = @_;
 
+	my $query;
 	my $results;
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select bool_or(section_aclgroup.aclread) as read,bool_or(section_aclgroup.aclcomplete) as complete from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$args{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$args{'id'}') );";
+
+	if($args{'customer'}){
+		$query = "
+			select
+				bool_or(section_aclgroup.aclread) as read,
+				bool_or(section_aclgroup.aclcomplete) as complete
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = ?
+			and (
+				section_aclgroup.aclgroup_id = (
+					select
+						aclgroup_id
+					from
+						aclgroup
+					where
+						name = ?
+				)
+			);
+		";
+	} else {
+		$query = "
+			select
+				bool_or(section_aclgroup.aclread) as read,
+				bool_or(section_aclgroup.aclcomplete) as complete
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = ?
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = ?
+				)
+			);
+		";
+	}
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'section'},$args{'id'});
 	my $access = $sth->fetchrow_hashref;
 	if ($access->{'complete'}) {
-		$query = "select * from helpdesk where status not in ('7') and section = '$args{'section'}' order by ticket"; #Currently 7 is the ticket status Completed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+		$query = "
+			select
+				*
+			from
+				helpdesk
+			where
+				status not in ('7')
+			and
+				section = ?
+			order by
+				ticket
+		";
+		#Currently 7 is the ticket status Completed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
-		$sth->execute;
+		$sth->execute(args{'section'});
 		$results = $sth->fetchall_hashref('ticket');
 	
 		return $results;		
 	} elsif($access->{'read'}){
-		$query = "select * from helpdesk where status not in ('6','7') and section = '$args{'section'}' order by ticket"; #Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
+		$query = "
+			select
+				*
+			from
+				helpdesk
+			where
+				status not in ('6','7')
+			and
+				section = ?
+			order by
+				ticket
+		";
+		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
-		$sth->execute;
+		$sth->execute($args{'section'});
 		$results = $sth->fetchall_hashref('ticket');
 	
 		return $results;
@@ -205,9 +413,9 @@ sub details{
 	my %args = @_;
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select * from helpdesk where ticket = '$args{'data'}'";
+	my $query = "select * from helpdesk where ticket = ";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'data'});
 	my $results = $sth->fetchrow_hashref;
 	
 	return $results;
@@ -229,14 +437,45 @@ sub update{
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	
-	$query = "select bool_or(section_aclgroup.aclupdate) as access from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$data->{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$data->{'updater'}') );";
+	$query = "
+		select
+			bool_or(section_aclgroup.aclupdate) as access
+		from
+			section_aclgroup
+			join
+				section on section.id = section_aclgroup.section_id
+			join
+				aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+		where
+			section_aclgroup.section_id = ?
+		and (
+			section_aclgroup.aclgroup_id in (
+				select
+					aclgroup_id
+				from
+					alias_aclgroup
+				where
+					alias_id = ?
+			)
+		);
+	";
 	$sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($data->{'section'},$data->{'updater'});
 	$access = $sth->fetchrow_hashref;
 
-	$query = "select count(ticket) from helpdesk where technician = '$data->{'updater'}' and ticket = '$data->{'ticket_number'}';";
+	$query = "
+		select
+			count(ticket)
+		from
+			helpdesk
+		where
+			technician = ?
+		and
+			ticket = ?
+		;
+	";
 	$sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($data->{'updater'},$data->{'ticket_number'});
 	my $explicit_access = $sth->fetchrow_hashref;
 	foreach($access->{'access'},$explicit_access->{'count'}){
 		unless(defined($_)){
@@ -246,16 +485,65 @@ sub update{
 	$access->{'access'} = ($access->{'access'} | $explicit_access->{'count'});
 
 	if($data->{'status'} == "7"){
-		$query = "select bool_or(section_aclgroup.aclcomplete) as access from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where section_aclgroup.section_id = '$data->{'section'}' and (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$data->{'updater'}') );";
+		$query = "
+			select
+				bool_or(section_aclgroup.aclcomplete) as access
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = ?
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = ?
+				)
+			);
+		";
 		$sth = $dbh->prepare($query);
-		$sth->execute;
+		$sth->execute($data->{'section'},$data->{'updater'});
 		$access = $sth->fetchrow_hashref;
 	}
 
 	if($access->{'access'}){
-		my $query = "select update_ticket($data->{'ticket_number'},'$data->{'site'}','$data->{'location'}','$data->{'contact'}','$data->{'contact_phone'}','$data->{'troubleshooting'}','$data->{'contact_email'}','$data->{'notes'}','$data->{'status'}',$data->{'tech'},$data->{'updater'})";
+		my $query = "
+			select
+				update_ticket(
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?,
+					?
+				);
+		";
 		my $sth = $dbh->prepare($query);
-		$sth->execute; #this will return the id of the insert record if we ever find a use for it
+		$sth->execute(
+			$data->{'ticket_number'},
+			$data->{'site'},
+			$data->{'location'},
+			$data->{'contact'},
+			$data->{'contact_phone'},
+			$data->{'troubleshooting'},
+			$data->{'contact_email'},
+			$data->{'notes'},
+			$data->{'status'},
+			$data->{'tech'},
+			$data->{'updater'}
+		);
+		#this will return the id of the insert record if we ever find a use for it
 		my $results = $sth->fetchrow_hashref;
 
 		return $results;

@@ -2,12 +2,14 @@
 
 use CGI::Carp qw(fatalsToBrowser);;
 use strict;
+use warnings;
 use Template;
 use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
 use CustomerFunctions;
+use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -31,9 +33,25 @@ if($authenticated == 1)
 	my $meta_keywords = "";
 	my $meta_description = "";
 
-	my @site_list = $config->{'sites'};
-	my @priority_list = $config->{'priority'};
-	my @section_list = $config->{'sections'};
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
+
+	my $query;
+	my $sth;
+	
+	$query = "select * from priority;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $priority_list = $sth->fetchall_hashref('id');
+
+	$query = "select * from site where not deleted;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $site_list = $sth->fetchall_hashref('id');
+
+	$query = "select * from section where name = 'Helpdesk';";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $section_list = $sth->fetchall_hashref('id');
 
 	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
@@ -41,10 +59,11 @@ if($authenticated == 1)
 	my $id = $user->get_user_info(alias => $alias);
 	my $submitter = $id->{'first'} . " " . $id->{'last'};
 	my $email = $id->{'email'};
+	my $site = $id->{'site'};
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => @site_list, priority_list => @priority_list, section_list => @section_list, author => $submitter, customer_email => $email, display_author => $config->{'display_author'}, display_barcode => $config->{'display_barcode'}, display_serial => $config->{'display_serial'}, display_location => $config->{'display_location'}, display_free_date => $config->{'display_free_date'}, display_free_time => $config->{'display_free_time'}};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => $site_list, priority_list => $priority_list, section_list => $section_list, author => $submitter, customer_email => $email, display_author => $config->{'display_author'}, display_barcode => $config->{'display_barcode'}, display_serial => $config->{'display_serial'}, display_location => $config->{'display_location'}, display_free_date => $config->{'display_free_date'}, display_free_time => $config->{'display_free_time'}, site => $site};
 	
 	print "Content-type: text/html\n\n";
 

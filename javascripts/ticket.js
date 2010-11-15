@@ -11,14 +11,12 @@ $(document).ready(function(){
 	}
 
 
-	$('.section_header_div').bind('click',function(){
-		$(this).next(".ticket_lookup").toggle();
-	});
-
-	if($(".ticket_lookup").length){
-		$('.ticket_lookup').each(function(){
-			var section = $(this).attr("id");
-			var pane = $(this).jScrollPane({
+	if($('.ticket_lookup').length){
+		$('.section_header_div').bind('click',function(){
+			$(this).next(".ticket_lookup").toggle();
+			var C = $(this).next(".ticket_lookup");
+			var section = C.attr("id");
+			var pane = C.jScrollPane({
 				showArrows: true,
 				maintainPosition: false
 			}).data('jsp');
@@ -30,12 +28,20 @@ $(document).ready(function(){
 				$('.ticket_summary').tablesorter();
 			});
 		});
-		var details_pane = $("#ticket_details").jScrollPane({
-				showArrows:true,
-				maintainPosition: false
+	
+		var section = $('.ticket_lookup').first().attr("id");
+		var pane = $('.ticket_lookup').first().show().jScrollPane({
+			showArrows: true,
+			maintainPosition: false
 		}).data('jsp');
-	}
-	$('.ticket_lookup').first().show();
+		var url = "lookup_ticket.pl?section=" + section;
+		pane.getContentPane().load(url,function(data){
+			pane.reinitialise();
+		});
+		$('.ticket_summary').livequery(function(){
+			$('.ticket_summary').tablesorter();
+		});
+	};
 
 	$("#submit_button").click(function(){
 		validateTicket();		

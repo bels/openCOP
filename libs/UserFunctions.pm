@@ -47,9 +47,9 @@ sub duplicate_check{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select count(*) from users where alias = '$args{'alias'}'";
+	my $query = "select count(*) from users where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query) or die $!;
-	$sth->execute or die $!;
+	$sth->execute($args{'alias'}) or die $!;
 	my $result = $sth->fetchrow_hashref or die $!;
 	
 	return $result->{'count'};
@@ -62,9 +62,28 @@ sub create_user{
 	#my $today = ($year + 1900) . "-" . ($month + 1) . "-" . $day; #replaced with using default values of current_time in postgresql
 	my $password = md5_hex($args{'password'});
 
-	my $query = "insert into users (alias,password,email, active,sections) values ('$args{'alias'}','$password','$args{'email'}',TRUE,'$args{'section'}')";
+	my $query = "
+		insert into users (
+			alias,
+			password,
+			email,
+			active,
+			sections
+		) values (
+			?,
+			?,
+			?,
+			TRUE,
+			?
+		)
+	";
 	my $sth = $self->{'dbh'}->prepare($query) or return undef;
-	$sth->execute or return undef;
+	$sth->execute(
+			$args{'alias'},
+			$password,
+			$args{'email'},
+			$args{'section'}
+	) or return undef;
 
 }
 
@@ -72,9 +91,9 @@ sub delete_user{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "delete from users where alias = '$args{'alias'}'";
+	my $query = "delete from users where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'alias'});
 }
 
 sub reset_password{
@@ -83,21 +102,21 @@ sub reset_password{
 	
 	my $password = md5_hex($args{'password'});
 	
-	my $query = "update users set password = '$password' where name = '$args{'alias'}'";
+	my $query = "update users set password = ? where name = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($password,$args{'alias'});
 }
 
 sub get_user_info{
 	my $self = shift;
 	my %args = @_;
 
-	my $query = "select * from users where alias = '$args{'alias'}'";
+	my $query = "select * from users where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'alias'});
 
 	my $results = $sth->fetchrow_hashref;
-#need to get the number of views, friends, followers? and add it to the results hashref that is passing back.  Need to implement these things first though
+	#need to get the number of views, friends, followers? and add it to the results hashref that is passing back.  Need to implement these things first though
 	return $results;
 }
 
@@ -131,18 +150,18 @@ sub upload_picture{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "update users set picture = '$args{'picture'}' where alias = '$args{'alias'}'";
+	my $query = "update users set picture = ? where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'picture'},$args{'alias'});
 }
 
 sub get_user_id{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select id from users where alias = '$args{'alias'}'";
+	my $query = "select id from users where alias = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'alias'});
 	my $result = $sth->fetchrow_hashref;
 	return $result->{'id'};
 }
@@ -150,9 +169,9 @@ sub get_user_id{
 sub get_groups{
 	my $self = shift;
 	my %args = @_;
-	my $query = "select distinct(alias_aclgroup.aclgroup_id),name from alias_aclgroup join aclgroup on alias_aclgroup.aclgroup_id = aclgroup.id where (alias_id = '$args{'id'}');";
+	my $query = "select distinct(alias_aclgroup.aclgroup_id),name from alias_aclgroup join aclgroup on alias_aclgroup.aclgroup_id = aclgroup.id where (alias_id = ?);";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'id'});
 	my $group = $sth->fetchall_hashref('aclgroup_id');
 	return $group;
 }
@@ -170,14 +189,14 @@ sub get_permissions{
 	}
 	my $permissions = {};
 
-	my $query = "select distinct(aclgroup_id) from alias_aclgroup where (alias_id = '$args{'id'}');";
+	my $query = "select distinct(aclgroup_id) from alias_aclgroup where (alias_id = ?);";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'id'});
 	my $group = $sth->fetchall_hashref('aclgroup_id');
 	foreach (keys %$group){
-		$query = "select * from section_aclgroup where aclgroup_id = '$_';";
+		$query = "select * from section_aclgroup where aclgroup_id = ?;";
 		$sth = $self->{'dbh'}->prepare($query);
-		$sth->execute;
+		$sth->execute($_);
 		my $results = $sth->fetchall_hashref('id');
 		foreach (keys %$results){
 			$permissions->{$results->{$_}->{'section_id'}} = {

@@ -40,13 +40,15 @@ if($authenticated == 1)
 		$user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 		$data->{'submitter'} = $user->get_user_id(alias => $alias);
 		$data->{'notes'} = $q->param('problem');
-		$data->{'tech'} = "undefined";
+		$data->{'tech'} = "1";
+		$data->{'customer'} = 1;
 	}
 	else
 	{
 		$user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 		$data->{'submitter'} = $user->get_user_id(alias => $alias);
 		$data->{'notes'} = "";
+		$data->{'customer'} = 0;
 	}
 
 	if(defined($data->{'tech'})){

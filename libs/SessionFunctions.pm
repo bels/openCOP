@@ -37,7 +37,7 @@ sub new{
 	my %args = @_;
 	
 	my $self = bless({},$package);
-	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}) or die "SessionFunctions::new: Database connection error: ".$DBI::errstr;
+	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'},{ pg_enable_utf8 => 1 }) or die "SessionFunctions::new: Database connection error: ".$DBI::errstr;
 	
 	return $self;
 }
@@ -48,9 +48,9 @@ sub authenticate_user{
 	
 	my $password = md5_hex($args{'password'});
 	
-	my $query = "select count(*) from $args{'users_table'} where alias = '$args{'alias'}' and password = '$password'";
+	my $query = "select count(*) from $args{'users_table'} where alias = ? and password = ?";
 	my $sth = $self->{'dbh'}->prepare($query) or die "Preparing the query for authenticate_user in SessionFunctions";
-	$sth->execute or die "Executing the query for authenticate_user in SessionFunctions";
+	$sth->execute($args{'alias'},$password) or die "Executing the query for authenticate_user in SessionFunctions";
 	my $result = $sth->fetchrow_hashref or die "Fetching the results for authenticate_user in SessionFunctions";
 	
 	return $result->{'count'};
@@ -65,18 +65,18 @@ sub create_session_id{
 	srand(time ^ $$ ^ unpack "%L*", `ps axww | gzip`);
 	my $random_number = int(rand(10000));
 
-	my $query = "select count(*) from $args{'auth_table'} where id = $random_number";
+	my $query = "select count(*) from $args{'auth_table'} where id = ?";
 	my $sth = $self->{'dbh'}->prepare($query)  or die "Preparing the query for create_session_id in SessionFunctions";
-	$sth->execute  or die "Executing the query for create_session_id in SessionFunctions";
+	$sth->execute($random_number) or die "Executing the query for create_session_id in SessionFunctions";
 	my $result = $sth->fetchrow_hashref  or die "Fetching the results for create_session_id in SessionFunctions";
 
 	if($result->{'count'} == 0)
 	{
 		my($sec,$min,$hour,$day,$month,$year) = (localtime)[0,1,2,3,4,5];
 		my $today = ($year + 1900) . "-" . ($month + 1) . "-" . $day . " $hour:$min:$sec";
-		$query = "insert into $args{'auth_table'} (id,user_id,session_key,created) values($random_number,'$args{'user_id'}','$args{'session_key'}','$today')";
+		$query = "insert into $args{'auth_table'} (id,user_id,session_key,created) values(?,?,?,?)";
 		$sth= $self->{'dbh'}->prepare($query)  or die "Preparing the second query for create_session_id in SessionFunctions";
-		$sth->execute  or die "Executing the second query for create_session_id in SessionFunctions";
+		$sth->execute($random_number,$args{'user_id'},$args{'session_key'},$today) or die "Executing the second query for create_session_id in SessionFunctions";
 		return $random_number;
 	}
 	else
@@ -89,9 +89,9 @@ sub is_logged_in{
 	my $self = shift;
 	my %args = @_;
 
-	my $query = "select count(*) from $args{'auth_table'} where id = $args{'id'} and session_key = '$args{'session_key'}'";
+	my $query = "select count(*) from $args{'auth_table'} where id = ? and session_key = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'id'},$args{'session_key'});
 	my $result = $sth->fetchrow_hashref;
 	
 	if($result->{'count'} > 1 || $result->{'count'} < 0)
@@ -108,9 +108,9 @@ sub get_name_for_session{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select user_id from $args{'auth_table'} where id = $args{'id'}";
+	my $query = "select user_id from $args{'auth_table'} where id = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'id'});
 	my $result = $sth->fetchrow_hashref;
 	
 	return $result->{'user_id'};
@@ -120,18 +120,18 @@ sub logout{
 	my $self = shift;
 	my %args =@_;
 	
-	my $query = "delete from $args{'auth_table'} where id = $args{'id'}";
+	my $query = "delete from $args{'auth_table'} where id = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($args{'id'});
 }
 
 sub add_visitor
 {
 	my $self = shift;
 	my $ip = shift;
-	my $query = "insert into visitors (ip) values('$ip')";
+	my $query = "insert into visitors (ip) values(?)";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute;
+	$sth->execute($ip);
 }
 1;
 __END__

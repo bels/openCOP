@@ -46,7 +46,7 @@ if($authenticated == 1)
 	my $section_list = $sth->fetchall_hashref('id');
 
 	unless($data->{'section'} eq "pseudo"){
-		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id) or die "What?"; #need to pass in hashref named data
+		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id, customer => "0") or die "What?"; #need to pass in hashref named data
 	} else {
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$query = "select * from helpdesk where status not in ('6','7') and technician = '$id' and section not in (select section_id from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$id') and aclread) ) order by ticket";
