@@ -188,6 +188,13 @@ sub submit{
 	} else {
 		$data->{'free_time'} = "now";
 	}
+
+	if($data->{'tech'}){
+	} else {
+		$data->{'tech'} = "1";
+	}
+
+
 	if($args{'customer'}){
 		$query = "
 			select
@@ -378,7 +385,7 @@ sub lookup{
 		";
 		#Currently 7 is the ticket status Completed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
-		$sth->execute(args{'section'});
+		$sth->execute($args{'section'});
 		$results = $sth->fetchall_hashref('ticket');
 	
 		return $results;		
@@ -413,7 +420,7 @@ sub details{
 	my %args = @_;
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select * from helpdesk where ticket = ";
+	my $query = "select * from helpdesk where ticket = ?";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($args{'data'});
 	my $results = $sth->fetchrow_hashref;
