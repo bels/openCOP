@@ -376,6 +376,8 @@ sub lookup{
 				*
 			from
 				helpdesk
+				join
+					section on section.id = helpdesk.section
 			where
 				status not in ('7')
 			and
@@ -395,6 +397,8 @@ sub lookup{
 				*
 			from
 				helpdesk
+				join
+					section on section.id = helpdesk.section
 			where
 				status not in ('6','7')
 			and
@@ -518,11 +522,19 @@ sub update{
 		$sth->execute($data->{'section'},$data->{'updater'});
 		$access = $sth->fetchrow_hashref;
 	}
-
+	my $closed_by;
+	my $completed_by;
 	if($access->{'access'}){
+		if($data->{'status'} == "6"){
+			$closed_by = $data->{'updater'};
+		} elsif($data->{'status'} == "7"){
+			$completed_by = $data->{'updater'};
+		}
 		my $query = "
 			select
 				update_ticket(
+					?,
+					?,
 					?,
 					?,
 					?,
@@ -548,11 +560,12 @@ sub update{
 			$data->{'notes'},
 			$data->{'status'},
 			$data->{'tech'},
-			$data->{'updater'}
+			$data->{'updater'},
+			$closed_by,
+			$completed_by
 		);
 		#this will return the id of the insert record if we ever find a use for it
 		my $results = $sth->fetchrow_hashref;
-
 		return $results;
 	} else {
 		return $results = {

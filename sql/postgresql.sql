@@ -1,7 +1,7 @@
 -- This will remove any data in the database.  I would not recommend using this to recreate tables that got "messed up".  This file should only be used to do an initial creation of the database or to wipe everything and start over.
 
 DROP TABLE IF EXISTS site_level;
-CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE(type));
+CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE);
 
 DROP TABLE IF EXISTS company;
 CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN);
@@ -19,13 +19,13 @@ DROP TABLE IF EXISTS priority;
 CREATE TABLE priority (id SERIAL PRIMARY KEY, severity INTEGER, description varchar(255));
 
 DROP TABLE IF EXISTS users;
-CREATE TABLE users (id SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN);
+CREATE TABLE users (id SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN DEFAULT true);
 
 DROP TABLE IF EXISTS ticket_status;
 CREATE TABLE ticket_status (id BIGSERIAL PRIMARY KEY, name VARCHAR(255));
 
 DROP TABLE IF EXISTS helpdesk;
-CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id) DEFAULT '1', location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT DEFAULT '1', problem TEXT, priority INT  DEFAULT '2', serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER DEFAULT '1', submitter INTEGER, free_date DATE, free_time TIME);
+CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id) DEFAULT '1', location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT DEFAULT '1', problem TEXT, priority INT  DEFAULT '2', serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER DEFAULT '1', submitter INTEGER, free_date DATE, free_time TIME, closed_by VARCHAR(255) DEFAULT null, completed_by VARCHAR(255) DEFAULT null);
 
 DROP TABLE IF EXISTS troubleshooting;
 CREATE TABLE troubleshooting(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
@@ -36,8 +36,30 @@ CREATE TABLE notes(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(
 DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20));
 
+DROP TABLE IF EXISTS reports;
+CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, report TEXT, group INTEGER, owner INTEGER);
+
 DROP TABLE IF EXISTS audit;
-CREATE TABLE audit (record BIGSERIAL PRIMARY KEY, status INTEGER, site INTEGER, location TEXT, updated TIMESTAMP DEFAULT current_timestamp, contact VARCHAR(255), notes TEXT, section INT, priority INT, tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER, closing_tech INTEGER, updater INTEGER, ticket INTEGER);
+CREATE TABLE audit (
+	record BIGSERIAL PRIMARY KEY,
+	status INTEGER,
+	site INTEGER,
+	location TEXT,
+	updated TIMESTAMP DEFAULT current_timestamp,
+	contact VARCHAR(255),
+	notes TEXT,
+	section INT,
+	priority INT,
+	tech VARCHAR(255),
+	contact_email VARCHAR(255),
+	technician INTEGER,
+	updater INTEGER,
+	ticket INTEGER,
+	closed_by VARCHAR(255) DEFAULT NULL,
+	completed_by VARCHAR(255) DEFAULT NULL,
+	closed_date TIMESTAMP,
+	completed_date TIMESTAMP
+);
 
 DROP TABLE IF EXISTS template CASCADE;
 DROP TABLE IF EXISTS property CASCADE; 
@@ -71,12 +93,6 @@ CREATE TABLE alias_aclgroup (id BIGSERIAL PRIMARY KEY, alias_id INTEGER referenc
 
 DROP TABLE IF EXISTS section_aclgroup;
 CREATE TABLE section_aclgroup (id BIGSERIAL PRIMARY KEY, aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, aclread BOOLEAN DEFAULT false, aclcreate BOOLEAN DEFAULT false, aclupdate BOOLEAN DEFAULT false, aclcomplete BOOLEAN DEFAULT false);
-
--- Default groups
-INSERT INTO aclgroup(name) values('customers');
-
--- Default permissions
-INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
 
 -- Default data templates
 INSERT INTO template(template) values('server');
@@ -135,7 +151,7 @@ DROP TABLE IF EXISTS customers;
 CREATE TABLE customers(id SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN DEFAULT true, site INTEGER);
 
 -- Adding admin user
-INSERT INTO users(alias,email,password,active,sections) values('admin','admin@localhost',MD5('admin'),true,'Helpdesk');
+INSERT INTO users(alias,email,password) values('admin','admin@localhost',MD5('admin'));
 -- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
@@ -154,6 +170,13 @@ INSERT INTO ticket_status (name) values ('Completed');
 INSERT INTO site_level(type) values ('test');
 INSERT INTO site (level,name) values (1,'Test Site');
 
+-- Default groups
+INSERT INTO aclgroup(name) values('customers');
+
+-- Default permissions
+INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
+
+-
 CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
 	last_id INTEGER;
@@ -211,12 +234,29 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION update_ticket(ticket_number BIGINT, site_text text, location_val TEXT,  contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, contact_email_val VARCHAR(255), notes_val TEXT, status_val INTEGER, tech_val INTEGER, updater_val INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION update_ticket(
+	ticket_number BIGINT,
+	site_text text,
+	location_val TEXT,
+	contact_val VARCHAR(255),
+	contact_phone_val VARCHAR(255),
+	troubleshot_val TEXT,
+	contact_email_val VARCHAR(255),
+	notes_val TEXT,
+	status_val INTEGER,
+	tech_val INTEGER,
+	updater_val INTEGER,
+	closed_by_val INTEGER,
+	completed_by_val INTEGER
+) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
 	site_val INTEGER;
 	section_val INTEGER;
 	last_id INTEGER;
+	closed_by_text VARCHAR(255);
+	completed_by_text VARCHAR(255);
+	last_audit INTEGER;
 BEGIN
 	--Step 1. Translate priority, site, status, section into values from the other tables
 	SELECT INTO site_val id FROM site WHERE name = site_text;
@@ -228,8 +268,47 @@ BEGIN
 	update helpdesk set site = site_val where ticket = ticket_number;
 	update helpdesk set location = location_val where ticket = ticket_number;
 	update helpdesk set status = status_val where ticket = ticket_number;
-	
-	INSERT INTO audit (status, site, location, contact, section, priority, contact_email, technician, notes, updater, ticket) values (status_val, site_val, location_val, contact_val, section_val, priority_val, contact_email_val, tech_val, notes_val, updater_val, ticket_number);
+	update helpdesk set closed_by = '' where ticket = ticket_number;
+	update helpdesk set completed_by = '' where ticket = ticket_number;
+
+	INSERT INTO audit (
+		status,
+		site,
+		location,
+		contact,
+		section,
+		priority,
+		contact_email,
+		technician,
+		notes,
+		updater,
+		ticket
+	) values (
+		status_val,
+		site_val,
+		location_val,
+		contact_val,
+		section_val,
+		priority_val,
+		contact_email_val,
+		tech_val,
+		notes_val,
+		updater_val,
+		ticket_number
+	);
+
+	select into last_audit last_value from audit_record_seq;
+	IF closed_by_val IS NOT NULL THEN
+		select into closed_by_text alias from users where id = closed_by_val;
+		update helpdesk set closed_by = closed_by_text where ticket = ticket_number;
+		update audit set closed_by = closed_by_text, closed_date = current_timestamp where record = last_audit;
+	END IF;
+
+	IF completed_by_val IS NOT NULL THEN
+		select into completed_by_text alias from users where id = completed_by_val;
+		update helpdesk set completed_by = completed_by_text where ticket = ticket_number;
+		update audit set completed_by = completed_by_text, completed_date = current_timestamp where record = last_audit;
+	END IF;
 
 	IF troubleshot_val NOT LIKE '' THEN
 		insert into troubleshooting (ticket_id,troubleshooting) values(ticket_number,troubleshot_val);
@@ -241,6 +320,43 @@ BEGIN
 	
 	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
 	RETURN last_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION report_ticket_closure(
+	alias_val VARCHAR(255), start_date_val TIMESTAMP, end_date_val TIMESTAMP
+) RETURNS INTEGER AS $$
+DECLARE
+	ticket_count INTEGER;
+BEGIN
+	select into ticket_count 
+		count(ticket)
+	from (
+		select
+			ticket
+		from
+			audit
+		where
+			ticket in (
+				select
+					helpdesk.ticket
+				from
+					audit
+					join
+						helpdesk on audit.ticket = helpdesk.ticket
+				where (
+					helpdesk.closed_by = alias_val
+				) and 
+					audit.status in ('6','7')
+				group by
+					helpdesk.ticket
+			) and (
+				updated between start_date_val and end_date_val
+			)
+		group by ticket
+	) as count;
+
+	return ticket_count;
 END;
 $$ LANGUAGE plpgsql;
 

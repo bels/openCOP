@@ -1,0 +1,8 @@
+	<div>
+		<span id="date_select_header" name="a b">Choose a date range:</span>
+		<div>
+			<span id="1day">Get statistics from today</span>
+			<span id="7day">Get statistics the last 7 days </span>
+			<span id="30day">Get statistics the last 30 days </span>
+		</div>
+	</div>

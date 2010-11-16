@@ -15,7 +15,7 @@
 				<a href="#" class="sub_link">Work Order Queue</a>
 			</span>
 			<span id="sub_report_link" class="hidden_menu sub">
-				<a href="#" class="sub_link">Ticket Closure</a>
+				<a href="report_ticket_closure.pl?init=1" class="sub_link">Ticket Closure</a>
 				<a href="#" class="sub_link">Ticket Trending</a>
 				<a href="#" class="sub_link">Inventory Report</a>
 				<a href="#" class="sub_link">P.O.</a>

@@ -1,0 +1,101 @@
+#query_builder{
+	margin-left: 25px;
+	margin-top: 25px;
+}
+
+#query_builder div{
+	min-width: 200px;
+}
+
+#query_builder select{
+	display: block;
+	min-width: 200px;
+	margin-left: 4px;
+}
+
+span.label{
+	float:left;
+	width: 50px;
+	white-space: pre-wrap;
+}
+
+.column{
+	float:left;
+}
+
+.table{
+	float:left;
+}
+
+button{
+	float:left;
+	margin-left: 4px;
+}
+
+#query_builder{
+	width: 100%;
+	height: 100%;
+	min-height: 600px;
+}
+
+#select_div{
+	width: 100%;
+	height: 25px;
+}
+
+#from_div{
+	width: 100%;
+	height: 25px;
+}
+
+#join_div_parent{
+	width: 100%;
+	min-height: 25px;
+}
+
+.join_div{
+	width: 100%;
+	height: 25px;
+	text-align: center;
+}
+
+.join_div_element{
+	float: left;
+}
+
+.where{
+	text-align: center;
+	width: 100%;
+	height: 25px;
+}
+
+select.operator{
+	float: left;
+}
+
+select.all_columns{
+	float: left;
+}
+
+input.where_input{
+	float: left;
+	margin-left: 4px;
+}
+
+span.fl{
+	float: left;
+	width: 50px;
+	white-space: pre-wrap;
+}
+
+.other_div{
+	float: left;
+	width: 100%;
+	min-height: 25px;
+}
+
+#submit_div{
+	float: left;
+	width: 100%;
+	height: 25px;
+}
