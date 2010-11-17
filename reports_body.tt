@@ -2,7 +2,7 @@
 		<div id="select_div">
 					<span class="label">Select</span>
 					<div>
-						<select id="100" class="column"></select>
+						<select id="100" name="100" class="column"></select>
 					</div>
 					<button id="200" class="add_column">+</button>
 					<button id="201" class="del_column">-</button>
@@ -10,7 +10,7 @@
 		<div id="from_div">
 					<span class="label">From</span>
 					<div>
-						<select id="300" class="table">
+						<select id="300" name="300" class="table">
 						</select>
 					</div>
 					<button id="202" class="add_table">+</button>
@@ -21,7 +21,7 @@
 			<button id="204" class="add_where">Add Where</button>
 		</div>
 		<div class="other_div">
-			<select id="500" class="add_other">
+			<select id="1000" name="1000" class="add_other">
 				<option value=""></option>
 				<option value="order by">order by</option>
 				<option value="limit">limit</option>

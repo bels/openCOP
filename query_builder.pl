@@ -107,21 +107,24 @@ if($authenticated == 1)
 	} elsif($vars->{'mode'} eq "first_join") {
 		my $error = 0;
 		my $table = $vars->{'table'};
+		my $column_data;
 
-		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-		my $query = qq(
-			select * from $table;
-		);
-		my $sth = $dbh->prepare($query);
-		$sth->execute;
-		my $column = $sth->fetchrow_hashref;
-
-		my $column_data = qq(
-		);
-		foreach (keys %$column){
-			$column_data .= qq(
-				<option value="$table.$_">$table.$_</option>
+		if(defined($table)){
+			my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+			my $query = qq(
+				select * from $table;
 			);
+			my $sth = $dbh->prepare($query);
+			$sth->execute;
+			my $column = $sth->fetchrow_hashref;
+	
+			$column_data = qq(
+			);
+			foreach (keys %$column){
+				$column_data .= qq(
+					<option value="$table.$_">$table.$_</option>
+				);
+			}
 		}
 		print "Content-type: text/html\n\n";
 		if($error){

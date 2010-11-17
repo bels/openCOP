@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20));
 
 DROP TABLE IF EXISTS reports;
-CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, report TEXT, group INTEGER, owner INTEGER);
+CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
 
 DROP TABLE IF EXISTS audit;
 CREATE TABLE audit (
@@ -410,3 +410,5 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON alias_aclgroup TO helpdesk;
 GRANT SELECT, UPDATE ON alias_aclgroup_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON section_aclgroup TO helpdesk;
 GRANT SELECT, UPDATE ON section_aclgroup_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON reports TO helpdesk;
+GRANT SELECT, UPDATE ON reports_id_seq TO helpdesk;
