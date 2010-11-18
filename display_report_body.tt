@@ -1,0 +1,20 @@
+	<div id="top">
+		<table id="res_table">
+			<thead>
+				<tr>
+				[% FOREACH column IN columns.keys %]
+					<th>[% column %]</th>
+				[% END %]
+				</tr>
+			</thead>
+			<tbody>
+			[% FOREACH item IN sorted_hash %]
+				<tr>
+				[% FOREACH column IN columns.keys %]
+					<td>[% results.$item.$column %]</td>
+				[% END %]
+				</tr>
+			[% END %]
+			</tbody>
+		</table>
+	</div>

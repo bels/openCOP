@@ -49,9 +49,45 @@ if($authenticated == 1)
 		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id, customer => "0") or die "What?"; #need to pass in hashref named data
 	} else {
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
-		$query = "select * from helpdesk where status not in ('6','7') and technician = '$id' and section not in (select section_id from section_aclgroup join section on section.id = section_aclgroup.section_id join aclgroup on aclgroup.id = section_aclgroup.aclgroup_id where (section_aclgroup.aclgroup_id in (select aclgroup_id from alias_aclgroup where alias_id = '$id') and aclread) ) order by ticket";
+		$query = "
+			select
+				*
+			from
+				helpdesk
+				join
+					section on section.id = helpdesk.section
+			where
+				status not in ('6','7')
+			and
+				technician = ?
+			and
+				section not in (
+					select
+						section_id
+					from
+						section_aclgroup
+						join
+							section on section.id = section_aclgroup.section_id
+						join
+							aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+					where (
+						section_aclgroup.aclgroup_id in (
+							select 
+								aclgroup_id
+							from
+								alias_aclgroup
+							where
+								alias_id = ?
+						)
+						and
+							aclread
+					)
+				)
+			order by ticket;
+			
+		";
 		$sth = $dbh->prepare($query);
-		$sth->execute;
+		$sth->execute($id,$id);
 		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
 	}
 	if($section->{$data->{'section'}}->{'error'}) {
@@ -67,8 +103,9 @@ if($authenticated == 1)
 					<tr class="header_row">
 						<th class="ticket_number header_row_item">Ticket Number</th>
 						<th class="ticket_status header_row_item">Ticket Status</th>
-						<th class="ticket_contact header_row_item">Ticket Priority</th>
+						<th class="ticket_priority header_row_item">Ticket Priority</th>
 						<th class="ticket_contact header_row_item">Ticket Contact</th>
+						<th class="ticket_section header_row_item">Section</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -81,6 +118,7 @@ if($authenticated == 1)
 						<td class="row_ticket_status">$ticket_statuses{$section->{$data->{'section'}}->{$element}->{'status'}}</td>
 						<td class="row_ticket_priority">$priorities{$section->{$data->{'section'}}->{$element}->{'priority'}}</td>
 						<td class="row_ticket_contact">$section->{$data->{'section'}}->{$element}->{'contact'}</td>
+						<td class="row_ticket_section">$section->{$data->{'section'}}->{$element}->{'name'}</td>
 					</tr>
 			);
 		}

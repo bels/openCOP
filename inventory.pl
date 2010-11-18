@@ -65,7 +65,6 @@ if($authenticated == 1)
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
-
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});
 }
