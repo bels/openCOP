@@ -1,4 +1,16 @@
 $(document).ready(function(){
+	var tabs;
+	var tickets;
+	if($('#tabs').length){
+		tabs = 1;
+	} else {
+		tabs = 0;
+	}
+	if($('.ticket_lookup').length){
+		tickets = 1;
+	} else {
+		tickets = 0;
+	}
 	$.ajaxSetup({
 		cache: false
 	});
@@ -21,15 +33,24 @@ $(document).ready(function(){
 	$("ul.topnav li").hoverIntent(config);
 	
 	function showMenu(){
-		$("#tabs").addClass("lower");
+		if(tabs){
+			$("#tabs").addClass("lower");
+		}
+		if(tickets){
+			$(".jspContainer").addClass("lower");
+		}
 		$(this).find("ul.subnav").slideDown('fast').show();
 	}
 	
 	function hideMenu(){
-		$(this).find("ul.subnav").slideUp('fast',function(){$("#tabs").removeClass("lower");});
+		$(this).find("ul.subnav").slideUp('fast',function(){
+			$(".jspContainer").removeClass("lower");
+			$("#tabs").removeClass("lower");
+		});
 	}
-	
-	$("#tabs").tabs();
+	if(tabs){
+		$("#tabs").tabs();
+	}
 });
 
 function logout(){

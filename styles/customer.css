@@ -223,3 +223,7 @@ h3{
 	margin-right: auto;
 	margin-bottom: 5px;
 }
+
+.note{
+	white-space: pre;
+}

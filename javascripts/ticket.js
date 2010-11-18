@@ -50,6 +50,7 @@ $(document).ready(function(){
 			$.blockUI({message: "Submitting"});
 			var url = "submit_ticket.pl";
 			var the_data = $("#newticket").serialize();
+			alert(the_data);
 			$.ajax({
 				type: 'POST',
 				url: url,

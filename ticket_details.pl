@@ -112,7 +112,7 @@ if($authenticated == 1)
 		<br>
 		<label for="problem">Problem:</label><span id="problem" name="problem">$results->{'problem'}</span><br>
 		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting"></textarea><br>
-		<label for="past_troubleshoot">Past Troubleshooting:</label><span id="past_troubleshoot" name="past_troubleshoot">
+		<label for="past_troubleshoot">Past Troubleshooting:</label><span id="past_troubleshoot" name="past_troubleshoot"><br>
 	);
 	
 	my @hash_order = keys %$troubleshooting;

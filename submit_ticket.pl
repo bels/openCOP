@@ -32,6 +32,7 @@ if($authenticated == 1)
 	my $id;
 	my $data = $q->Vars;
 	my $type = $q->url_param('type');
+	warn $data->{'problem'};
 
 	$alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
