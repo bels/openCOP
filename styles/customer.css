@@ -136,7 +136,7 @@ input.error{
 }
 
 #add_customer_div{
-	height: 320px;
+	height: 340px;
 	width: 375px;
 	color: white;
 	margin-right: auto;
@@ -212,4 +212,14 @@ h3{
 #ticket_group a{
 	color: white;
 	text-decoration: none;
+}
+
+#title{
+	display: block;
+	width: 195px;
+	font-size: 1.1em;
+	font-weight: bold;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
 }
