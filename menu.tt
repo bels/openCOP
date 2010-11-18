@@ -13,13 +13,7 @@
 				</li>
 				<li><a href=#>Reports</a>
 					<ul class="subnav">
-						<li><a href="#">Ticket Closure</a></li>
-						<li><a href="#">Ticket Trending</a></li>
-						<li><a href="#">Inventory Report</a></li>
-						<li><a href="#">P.O.</a></li>
-						<li><a href="#">Grant</a></li>
-						<li><a href="#">Vendor</a></li>
-						<li><a href="#">Customer Satisfaction</a></li>
+						<li><a href="reports.pl">Query Builder</a></li>
 					</ul>
 				</li>
 				<li><a href=#>Inventory</a>

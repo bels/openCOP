@@ -28,7 +28,7 @@ if($authenticated == 1)
 {
 	my @styles = ("styles/layout.css","styles/reports.css");
 	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.livequery.js","javascripts/jquery.json-2.2.js","javascripts/main.js","javascripts/reports.js");
-	my $title = $config->{'company_name'} . " - Custom Report";
+	my $title = $config->{'company_name'} . " - Query Builder";
 	my $file = "reports.tt";
 
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}};
