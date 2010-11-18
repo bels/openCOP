@@ -82,7 +82,7 @@ if($authenticated == 1)
 		}
 		print qq(<div class="note_div $zebra"><span class="note_date">);
 		print substr(@$note[3],0,19);
-		print qq(: </span><span class="note">@$note[2]</span></div>);
+		print qq(:<br></span><span class="note">@$note[2]</span></div>);
 	}
 	print "\t\t</div>";
 }	

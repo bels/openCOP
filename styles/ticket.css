@@ -1,3 +1,7 @@
+.lower{
+	z-index: -1;
+}
+
 .short_label{
 	display: inline-block;
 	width: 90px;
@@ -109,4 +113,12 @@ td{
 	text-align: justify;
 	font-weight: bold;
 	font-size: 1.1em;
+}
+
+#past_troubleshoot{
+	white-space: pre;
+}
+
+#problem{
+	white-space: pre;
 }

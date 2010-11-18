@@ -213,3 +213,7 @@ h3{
 	color: white;
 	text-decoration: none;
 }
+
+.note{
+	white-space: pre;
+}
