@@ -10,8 +10,6 @@ use SessionFunctions;
 use UserFunctions;
 use DBI;
 use JSON;
-use YAML;
-
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -37,12 +35,6 @@ if($authenticated == 1)
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query;
 	my @prepare_array;
-#	$query = qq(
-#		select * from @{$object->{'tables'}}[0]->{'value'};
-#	);
-#	my $sth = $dbh->prepare($query);
-#	$sth->execute;
-#	my $column = $sth->fetchrow_hashref;
 
 	$query = "select ";
 	for(my $i = 0; $i < @{$object->{'select_columns'}}; $i++){
@@ -56,7 +48,6 @@ if($authenticated == 1)
 
 	$query .= "from @{$object->{'tables'}}[0]->{'value'} ";
 
-	YAML::DumpFile("json.yaml",$object);
 	if(defined(@{$object->{'joins'}}[0])){
 		for(my $i = 1; $i < @{$object->{'tables'}}; $i++){
 			$query .= "join @{$object->{'tables'}}[$i]->{'value'} on @{$object->{'joins'}}[0]->{'value'} = @{$object->{'joins'}}[1]->{'value'} ";
@@ -66,6 +57,9 @@ if($authenticated == 1)
 	}
 
 	if(defined(@{$object->{'where'}}[0])){
+		if(@{$object->{'where'}}[0]->{'value'} eq "and" || @{$object->{'where'}}[0]->{'value'} eq "or"){
+			shift(@{$object->{'where'}});
+		}
 		$query .= "where (@{$object->{'where'}}[0]->{'value'} @{$object->{'where'}}[1]->{'value'} ?) ";
 		push(@prepare_array,@{$object->{'where'}}[2]->{'value'});
 		for(my $i = 0; $i <= 2; $i++){
@@ -89,10 +83,6 @@ if($authenticated == 1)
 	$query .= ";";
 	warn $query;
 
-#	for(@sorted_hash){
-#		warn $_;
-#	}
-
 	if($vars->{'mode'} eq "save"){
 		print "Content-type: text/html\n\n";
 		my $aclgroup;
@@ -108,6 +98,7 @@ if($authenticated == 1)
 		$sth->execute(@prepare_array);
 		my $results = $sth->fetchall_hashref(1);
 		my @sorted_hash;
+		my $columns = {};
 		if(defined(@{$object->{'other'}}[0])){
 			if(@{$object->{'other'}}[0]->{'value'} eq "asc"){
 				@sorted_hash = sort {$a <=> $b} (keys %$results);
@@ -115,8 +106,26 @@ if($authenticated == 1)
 				@sorted_hash = sort {$b <=> $a} (keys %$results);
 			}
 		} else {
-		@sorted_hash = sort {$a <=> $b} (keys %$results);
-	}
+			@sorted_hash = sort {$a <=> $b} (keys %$results);
+		}
+
+		foreach my $key (keys %$results){
+			foreach my $pkey (keys %{$results->{$key}}){
+				$columns->{$pkey} = $pkey;
+			}
+		}
+
+		my @styles = ("styles/jquery.jscrollpane.css","styles/layout.css","styles/display_report.css");
+		my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.livequery.js","javascripts/jquery.json-2.2.js","javascripts/display_report.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js");
+		my $title = $config->{'company_name'} . " - Show Report";
+		my $file = "display_report.tt";
+
+		my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, sorted_hash => \@sorted_hash, results => $results, columns => $columns};
+	
+#		print "Content-type: text/html\n\n";
+	
+		my $template = Template->new();
+		$template->process($file,$vars) || die $template->error();
 	} else {
 		warn "What? How did you even get here?";
 	}

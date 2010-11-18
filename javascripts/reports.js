@@ -559,8 +559,9 @@ $(document).ready(function(){
 			type: 'POST',
 			url: 'build_sql.pl',
 			data: {mode: mode, data: $.toJSON(h)},
-			success: function(){
-				alert($.toJSON(h));
+			success: function(data){
+				document.write(data);
+				document.close();
 			},
 			error: function(){
 				alert("Error");

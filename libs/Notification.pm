@@ -50,6 +50,7 @@ sub new{
 }
 
 sub by_email{
+	return 1;
 	my $self = shift;
 	my %args = @_;
 	
