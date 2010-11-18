@@ -77,10 +77,6 @@ input{
 	width: 100%;
 }
 
-.ticket_link{
-	margin-left: 60px;
-}
-
 #right label{
 	width: 180px;
 }
@@ -208,9 +204,11 @@ h3{
 	border-radius: 15px;
 	-moz-border-radius: 15px;
 	width: 100px;
-	padding: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	margin-left: auto;
 	margin-right: auto;
+	text-align: center;
 }
 
 #ticket_group a{
