@@ -1,10 +1,11 @@
 ---
 auth_table: auth
+backend: ldap
+base_dn: 'dc=belfield,dc=us'
 company_domain: test.com
 company_name: Test company
 config_file: config.yml
 config_type: YAML
-date_format: '%W, %M %m, %Y'
 db_name: ccboehd
 db_password: helpdesk
 db_type: Pg
@@ -16,12 +17,15 @@ display_free_time: 1
 display_location: 1
 display_serial: 1
 index_page: index.pl
+ldap_port: 389
+ldap_server: daphne
+ldap_service_account: cn=admin,dc=belfield,dc=us
+ldap_service_password: justin
 logo_image: images/logo.jpg
 mail_server: localhost
 support_email: support@company.com
 support_phone_number: 000-000-0000
-template_dir: /usr/local/www/helpdesk/templates
 ticket_mail_account: newticket
 ticket_mail_password: password
 users_table: users
-version: .5
+version: .9

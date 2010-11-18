@@ -1,7 +1,7 @@
 -- This will remove any data in the database.  I would not recommend using this to recreate tables that got "messed up".  This file should only be used to do an initial creation of the database or to wipe everything and start over.
 
 DROP TABLE IF EXISTS site_level;
-CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE(type));
+CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE);
 
 DROP TABLE IF EXISTS company;
 CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN);
@@ -72,11 +72,8 @@ CREATE TABLE alias_aclgroup (id BIGSERIAL PRIMARY KEY, alias_id INTEGER referenc
 DROP TABLE IF EXISTS section_aclgroup;
 CREATE TABLE section_aclgroup (id BIGSERIAL PRIMARY KEY, aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, aclread BOOLEAN DEFAULT false, aclcreate BOOLEAN DEFAULT false, aclupdate BOOLEAN DEFAULT false, aclcomplete BOOLEAN DEFAULT false);
 
--- Default groups
-INSERT INTO aclgroup(name) values('customers');
-
--- Default permissions
-INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
+DROP TABLE IF EXISTS enabled_modules;
+CREATE TABLE enabled_modules (id SERIAL PRIMARY KEY, module_name VARCHAR(255), filename VARCHAR(255));
 
 -- Default data templates
 INSERT INTO template(template) values('server');
@@ -135,7 +132,7 @@ DROP TABLE IF EXISTS customers;
 CREATE TABLE customers(id SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN DEFAULT true, site INTEGER);
 
 -- Adding admin user
-INSERT INTO users(alias,email,password,active,sections) values('admin','admin@localhost',MD5('admin'),true,'Helpdesk');
+INSERT INTO users(alias,email,password,active) values('admin','admin@localhost',MD5('admin'),true);
 -- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
@@ -153,6 +150,12 @@ INSERT INTO ticket_status (name) values ('Completed');
 -- test data to start with 
 INSERT INTO site_level(type) values ('test');
 INSERT INTO site (level,name) values (1,'Test Site');
+
+-- Default groups
+INSERT INTO aclgroup(name) values('customers');
+
+-- Default permissions
+INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
 
 CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
@@ -294,3 +297,5 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON alias_aclgroup TO helpdesk;
 GRANT SELECT, UPDATE ON alias_aclgroup_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON section_aclgroup TO helpdesk;
 GRANT SELECT, UPDATE ON section_aclgroup_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON enabled_modules TO helpdesk;
+GRANT SELECT, UPDATE ON enabled_modules_id_seq TO helpdesk;

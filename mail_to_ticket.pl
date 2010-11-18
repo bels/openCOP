@@ -1,4 +1,15 @@
+#!/usr/bin/env perl
 # This script will download and remove all of the messages from the current mail server  for later processing
+
+if($ARGV[0] eq "enable")
+{
+	enable();
+}
+if($ARGV[0] eq "disable")
+{
+	disable();
+}
+#MODULE_NAME=Mail To Ticket
 
 use strict;
 use warnings;
@@ -6,6 +17,14 @@ use warnings;
 use lib './libs';
 use ReadConfig;
 use Mail::IMAPClient;
+
+### Some basic logging
+open FILE, ">>/usr/local/www/helpdesk/modules/logfile";
+print FILE "I ran " . localtime(time);
+my $current = qx(pwd);
+print FILE "\nCurrent working directory $current";
+close(FILE);
+################
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -52,3 +71,42 @@ $imap->expunge; #this removes messages that have the Deleted flag set
 $imap->close("INBOX");
 
 $imap->logout();
+
+qx(../process_mail.pl);
+
+sub enable{
+	my $os = qx(uname);
+	chomp($os);
+	my $file = "opencop_crontab";
+	my $crontab = qx(crontab -l);
+	my $path = qx(pwd);
+	chomp($path);
+	my $complete_path = $path . "/modules/mail_to_ticket.pl\n";
+	open FILE, ">$file";
+	print FILE $crontab ."5 * * * * /usr/bin/env perl $complete_path";
+	close(FILE);
+	qx(crontab $file);
+	qx(rm $file);
+	exit;
+}
+
+sub disable{
+	my $crontab = qx(crontab -l);
+	chomp($crontab);
+	my @crontabs = split("\n",$crontab);
+	my $file = "opencop_crontab";
+	open FILE, ">$file";
+	foreach (@crontabs){
+		if($_ =~ m/mail_to_ticket.pl/)
+		{
+		}
+		else
+		{
+			print FILE "$_\n";
+		}
+	}
+	close(FILE);
+	qx(crontab $file);
+	qx(rm $file);
+	exit;
+}

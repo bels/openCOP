@@ -24,8 +24,8 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my @styles = ("styles/layout.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
+	my @styles = ("styles/layout.css","styles/global_settings.css");
+	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js","javascripts/global_settings.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $duplicate = $q->param('duplicate');

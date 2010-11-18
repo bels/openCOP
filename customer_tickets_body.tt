@@ -1,9 +1,11 @@
 		<div id="left">
 			[% IF status == "open" %]<center><h4 id="oc" value="open">Your Open Tickets</h4></center>[% END %]
 			[% IF status == "closed" %]<center><h4 id="oc" value="closed">Your Closed Tickets</h4></center>[% END %]
+			<div id="ticket_group">
 			[% FOREACH ticket IN tickets %]
 				<a href="#" id=[% ticket.0 %] class="ticket_link">[% ticket.0 %]</a><br />
 			[% END %]
+			</div>
 		</div>
 		<div id="right_holder">
 			<div id="right">

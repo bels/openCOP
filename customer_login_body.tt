@@ -1,3 +1,4 @@
+		<div id="drop_shadow"></div>
 		<div id="low_resolution_warning">
 			<span id="lrw_text">You appear to have a resolution lower than 1024x768. You may experience display issues.</span>
 		</div>
