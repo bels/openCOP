@@ -94,6 +94,9 @@ CREATE TABLE alias_aclgroup (id BIGSERIAL PRIMARY KEY, alias_id INTEGER referenc
 DROP TABLE IF EXISTS section_aclgroup;
 CREATE TABLE section_aclgroup (id BIGSERIAL PRIMARY KEY, aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, aclread BOOLEAN DEFAULT false, aclcreate BOOLEAN DEFAULT false, aclupdate BOOLEAN DEFAULT false, aclcomplete BOOLEAN DEFAULT false);
 
+DROP TABLE IF EXISTS enabled_modules;
+CREATE TABLE enabled_modules (id SERIAL PRIMARY KEY, module_name VARCHAR(255), filename VARCHAR(255));
+
 -- Default data templates
 INSERT INTO template(template) values('server');
 INSERT INTO template(template) values('cert');
@@ -176,7 +179,6 @@ INSERT INTO aclgroup(name) values('customers');
 -- Default permissions
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
 
--
 CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
 	last_id INTEGER;
@@ -410,5 +412,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON alias_aclgroup TO helpdesk;
 GRANT SELECT, UPDATE ON alias_aclgroup_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON section_aclgroup TO helpdesk;
 GRANT SELECT, UPDATE ON section_aclgroup_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON enabled_modules TO helpdesk;
+GRANT SELECT, UPDATE ON enabled_modules_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON reports TO helpdesk;
 GRANT SELECT, UPDATE ON reports_id_seq TO helpdesk;

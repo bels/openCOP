@@ -3,40 +3,34 @@ $(document).ready(function(){
 		cache: false
 	});
 	var logoutTimer = window.setTimeout('logout()', '3600000');
-	var config = {
-		interval: 120,
-		over: hideMenus,
-		out: doNothing
-	};
-
-	$('.menu_link').each(function(){
-		$(this).hoverIntent(config);
-	});
-	
-	$(".sub_link").hover(function(){
-		$(this).addClass("highlighted_link");
-	},function(){
-		$(this).removeClass("highlighted_link");
-	});
 	
 	$(".customer_link").hover(function(){
 		$(this).addClass("highlighted_link");
 	},function(){
 		$(this).removeClass("highlighted_link");
 	});
+	
+	 var config = {
+		interval: 150,
+		over: showMenu,
+		out: hideMenu
+	};
+	
+	$("ul.subnav").parent().append("<span></span>"); //Only shows drop down trigger when js is enabled (Adds empty span tag after ul.subnav*)
+
+	$("ul.topnav li").hoverIntent(config);
+	
+	function showMenu(){
+		$("#tabs").addClass("lower");
+		$(this).find("ul.subnav").slideDown('fast').show();
+	}
+	
+	function hideMenu(){
+		$(this).find("ul.subnav").slideUp('fast',function(){$("#tabs").removeClass("lower");});
+	}
+	
+	$("#tabs").tabs();
 });
-
-function hideMenus(){
-		var sublink = $(this).attr("id");
-		$('.sub').each(function(){
-			$(this).addClass("hidden_menu");
-		});
-		$('#sub_' + sublink).removeClass("hidden_menu");	
-}
-
-function doNothing(){
-	return true;
-}
 
 function logout(){
 	$.cookie("session", null, { path: '/' });

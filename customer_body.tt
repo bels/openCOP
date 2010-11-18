@@ -1,37 +1,39 @@
-		<h2>[% company_name %] Helpdesk - Input a new ticket</h2>
-		<form id="newticket">
-			<input type="hidden" value="[% site %]" name="site" id="site">
-			<div id="author_div">
-				<h3>General Information</h3>
-[% IF display_author == 1 %]<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2 value="[% author %]" readonly="readonly"><a href="tips.pl?101" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="author" id="author" value="[% author %]">[% END %]
-[% IF display_barcode == 1 %]<label for="barcode" class="short_label">Barcode:</label><input type="text" name="barcode" id="barcode" tabindex=3><a href="tips.pl?102" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="barcode" id="barcode">[% END %]
-[% IF display_serial == 1 %]<label for="serial" class="short_label">Serial:</label><input type="text" name="serial" id="serial" tabindex=4><a href="tips.pl?102" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="serial" id="serial">[% END %]<br />
-				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" value="[% author %]" tabindex=5><a href="tips.pl?103" class="tooltip" target="_tips">?</a>
-				<label for="phone" class="short_label">Phone:</label><input type="text" name="phone" id="phone" tabindex=6><a href="tips.pl?104" class="tooltip" target="_tips">?</a>
-				<label for="email" class="short_label">Email:</label><input type="text" name="email" id="email" value="[% customer_email %]" tabindex=7><a href="tips.pl?105" class="tooltip" target="_tips">?</a><br />
-[% IF display_location == 1 %]<label for="location" class="short_label">Location:</label><input type="text" name="location" id="location" tabindex=8><a href="tips.pl?106" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="location" id="location">[% END %]
-[% IF display_free_date == 1 %]<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" tabindex=9><a href="tips.pl?9000" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="free_date" id="free_date">[% END %]
-[% IF display_free_time == 1 %]<label for="free_time" class="short_label">Time Free:</label><input type="time" name="free_time" id="free_time" tabindex=10><a href="tips.pl?9000" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="free_time" id="free_time">[% END %]
-				<br />
-				<label for="priority" class="short_label">Priority:</label>
-				<select name="priority" size="1" tabindex="11" id="priority">
-					[% FOREACH priority IN priority_list.keys %]
-					<option [% IF priority_list.$priority.description == "Normal" %]SELECTED[% END %] value="[% priority_list.$priority.id %]">[% priority_list.$priority.description %]</option>
-					[% END %]
-				</select>
-				<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
-				<label for="section" class="short_label">Section:</label>
-				<select name="section" size="1" tabindex="12" id="section">
-					[% FOREACH section IN section_list.keys %]
-					<option [% IF section_list.$section.name == "Helpdesk" %]SELECTED[% END %] value="[% section_list.$section.id %]">[% section_list.$section.name %]</option>
-					[% END %]
-				</select>
-				<a href="tips.pl?108" class="tooltip" target="_tips">?</a>
-			</div>
-			<div id="problem_details">
-				<h3>Problem Details</h3>
-				<label for="problem" id="problem_label">Problem and Troubleshooting Tried:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
-				<textarea id="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="13"></textarea><br />
-				<button type="button" id="customer_submit_button">Submit</button>
-			</div>
-		</form>
+		<div id="ticket_div">
+			<div id="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[% company_name %] Helpdesk - Input a new ticket</div>
+			<form id="newticket">
+				<input type="hidden" value="[% site %]" name="site" id="site">
+				<div id="author_div">
+					<h3>General Information</h3>
+	[% IF display_author == 1 %]<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2 value="[% author %]" readonly="readonly"><a href="tips.pl?101" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="author" id="author" value="[% author %]">[% END %]
+	[% IF display_barcode == 1 %]<label for="barcode" class="short_label">Barcode:</label><input type="text" name="barcode" id="barcode" tabindex=3><a href="tips.pl?102" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="barcode" id="barcode">[% END %]
+	[% IF display_serial == 1 %]<label for="serial" class="short_label">Serial:</label><input type="text" name="serial" id="serial" tabindex=4><a href="tips.pl?102" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="serial" id="serial">[% END %]<br />
+					<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" value="[% author %]" tabindex=5><a href="tips.pl?103" class="tooltip" target="_tips">?</a>
+					<label for="phone" class="short_label">Phone:</label><input type="text" name="phone" id="phone" tabindex=6><a href="tips.pl?104" class="tooltip" target="_tips">?</a>
+					<label for="email" class="short_label">Email:</label><input type="text" name="email" id="email" value="[% customer_email %]" tabindex=7><a href="tips.pl?105" class="tooltip" target="_tips">?</a><br />
+	[% IF display_location == 1 %]<label for="location" class="short_label">Location:</label><input type="text" name="location" id="location" tabindex=8><a href="tips.pl?106" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="location" id="location">[% END %]
+	[% IF display_free_date == 1 %]<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" tabindex=9><a href="tips.pl?9000" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="free_date" id="free_date">[% END %]
+	[% IF display_free_time == 1 %]<label for="free_time" class="short_label">Time Free:</label><input type="time" name="free_time" id="free_time" tabindex=10><a href="tips.pl?9000" class="tooltip" target="_tips">?</a>[% ELSE %]<input type="hidden" name="free_time" id="free_time">[% END %]
+					<br />
+					<label for="priority" class="short_label">Priority:</label>
+					<select name="priority" size="1" tabindex="11" id="priority">
+						[% FOREACH priority IN priority_list.keys %]
+						<option [% IF priority_list.$priority.description == "Normal" %]SELECTED[% END %] value="[% priority_list.$priority.id %]">[% priority_list.$priority.description %]</option>
+						[% END %]
+					</select>
+					<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
+					<label for="section" class="short_label">Section:</label>
+					<select name="section" size="1" tabindex="12" id="section">
+						[% FOREACH section IN section_list.keys %]
+						<option [% IF section_list.$section.name == "Helpdesk" %]SELECTED[% END %] value="[% section_list.$section.id %]">[% section_list.$section.name %]</option>
+						[% END %]
+					</select>
+					<a href="tips.pl?108" class="tooltip" target="_tips">?</a>
+				</div>
+				<div id="problem_details">
+					<h3>Problem Details</h3>
+					<label for="problem" id="problem_label">Problem and Troubleshooting Tried:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
+					<textarea id="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="13"></textarea><br />
+					<button type="button" id="customer_submit_button">Submit</button>
+				</div>
+			</form>
+		</div>

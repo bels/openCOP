@@ -1,44 +1,51 @@
 		<div id="menu">
-			<a href="ticket.pl" id="ticket_link" class="menu_link">Tickets</a>
-			<a href="reports.pl" id="report_link" class="menu_link">Reports</a>
-			<a href="inventory.pl" id="inventory_link" class="menu_link">Inventory</a>
-			<a href="customer_admin.pl" id="customer_admin_link" class="menu_link">Customer Admin</a>
-			<a href="admin.pl" id="admin_link" class="menu_link">Admin</a>
+			<ul class="topnav">
+				<li><a href="index.pl">Home</a></li>
+				<li><a href=#>Tickets</a>
+					<ul class="subnav">
+						<li><a href="ticket.pl?mode=new">New Ticket</a></li>
+						<li><a href="ticket.pl?mode=lookup">Ticket Lookup</a></li>
+						<li><a href="work_order.pl?mode=new">New Work Order</a></li>
+						<li><a href="work_order.pl?mode=lookup">Work Order Lookup</a></li>
+						<li><a href="#">Ticket Queue</a></li>
+						<li><a href="#">Work Order Queue</a></li>
+					</ul>
+				</li>
+				<li><a href=#>Reports</a>
+					<ul class="subnav">
+						<li><a href="#">Ticket Closure</a></li>
+						<li><a href="#">Ticket Trending</a></li>
+						<li><a href="#">Inventory Report</a></li>
+						<li><a href="#">P.O.</a></li>
+						<li><a href="#">Grant</a></li>
+						<li><a href="#">Vendor</a></li>
+						<li><a href="#">Customer Satisfaction</a></li>
+					</ul>
+				</li>
+				<li><a href=#>Inventory</a>
+					<ul class="subnav">
+						<li><a href="inventory.pl?mode=add">Add</a></li>
+						<li><a href="inventory.pl?mode=current">Current</a></li>
+						<li><a href="inventory.pl?mode=configure">Configure</a></li>
+					</ul>
+				</li>
+				<li><a href=#>Customer Admin</a>
+					<ul class="subnav">
+						<li><a href="customer_admin.pl">Add Customer</a></li>
+						<li><a href="customer_edit.pl">Edit Customer</a></li>
+					</ul>
+				</lI>
+				<li><a href=#>Admin</a>
+					<ul class="subnav">
+						<li><a href="user_admin.pl">User Admin</a></li>
+						<li><a href="sites.pl">Companies/Sites</a></li>
+						<li><a href="global_settings.pl">Global Settings</a></li>
+						<li><a href="password.pl">Change Password</a></li>
+						<li><a href="groups.pl">Groups</a></li>
+						<li><a href="permissions.pl">Permissions</a></li>
+						<li><a href="logout.pl">Logout</a></li>
+					</ul>
+				</li>
+			</ul>
 		</div>
-		<div id="submenu">
-			<span id="sub_ticket_link" class="sub">
-				<a href="ticket.pl?mode=new" class="sub_link">New Ticket</a>
-				<a href="ticket.pl?mode=lookup" class="sub_link">Ticket Lookup</a>
-				<a href="work_order.pl?mode=new" class="sub_link">New Work Order</a>
-				<a href="work_order.pl?mode=lookup" class="sub_link">Work Order Lookup</a>
-				<a href="#" class="sub_link">Ticket Queue</a>
-				<a href="#" class="sub_link">Work Order Queue</a>
-			</span>
-			<span id="sub_report_link" class="hidden_menu sub">
-				<a href="report_ticket_closure.pl?init=1" class="sub_link">Ticket Closure</a>
-				<a href="#" class="sub_link">Ticket Trending</a>
-				<a href="#" class="sub_link">Inventory Report</a>
-				<a href="#" class="sub_link">P.O.</a>
-				<a href="#" class="sub_link">Grant</a>
-				<a href="#" class="sub_link">Vendor</a>
-				<a href="#" class="sub_link">Customer Satisfaction</a>
-			</span>
-			<span id="sub_inventory_link"  class="hidden_menu sub">
-				<a href="inventory.pl?mode=add" class="sub_link">Add</a>
-				<a href="inventory.pl?mode=current" class="sub_link">Current</a>
-				<a href="inventory.pl?mode=configure" class="sub_link">Configure</a>
-			</span>
-			<span id="sub_admin_link"  class="hidden_menu sub">
-				<a href="user_admin.pl" class="sub_link">User Admin</a>
-				<a href="sites.pl" class="sub_link">Companies/Sites</a>
-				<a href="global_settings.pl" class="sub_link">Global Settings</a>
-				<a href="password.pl" class="sub_link">Change Password</a>
-				<a href="groups.pl" class="sub_link">Groups</a>
-				<a href="permissions.pl" class="sub_link">Permissions</a>
-				<a href="logout.pl" class="sub_link">Logout</a>
-			</span>
-			<span id="sub_customer_admin_link"  class="hidden_menu sub">
-				<a href="customer_admin.pl" class="sub_link">Add Customer</a>
-				<a href="customer_edit.pl" class="sub_link">Edit Customer</a>
-			</span>
-		</div>
+		<div id="drop_shadow"></div>

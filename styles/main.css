@@ -1,41 +1,7 @@
-#server_status{
-	width: 250px;
-	height: 250px;
-	margin-top: 15px;
-	margin-left: 50px;
-	background-color: #bdbdd2;
-	border: 3px solid #9696a7;
-	display: inline-block;
-	float: left;
+.ui-tabs .ui-tabs-hide {
+     display: none;
 }
 
-#current_critical{
-	width: 70%;
-	height:250px;
-	margin-top: 15px;
-	margin-left: 35px;
-	background-color: #bdbdd2;
-	border: 3px solid #9696a7;
-	float: left;
-}
-
-#agents_working{
-	width: 300px;
-	height: 250px;
-	margin-top: 15px;
-	margin-left: 50px;
-	background-color: #bdbdd2;
-	border: 3px solid #9696a7;
-	display: inline-block;
-	float: left;
-}
-
-#closure_info{
-	width: 65%;
-	height:250px;
-	margin-top: 15px;
-	margin-left: 35px;
-	background-color: #bdbdd2;
-	border: 3px solid #9696a7;
-	float: left;
+.lower{
+	z-index: -1;
 }

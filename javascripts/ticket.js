@@ -133,7 +133,7 @@ $(document).ready(function(){
 					required: "*"
 				},
 				problem: {
-					required: "*"
+					required: "* Please enter a description of your problem."
 				}
 			}
 		});
