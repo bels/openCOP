@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$('.add_column').livequery(function(){
-		$('.add_column').bind('click',function(){
+		$(this).bind('click',function(){
 			var temp = $(this).prev().children("select:last-child");
 			var id_num;
 			(temp.attr('id') ? id_num = temp.attr('id') : id_num = 99);
@@ -15,7 +15,7 @@ $(document).ready(function(){
 		});
 	});
 	$('.add_table').livequery(function(){
-		$('.add_table').bind('click',function(){
+		$(this).bind('click',function(){
 			var table_num;
 			var temp = $(this).parent().find("select.table");
 			(temp.attr('id') ? table_num = temp.attr('id') : table_num = 299);
@@ -32,7 +32,7 @@ $(document).ready(function(){
 			var fs_num;
 			(fs.attr('id') ? fs_num = fs.attr('id') : fs_num = 599);
 			fs_num++;
-			var table_select = "<div class=\"join_div\"><span class=\"fl\"> </span><div class=\"join_div_element\"><select class=\"join\" id=\"" + j_num + "\" name=\"" + j_num + "\"><option value=\"left join\" selected=\"selected\">Left Join</option><option value=\"right join\">Right join</option></select></div><div class=\"join_div_element\"><select id=\"" + table_num + "\" name=\"" + table_num + "\" class=\"table\"></select></div><span class=\"label\">on</span><div class=\"join_div_element\"><select id=\"" + fc_num + "\" name=\"" + fc_num + "\" class=\"first join_column\"></select></div><span class=\"label\">=</span><div class=\"join_div_element\"><select id=\"" + fs_num + "\" name=\"" + fs_num + "\" class=\"second join_column\"></select></div><button id=\"206\" class=\"del_table\">-</button><button id=\"205\" class=\"add_table\">+</button></div>";
+			var table_select = "<div class=\"join_div\"><span class=\"fl\"> </span><div class=\"join_div_element\"><select class=\"join\" id=\"" + j_num + "\" name=\"" + j_num + "\"><option value=\"left join\" selected=\"selected\">Left Join</option><option value=\"right join\">Right join</option><option value=\"inner join\">Inner join</option><option value=\"outer join\">Outer join</option></select></div><div class=\"join_div_element\"><select id=\"" + table_num + "\" name=\"" + table_num + "\" class=\"table\"></select></div><span class=\"label\">on</span><div class=\"join_div_element\"><select id=\"" + fc_num + "\" name=\"" + fc_num + "\" class=\"first join_column\"></select></div><span class=\"label\">=</span><div class=\"join_div_element\"><select id=\"" + fs_num + "\" name=\"" + fs_num + "\" class=\"second join_column\"></select></div><button id=\"206\" class=\"del_table\">-</button><button id=\"205\" class=\"add_table\">+</button></div>";
 			if($(this).parent().next('#join_div_parent').length){
 				$(this).parent().next().append(table_select);
 			} else {
@@ -42,6 +42,9 @@ $(document).ready(function(){
 			var mode = "first_join";
 			var table = $(this).val();
 			var table_select = $(this);
+			if($(this).val() === null){
+			} else if($(this).val() == ''){
+			} else {
 			$.ajax({
 				type: 'POST',
 				url: 'query_builder.pl',
@@ -110,13 +113,14 @@ $(document).ready(function(){
 					}
 				});
 			});
+			}
 		});
 	});
 	$('.del_table').livequery(function(){
 		$(this).bind('click',function(){
-			if($(this).parent().prev('div.join_div').length){
+			if($(this).parent().prev('div.join_div').length && !$(this).parent().next('div.join_div').length){
 				$(this).parent().prev('div.join_div').append("<button id=\"205\" class=\"add_table\">+</button>");
-			} else {
+			} else if(!$(this).parent().next('div.join_div').length){
 				$('#from_div').append("<button id=\"205\" class=\"add_table\">+</button>");
 			}
 			$(this).parent().remove();
@@ -219,7 +223,7 @@ $(document).ready(function(){
 	});
 	$('.all_columns').livequery(function(){
 		var all_columns_select = $(this);
-		$('.join_div select.table').each(function(){
+		$('div select.table').each(function(){
 			var mode = "second_join";
 			var tablestring = "";
 			$('div select.table').each(function(){
@@ -315,43 +319,50 @@ $(document).ready(function(){
 			}
 		});
 		$('#from_div select.table').change(function(){
+
+		var all_columns_select = $(this);
+		$('div select.table').each(function(){
 			var mode = "select_column";
-			var table = $(this).val();
+			var tablestring = "";
+			$('div select.table').each(function(){
+				tablestring += $(this).val() + ":";
+			});
 			$.ajax({
 				type: 'POST',
 				url: 'query_builder.pl',
-				data: {mode: mode, table: table},
+				data: {mode: mode, tablestring: tablestring},
 				success: function(data){
 					var error = data.substr(0,1);
 					if(error == "0"){
 						var str = data.replace(/^[\d\s]/,'');
 						$('#select_div select.column').each(function(){
-							$(this).html(str);
-							$('.join_div select.table').each(function(){
-								var mode = "second_join";
-								var tablestring = "";
-								var table_select = $(this);
-								$('div select.table').each(function(){
-									tablestring += $(this).val() + ":";
-								});
-								$.ajax({
-									type: 'POST',
-									url: 'query_builder.pl',
-									data: {mode: mode, tablestring: tablestring},
-									success: function(data){
-										var error = data.substr(0,1);
-										if(error == "0"){
-											var str = data.replace(/^[\d\s]/,'');
-											table_select.parent().parent().find('.join_div_element select.second').html(str);
-										} else if(error == "1"){
-											var str = data.replace(/^[\d\s]/,'');
+								$(this).html(str);
+								$('.join_div select.table').each(function(){
+									var mode = "second_join";
+									var tablestring = "";
+									var table_select = $(this);
+									$('div select.table').each(function(){
+										tablestring += $(this).val() + ":";
+									});
+									$.ajax({
+										type: 'POST',
+										url: 'query_builder.pl',
+										data: {mode: mode, tablestring: tablestring},
+										success: function(data){
+											var error = data.substr(0,1);
+											if(error == "0"){
+												var str = data.replace(/^[\d\s]/,'');
+												table_select.parent().parent().find('.join_div_element select.second').html(str);
+											} else if(error == "1"){
+												var str = data.replace(/^[\d\s]/,'');
+											}
+										},
+										error: function(){
+											alert("Error");
 										}
-									},
-									error: function(){
-										alert("Error");
-									}
+									});
 								});
-							});
+
 						});
 					} else if(error == "1"){
 						var str = data.replace(/^[\d\s]/,'');
@@ -361,6 +372,11 @@ $(document).ready(function(){
 					alert("Error");
 				}
 			});
+		});
+
+			if($(this).val() === null){
+				} else if($(this).val() == ''){
+			} else {
 			$('.where_div select.all_columns').each(function(){
 				var all_columns_select = $(this);
 				var mode = "second_join";
@@ -386,7 +402,7 @@ $(document).ready(function(){
 					}
 				});
 			});
-
+			}
 		});
 	});
 	$('#select_div select.column').livequery(function(){
@@ -415,6 +431,7 @@ $(document).ready(function(){
 			}
 		});
 		$('.join_div select.table').change(function(){
+			populate_select_columns();
 			var mode = "first_join";
 			var table = $(this).val();
 			var table_select = $(this);
@@ -591,28 +608,31 @@ $.fn.serializeObject = function(){
 
 
 function populate_select_columns(){
-	var mode = "select_column";
-	var table = $('#from_div select.table').val();
-	$.ajax({
-		type: 'POST',
-		url: 'query_builder.pl',
-		data: {mode: mode, table: table},
-		success: function(data){
-			var error = data.substr(0,1);
-			if(error == "0"){
-				var str = data.replace(/^[\d\s]/,'');
-				$('#select_div select.column').each(function(){
-					if($(this).html().match(/.+/)){
-					} else {
-						$(this).html(str);
+		var all_columns_select = $(this);
+		$('div select.table').each(function(){
+			var mode = "select_column";
+			var tablestring = "";
+			$('div select.table').each(function(){
+				tablestring += $(this).val() + ":";
+			});
+			$.ajax({
+				type: 'POST',
+				url: 'query_builder.pl',
+				data: {mode: mode, tablestring: tablestring},
+				success: function(data){
+					var error = data.substr(0,1);
+					if(error == "0"){
+						var str = data.replace(/^[\d\s]/,'');
+						$('#select_div select.column').each(function(){
+							$(this).html(str);
+						});
+					} else if(error == "1"){
+						var str = data.replace(/^[\d\s]/,'');
 					}
-				});
-			} else if(error == "1"){
-				var str = data.replace(/^[\d\s]/,'');
-			}
-		},
-		error: function(){
-			alert("Error");
-		}
-	});			
+				},
+				error: function(){
+					alert("Error");
+				}
+			});
+		});
 }

@@ -61,6 +61,7 @@ if($authenticated == 1)
 			'object'	=>	"object",
 			'value'		=>	"value",
 			'value_property'=>	"value_property",
+			'property'	=>	"property",
 		};
 		my $table_data = qq(
 			<option value=""></option>
@@ -79,24 +80,32 @@ if($authenticated == 1)
 		}
 	} elsif($vars->{'mode'} eq "select_column") {
 		my $error = 0;
-		my $table = $vars->{'table'};
+		my $tablestring = $vars->{'tablestring'};
+		$tablestring =~ s/:$//;
+		my @table = split(":",$tablestring);
+		my $query;
+		my $column_data;
 
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-		my $query = qq(
-			select * from $table;
-		);
-		my $sth = $dbh->prepare($query);
-		$sth->execute;
-		my $column = $sth->fetchrow_hashref;
-
 		my $column_data = qq(
 			<option value="*">*</option>
 		);
-		foreach (keys %$column){
-			$column_data .= qq(
-				<option value="$_">$_</option>
+
+		foreach my $t (@table){
+			$query = qq(
+				select * from $t;
 			);
+			my $sth = $dbh->prepare($query);
+			$sth->execute;
+			my $column = $sth->fetchrow_hashref;
+	
+			foreach (keys %$column){
+				$column_data .= qq(
+					<option value="$t.$_">$t.$_</option>
+				);
+			}
 		}
+
 		print "Content-type: text/html\n\n";
 		if($error){
 			print "1";

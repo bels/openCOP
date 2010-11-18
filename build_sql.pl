@@ -61,12 +61,18 @@ if($authenticated == 1)
 			shift(@{$object->{'where'}});
 		}
 		$query .= "where (@{$object->{'where'}}[0]->{'value'} @{$object->{'where'}}[1]->{'value'} ?) ";
+		if(@{$object->{'where'}}[1]->{'value'} eq "like"){
+			@{$object->{'where'}}[2]->{'value'} = "%" . @{$object->{'where'}}[2]->{'value'} . "%";
+		}
 		push(@prepare_array,@{$object->{'where'}}[2]->{'value'});
 		for(my $i = 0; $i <= 2; $i++){
 			shift(@{$object->{'where'}});
 		}
 		while(@{$object->{'where'}}){
 			$query .= " @{$object->{'where'}}[0]->{'value'} (@{$object->{'where'}}[1]->{'value'} @{$object->{'where'}}[2]->{'value'} ?) ";
+			if(@{$object->{'where'}}[2]->{'value'} eq "like"){
+				@{$object->{'where'}}[3]->{'value'} = "%" . @{$object->{'where'}}[3]->{'value'} . "%";
+			}
 			push(@prepare_array,@{$object->{'where'}}[3]->{'value'});
 			for(my $i = 0; $i <= 3; $i++){
 				shift(@{$object->{'where'}});
