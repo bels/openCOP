@@ -572,13 +572,22 @@ $(document).ready(function(){
 		h['joins'] = $('select.join_column').serializeObject();
 		h['where'] = $('.where').children().serializeObject();
 		h['other'] = $('#fake_form').children().serializeObject();
+		var report_name = $('input#as').val();
+		alert(report_name);
 		$.ajax({
 			type: 'POST',
 			url: 'build_sql.pl',
-			data: {mode: mode, data: $.toJSON(h)},
+			data: {mode: mode, data: $.toJSON(h), report_name: report_name},
 			success: function(data){
-				document.write(data);
-				document.close();
+				var error = data.substr(0,1);
+				if(error == "1"){
+					var str = data.replace(/^[\d\s]/,'');
+					location.reload(true);
+				} else if(error == "2"){
+					var str = data.replace(/^[\d\s]/,'');
+					document.write(str);
+					document.close();
+				}
 			},
 			error: function(){
 				alert("Error");
