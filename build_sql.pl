@@ -29,8 +29,8 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $vars = $q->Vars;
+	my $name = $vars->{'report_name'};
 
-	my $json = JSON->new;
 	my $object = from_json($vars->{'data'});
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query;
@@ -95,8 +95,6 @@ if($authenticated == 1)
 		my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 		my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 		my $id = $user->get_user_id(alias => $alias);
-		my $name = $vars->{'report_name'};
-		warn $name;
 		my $insert = "insert into reports (report,name,aclgroup,owner) values(?,?,?,?);";
 		my $sth = $dbh->prepare($insert);
 		$sth->execute($query,$name,$aclgroup,$id);
@@ -129,8 +127,7 @@ if($authenticated == 1)
 		my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.livequery.js","javascripts/jquery.json-2.2.js","javascripts/main.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/display_report.js");
 		my $title = $config->{'company_name'} . " - Custom Report";
 		my $file = "display_report.tt";
-
-		my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, sorted_hash => \@sorted_hash, results => $results, columns => $columns};
+		my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, sorted_hash => \@sorted_hash, results => $results, columns => $columns, table_title => $name};
 	
 		my $template = Template->new();
 		$template->process($file,$vars) || die $template->error();
