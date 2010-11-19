@@ -42,7 +42,8 @@ if($authenticated == 1)
 	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
 	
 	print qq(
-		<div class="ticket_details">
+		<div id="ticket_details">
+			<div id="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Test company Helpdesk - Ticket #$ticket_number</div>
 			<label>Ticket Contact:</label>$results->{'contact'}<br>
 			<label>Ticket Number:</label>$results->{'ticket'}<br>
 			<label>Ticket Status:</label>$ticket_statuses{$results->{'status'}}<br>
