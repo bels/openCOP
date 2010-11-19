@@ -13,6 +13,7 @@
 	border: 3px ridge #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 label{
