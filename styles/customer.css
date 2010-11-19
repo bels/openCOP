@@ -229,3 +229,9 @@ h3{
 .note{
 	white-space: pre;
 }
+
+#ticket_details{
+	width: 1000px;
+	margin-top: 15px;
+	border: 2px solid #333;
+}
