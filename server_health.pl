@@ -32,7 +32,14 @@ foreach (@drives)
 	$_ =~ s/ +/ /g;
 	my $j = 0;
 	foreach(split(/\s/,$_)){
-		print qq(<span class="$class drive_data">$_);
+		if($_ eq "Mounted")
+		{
+			print qq(<span class="$class drive_data">$_ On);
+		}elsif($_ eq "on"){
+		}else{
+			print qq(<span class="$class drive_data">$_);
+		}
+		
 		if($j == 4 && $i != 0)
 		{
 			chop($_);
