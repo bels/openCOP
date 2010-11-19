@@ -72,7 +72,8 @@ if($authenticated == 1)
 }
 else
 {
-	my $errorcode = $q->param('errorcode') or my $errorcode = 0;
+	my $errorcode;
+	$errorcode = $q->param('errorcode') or $errorcode = 0;
 	my $vars;
 	my @styles = ("styles/layout.css", "styles/customer.css");
 	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/customer_login.js");
