@@ -23,6 +23,8 @@ declare -A REQHASH=(		# Define a list of required ports
 	["p5-Authen-SASL"]="p5-Authen-SASL"
 	["p5-libwww"]="p5-libwww"
 	["p5-JSON"]="p5-JSON"
+	["p5-DBD-Excel"]="p5-DBD-Excel"
+	["p5-SQL-Statement"]="p5-SQL-Statement"
 )
 
 function die() {

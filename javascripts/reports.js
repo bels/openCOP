@@ -573,7 +573,6 @@ $(document).ready(function(){
 		h['where'] = $('.where').children().serializeObject();
 		h['other'] = $('#fake_form').children().serializeObject();
 		var report_name = $('input#as').val();
-		alert(report_name);
 		$.ajax({
 			type: 'POST',
 			url: 'build_sql.pl',
