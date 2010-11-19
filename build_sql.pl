@@ -95,11 +95,15 @@ if($authenticated == 1)
 		my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 		my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 		my $id = $user->get_user_id(alias => $alias);
-		my $insert = "insert into reports (report,aclgroup,owner) values(?,?,?);";
+		my $name = $vars->{'report_name'};
+		warn $name;
+		my $insert = "insert into reports (report,name,aclgroup,owner) values(?,?,?,?);";
 		my $sth = $dbh->prepare($insert);
-		$sth->execute($query,$aclgroup,$id);
+		$sth->execute($query,$name,$aclgroup,$id);
+		print "1";
 	} elsif($vars->{'mode'} eq "run"){
 		print "Content-type: text/html\n\n";
+		print "2";
 		my $sth = $dbh->prepare($query);
 		$sth->execute(@prepare_array);
 		my $results = $sth->fetchall_hashref(1);

@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20));
 
 DROP TABLE IF EXISTS reports;
-CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
+CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
 
 DROP TABLE IF EXISTS audit;
 CREATE TABLE audit (
