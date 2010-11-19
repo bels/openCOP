@@ -1,6 +1,6 @@
 	[% FOREACH id IN section_list.keys %]
 		<div id="section_[% section_list.$id.section_id %]" class="section_header_div">
-			<span>[% section_list.$id.name %]</span>
+			<a href="#" class="toggle_link"><img src="images/toggle.png" style="display:none" border=0 class="toggle_img"><img src="images/toggled.png" border=0 class="toggle_img"></a><span class="ticket_section_toggle">[% section_list.$id.name %]</span>
 		</div>
 		<div class="ticket_lookup" id="[% section_list.$id.section_id %]">
 		</div>

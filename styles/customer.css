@@ -13,6 +13,7 @@
 	border: 3px ridge #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 label{
@@ -146,6 +147,7 @@ input.error{
 	border: 3px ridge #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 #customer_admin_form h2{
@@ -203,6 +205,7 @@ h3{
 	background-color: #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 	width: 100px;
 	padding-top: 10px;
 	padding-bottom: 10px;

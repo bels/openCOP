@@ -138,4 +138,12 @@ $(document).ready(function(){
 			}
 		});
 	}
+	
+	$(".ticket_section_toggle").click(function(){
+		$(".toggle_img").toggle();
+	});
+	
+	$(".toggle_link").click(function(){
+		$(".toggle_img").toggle();
+	});
 });
