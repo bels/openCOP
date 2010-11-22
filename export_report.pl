@@ -10,6 +10,7 @@ use SessionFunctions;
 use DBI;
 use JSON;
 use Notification;
+use UserFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -30,7 +31,12 @@ if($authenticated == 1)
 {
 	my $vars = $q->Vars;
 	my $json = JSON->new;
-	warn $vars->{'table'};
+	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $userinfo = $user->get_user_info(alias => $alias);
+
+	my $email = $userinfo->{'email'};
+
 	my $object = from_json($vars->{'table'});
 	my $name = $vars->{'report_name'};
 	my $filename = $name;
@@ -63,7 +69,7 @@ if($authenticated == 1)
 				$sth->execute;
 			}
 			my $notify = Notification->new;
-			$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text");
+			$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text", to => $email);
 		} elsif($vars->{'mode'} eq "pdf"){
 		}
 		print "Content-type: text/html\n\n";
