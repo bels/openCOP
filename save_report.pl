@@ -10,8 +10,6 @@ use ReadConfig;
 use SessionFunctions;
 use DBI;
 use JSON;
-use Notification;
-use UserFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -31,49 +29,38 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $vars = $q->Vars;
-	my $json = JSON->new;
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $userinfo = $user->get_user_info(alias => $alias);
-
-	my $email = $userinfo->{'email'};
-
+	foreach(keys %$vars){
+		warn $_;
+	}
+	$vars->{'table'} =~ s/'/"/g;
+	warn $vars->{'table'};
 	my $object = from_json($vars->{'table'});
+	my $mode = $vars->{'mode'};
 	my $name = $vars->{'report_name'};
 	my $filename = $name;
 	$filename =~ s/ /_/g;
 	foreach(@{$object}){
 		shift @{$_};
 	}
-	if($vars->{'mode'} eq "csv"){
-		my $dbh = DBI->connect("dbi:CSV:f_dir=/tmp/");
-		my $query = "CREATE TABLE $filename.csv (";
-		foreach(@{@{$object}[0]}){
-			$query .= "$_ VARCHAR(255), ";
-		}
-		shift(@{$object});
-		$query =~ s/, $/ /;
-		$query .= ")";
-		my $sth = $dbh->prepare($query);
-		$sth->execute;
+	if($mode eq "csv"){
+		my $query;
 		foreach(@{$object}){
-			$query = "INSERT INTO $filename.csv values (";
 			for(my $i = 0; $i <= $#{$_}; $i++){
-				$query .= "'@{$_}[$i]', ";
+				if(@{$_}[$i] =~ m/ /){
+					@{$_}[$i] = qq(") . @{$_}[$i] . qq(");
+				}
+				$query .= "@{$_}[$i],";
 			}
 			shift @{$_};
-			$query =~ s/, $/ /;
-			$query .= ")";
-			$sth = $dbh->prepare($query);
-			$sth->execute;
+			$query =~ s/,$//;
+			$query .= "\n";
 		}
-		my $notify = Notification->new;
-		$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text", to => $email);
-		print "Content-type: text/html\n\n";
+		print "Content-type: application/octet-stream\n";
+		print "Content-disposition: attachment; filename=$filename.csv\n\n";
+		print($query);
 	} else if($vars->{'mode'} eq "pdf"){
 
 	} else if($vars->{'mode'} eq "excel"){
-
 	}
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});

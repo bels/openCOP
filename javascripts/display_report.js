@@ -6,13 +6,22 @@ $(document).ready(function(){
 	$('#res_table').livequery(function(){
 		$(this).tablesorter();
 	});
+	$('#email').bind('click',function(){
+		var eb = $('#export_button');
+		if(eb.text() == "Save"){
+			eb.text("Send");
+		} else if(eb.text() == "Send"){
+			eb.text("Save");
+		}
+	});
 	$('#export_button').bind('click',function(){
+		resetLogout();
 	//	var h = {};
 		var h = [];
 		h[0] = [];
 		$('#table_head_row').each(function(){
 			var i = h[0];
-			i.push(null);
+			i.push(undefined);
 			$(this).children('th.table_head_cell').each(function(){
 				i.push($(this).text());
 			});
@@ -28,24 +37,21 @@ $(document).ready(function(){
 		var mode = $('#export_select').val();
 		var email = $('#email').attr('checked');
 		var name = $('#report_name').text();
-		alert(table);
-		$.ajax({
-			type: 'POST',
-			url: 'export_report.pl',
-			data: {mode: mode, table: table, email: email, report_name: name},
-			success: function(data){
-				var error = data.substr(0,1);
-				if(error == "0"){
-					alert(table);
-					var str = data.replace(/^[\d\s]/,'');
-				} else if(error == "1"){
-					alert(error);
-					var str = data.replace(/^[\d\s]/,'');
+		if(email === true){
+			$.ajax({
+				type: 'POST',
+				url: 'export_report.pl',
+				data: {mode: mode, table: table, report_name: name},
+				success: function(data){
+					alert("The report has been sent.");
+				},
+				error: function(){
+					alert("Error");
 				}
-			},
-			error: function(){
-				alert("Error");
-			}
-		});
+			});
+		} else {
+			var data = {mode: mode, report_name: name, table: table};
+			$.download('save_report.pl',data,'post',function(){});
+		}
 	});
 });
