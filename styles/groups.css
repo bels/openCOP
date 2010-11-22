@@ -20,7 +20,7 @@
 
 .multiselect{
 	width: 460px;
-	height: 400px;
+	height: 200px;
 	display: none;
 }        
 
@@ -70,6 +70,23 @@ button.associate{
 	-webkit-border-radius: 15px;
 }
 
+#group_to_user{
+	height: 300px;
+	width: 750px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
 #del_group_div{
 	float: left;
 	width: 300px;
@@ -78,4 +95,20 @@ button.associate{
 #add_group_div{
 	float: left;
 	width: 400px;
+}
+
+#select_group_div{
+	width: 460px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ui-multiselect{
+	width: 460px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.available{
+	color: black;
 }

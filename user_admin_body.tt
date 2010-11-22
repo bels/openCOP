@@ -5,7 +5,7 @@
 			[% IF success == 1 %]
 				<span class="success">The user was created successfully.</span>
 			[% END %]
-			<h2>Add User</h2>
+			<h3>Add User</h3>
 			<form id="login_form" action="create_user.pl" method="POST">
 				<label for="username">Username:</label><input type="text" id="username" name="username"><br />
 				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br />
@@ -19,4 +19,24 @@
 				</select>
 				<input type="submit" id="submit_button" value="Add User">
 			</form>
+		</div>
+		
+		<div id="user_to_group" class="associate_div">
+			<h3>Modify Group Memberships</h3>
+			<div id="select_user_div" class="select_div">
+				<label id="select_user_header">User</label>
+				<select id="select_user_select">
+					<option value="" selected="selected"></option>
+				[% FOREACH id IN users.keys %]
+					<option value="[% users.$id.id %]">[% users.$id.alias %]</option>
+				[% END %]
+				</select>
+				<button id="submit_a_ug" mode="a_ug" class="associate">Save</button>
+			</div>
+			<div id="associate_user_group_div">
+				<div id="onload_append_div" class="onload_append">
+				</div>
+				<div id="a_ug_append_div">
+				</div>
+			</div>
 		</div>

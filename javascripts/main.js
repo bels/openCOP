@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	var tabs;
 	var tickets;
+	var user_admin_page;
 	if($('#tabs').length){
 		tabs = 1;
 	} else {
@@ -11,6 +12,12 @@ $(document).ready(function(){
 	} else {
 		tickets = 0;
 	}
+	if($('#associate_user_group_div').length){
+		user_admin_page = 1;
+	} else {
+		user_admin_page = 0;
+	}
+
 	$.ajaxSetup({
 		cache: false
 	});
@@ -41,13 +48,29 @@ $(document).ready(function(){
 		if(tickets){
 			$(".jspContainer").addClass("lower");
 		}
+		if(user_admin_page){
+			$("#associate_user_group_div").addClass("lower");
+			$("#a_ug_append_div").addClass("lower");
+			$(".ui-multiselect").addClass("lower");
+			$(".selected").addClass("lower");
+			$(".available").addClass("lower");
+		}
 		$(this).find("ul.subnav").slideDown('fast').show();
 	}
 	
 	function hideMenu(){
 		resetLogout();
 		$(this).find("ul.subnav").slideUp('fast',function(){
-			$(".jspContainer").removeClass("lower");
+			if(tickets){
+				$(".jspContainer").removeClass("lower");
+			}
+			if(user_admin_page){
+				$("#associate_user_group_div").removeClass("lower");
+				$("#a_ug_append_div").removeClass("lower");
+				$(".ui-multiselect").removeClass("lower");
+				$(".selected").removeClass("lower");
+				$(".available").removeClass("lower");
+			}
 			$("#tabs").removeClass("lower");
 		});
 	}

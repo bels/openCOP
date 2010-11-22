@@ -1,11 +1,19 @@
 #wrapper{
-	float: left;
-	margin-top: 25px;
-	margin-left: 25px;
-	margin-bottom: 25px;
-	margin-right: 25px;
 	min-width: 900px;
 	width: 95%;
+	margin-left: 35px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	padding-bottom: 15px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 .header_text{
@@ -16,11 +24,6 @@
 	text-align: center;
 	font-weight: bold;
 	font-size: 1.1em;
-}
-
-#group_to_section{
-	width: 100%;
-	float: left;
 }
 
 button.associate{
@@ -35,13 +38,9 @@ button.associate{
 	min-width: 150px;
 }
 
-.even{
-	background-color: #efefef;
-}
-
 .odd{
-	background-color: #dcdcdc;
-
+	background-color: white;
+	color: black
 }
 
 
