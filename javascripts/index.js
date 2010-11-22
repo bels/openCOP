@@ -6,4 +6,21 @@ $(document).ready(function(){
 			$('#low_resolution_warning').show();
 		}
 	}
+	
+	if($.browser.msie)
+	{
+		alert($.browser.version);
+	}
+	if($.browser.mozilla)
+	{
+		alert($.browser.version);
+	}
+	if($.browser.webkit)
+	{
+		alert($.browser.version);
+	}
+	if($.browser.opera)
+	{
+		alert($.browser.version);
+	}
 });
