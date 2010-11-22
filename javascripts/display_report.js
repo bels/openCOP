@@ -6,6 +6,14 @@ $(document).ready(function(){
 	$('#res_table').livequery(function(){
 		$(this).tablesorter();
 	});
+	$('#email').bind('click',function(){
+		var eb = $('#export_button');
+		if(eb.text() == "Save"){
+			eb.text("Send");
+		} else if(eb.text() == "Send"){
+			eb.text("Save");
+		}
+	});
 	$('#export_button').bind('click',function(){
 		resetLogout();
 	//	var h = {};
@@ -33,8 +41,9 @@ $(document).ready(function(){
 			$.ajax({
 				type: 'POST',
 				url: 'export_report.pl',
-				data: {mode: mode, table: table, email: email, report_name: name},
+				data: {mode: mode, table: table, report_name: name},
 				success: function(data){
+					alert("The report has been sent.");
 				},
 				error: function(){
 					alert("Error");

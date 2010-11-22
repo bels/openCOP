@@ -4,12 +4,12 @@ use CGI::Carp qw(fatalsToBrowser);;
 use strict;
 use Template;
 use lib './libs';
+use lib './modules';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
 use DBI;
 use JSON;
-use YAML;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -58,8 +58,9 @@ if($authenticated == 1)
 		print "Content-type: application/octet-stream\n";
 		print "Content-disposition: attachment; filename=$filename.csv\n\n";
 		print($query);
-	} elsif($mode eq "pdf"){
-		print "Content-type: text/html\n\n";
+	} else if($vars->{'mode'} eq "pdf"){
+
+	} else if($vars->{'mode'} eq "excel"){
 	}
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});

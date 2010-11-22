@@ -4,6 +4,7 @@ use CGI::Carp qw(fatalsToBrowser);;
 use strict;
 use Template;
 use lib './libs';
+use lib './modules';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
@@ -44,38 +45,36 @@ if($authenticated == 1)
 	foreach(@{$object}){
 		shift @{$_};
 	}
-	if($vars->{'email'} eq "true"){
-		warn $vars->{'email'};
-		if($vars->{'mode'} eq "csv"){
-			my $dbh = DBI->connect("dbi:CSV:f_dir=/tmp/");
-			my $query = "CREATE TABLE $filename.csv (";
-			foreach(@{@{$object}[0]}){
-				$query .= "$_ VARCHAR(255), ";
+	if($vars->{'mode'} eq "csv"){
+		my $dbh = DBI->connect("dbi:CSV:f_dir=/tmp/");
+		my $query = "CREATE TABLE $filename.csv (";
+		foreach(@{@{$object}[0]}){
+			$query .= "$_ VARCHAR(255), ";
+		}
+		shift(@{$object});
+		$query =~ s/, $/ /;
+		$query .= ")";
+		my $sth = $dbh->prepare($query);
+		$sth->execute;
+		foreach(@{$object}){
+			$query = "INSERT INTO $filename.csv values (";
+			for(my $i = 0; $i <= $#{$_}; $i++){
+				$query .= "'@{$_}[$i]', ";
 			}
-			shift(@{$object});
+			shift @{$_};
 			$query =~ s/, $/ /;
 			$query .= ")";
-			my $sth = $dbh->prepare($query);
+			$sth = $dbh->prepare($query);
 			$sth->execute;
-			foreach(@{$object}){
-				$query = "INSERT INTO $filename.csv values (";
-				for(my $i = 0; $i <= $#{$_}; $i++){
-					$query .= "'@{$_}[$i]', ";
-				}
-				shift @{$_};
-				$query =~ s/, $/ /;
-				$query .= ")";
-				$sth = $dbh->prepare($query);
-				$sth->execute;
-			}
-			my $notify = Notification->new;
-			$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text", to => $email);
-		} elsif($vars->{'mode'} eq "pdf"){
 		}
+		my $notify = Notification->new;
+		$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text", to => $email);
 		print "Content-type: text/html\n\n";
-	} else {
-	}
+	} else if($vars->{'mode'} eq "pdf"){
 
+	} else if($vars->{'mode'} eq "excel"){
+
+	}
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});
 }

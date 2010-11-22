@@ -25,10 +25,8 @@
 		<span id="export_as" name="export_as">Export as: </span>
 		<select id="export_select">
 			<option value=""></option>
-		//	<option value="excel">Excel Spreadsheet</option>
-			<option value="pdf">PDF Document</option>
 			<option value="csv">Comma Seperated Value file</option>
 		</select>
 		<span id="send_email">Send in email</span><input type="checkbox" name="email" id="email" title="Send in email">
-		<button id="export_button">Export</button>
+		<button id="export_button">Save</button>
 	</div>
