@@ -9,7 +9,7 @@ use ReadConfig;
 use SessionFunctions;
 use DBI;
 use JSON;
-use Notification;
+use YAML;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -29,47 +29,38 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $vars = $q->Vars;
-	my $json = JSON->new;
+	foreach(keys %$vars){
+		warn $_;
+	}
+	$vars->{'table'} =~ s/'/"/g;
 	warn $vars->{'table'};
 	my $object = from_json($vars->{'table'});
+	my $mode = $vars->{'mode'};
 	my $name = $vars->{'report_name'};
 	my $filename = $name;
 	$filename =~ s/ /_/g;
 	foreach(@{$object}){
 		shift @{$_};
 	}
-	if($vars->{'email'} eq "true"){
-		warn $vars->{'email'};
-		if($vars->{'mode'} eq "csv"){
-			my $dbh = DBI->connect("dbi:CSV:f_dir=/tmp/");
-			my $query = "CREATE TABLE $filename.csv (";
-			foreach(@{@{$object}[0]}){
-				$query .= "$_ VARCHAR(255), ";
-			}
-			shift(@{$object});
-			$query =~ s/, $/ /;
-			$query .= ")";
-			my $sth = $dbh->prepare($query);
-			$sth->execute;
-			foreach(@{$object}){
-				$query = "INSERT INTO $filename.csv values (";
-				for(my $i = 0; $i <= $#{$_}; $i++){
-					$query .= "'@{$_}[$i]', ";
+	if($mode eq "csv"){
+		my $query;
+		foreach(@{$object}){
+			for(my $i = 0; $i <= $#{$_}; $i++){
+				if(@{$_}[$i] =~ m/ /){
+					@{$_}[$i] = qq(") . @{$_}[$i] . qq(");
 				}
-				shift @{$_};
-				$query =~ s/, $/ /;
-				$query .= ")";
-				$sth = $dbh->prepare($query);
-				$sth->execute;
+				$query .= "@{$_}[$i],";
 			}
-			my $notify = Notification->new;
-			$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text");
-		} elsif($vars->{'mode'} eq "pdf"){
+			shift @{$_};
+			$query =~ s/,$//;
+			$query .= "\n";
 		}
+		print "Content-type: application/octet-stream\n";
+		print "Content-disposition: attachment; filename=$filename.csv\n\n";
+		print($query);
+	} elsif($mode eq "pdf"){
 		print "Content-type: text/html\n\n";
-	} else {
 	}
-
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});
 }

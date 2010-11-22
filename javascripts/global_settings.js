@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	$("#modules").load("list_modules.pl");
 	$(".module").live('click',function(){
+		resetLogout();
 		var module_name = $(this).attr('name');
 		if($(this).is(':checked')){
 			handle_modules(module_name,'enable');

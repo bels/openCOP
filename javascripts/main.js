@@ -17,6 +17,7 @@ $(document).ready(function(){
 	var logoutTimer = window.setTimeout('logout()', '3600000');
 	
 	$(".customer_link").hover(function(){
+		resetLogout();
 		$(this).addClass("highlighted_link");
 	},function(){
 		$(this).removeClass("highlighted_link");
@@ -33,6 +34,7 @@ $(document).ready(function(){
 	$("ul.topnav li").hoverIntent(config);
 	
 	function showMenu(){
+		resetLogout();
 		if(tabs){
 			$("#tabs").addClass("lower");
 		}
@@ -43,6 +45,7 @@ $(document).ready(function(){
 	}
 	
 	function hideMenu(){
+		resetLogout();
 		$(this).find("ul.subnav").slideUp('fast',function(){
 			$(".jspContainer").removeClass("lower");
 			$("#tabs").removeClass("lower");
@@ -56,4 +59,8 @@ $(document).ready(function(){
 function logout(){
 	$.cookie("session", null, { path: '/' });
 	location.href = 'logout.pl';
+}
+
+function resetLogout(){
+	logoutTimer = window.setTimeout('logout()', '3600000');
 }

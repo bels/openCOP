@@ -13,6 +13,7 @@ $(document).ready(function(){
 
 	if($('.ticket_lookup').length){
 		$('.section_header_div').bind('click',function(){
+			resetLogout();
 			$(this).next(".ticket_lookup").toggle();
 			var C = $(this).next(".ticket_lookup");
 			var section = C.attr("id");
@@ -44,6 +45,7 @@ $(document).ready(function(){
 	};
 
 	$("#submit_button").click(function(){
+		resetLogout();
 		validateTicket();		
 		if($("#newticket").valid())
 		{
@@ -75,6 +77,7 @@ $(document).ready(function(){
 	});
 	
 	$(".lookup_row").live("click",function(){
+		resetLogout();
 		var ticket_number = $(this).children(".row_ticket_number").text();
 		var url = "ticket_details.pl?ticket_number=" + ticket_number;
 		var details_pane = $("#ticket_details").jScrollPane({
@@ -87,6 +90,7 @@ $(document).ready(function(){
 		$("#ticket_details").css("display","block");
 	});
 	$("#customer_submit_button").click(function(){
+		resetLogout();
 		validateTicket();		
 		if($("#newticket").valid())
 		{
@@ -140,10 +144,12 @@ $(document).ready(function(){
 	}
 	
 	$(".ticket_section_toggle").click(function(){
+		resetLogout();
 		$(".toggle_img").toggle();
 	});
 	
 	$(".toggle_link").click(function(){
+		resetLogout();
 		$(".toggle_img").toggle();
 	});
 });

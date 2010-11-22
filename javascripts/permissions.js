@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	$('.delete_button').bind('click', function(){
+		resetLogout();
 		var id = $(this).attr('id');
 		var mode = "delete_permission";
 		$.blockUI({message: "Submitting"});
@@ -26,6 +27,7 @@ $(document).ready(function(){
 	});
 
 	$('.update_button').bind('click', function(){
+		resetLogout();
 		var id = $(this).attr('id');
 		var mode = "update_permission";
 		var permission_string = "";
@@ -60,6 +62,7 @@ $(document).ready(function(){
 	});
 
 	$('#submit_a_gs').bind('click', function(){
+		resetLogout();
 		var gid = $('#select_group').val();
 		var sid = $('#select_section').val();
 		var mode = "add_gs";

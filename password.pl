@@ -40,7 +40,7 @@ if($authenticated == 1)
 {
 	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 	my $id;
-	if($previous =~ m/customer/i || $type eq "customer")
+	if($previous =~ m/customer_/i || $type eq "customer")
 	{
 		$file = "customer_password.tt";
 		$customer = 1;

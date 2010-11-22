@@ -85,6 +85,51 @@ sub handle_failure{
 	warn join( ':', $smtp->code, $call, $smtp_msg );
 }
 
+sub send_attachment{
+	my $self = shift;
+	my %args = @_;
+	
+	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
+	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in notification.yml
+	my $email = $args{'to'};
+	my $company_name = $self->{'config'}->{'company_name'};
+	my $boundary = 'frontier';
+	my $data_file = $args{'attachment_file'};
+
+	open (DATA,$data_file) || die("Could not open the file");
+		my @csv = <DATA>;
+	close(DATA);
+
+	$smtp->auth($self->{'config'}->{'email_user'},$self->{'config'}->{'email_password'});
+		
+	$smtp->mail($self->{'config'}->{'from'}) || handle_failure( $smtp, 'mail' );
+	$smtp->to($email) || handle_failure( $smtp, 'to' );
+	
+	$smtp->data();
+	$smtp->datasend("To: $email\n") || handle_failure( $smtp, 'data_send_to' );
+	$smtp->datasend("From: $self->{'config'}->{'from'}\n") || handle_failure( $smtp, 'data_send_from' ) ;
+	$smtp->datasend("Subject: $args{'attachment_name'}\n") || handle_failure( $smtp, 'data_send_subject' ) ;
+	$smtp->datasend("\n");
+
+	$smtp->datasend("MIME-Version: 1.0\n");
+	$smtp->datasend("Content-type: multipart/mixed;\n\tboundary=$boundary\n");
+	$smtp->datasend("\n");
+	$smtp->datasend("--$boundary\n");
+	$smtp->datasend("Content-type: text/plain\n");
+	$smtp->datasend("Content-Disposition: quoted-printable\n");
+	$smtp->datasend($message_body) || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend("\n\nThank you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
+	$smtp->datasend("--$boundary\n");
+	$smtp->datasend("Content-Type: $args{'content_type'}; name=$data_file\n");
+	$smtp->datasend("Content-Disposition: attachment; filename=$data_file\n");
+	$smtp->datasend("\n");
+	$smtp->datasend("@csv\n");
+	$smtp->datasend("--$boundary--\n");
+    
+	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
+	$smtp->quit || handle_failure( $smtp, 'quit' );
+}
+
 sub new_user{
 	my $self = shift;
 	my %args = @_;

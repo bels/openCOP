@@ -11,10 +11,12 @@ $(document).ready(function(){
 	});
 
 	$('#submit_add_button').bind('click',function(){
+		resetLogout();
 		submit_tp($(this));
 	});
 
 	$('#submit_del_button').bind('click',function(){
+		resetLogout();
 		submit_tp($(this));
 	});
 
@@ -26,6 +28,7 @@ $(document).ready(function(){
 
 	$('#del_tp_select').livequery(function(){
 		$('#del_tp_select').change(function(){
+			resetLogout();
 			if($('#del_tp_select').val() == "property"){
 				load_properties();
 			} else {
@@ -36,11 +39,13 @@ $(document).ready(function(){
 
 	$('.type_select').livequery(function(){
 		$('.type_select').change(function(){
+			resetLogout();
 			load_associations();
 		});
 	});
 
 	$('#submit_a_tp').bind('click', function(){
+		resetLogout();
 		var tp_select_string = "";
 		var tp_unselect_string = "";
 		var mode = "associate";
