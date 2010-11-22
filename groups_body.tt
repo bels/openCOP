@@ -1,23 +1,16 @@
 <div id="wrapper">
-	<ul id="modify_group_wrapper" class="div_wrapper">
-	<div id="add_group_div" class="modify_group_div">
-		<div id="add_group_header" class="header_text">
-			<span id="add_group_header_text">Add new group</span>
-		</div>
-		<div id="add_group_form_div">
+	<div id="modify_group_wrapper" class="div_wrapper">
+		<span class="group_title">Add/Remove Group</span>
+		<div id="add_group_div" class="modify_group_div">
 			<form id="add_group_form">
+				<label id="add_group_header_text">Add new group</label>
 				<input id="group_name" class="add_group_input">
 				<button id="add_group_button">Add</button>
 			</form>
 		</div>
-	</div>
-
-	<div id="del_group_div" class="modify_group_div">
-		<div id="del_group_header" class="header_text">
-			<span id="del_group_header_text">Delete group</span>
-		</div>
-		<div id="del_group_form_div">
+		<div id="del_group_div" class="modify_group_div">
 			<form id="del_group_form">
+				<label id="del_group_header_text">Delete group</label>
 				<select id="delete_group_select">
 					<option value=""></option>
 				[% FOREACH group IN groups.keys %]
@@ -28,7 +21,6 @@
 			</form>
 		</div>
 	</div>
-	</ul>
 	<ul id="associate_div_wrapper" class="div_wrapper">
 	<div id="user_to_group" class="associate_div">
 		<div id="associate_user_group_header" class="header_text">
@@ -54,7 +46,7 @@
 
 	<div id="group_to_user" class="associate_div">
 		<div id="associate_group_user_header" class="header_text">
-			<span id="associate_group_user_header_text">Add users to groups</span>
+			<span id="associate_group_user_header_text">Membership</span>
 		</div>
 		<div id="select_group_div" class="select_div">
 			<span id="select_group_header">Group</span>
