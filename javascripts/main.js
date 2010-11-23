@@ -29,7 +29,10 @@ $(document).ready(function(){
 		out: hideMenu
 	};
 	
-	$("ul.subnav").parent().append("<span></span>"); //Only shows drop down trigger when js is enabled (Adds empty span tag after ul.subnav*)
+	if($('ul.subnav').parent().children('span').length){
+	} else {
+		$("ul.subnav").parent().append("<span></span>"); //Only shows drop down trigger when js is enabled (Adds empty span tag after ul.subnav*)
+	}
 
 	$("ul.topnav li").hoverIntent(config);
 	

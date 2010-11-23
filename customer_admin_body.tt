@@ -17,8 +17,8 @@
 				<label for="site" class="short_label">Site:</label>
 				<select name="site" size="1" tabindex="1" id="site">
 					<option></option>
-					[% FOREACH site IN site_list %]
-					<option value="[% site %]">[% site %]</option>
+					[% FOREACH site IN site_list.keys %]
+					<option value="[% site %]">[% site_list.$site.name %]</option>
 					[% END %]
 				</select>
 				<input type="submit" value="Create Account" id="submit_button">

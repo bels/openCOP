@@ -271,6 +271,7 @@ sub submit{
 					?
 				);
 		";
+		warn $query;
 		$sth = $dbh->prepare($query);
 		$sth->execute(
 			$site,
@@ -302,10 +303,12 @@ sub submit{
 		}
 		return $results = {
 			'error'		=>	"0",
+			'id'		=>	$id->{'insert_ticket'},
 		};
 	} else {
 		return $results = {
 			'error'		=>	"1",
+			'id'		=>	"0",
 		};
 	}
 }

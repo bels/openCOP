@@ -34,9 +34,15 @@ if($authenticated == 1)
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $file = "customer_admin.tt";
-	my @site_list = $config->{'sites'};
+
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+	my $query = "select * from site where not deleted;";
+	my $sth = $dbh->prepare($query);
+	$sth->execute;
+	my $site_list = $sth->fetchall_hashref('id');
+
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, site_list => @site_list,duplicate => $duplicate,success => $success};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, site_list => $site_list,duplicate => $duplicate,success => $success};
 	
 	print "Content-type: text/html\n\n";
 

@@ -39,6 +39,15 @@ CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curren
 DROP TABLE IF EXISTS reports;
 CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
 
+DROP TABLE IF EXISTS wo;
+CREATE TABLE wo(id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE);
+
+DROP TABLE IF EXISTS wo_template;
+CREATE TABLE wo_template(wo_id INTEGER references wo(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, requires_id INTEGER DEFAULT null, step INTEGER);
+
+DROP TABLE IF EXISTS wo_ticket;
+CREATE TABLE wo_ticket (id BIGSERIAL PRIMARY KEY, ticket_id INTEGER, requires INTEGER DEFAULT null, wo_id INTEGER, step INTEGER);
+
 DROP TABLE IF EXISTS audit;
 CREATE TABLE audit (
 	record BIGSERIAL PRIMARY KEY,
@@ -362,6 +371,50 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION create_wo(
+	name_val VARCHAR(255)
+) RETURNS INTEGER AS $$
+DECLARE
+	wo_id INTEGER;
+BEGIN
+	insert into wo(
+		name
+	)
+	values(
+		name_val
+	);
+
+	select into wo_id currval('wo_id_seq');
+	return wo_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_wo(
+	wo_val INTEGER,
+	section_val INTEGER,
+	requires_val INTEGER,
+	step_val INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+	wt_id INTEGER;
+BEGIN
+	insert into wo_template(
+		wo_id,
+		section_id,
+		requires_id,
+		step
+	)
+	values(
+		wo_val,
+		section_val,
+		requires_val,
+		step_val
+	);
+	wt_id := -1;
+	return wt_id;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Permissions and stuff
 DROP USER helpdesk;
 CREATE USER helpdesk WITH PASSWORD 'helpdesk';
@@ -416,3 +469,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON enabled_modules TO helpdesk;
 GRANT SELECT, UPDATE ON enabled_modules_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON reports TO helpdesk;
 GRANT SELECT, UPDATE ON reports_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo TO helpdesk;
+GRANT SELECT, UPDATE ON wo_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo_ticket TO helpdesk;
+GRANT SELECT, UPDATE ON wo_ticket_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo_template TO helpdesk;
