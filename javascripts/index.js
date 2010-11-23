@@ -7,7 +7,7 @@ $(document).ready(function(){
 		}
 	}
 	
-	if($.browser.msie)
+	/*if($.browser.msie)
 	{
 		alert($.browser.version);
 	}
@@ -22,5 +22,8 @@ $(document).ready(function(){
 	if($.browser.opera)
 	{
 		alert($.browser.version);
+	}*/
+	if(!$.support.boxModel || !$.support.opacity){
+		alert("Your browser is not current with its standards compliance.  There are parts of this application that will not look/operate correctly.  Please upgrade to a compliant browser (Firefox 3.5+, Safari 3+, Opera 10+, IE9).");
 	}
 });
