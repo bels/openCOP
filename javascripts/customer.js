@@ -3,6 +3,8 @@ $(document).ready(function(){
 		cache: false
 	});
 
+	var logoutTimer = window.setTimeout('logout()', '3600000');
+
 	$("#free_date").live('focus', function(){
 		resetLogout();
 		if($(this).attr("readonly") === true){
@@ -63,3 +65,6 @@ $(document).ready(function(){
 		}
 	});
 });
+function resetLogout(){
+	logoutTimer = window.setTimeout('logout()', '3600000');
+}

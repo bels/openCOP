@@ -16,9 +16,10 @@
 					<br />
 					<label for="priority" class="short_label">Priority:</label>
 					<select name="priority" size="1" tabindex="11" id="priority">
-						[% FOREACH priority IN priority_list.keys %]
-						<option [% IF priority_list.$priority.description == "Normal" %]SELECTED[% END %] value="[% priority_list.$priority.id %]">[% priority_list.$priority.description %]</option>
-						[% END %]
+					[% FOREACH i IN priority_list.keys %]
+						[% j = loop.count %]
+						<option value="[% j %]" [% IF j == 2 %]selected[% END %]>[% priority_list.$j.description %]</option>
+					[% END %]
 					</select>
 					<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
 					<label for="section" class="short_label">Section:</label>

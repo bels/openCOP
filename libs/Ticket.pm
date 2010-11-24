@@ -65,6 +65,7 @@ sub render{
 
 	$config->read_config;
 
+	# Pull available sections from the database
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query = "
 		select
@@ -90,6 +91,7 @@ sub render{
 	$sth->execute($args{'id'});
 	my $section_list = $sth->fetchall_hashref('section_id');
 
+	# Pull sections to which this user has create rights from the database
 	$query = "
 		select
 			name,
@@ -115,21 +117,25 @@ sub render{
 	$sth->execute($args{'id'});
 	my $section_create_list = $sth->fetchall_hashref('section_id');
 
+	# Create a psuedo-section for tickets which are assigned to the technician but not on a board to which the technician has read rights
 	$section_list->{'pseudo'} = {
 		'section_id'	=>	"pseudo",
 		'name'		=>	"Tickets assigned directly",
 	};
 
+	# Get the list of available priorities
 	$query = "select * from priority;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $priority_list = $sth->fetchall_hashref('id');
 
+	# Get the list of available sites
 	$query = "select * from site where not deleted;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $site_list = $sth->fetchall_hashref('id');
 
+	# Get the list of technicians
 	$query = "select id,alias from users where active;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
@@ -384,6 +390,8 @@ sub lookup{
 			where
 				status not in ('7')
 			and
+				active
+			and
 				section = ?
 			order by
 				ticket
@@ -404,6 +412,8 @@ sub lookup{
 					section on section.id = helpdesk.section
 			where
 				status not in ('6','7')
+			and
+				active
 			and
 				section = ?
 			order by
@@ -427,7 +437,7 @@ sub details{
 	my %args = @_;
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select * from helpdesk where ticket = ?";
+	my $query = "select * from helpdesk where ticket = ? and active";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($args{'data'});
 	my $results = $sth->fetchrow_hashref;
@@ -569,6 +579,25 @@ sub update{
 		);
 		#this will return the id of the insert record if we ever find a use for it
 		my $results = $sth->fetchrow_hashref;
+		if($data->{'status'} == "6" || $data->{'status'} == "7"){
+			$query = "
+				update
+					helpdesk
+				set
+					active = true
+				where
+					ticket in (
+						select
+							ticket_id
+						from
+							wo_ticket
+						where
+							requires = ?
+					);
+			";
+			$sth = $dbh->prepare($query);
+			$sth->execute($results->{'update_ticket'});
+		}
 		return $results;
 	} else {
 		return $results = {

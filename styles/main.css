@@ -2,10 +2,6 @@
      display: none;
 }
 
-.lower{
-	z-index: -1;
-}
-
 .drive_data{
 	display: inline-block;
 	float: left;

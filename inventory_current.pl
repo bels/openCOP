@@ -229,10 +229,18 @@ if($authenticated == 1)
 			<select id="by_property">
 				<option value="" selected="selected"></option>
 		);
-		foreach my $key (keys %$pid){
-			$data .= qq(
-				<option value="$pid->{$key}->{'id'}">$pid->{$key}->{'property'}</option>
-			);
+		my $i;
+		my @pid;
+		foreach(keys %$pid){
+			push(@pid,$pid->{$_}->{'property'});
+		}
+		my @ppid = sort(@pid);
+		foreach(@pid){
+			$_ = $pid->{$_}->{'id'};
+		}
+		for ($i = 1; $i <= $#pid; $i++)
+		{
+			$data .= qq(<option value=$pid[$i]>$ppid[$i]</option>);
 		}
 		$data .= qq(
 			</select>

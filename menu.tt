@@ -5,7 +5,7 @@
 					<ul class="subnav">
 						<li><a href="ticket.pl?mode=new">New Ticket</a></li>
 						<li><a href="ticket.pl?mode=lookup">Ticket Lookup</a></li>
-						<li><a href="work_orders.pl">New Work Order</a></li>
+						<li><a href="work_order_new.pl">New Work Order</a></li>
 						<li><a href="#">Work Order Lookup</a></li>
 						<li><a href="#">Ticket Queue</a></li>
 						<li><a href="#">Work Order Queue</a></li>
@@ -31,6 +31,7 @@
 				</lI>
 				<li><a href=#>Admin</a>
 					<ul class="subnav">
+						<li><a href="work_orders.pl">Work Orders</a></li>
 						<li><a href="user_admin.pl">User Admin</a></li>
 						<li><a href="sites.pl">Companies/Sites</a></li>
 						<li><a href="global_settings.pl">Global Settings</a></li>

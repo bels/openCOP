@@ -18,23 +18,11 @@ $(document).ready(function(){
 					newHTML += '<option value="' + ci + '">Step ' + ci + '</option>';
 				}
 			});
+			ci = $(this).parent().parent().parent().attr('id').substr($(this).attr('id').length -1);
 			$(this).html(newHTML);
+			$(this).children('option[value=' + ci + ']').remove();
 		});
 	});
-
-	$('.requires').livequery(function(){
-		var ci;
-		var newHTML = "";
-		var iHTML = $(this).html();
-		$('#wo_tabs').find('div.ui-tabs-panel').each(function(){
-			var thisForm = $(this).find('form.newwo');
-			if(thisForm.length){
-				ci = $(this).attr('id').substr($(this).attr('id').length -1);
-				newHTML += '<option value="' + ci + '">Step ' + ci + '</option>';
-			}
-		});
-		$(this).html(iHTML + newHTML);
-	}).expire();
 
 	$('.create_button').livequery(function(){
 		$(this).bind('click',function(){
@@ -64,33 +52,36 @@ $(document).ready(function(){
 					}
 				}
 			});
-
-			if(allValid){
-				$.blockUI({message: "Submitting"});
-				var name = $('#wo_name_input').val();
-				var object = $.toJSON(h);
-				var url = "submit_wo.pl";
-				$.ajax({
-					type: 'POST',
-					url: url,
-					data: {object: object, name: name},
-					success: function(data){
-						var error = data.substr(0,1);
-						if(error == "0"){
-							var str = data.replace(/^[\d\s]/,'');
-							alert("Creates new work order");
-							window.location = "work_orders.pl";
-						} else {
-							var str = data.replace(/^[\d\s]/,'');
-							alert(str);
+			if($('#wo_name_input').val() !== ""){
+				if(allValid){
+					$.blockUI({message: "Submitting"});
+					var name = $('#wo_name_input').val();
+					var object = $.toJSON(h);
+					var url = "create_wo.pl";
+					$.ajax({
+						type: 'POST',
+						url: url,
+						data: {object: object, name: name},
+						success: function(data){
+							var error = data.substr(0,1);
+							if(error == "0"){
+								var str = data.replace(/^[\d\s]/,'');
+								alert("Created new work order");
+								window.location = "work_orders.pl";
+							} else if(error == "1"){
+								var str = data.replace(/^[\d\s]/,'');
+								alert(str);
+							}
+							$.unblockUI();
+						},
+						error: function(xml,text,error){
+							alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
+							$.unblockUI();
 						}
-						$.unblockUI();
-					},
-					error: function(xml,text,error){
-						alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
-						$.unblockUI();
-					}
-				});
+					});
+				}
+			} else {
+				alert("You must give this work order a name");
 			}
 		});
 	});
@@ -99,34 +90,10 @@ $(document).ready(function(){
 function validateTicket(e){
 	e.validate({
 		rules: {
-			site: "required",
-			author: "required",
-			contact: "required",
-			email: {
-				email: true,
-				required: true
-			},
-			priority: "required",
 			section: "required",
 			problem: "required"
 		},
 		messages: {
-			site: {
-				required: "*"
-			},
-			author: {
-				required: "*"
-			},
-			contact: {
-				required: "*"
-			},
-			email: {
-				email: "*",
-				required: "*"
-			},
-			priority: {
-				required: "*"
-			},
 			section: {
 				required: "*"
 			},
@@ -136,7 +103,4 @@ function validateTicket(e){
 		}
 	});
 	return e.valid();
-}
-
-function refreshRequires(){
 }

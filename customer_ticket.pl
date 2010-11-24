@@ -42,7 +42,7 @@ if($authenticated == 1)
 	my $closed; #used to toggle something in the template file
 	if($data->{'status'} eq "open")
 	{
-		$query = "select * from helpdesk where submitter = '$id' and status <> 6 and status <> 7";
+		$query = "select * from helpdesk where submitter = '$id' and status <> 6 and status <> 7 and active";
 		$closed = 0;
 	}
 	if($data->{'status'} eq "closed")

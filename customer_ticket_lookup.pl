@@ -26,7 +26,7 @@ if($authenticated == 1)
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $ticket_number = $q->param('ticket_number');
 	my $oc = $q->param('oc');
-	my $query = "select * from helpdesk where ticket = ?";
+	my $query = "select * from helpdesk where ticket = ? and active";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($ticket_number);
 	my $results = $sth->fetchrow_hashref;

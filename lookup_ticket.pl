@@ -59,6 +59,8 @@ if($authenticated == 1)
 			where
 				status not in ('6','7')
 			and
+				active
+			and
 				technician = ?
 			and
 				section not in (

@@ -1,10 +1,16 @@
 $(document).ready(function(){
 	var tabs;
+	var wo_tabs;
 	var tickets;
 	if($('#tabs').length){
 		tabs = 1;
 	} else {
 		tabs = 0;
+	}
+	if($('#wo_tabs').length){
+		wo_tabs = 1;
+	} else {
+		wo_tabs = 0;
 	}
 	if($('.ticket_lookup').length){
 		tickets = 1;
@@ -41,6 +47,9 @@ $(document).ready(function(){
 		if(tabs){
 			$("#tabs").addClass("lower");
 		}
+		if(wo_tabs){
+			$("#wo_tabs").addClass("lower");
+		}
 		if(tickets){
 			$(".jspContainer").addClass("lower");
 		}
@@ -52,6 +61,7 @@ $(document).ready(function(){
 		$(this).find("ul.subnav").slideUp('fast',function(){
 			$(".jspContainer").removeClass("lower");
 			$("#tabs").removeClass("lower");
+			$("#wo_tabs").removeClass("lower");
 		});
 	}
 	if(tabs){

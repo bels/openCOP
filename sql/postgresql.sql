@@ -25,7 +25,32 @@ DROP TABLE IF EXISTS ticket_status;
 CREATE TABLE ticket_status (id BIGSERIAL PRIMARY KEY, name VARCHAR(255));
 
 DROP TABLE IF EXISTS helpdesk;
-CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id) DEFAULT '1', location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT DEFAULT '1', problem TEXT, priority INT  DEFAULT '2', serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER DEFAULT '1', submitter INTEGER, free_date DATE, free_time TIME, closed_by VARCHAR(255) DEFAULT null, completed_by VARCHAR(255) DEFAULT null);
+CREATE TABLE helpdesk (
+	ticket BIGSERIAL PRIMARY KEY,
+	status INTEGER references ticket_status(id),
+	barcode VARCHAR(255),
+	site INTEGER references site(id) DEFAULT '1',
+	location TEXT,
+	requested TIMESTAMP DEFAULT current_timestamp,
+	updated TIMESTAMP,
+	author TEXT,
+	contact VARCHAR(255),
+	contact_phone VARCHAR(255),
+	notes TEXT,
+	section INT DEFAULT '1',
+	problem TEXT,
+	priority INT DEFAULT '2',
+	serial VARCHAR(255),
+	tech VARCHAR(255),
+	contact_email VARCHAR(255),
+	technician INTEGER DEFAULT '1',
+	submitter INTEGER,
+	free_date DATE,
+	free_time TIME,
+	closed_by VARCHAR(255) DEFAULT null,
+	completed_by VARCHAR(255) DEFAULT null,
+	active BOOLEAN DEFAULT true
+);
 
 DROP TABLE IF EXISTS troubleshooting;
 CREATE TABLE troubleshooting(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
@@ -43,7 +68,7 @@ DROP TABLE IF EXISTS wo;
 CREATE TABLE wo(id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE);
 
 DROP TABLE IF EXISTS wo_template;
-CREATE TABLE wo_template(wo_id INTEGER references wo(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, requires_id INTEGER DEFAULT null, step INTEGER);
+CREATE TABLE wo_template(wo_id INTEGER references wo(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, requires_id INTEGER DEFAULT null, step INTEGER, problem TEXT DEFAULT null);
 
 DROP TABLE IF EXISTS wo_ticket;
 CREATE TABLE wo_ticket (id BIGSERIAL PRIMARY KEY, ticket_id INTEGER, requires INTEGER DEFAULT null, wo_id INTEGER, step INTEGER);
@@ -164,20 +189,19 @@ CREATE TABLE customers(id SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(1
 
 -- Adding admin user
 INSERT INTO users(alias,email,password) values('admin','admin@localhost',MD5('admin'));
--- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
 INSERT INTO priority(severity,description) values(3,'High');
 INSERT INTO priority(severity,description) values(4,'Business Critical');
 INSERT INTO section(name,email) values('Helpdesk','helpdesk@testcompany.com');
 -- some starting ticket status
-INSERT INTO ticket_status (name) values ('New');
-INSERT INTO ticket_status (name) values ('In Progress');
-INSERT INTO ticket_status (name) values ('Waiting Customer');
-INSERT INTO ticket_status (name) values ('Waiting Vendor');
-INSERT INTO ticket_status (name) values ('Waiting Other');
-INSERT INTO ticket_status (name) values ('Closed');
-INSERT INTO ticket_status (name) values ('Completed');
+INSERT INTO status (status) values ('New');
+INSERT INTO status (status) values ('In Progress');
+INSERT INTO status (status) values ('Waiting Customer');
+INSERT INTO status (status) values ('Waiting Vendor');
+INSERT INTO status (status) values ('Waiting Other');
+INSERT INTO status (status) values ('Closed');
+INSERT INTO status (status) values ('Completed');
 -- test data to start with 
 INSERT INTO site_level(type) values ('test');
 INSERT INTO site (level,name) values (1,'Test Site');
@@ -328,9 +352,9 @@ BEGIN
 	IF notes_val NOT LIKE '' THEN
 		insert into notes (ticket_id,note) values(ticket_number,notes_val);
 	END IF;
-	
-	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
-	RETURN last_id;
+	-- select into last_id last_value from helpdesk_ticket_seq;
+	-- last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
+	RETURN ticket_number;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -393,7 +417,8 @@ CREATE OR REPLACE FUNCTION insert_wo(
 	wo_val INTEGER,
 	section_val INTEGER,
 	requires_val INTEGER,
-	step_val INTEGER
+	step_val INTEGER,
+	problem_val TEXT
 ) RETURNS INTEGER AS $$
 DECLARE
 	wt_id INTEGER;
@@ -402,13 +427,15 @@ BEGIN
 		wo_id,
 		section_id,
 		requires_id,
-		step
+		step,
+		problem
 	)
 	values(
 		wo_val,
 		section_val,
 		requires_val,
-		step_val
+		step_val,
+		problem_val
 	);
 	wt_id := -1;
 	return wt_id;
