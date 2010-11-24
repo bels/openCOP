@@ -153,10 +153,13 @@ if($authenticated == 1)
 
 		$data = qq(
 				<form id="add_object_form">
-					<label for="object_type_select" class="add type_select">Create </label>
 					<div id="object_type_append_div">
-				<select id="object_type_select">
-					<option value="" selected="selected"></option>
+					<div id="add_top_header" class="header_text">
+					<span id="add_top_header_text">Create new objects</span>
+				</div>
+					<label for="object_type_select" class="add type_select">Create </label>
+					<select id="object_type_select">
+						<option value="" selected="selected"></option>
 		);
 		foreach my $key (keys %$results){
 			$data .= qq(<option tpid="$special_case->{'type'}->{'id'}" value="$results->{$key}->{'id'}">$results->{$key}->{'template'}</option>);
@@ -196,18 +199,16 @@ if($authenticated == 1)
 			}
 		}
 		$data .= qq(	</select>
+				<button id="submit_add_property_button" class="submit_button left_add_object">Add Property</button>
 				</div>
 		);
 
 		$data .= qq(
+					<button id="submit_create_object_button" class="submit_button left_add_object">Create Inventory Object</button>
 					</div>
 				</form>
 		);
-
-		$data .= qq(
-						<button id="submit_create_object_button" class="submit_button left_add_object">Create</button>
-						<button id="submit_add_property_button" class="submit_button left_add_object">Add</button>
-		);
+		
 		print $data;
 	} elsif ($vars->{'mode'} eq "onload_more"){
 		$query = "select * from template;";
@@ -250,11 +251,11 @@ if($authenticated == 1)
 		foreach my $key (@hash_order){
 			$i++;
 			$data .= qq(
-				<br><label class="object_form_label object_form">$results->{$key}->{'property'}</label>	<input id="$results->{$key}->{'property_id'}" class="object_form_input object_form required" tabindex="$i">
+				<br><label class="object_form_label object_form">$results->{$key}->{'property'}</label>	<input id="$results->{$key}->{'property_id'}" class="object_form_input object_form required">
 			);
 			$i--;
 			$data .= qq(
-				<button class="object_form object_remove_property_button" tabindex="$i">Remove</button>
+				<button class="object_form object_remove_property_button">Remove</button>
 			);
 			$i++;
 			$i++;
@@ -292,7 +293,6 @@ if($authenticated == 1)
 			$sth->execute;
 		}
 		print "Content-type: text/html\n\n";
-		print "0";
 	} elsif ($vars->{'mode'} eq "delete_object"){
 		$query = "delete from object where id = '$vars->{'object'}';";
 		$sth = $dbh->prepare($query);

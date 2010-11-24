@@ -10,7 +10,7 @@
 label.add, label.del{
 	_border: 1px green solid;	
 	display: inline-block;
-	float: left;
+	width: 155px;
 	min-width: 70px;
 	height: 25px;
 	padding-left: 4px;
@@ -19,7 +19,6 @@ label.add, label.del{
 }
 
 input{
-	float: left;
 	margin-left: 4px;
 	margin-top: 4px;
 }
@@ -30,9 +29,8 @@ select{
 }
 
 .submit_button{
-	float: right;
-	margin-left: 4px;
-	margin-right: 4px;
+	margin-left: auto;
+	margin-right: auto;
 	margin-top: 4px;
 }
 
@@ -44,11 +42,4 @@ select{
 	text-align: center;
 	font-weight: bold;
 	font-size: 1.1em;
-}
-
-.type_select{
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 4px;
 }

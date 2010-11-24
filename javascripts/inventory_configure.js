@@ -60,7 +60,7 @@ $(document).ready(function(){
 				tp_unselect_string += $(this).attr("value") + ":";
 			}
 		});
-		$.blockUI({message: "Submitting"});
+		$.blockUI({message: "Please Wait"});
 		$.ajax({
 			type: 'POST',
 			url: 'inventory_getdata.pl',

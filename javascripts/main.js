@@ -2,6 +2,12 @@ $(document).ready(function(){
 	var tabs;
 	var tickets;
 	var user_admin_page;
+	var inventory_current;
+	if($("#current_object_div").length){
+		inventory_current = 1;
+	} else {
+		inventory_current = 0;
+	}
 	if($('#tabs').length){
 		tabs = 1;
 	} else {
@@ -55,6 +61,10 @@ $(document).ready(function(){
 			$(".selected").addClass("lower");
 			$(".available").addClass("lower");
 		}
+		if(inventory_current){
+
+			$(".jspContainer").addClass("lower");
+		}
 		$(this).find("ul.subnav").slideDown('fast').show();
 	}
 	
@@ -70,6 +80,9 @@ $(document).ready(function(){
 				$(".ui-multiselect").removeClass("lower");
 				$(".selected").removeClass("lower");
 				$(".available").removeClass("lower");
+			}
+			if(inventory_current){
+				$(".jspContainer").removeClass("lower");
 			}
 			$("#tabs").removeClass("lower");
 		});

@@ -1,8 +1,6 @@
 	<div id="configure_wrapper" class="wrapper">
 		<div id="configure_top" class="top">
-			<div id="configure_top_header" class="header_text">
-				<span id="configure_top_header_text">Add and remove types and properties</span>
-			</div>
+			<span id="configure_top_header_text" class="header_text">Add and remove types and properties</span>
 			<div id="add_tp_div" class="tp_div">
 				<form id="add_tp_form">
 					<label for="add_tp_select" class="add">Add </label>
@@ -11,8 +9,8 @@
 						<option value="property">Property</option>
 					</select>
 					<input id="add_tp" type="text" class="add">
+					<button id="submit_add_button" mode="add_tp" class="submit_button">Submit</button>
 				</form>
-				<button id="submit_add_button" mode="add_tp" class="submit_button">Submit</button>
 			</div>
 			<div id="del_tp_div" class="tp_div">
 				<form id="del_tp_form">
@@ -23,20 +21,16 @@
 					</select>
 					<div id="t_tp_append_div">
 					</div>
+					<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
 				</form>
-				<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
 			</div>
 		</div>
 		<div id="configure_bottom" class="bottom">
-			<div id="configure_bottom_header" class="header_text">
-				<span id="configure_bottom_header_text">Associate properties with types</span>
+			<span id="configure_bottom_header_text" class="header_text">Associate properties with types</span>
+			<button id="submit_a_tp" mode="a_tp">Associate</button>
+			<div id="onload_append_div" class="onload_append">
 			</div>
-				<button id="submit_a_tp" mode="a_tp">Associate</button>
-			<div id="associate_tp_div">
-				<div id="onload_append_div" class="onload_append">
-				</div>
-				<div id="a_tp_append_div">
-				</div>
+			<div id="a_tp_append_div">
 			</div>
 		</div>
 	</div>

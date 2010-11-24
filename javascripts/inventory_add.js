@@ -33,13 +33,14 @@ $(document).ready(function(){
 				});
 				submitvalue += type + ":" + company + ":" + name;
 				submitproperty += tpid + ":" + cpid + ":" + npid;
-				$.blockUI({message: "Submitting"});
+				$.blockUI({message: "Please Wait"});
 				$.ajax({
 					type: 'POST',
 					url: 'inventory_getdata.pl',
 					data: {mode: mode, value: submitvalue, property: submitproperty},
 					success: function(data){
 						$.unblockUI();
+						location.href="inventory.pl?mode=add";
 					},
 					error: function(){
 						alert("Error");
@@ -57,7 +58,7 @@ $(document).ready(function(){
 			} else {
 				var property = $('#object_property_select').val();
 				var mode = "add_property_field";
-				$.blockUI({message: "Submitting"});
+				$.blockUI({message: "Please Wait"});
 				$.ajax({
 					type: 'POST',
 					url: 'inventory_getdata.pl',
@@ -81,7 +82,7 @@ $(document).ready(function(){
 			resetLogout();
 			var type = $('#object_type_select').val();
 			var mode = "populate_create_form";
-			$.blockUI({message: "Submitting"});
+			$.blockUI({message: "Please Wait"});
 			$.ajax({
 				type: 'POST',
 				url: 'inventory_getdata.pl',

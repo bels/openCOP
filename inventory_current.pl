@@ -150,7 +150,7 @@ if($authenticated == 1)
 			$sth->execute;
 			my $id = $sth->fetchall_hashref('id');
 	
-			$data = qq(
+			$data = qq(<label for="company_select">Choose a company</label>
 				<select id="company_select" class="type_select">
 					<option value="" selected="selected"></option>
 			);
@@ -164,7 +164,7 @@ if($authenticated == 1)
 			);
 			
 		} else {
-			$data = qq(
+			$data = qq(<label for="property_search">Refine search</label>
 				<input id="property_search">
 				<button id="property_search_button">Search</button>
 			);
@@ -225,7 +225,7 @@ if($authenticated == 1)
 		$sth->execute;
 		my $pid = $sth->fetchall_hashref('id');
 
-		$data = qq(
+		$data = qq(<label for="by_property">Select criteria to display by</label>
 			<select id="by_property">
 				<option value="" selected="selected"></option>
 		);
@@ -236,9 +236,6 @@ if($authenticated == 1)
 		}
 		$data .= qq(
 			</select>
-		);
-		$data .= qq(
-			<a href="#search" id="search" class="select_menu_item">Search</a>
 		);
 		print $data;
 	} elsif ($vars->{'mode'} eq "search"){
