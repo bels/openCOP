@@ -1,11 +1,12 @@
 	<div id="current_object_div" class="current_object">
 		<div id="select_menu">
 		</div>
+		<div id="company_select_div">
+		</div>
 	</div>
 	<div id="current_wrapper" class="wrapper">
 		<div id="current_top" class="top">
-			<div id="company_select_div">
-			</div>
+			
 			<div id="object_lookup">
 			</div>
 		</div>

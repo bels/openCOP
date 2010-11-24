@@ -1,7 +1,124 @@
+#wrapper{
+	width: 1100px;
+	height: 645px;
+	min-width: 1100px;
+}
+
 #left_site{
 	float: left;
 }
 
 #right_site{
+	margin-left: 15px;
 	float: left;
+}
+
+#left_site h3{
+	width: 170px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#right_site h3{
+	width: 230px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+label{
+	margin-right: 10px;
+}
+
+a{
+	color: white;
+}
+
+.tooltip{
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+#add_site_div{
+	height: 150px;
+	width: 450px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+#add_site_level_div{
+	height: 150px;
+	width: 450px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+#delete_site_div{
+	height: 150px;
+	width: 450px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+#add_company_div{
+	height: 150px;
+	width: 450px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+#associate_site_company_div{
+	height: 150px;
+	width: 450px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }

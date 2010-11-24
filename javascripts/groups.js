@@ -75,6 +75,7 @@ $(document).ready(function(){
 				var error = data.substr(0,1);
 				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
+					alert("Group added successfully");
 				} else if(error == "1"){
 					var str = data.replace(/^[\d\s]/,'');
 					alert("Duplicate entry encountered");
@@ -109,6 +110,7 @@ $(document).ready(function(){
 				var error = data.substr(0,1);
 				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
+					alert("Group deleted successfully");
 				} else if(error == "1"){
 					alert("Error executing delete statement");
 				}

@@ -4,12 +4,14 @@
 		[% IF success == 1 %]
 			<span class="success">The section was created successfully.</span>
 		[% END %]
-		<div id="sections_div">
-			<form action="add_section.pl" method="POST">
-				<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name"><a href="tips.pl?0" class="tooltip">?</a><br />
-				<label for="section_email">Section Email:</label><input type="text" name="section_email" id="section_email"><a href="tips.pl?0" class="tooltip">?</a><br />
-				<input type="submit" value="Add" id="submit_button">
-			</form>
-		</div>
-		<div id="modules">
+		<div id="wrapper">
+			<div id="sections_div">
+				<form action="add_section.pl" method="POST">
+					<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name"><a href="tips.pl?0" class="tooltip">?</a><br />
+					<label for="section_email">Section Email:</label><input type="text" name="section_email" id="section_email"><a href="tips.pl?0" class="tooltip">?</a><br />
+					<input type="submit" value="Add" id="submit_button">
+				</form>
+			</div>
+			<div id="modules">
+			</div>
 		</div>
