@@ -75,25 +75,27 @@ $(document).ready(function(){
 			}
 		});
 		$.blockUI({message: "Submitting"});
-		$.ajax({
-			type: 'POST',
-			url: 'permissions_submit.pl',
-			data: {gid: gid, sid: sid, mode: mode, permission: permission_string},
-			success: function(data){
-				var error = data.substr(0,1);
-				if(error == "0"){
-					var str = data.replace(/^[\d\s]/,'');
-				} else if(error == "1"){
-					var str = data.replace(/^[\d\s]/,'');
-					alert("Duplicate entry encountered");
+		if(gid && sid({
+			$.ajax({
+				type: 'POST',
+				url: 'permissions_submit.pl',
+				data: {gid: gid, sid: sid, mode: mode, permission: permission_string},
+				success: function(data){
+					var error = data.substr(0,1);
+					if(error == "0"){
+						var str = data.replace(/^[\d\s]/,'');
+					} else if(error == "1"){
+						var str = data.replace(/^[\d\s]/,'');
+						alert("Duplicate entry encountered");
+					}
+					$.unblockUI();
+					location.reload(true);
+				},
+				error: function(){
+					alert("Error");
+					$.unblockUI();
 				}
-				$.unblockUI();
-				location.reload(true);
-			},
-			error: function(){
-				alert("Error");
-				$.unblockUI();
-			}
-		});
+			});
+		}
 	});
 });

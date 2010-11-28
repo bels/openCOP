@@ -21,13 +21,10 @@ CREATE TABLE priority (id SERIAL PRIMARY KEY, severity INTEGER, description varc
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (id SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN DEFAULT true);
 
-DROP TABLE IF EXISTS ticket_status;
-CREATE TABLE ticket_status (id BIGSERIAL PRIMARY KEY, name VARCHAR(255));
-
 DROP TABLE IF EXISTS helpdesk;
 CREATE TABLE helpdesk (
 	ticket BIGSERIAL PRIMARY KEY,
-	status INTEGER references ticket_status(id),
+	status INTEGER references status(id),
 	barcode VARCHAR(255),
 	site INTEGER references site(id) DEFAULT '1',
 	location TEXT,
@@ -445,14 +442,12 @@ $$ LANGUAGE plpgsql;
 -- Permissions and stuff
 DROP USER helpdesk;
 CREATE USER helpdesk WITH PASSWORD 'helpdesk';
-GRANT SELECT, INSERT, UPDATE, DELETE ON ticket_status TO helpdesk;
-GRANT SELECT, UPDATE ON ticket_status_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
+GRANT SELECT, UPDATE ON status_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site_level TO helpdesk;
 GRANT SELECT, UPDATE ON site_level_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site TO helpdesk;
 GRANT SELECT, UPDATE ON site_id_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
-GRANT SELECT, UPDATE ON status_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk TO helpdesk;
 GRANT SELECT, UPDATE ON helpdesk_ticket_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO helpdesk;

@@ -116,7 +116,7 @@ $(document).ready(function(){
 	});
 
 	$('#by_property').livequery(function(){
-		$('#by_property').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			by_property();
 			$('#update_object_form').remove();

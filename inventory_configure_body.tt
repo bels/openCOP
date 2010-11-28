@@ -9,8 +9,8 @@
 						<option value="property">Property</option>
 					</select>
 					<input id="add_tp" type="text" class="add">
-					<button id="submit_add_button" mode="add_tp" class="submit_button">Submit</button>
 				</form>
+				<button id="submit_add_button" mode="add_tp" class="submit_button">Submit</button>
 			</div>
 			<div id="del_tp_div" class="tp_div">
 				<form id="del_tp_form">
@@ -21,8 +21,8 @@
 					</select>
 					<div id="t_tp_append_div">
 					</div>
-					<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
 				</form>
+				<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
 			</div>
 		</div>
 		<div id="configure_bottom" class="bottom">

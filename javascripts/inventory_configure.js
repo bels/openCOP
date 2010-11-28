@@ -92,7 +92,6 @@ function load_associations(){
 		success: function(data){
 			$('#a_tp_append_div').text("");
 			$('#a_tp_append_div').append(data);
-			remove_error_label();
 		},
 		error: function(){
 			alert("Error");
@@ -109,7 +108,6 @@ function load_properties(){
 			success: function(data){
 				$('#t_tp_append_div').text("");
 				$('#t_tp_append_div').append(data);
-				remove_error_label();
 			},
 			error: function(){
 				alert("Error");
@@ -126,7 +124,6 @@ function load_types(){
 			success: function(data){
 				$('#onload_append_div').text("");
 				$('#onload_append_div').append(data);
-				remove_error_label();
 			},
 			error: function(){
 				alert("Error");
@@ -143,7 +140,6 @@ function load_types2(){
 			success: function(data){
 				$('#t_tp_append_div').text("");
 				$('#t_tp_append_div').append(data);
-				remove_error_label();
 			},
 			error: function(){
 				alert("Error");
@@ -195,4 +191,3 @@ function submit_tp(button){
 			});
 	}
 }
-

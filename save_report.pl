@@ -58,9 +58,10 @@ if($authenticated == 1)
 		print "Content-type: application/octet-stream\n";
 		print "Content-disposition: attachment; filename=$filename.csv\n\n";
 		print($query);
-	} else if($vars->{'mode'} eq "pdf"){
-
-	} else if($vars->{'mode'} eq "excel"){
+	} elsif($vars->{'mode'} eq "pdf"){
+		warn "Nothing here!";
+	} elsif($vars->{'mode'} eq "excel"){
+		warn "Nothing here either!";
 	}
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});

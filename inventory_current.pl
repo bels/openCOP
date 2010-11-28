@@ -231,16 +231,17 @@ if($authenticated == 1)
 		);
 		my $i;
 		my @pid;
+		my @p;
 		foreach(keys %$pid){
 			push(@pid,$pid->{$_}->{'property'});
 		}
 		my @ppid = sort(@pid);
-		foreach(@pid){
-			$_ = $pid->{$_}->{'id'};
+		foreach(keys %$pid){
+			push(@p,$pid->{$_}->{'id'});
 		}
 		for ($i = 1; $i <= $#pid; $i++)
 		{
-			$data .= qq(<option value=$pid[$i]>$ppid[$i]</option>);
+			$data .= qq(<option value=$p[$i]>$ppid[$i]</option>);
 		}
 		$data .= qq(
 			</select>
