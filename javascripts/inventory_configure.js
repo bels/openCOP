@@ -153,16 +153,19 @@ function load_types2(){
 
 function submit_tp(button){
 	var t = $('#type_select').val();
-	which = button.attr("mode");
-	value = $('#' + which).val();
+	var which = button.attr("mode");
+	var value = $('#' + which).val();
+	var errorspace = $('#errorspace');
 	if(value == "") {
 		$('.tp_return').remove();
-		$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' cannot be blank</label>').appendTo('#' + which + '_form');
+		$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' cannot be blank</label>').appendTo(errorspace);
 	} else {
-			mode = "configure";
-			type = $('#' + which + '_select').val();
-			value = $('#' + which).val();
-			$.blockUI({message: "Submitting"});			
+			var mode = "configure";
+			var type = $('#' + which + '_select').val();
+			alert(type);
+			alert(value);
+			alert(which);
+			$.blockUI({message: "Submitting"});
 			$.ajax({
 				type: 'POST',
 				url: 'inventory_submit.pl',
@@ -174,18 +177,18 @@ function submit_tp(button){
 						$('#' + which).val("");
 						$('#' + which).focus();
 						$('.tp_return').remove();
-						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo('#' + which + '_form');
+						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo(errorspace);
 						load_types();
 						load_types2();
 						load_associations(t);
 					} else if(error == "1"){
                                                 var str = data.replace(/^[\d\s]/,'');
 						$('.tp_return').remove();
-						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' already exists</label>').appendTo('#' + which + '_form');
+						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' already exists</label>').appendTo(errorspace);
 					} else if(error == "2"){
                                                 var str = data.replace(/^[\d\s]/,'');
 						$('.tp_return').remove();
-						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' does not exist</label>').appendTo('#' + which + '_form');
+						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' does not exist</label>').appendTo(errorspace);
 					}
 					$.unblockUI();
 				},

@@ -38,6 +38,11 @@
 	border: 1px solid black;
 }
 
+.lookup_row.selected{
+	background-color: #757575;
+	cursor: pointer;
+}
+
 table{
 	width: 100%;
 	border-collapse:collapse;

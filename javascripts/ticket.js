@@ -76,6 +76,15 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	$('.lookup_row').livequery(function(){
+		$(this).hover(function(){
+			$(this).addClass('selected');
+		},
+		function(){
+			$(this).removeClass('selected');
+		});
+	});
 	
 	$(".lookup_row").live("click",function(){
 		resetLogout();

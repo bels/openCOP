@@ -38,14 +38,14 @@ if($authenticated == 1)
 			$query = "select property.property,template_property.id,template_property.property_id from template_property join property on template_property.property_id = property.id where template_id = '$type';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			$used_properties = $sth->fetchall_hashref('id');
+			$used_properties = $sth->fetchall_hashref('property');
 			@used_properties_order = sort (keys %$used_properties);
 		}
 
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $all_properties  = $sth->fetchall_hashref('id');
+		my $all_properties  = $sth->fetchall_hashref('property');
 		my @all_properties_order = sort (keys %$all_properties);
 		my @used_properties;
 
@@ -53,24 +53,19 @@ if($authenticated == 1)
 			<select id="associate_tp" class="multiselect" multiple="multiple" name="tp_select_array[]">
 		);
 
-
-
 		if(defined($used_properties)){
 			my $i;
-			my @pid = ['null'];
-			my @p = ['null'];
+			my @pid;
 			foreach(keys %$used_properties){
 				push(@pid,$used_properties->{$_}->{'property'});
 			}
 			my @ppid = sort(@pid);
-			foreach(keys %$used_properties){
-				push(@p,$used_properties->{$_}->{'property_id'});
-			}
-			for ($i = 1; $i <= $#pid; $i++)
+			unshift(@ppid,'');
+			for ($i = 1; $i <= $#ppid; $i++)
 			{
-				unless($used_properties->{$i}->{'property'} eq "type" || $used_properties->{$i}->{'property'} eq "company" || $used_properties->{$i}->{'property'} eq "name") {
-					push(@used_properties,$used_properties->{$i}->{'property_id'});
-					$data .= qq(<option selected="selected" value=$p[$i]>$ppid[$i]</option>);
+				unless($used_properties->{$ppid[$i]}->{'property'} eq "type" || $used_properties->{$ppid[$i]}->{'property'} eq "company" || $used_properties->{$ppid[$i]}->{'property'} eq "name") {
+					push(@used_properties,$used_properties->{$ppid[$i]}->{'property_id'});
+					$data .= qq(<option selected="selected" value=$used_properties->{$ppid[$i]}->{'property_id'}>$used_properties->{$ppid[$i]}->{'property'}</option>);
 				}
 			}
 		}
@@ -85,18 +80,15 @@ if($authenticated == 1)
 
 		if(defined($all_properties)){
 			my $i;
-			my @pid = ['null'];
-			my @p = ['null'];
+			my @pid;
 			foreach(keys %$all_properties){
 				push(@pid,$all_properties->{$_}->{'property'});
 			}
 			my @ppid = sort(@pid);
-			foreach(keys %$all_properties){
-				push(@p,$all_properties->{$_}->{'id'});
-			}
-			for ($i = 1; $i <= $#pid; $i++)	{
-				unless($all_properties->{$i}->{'property'} eq "type" || $all_properties->{$i}->{'property'} eq "company" || $all_properties->{$i}->{'property'} eq "name") {
-					$data .= qq(<option value=$p[$i]>$ppid[$i]</option>);
+			unshift(@ppid,'');
+			for ($i = 1; $i <= $#ppid; $i++){
+				unless($all_properties->{$ppid[$i]}->{'property'} eq "type" || $all_properties->{$ppid[$i]}->{'property'} eq "company" || $all_properties->{$ppid[$i]}->{'property'} eq "name") {
+					$data .= qq(<option value=$all_properties->{$ppid[$i]}->{'id'}>$all_properties->{$ppid[$i]}->{'property'}</option>);
 				}
 			}
 		}
@@ -145,24 +137,21 @@ if($authenticated == 1)
 		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('id');
+		my $results = $sth->fetchall_hashref('template');
 		$data = qq(
 				<select id="type_select" class="type_select">
 					<option value="" selected="selected"></option>
 		);
 
 		my $i;
-		my @pid = ['null'];
-		my @p = ['null'];
+		my @pid;
 		foreach(keys %$results){
 			push(@pid,$results->{$_}->{'template'});
 		}
 		my @ppid = sort(@pid);
-		foreach(keys %$results){
-			push(@p,$results->{$_}->{'id'});
-		}
-		for ($i = 1; $i <= $#pid; $i++)	{
-			$data .= qq(<option value=$p[$i]>$ppid[$i]</option>);
+		unshift(@ppid,'');
+		for ($i = 1; $i <= $#ppid; $i++){
+			$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'template'}</option>);
 		}
 		$data .= qq(</select>);
 		print $data;
@@ -170,17 +159,17 @@ if($authenticated == 1)
 		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('id');
+		my $results = $sth->fetchall_hashref('template');
 
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $properties = $sth->fetchall_hashref('id');
+		my $properties = $sth->fetchall_hashref('property');
 
 		$query = "select * from company where hidden = false;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $companies= $sth->fetchall_hashref('id');
+		my $companies= $sth->fetchall_hashref('name');
 
 		$query = "select id,property from property where property = 'type' or property = 'company' or property = 'name';";
 		$sth = $dbh->prepare($query);
@@ -199,17 +188,14 @@ if($authenticated == 1)
 		);
 
 		my $i;
-		my @pid = ['null'];
-		my @p = ['null'];
+		my @pid;
 		foreach(keys %$results){
 			push(@pid,$results->{$_}->{'template'});
 		}
 		my @ppid = sort(@pid);
-		foreach(keys %$results){
-			push(@p,$results->{$_}->{'id'});
-		}
-		for ($i = 1; $i <= $#pid; $i++)	{
-			$data .= qq(<option tpid="$special_case->{'type'}->{'id'}" value=$p[$i]>$ppid[$i]</option>);
+		unshift(@ppid,'');
+		for ($i = 1; $i <= $#ppid; $i++){
+			$data .= qq(<option tpid="$special_case->{'type'}->{'id'}" value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'template'}</option>);
 		}
 
 
@@ -221,17 +207,14 @@ if($authenticated == 1)
 					<select id="object_company_select" class="company_select">
 						<option value="" selected="selected"></option>
 		);
-		@pid = ['null'];
-		@p = ['null'];
+		@pid = [];
 		foreach(keys %$companies){
 			push(@pid,$companies->{$_}->{'name'});
 		}
 		my @ppid = sort(@pid);
-		foreach(keys %$companies){
-			push(@p,$companies->{$_}->{'id'});
-		}
-		for ($i = 1; $i <= $#pid; $i++)	{
-			$data .= qq(<option cpid="$special_case->{'company'}->{'id'}" value=$p[$i]>$ppid[$i]</option>);
+		unshift(@ppid,'');
+		for ($i = 1; $i <= $#ppid; $i++){
+			$data .= qq(<option cpid="$special_case->{'company'}->{'id'}" value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'name'}</option>);
 		}
 		$data .= qq(	</select>
 				</div>
@@ -251,18 +234,15 @@ if($authenticated == 1)
 				<select id="object_property_select" class="property_select">
 					<option value="" selected="selected"></option>
 		);
-		@pid = ['null'];
-		@p = ['null'];
+		@pid = [];
 		foreach(keys %$properties){
 			push(@pid,$properties->{$_}->{'property'});
 		}
 		my @ppid = sort(@pid);
-		foreach(keys %$properties){
-			push(@p,$properties->{$_}->{'id'});
-		}
-		for ($i = 1; $i <= $#pid; $i++)	{
+		unshift(@ppid,'');
+		for ($i = 1; $i <= $#ppid; $i++){
 			unless($ppid[$i] eq "company" || $ppid[$i] eq "type" || $ppid[$i] eq "name"){
-				$data .= qq(<option value=$p[$i]>$ppid[$i]</option>);
+				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'name'}</option>);
 			}
 		}
 		$data .= qq(	</select>
@@ -281,24 +261,21 @@ if($authenticated == 1)
 		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('id');
+		my $results = $sth->fetchall_hashref('template');
 		$data = qq(
 				<select id="del_tp" class="type_select">
 					<option value="" selected="selected"></option>
 		);
 
 		my $i;
-		my @pid = ['null'];
-		my @p = ['null'];
+		my @pid;
 		foreach(keys %$results){
 			push(@pid,$results->{$_}->{'template'});
 		}
 		my @ppid = sort(@pid);
-		foreach(keys %$results){
-			push(@p,$results->{$_}->{'id'});
-		}
-		for ($i = 1; $i <= $#pid; $i++)	{
-			$data .= qq(<option value=$p[$i]>$ppid[$i]</option>);
+		unshift(@ppid,'asdf');
+		for ($i = 1; $i <= $#ppid; $i++){
+			$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'template'}</option>);
 		}
 
 		$data .= qq(</select>);
@@ -307,15 +284,24 @@ if($authenticated == 1)
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $results = $sth->fetchall_hashref('id');
+		my $results = $sth->fetchall_hashref('property');
 		$data = qq(
 				<select id="del_tp">
 					<option value="" selected="selected"></option>
 		);
-		my @hash_order = sort (keys %$results);
-		foreach my $key (@hash_order){
-			$data .= qq(<option value="$results->{$key}->{'id'}">$results->{$key}->{'property'}</option>);
+		my $i;
+		my @pid;
+		foreach(keys %$results){
+			push(@pid,$results->{$_}->{'property'});
 		}
+		my @ppid = sort(@pid);
+		unshift(@ppid,'asdf');
+		for ($i = 1; $i <= $#ppid; $i++){
+			unless($results->{$ppid[$i]}->{'property'} eq "type" || $results->{$ppid[$i]}->{'property'} eq "company"){
+				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'property'}</option>);
+			}
+		}
+
 		$data .= qq(</select>);
 		print $data;
 	} elsif ($vars->{'mode'} eq "populate_create_form"){

@@ -42,7 +42,7 @@ if($authenticated == 1)
 
 	my $meta_keywords = "";
 	my $meta_description = "";
-	my @styles = ( "styles/groups.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @styles = ( "styles/groups.css","styles/ui.multiselect.css");
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/groups.js","javascripts/main.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js");
 
 	my $file = "groups.tt";
