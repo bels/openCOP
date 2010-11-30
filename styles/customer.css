@@ -134,7 +134,7 @@ input.error{
 
 #add_customer_div{
 	height: 340px;
-	width: 375px;
+	width: 400px;
 	color: white;
 	margin-right: auto;
 	margin-left: auto;
@@ -160,6 +160,13 @@ input.error{
 	display: inline-block;
 	width: 170px;
 	margin-bottom: 10px;
+}
+
+#customer_admin_form label.error{
+	display: inline-block;
+	font-size: 1.2em;
+	width: auto;
+	margin-bottom: 0px;
 }
 
 #customer_admin_form #submit_button{
