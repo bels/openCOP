@@ -67,14 +67,12 @@ sub create_user{
 			alias,
 			password,
 			email,
-			active,
-			sections
+			active
 		) values (
 			?,
 			?,
 			?,
-			TRUE,
-			?
+			TRUE
 		)
 	";
 	my $sth = $self->{'dbh'}->prepare($query) or return undef;
@@ -82,7 +80,6 @@ sub create_user{
 			$args{'alias'},
 			$password,
 			$args{'email'},
-			$args{'section'}
 	) or return undef;
 
 }
@@ -129,30 +126,13 @@ sub update_profile{
 	{
 		$query = "update users set email = ? where alias = ?";
 	}
-	if($args{'column'} eq 'zip')
-	{
-		$query = "update users set zip = ? where alias = ?";
-	}
 	if($args{'column'} eq 'password')
 	{
 		$args{'value'} = md5_hex($args{'value'});
 		$query = "update users set password = ? where alias = ?";
 	}
-	if($args{'column'} eq 'avail_contact')
-	{
-		$query = "update users set avail_contact = ? where alias = ?";
-	}
 	my $sth = $self->{'dbh'}->prepare($query);
 	$sth->execute($args{'value'},$args{'alias'});
-}
-
-sub upload_picture{
-	my $self = shift;
-	my %args = @_;
-	
-	my $query = "update users set picture = ? where alias = ?";
-	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute($args{'picture'},$args{'alias'});
 }
 
 sub get_user_id{

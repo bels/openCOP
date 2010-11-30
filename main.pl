@@ -25,7 +25,7 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my @styles = ("styles/layout.css","styles/smoothness/jquery-ui-1.8.5.custom.css","styles/main.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery.livequery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $file = "main.tt";

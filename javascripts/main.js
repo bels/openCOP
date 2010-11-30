@@ -19,11 +19,14 @@ $(document).ready(function(){
 	} else {
 		wo_tabs = 0;
 	}
-	if($('.ticket_lookup').length){
-		tickets = 1;
+	if($('.jspContainer').length){
+		jspC = 1;
 	} else {
-		tickets = 0;
+		jspC = 0;
 	}
+	$('.jspContainer').livequery(function(){
+		jspC = 1;
+	});
 	if($('#associate_user_group_div').length){
 		user_admin_page = 1;
 	} else {
@@ -63,7 +66,7 @@ $(document).ready(function(){
 		if(wo_tabs){
 			$("#wo_tabs").addClass("lower");
 		}
-		if(tickets){
+		if(jspC){
 			$(".jspContainer").addClass("lower");
 		}
 		if(user_admin_page){

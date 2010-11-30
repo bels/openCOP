@@ -245,3 +245,20 @@ h3{
 	margin-top: 15px;
 	border: 2px solid #333;
 }
+
+#new_note{
+	margin-left: 15px;
+}
+
+#update_ticket_button{
+	margin-left: 15px;
+}
+
+h4{
+	margin-left: 15px;
+}
+
+.note_div{
+	padding-left: 15px;
+	padding: 5px;
+}

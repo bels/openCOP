@@ -1,0 +1,55 @@
+                           README
+This document contains installation instructions, prerequisites and other tidbits.
+
+
+1. Prerequisites
+----------------------------------
+
+ - FreeBSD (It has been tested with 8.x but should work with 6.4+)
+ - Apache (Tested with 2.2.x but should work with 2.x+)
+ - Perl 5.8+
+ - Perl Modules
+	- DBI
+	- DBD-Pg
+	- Template-Toolkit
+	- YAML
+	- URI-Escape-XS
+	- Digest-MD5
+	- Data-Dumper
+	- Net-SMTP_auth
+	- Mail-IMAPClient
+	- Date-Manip
+	- Authen-SASL
+	- libwww
+	- JSON
+	- DBD-Excel
+	- SQL-Statement
+ - Postgresql (Tested with 8.x but should work with 7.x+)
+ - sudo
+ 
+2. Installation Instructions
+-------------------------------------
+
+   A script is included that aids in setting up the database.  Currently this script only works for postgresql but there are plans
+to include MySQL in the future.
+   
+   - Run the database setup script (sql/setup_postgresql.sh)
+   - Copy the entire openCOP directory into your web root
+   - Remove the doc and sql directories from webroot/openCOP
+   - Add (This assumes that your webroot is /usr/local/www.  Replace that with your webroot)
+	<Directory "/usr/local/www/openCOP/"> 
+	    Options ExecCGI
+	    AddHandler cgi-script cgi pl
+	</Directory>
+
+3. Future Plans
+-------------------------------------
+   We intend on testing this application in Linux and modifying the installation instructions to include Linux specific installation issues.
+We also plan on adding other database backend support including MySQL and others.  Check out our ROADMAP which is also included
+with the source for a general idea of where the project is heading.
+	
+4. Licensing Info
+-------------------------------------
+   OpenCOP is a GPLv2 application.  It is developed by LFM LLC (http://www.lfmcorp.com).  LFM LLC offers support contracts for openCOP
+that covers installation assistance, custom report building, early access to bug fixes, etc...  For more information about the support contracts
+please see http://www.lfmcorp.com/helpdesk.

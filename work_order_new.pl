@@ -2,6 +2,7 @@
 
 use CGI::Carp qw(fatalsToBrowser);
 use strict;
+use warnings;
 use Template;
 use lib './libs';
 use CGI;
