@@ -209,7 +209,6 @@ if($authenticated == 1)
 						print qq(
 							<label class="object_detail" for=") . $key . qq(_input">$key</label>
 							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$new_object->{$element}->{$key}[0]">
-							<br>
 						);
 					}
 				}

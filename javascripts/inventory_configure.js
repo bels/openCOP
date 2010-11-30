@@ -21,13 +21,13 @@ $(document).ready(function(){
 	});
 
 	$('.multiselect').livequery(function(){
-		$('.multiselect').multiselect();
+		$(this).multiselect();
 		$('.ui-multiselect').show();
 	});
 
 
 	$('#del_tp_select').livequery(function(){
-		$('#del_tp_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			if($('#del_tp_select').val() == "property"){
 				load_properties();
@@ -38,7 +38,7 @@ $(document).ready(function(){
 	});
 
 	$('.type_select').livequery(function(){
-		$('.type_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			load_associations();
 		});
@@ -82,8 +82,11 @@ $(document).ready(function(){
 	});
 
 });
-function load_associations(){
+function load_associations(t){
 	var type = $('#type_select').val();
+	if($('#type_select').val() == ""){
+		type = t;
+	}
 	var mode = "init";
 	$.ajax({
 		type: 'POST',
@@ -92,6 +95,7 @@ function load_associations(){
 		success: function(data){
 			$('#a_tp_append_div').text("");
 			$('#a_tp_append_div').append(data);
+			$('#type_select option[value="' + type + '"]').attr('selected','selected');
 		},
 		error: function(){
 			alert("Error");
@@ -148,6 +152,7 @@ function load_types2(){
 }
 
 function submit_tp(button){
+	var t = $('#type_select').val();
 	which = button.attr("mode");
 	value = $('#' + which).val();
 	if(value == "") {
@@ -172,7 +177,7 @@ function submit_tp(button){
 						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo('#' + which + '_form');
 						load_types();
 						load_types2();
-						load_associations();
+						load_associations(t);
 					} else if(error == "1"){
                                                 var str = data.replace(/^[\d\s]/,'');
 						$('.tp_return').remove();

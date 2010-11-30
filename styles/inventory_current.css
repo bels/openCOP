@@ -92,6 +92,10 @@ label.object_detail{
 
 input.object_detail{
 	clear:right;
+	display: block;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 19px;
 }
 
 h2{
@@ -103,6 +107,8 @@ h2{
 	margin-left: 10px;
 	margin-bottom: 10px;
 	margin-right: 10px;
+	width: 100%;
+	height: 100%;
 }
 
 #object_summary_header_row{

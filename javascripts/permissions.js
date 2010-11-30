@@ -75,7 +75,7 @@ $(document).ready(function(){
 			}
 		});
 		$.blockUI({message: "Submitting"});
-		if(gid && sid({
+		if(gid && sid){
 			$.ajax({
 				type: 'POST',
 				url: 'permissions_submit.pl',
