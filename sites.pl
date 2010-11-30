@@ -35,7 +35,7 @@ if($authenticated == 1)
 		push(@site_levels,shift(@$site));
 	}
 	
-	$query = "select name from site where deleted != '1' or deleted is null";
+	$query = "select name from site where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	$results = $sth->fetchall_arrayref;
@@ -62,7 +62,7 @@ if($authenticated == 1)
 	my $delete_site_success = $q->param('delete_site_success');
 	
 	my @styles = ("styles/layout.css", "styles/sites.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/main.js","javascripts/sites.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

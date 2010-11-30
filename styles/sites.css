@@ -38,7 +38,7 @@ a{
 	margin-right: 3px;
 }
 
-#add_site_div{
+#wrapper div.style{
 	height: 150px;
 	width: 450px;
 	margin-left: 50px;
@@ -55,70 +55,26 @@ a{
 	-webkit-border-radius: 15px;
 }
 
-#add_site_level_div{
-	height: 150px;
-	width: 450px;
-	margin-left: 50px;
-	margin-top: 20px;
-	padding-top: 20px;
-	padding-left: 25px;
-	color: white;
-	background-color: #333;
-	background-image: url('../images/login_box_gradient.jpg');
-	background-repeat: repeat-x;
-	border: 3px ridge #333;
-	border-radius: 15px;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
+#behind_popup{
+	display:none;
+	position:fixed;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	background:#000000;
+	border:1px solid #cecece;
+	z-index:1;
 }
 
-#delete_site_div{
-	height: 150px;
-	width: 450px;
-	margin-left: 50px;
-	margin-top: 20px;
-	padding-top: 20px;
-	padding-left: 25px;
-	color: white;
-	background-color: #333;
-	background-image: url('../images/login_box_gradient.jpg');
-	background-repeat: repeat-x;
-	border: 3px ridge #333;
-	border-radius: 15px;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-}
-
-#add_company_div{
-	height: 150px;
-	width: 450px;
-	margin-left: 50px;
-	margin-top: 20px;
-	padding-top: 20px;
-	padding-left: 25px;
-	color: white;
-	background-color: #333;
-	background-image: url('../images/login_box_gradient.jpg');
-	background-repeat: repeat-x;
-	border: 3px ridge #333;
-	border-radius: 15px;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-}
-
-#associate_site_company_div{
-	height: 150px;
-	width: 450px;
-	margin-left: 50px;
-	margin-top: 20px;
-	padding-top: 20px;
-	padding-left: 25px;
-	color: white;
-	background-color: #333;
-	background-image: url('../images/login_box_gradient.jpg');
-	background-repeat: repeat-x;
-	border: 3px ridge #333;
-	border-radius: 15px;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
+#confirm_dialog{
+	display: none;
+	position:fixed;
+	height:530px;
+	width:408px;
+	background:#FFFFFF;
+	border:2px solid #cecece;
+	z-index:2;
+	padding:12px;
+	font-size:13px;
 }

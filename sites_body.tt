@@ -16,10 +16,13 @@
 		[% IF delete_site_success == 1 %]
 			<span class="success">The site was deleted successfully.</span>
 		[% END %]
+		[% IF delete_site_level_success == 1 %]
+			<span class="success">The site level was deleted successfully.</span>
+		[% END %]
 		<div id="wrapper">
 			<div id="left_site">
 				<h3>Site Functions</h3>
-				<div id="add_site_div">
+				<div id="add_site_div" class="style">
 					<form action="add_site.pl" method="POST">
 						<h4>Add Site<a href="tips.pl?0" class="tooltip">?</a></h4>
 						<label for="site_name">Site Name:</label><input type="text" name="site_name" id="site_name"><a href="tips.pl?0" class="tooltip">?</a><br />
@@ -34,14 +37,14 @@
 						<input type="submit" value="Add" id="submit_button">
 					</form>
 				</div>
-				<div id="add_site_level_div">
+				<div id="add_site_level_div" class="style">
 					<form action="add_site_level.pl" method="POST">
-						<h4>Add Site Type/Level<a href="tips.pl?0" class="tooltip">?</a></h4>
+						<h4>Add Site Level<a href="tips.pl?0" class="tooltip">?</a></h4>
 						<label for="site_level_name">Site Level Name:</label><input type="text" name="site_level_name" id="site_level_name"><a href="tips.pl?0" class="tooltip">?</a>
 						<input type="submit" value="Add" id="level_submit_button">
 					</form>
 				</div>
-				<div id="delete_site_div">
+				<div id="delete_site_div" class="style">
 					<form action="delete_site.pl" method="POST">
 						<h4>Delete Site</h4>
 						<label for="delete_site_name">Site Name:</label>
@@ -53,17 +56,29 @@
 						<input type="submit" value="Delete" id="delete_submit_button">
 					</form>
 				</div>
+				<div id="delete_site_level_div" class="style">
+					<form id="delete_site_level_form">
+						<h4>Delete Site Level</h4>
+						<label for="delete_site_level_name">Site Level Name:</label>
+						<select name="delete_site_level_name" id="delete_site_level_name">
+						[% FOREACH site_level IN site_level_list %]
+							<option value="[% site_level %]">[% site_level %]</option>
+						[% END %]
+						</select>
+					</form>
+						<button id="delete_site_level_submit_button">Delete</button>
+				</div>
 			</div>
 			<div id="right_site">
 				<h3>Company Functions</h3>
-				<div id="add_company_div">
+				<div id="add_company_div" class="style">
 					<form action="add_company.pl" method="POST">
 						<h4>Add Company<a href="tips.pl?0" class="tooltip">?</a></h4>
 						<label for="company_name_input">Company Name:</label><input type="text" name="company_name_input" id="company_name_input"><a href="tips.pl?0" class="tooltip">?</a>
 						<input type="submit" value="Add" id="company_submit_button">
 					</form>
 				</div>
-				<div id="associate_site_company_div">
+				<div id="associate_site_company_div" class="style">
 					<h4>Associate a site with a company</h4>
 					<form action="associate_company_site.pl" method="POST">
 						<label for="associate_company_name">Company:</label>
@@ -82,4 +97,12 @@
 					</form>
 				</div>
 			</div>
+		</div>
+		<div id="confirm_dialog">
+			<h3>Warning</h3>
+			<div id="confirm_middle">
+			</div>
+			<button id="proceed">Okay</button><button id="cancel">Cancel</button>
+		</div>
+		<div id="behind_popup">
 		</div>
