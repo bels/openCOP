@@ -54,8 +54,10 @@ function delete_site_level(){
 			url: url,
 			data: {site: site},
 			success: function(data){
+				location.href="sites.pl?delete_site_level_success=1";
 			},
 			error: function(data){
+				alert("Emergency, emergency. There's an emergency going on here.");
 			}
 		});
 }

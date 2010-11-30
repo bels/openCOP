@@ -60,15 +60,16 @@ if($authenticated == 1)
 	my $company_success = $q->param('company_success');
 	my $associate_success = $q->param('associate_success');
 	my $delete_site_success = $q->param('delete_site_success');
+	my $delete_site_level_success = $q->param('delete_site_level_success');
 	
 	my @styles = ("styles/layout.css", "styles/sites.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/main.js","javascripts/sites.js");
+	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.livequery.js","javascripts/main.js","javascripts/sites.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 
 	my $file = "sites.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@site_levels, success => $success,level_success => $level_success,company_success => $company_success, sites_list => \@sites, company_list => \@companies, associate_success => $associate_success,delete_site_success => $delete_site_success};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_level_list => \@site_levels, success => $success,level_success => $level_success,company_success => $company_success, sites_list => \@sites, company_list => \@companies, associate_success => $associate_success,delete_site_success => $delete_site_success,delete_site_level_success => $delete_site_level_success};
 	
 	print "Content-type: text/html\n\n";
 
