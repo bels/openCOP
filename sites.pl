@@ -62,8 +62,8 @@ if($authenticated == 1)
 	my $delete_site_success = $q->param('delete_site_success');
 	my $delete_site_level_success = $q->param('delete_site_level_success');
 	
-	my @styles = ("styles/layout.css", "styles/sites.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.livequery.js","javascripts/main.js","javascripts/sites.js");
+	my @styles = ( "styles/sites.css");
+	my @javascripts = ("javascripts/main.js","javascripts/sites.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

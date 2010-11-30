@@ -9,8 +9,8 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 
-my @styles = ("styles/layout.css", "styles/index.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/index.js");
+my @styles = ( "styles/index.css");
+my @javascripts = ("javascripts/index.js");
 my $meta_keywords = "";
 my $meta_description = "";
 

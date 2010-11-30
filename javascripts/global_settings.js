@@ -5,12 +5,12 @@ $(document).ready(function(){
 		var module_name = $(this).attr('name');
 		if($(this).is(':checked')){
 			handle_modules(module_name,'enable');
-			location.reload(true);
+			location.href="global_settings.pl";
 		}
 		else
 		{
 			handle_modules(module_name,'disable');
-			location.reload(true);
+			location.href="global_settings.pl";
 		}
 	});
 });

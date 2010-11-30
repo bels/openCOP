@@ -55,8 +55,8 @@ if($authenticated == 1)
 	
 	my $meta_keywords = "";
 	my $meta_description = "";
-	my @styles = ("styles/layout.css", "styles/password.css","styles/customer.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/password.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
+	my @styles = ( "styles/password.css","styles/customer.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/password.js","javascripts/main.js");
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},customer => $customer,id => $id, success => $success, email_success => $email_success};

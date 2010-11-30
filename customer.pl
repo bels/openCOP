@@ -28,8 +28,8 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my @styles = ("styles/layout.css", "styles/customer.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery-ui-timepicker-addon.min.js");
+	my @styles = ( "styles/customer.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-timepicker-addon.min.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 
@@ -75,8 +75,8 @@ else
 	my $errorcode;
 	$errorcode = $q->param('errorcode') or $errorcode = 0;
 	my $vars;
-	my @styles = ("styles/layout.css", "styles/customer.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/customer_login.js");
+	my @styles = ( "styles/customer.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/customer_login.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

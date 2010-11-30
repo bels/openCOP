@@ -34,8 +34,8 @@ if($authenticated == 1)
 	my $properties;
 	my $file;
 
-	my @styles = ("styles/layout.css","styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/ui.multiselect.js","javascripts/jquery.livequery.js");
+	my @styles = ("styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/main.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js");
 
 	my $mode = $q->param('mode');
 	if ($mode eq "add"){
@@ -47,7 +47,7 @@ if($authenticated == 1)
 		$title = $config->{'company_name'} . " - Inventory Current";
 		$file = "inventory_current.tt";
 		push(@styles,"styles/inventory_current.css","styles/jquery.jscrollpane.css");
-		push(@javascripts,"javascripts/inventory_current.js","javascripts/jquery.tablesorter.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery.livequery.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js");
+		push(@javascripts,"javascripts/inventory_current.js","javascripts/jquery.tablesorter.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js");
 	} elsif ($mode eq "configure"){
 		$title = $config->{'company_name'} . " - Inventory Configure.";
 		$file = "inventory_configure.tt";

@@ -51,8 +51,8 @@ if($authenticated == 1)
 
 	my $meta_keywords = "";
 	my $meta_description = "";
-	my @styles = ("styles/layout.css", "styles/permissions.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.validate.js","javascripts/permissions.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.livequery.js","javascripts/jquery.blockui.js");
+	my @styles = ( "styles/permissions.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/permissions.js","javascripts/main.js","javascripts/jquery.blockui.js");
 
 	my $file = "permissions.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";

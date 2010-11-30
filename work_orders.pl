@@ -86,8 +86,8 @@ if($authenticated == 1)
 	$sth->execute;
 	my $tech_list = $sth->fetchall_hashref('id');
 
-	my @styles = ("styles/layout.css","styles/smoothness/jquery-ui-1.8.5.custom.css","styles/work_orders.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.livequery.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_orders.js");
+	my @styles = ("styles/work_orders.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_orders.js");
 	my $title = $config->{'company_name'} . " - Work Orders";
 	my $file = "work_orders.tt";
 

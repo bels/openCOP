@@ -34,8 +34,8 @@ if($authenticated == 1)
 	$sth->execute;
 	my $uid = $sth->fetchall_hashref('id');
 	
-	my @styles = ("styles/layout.css","styles/user_admin.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css", "styles/groups.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/groups.js","javascripts/jquery.livequery.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/ui.multiselect.js","javascripts/main.js");
+	my @styles = ("styles/user_admin.css","styles/ui.multiselect.css", "styles/groups.css");
+	my @javascripts = ("javascripts/groups.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js","javascripts/main.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";

@@ -29,8 +29,8 @@ my $success = $q->param('success');
 
 if($authenticated == 1)
 {
-	my @styles = ("styles/layout.css", "styles/customer.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/customer_admin.js");
+	my @styles = ( "styles/customer.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/customer_admin.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $file = "customer_admin.tt";
