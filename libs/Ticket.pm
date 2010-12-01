@@ -115,7 +115,8 @@ sub render{
 	";
 	$sth = $dbh->prepare($query);
 	$sth->execute($args{'id'});
-	my $section_create_list = $sth->fetchall_hashref('section_id');
+	my $section_create_list = $sth->fetchall_hashref('name');
+	my @s_section = sort({lc($a) cmp lc($b)} keys %$section_create_list);
 
 	# Create a psuedo-section for tickets which are assigned to the technician but not on a board to which the technician has read rights
 	$section_list->{'pseudo'} = {
@@ -133,13 +134,15 @@ sub render{
 	$query = "select * from site where not deleted;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $site_list = $sth->fetchall_hashref('id');
+	my $site_list = $sth->fetchall_hashref('name');
+	my @s_site = sort({lc($a) cmp lc($b)} keys %$site_list);
 
 	# Get the list of technicians
 	$query = "select id,alias from users where active;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $tech_list = $sth->fetchall_hashref('id');
+	my $tech_list = $sth->fetchall_hashref('alias');
+	my @s_tech = sort({lc($a) cmp lc($b)} keys %$tech_list);
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
@@ -147,7 +150,7 @@ sub render{
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
 
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();

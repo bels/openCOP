@@ -79,19 +79,15 @@ if($authenticated == 1)
 	";
 	$sth = $dbh->prepare($query);
 	$sth->execute($id);
-	my $section_create_list = $sth->fetchall_hashref('section_id');
-
-	$query = "select id,alias from users where active;";
-	$sth = $dbh->prepare($query);
-	$sth->execute;
-	my $tech_list = $sth->fetchall_hashref('id');
+	my $section_create_list = $sth->fetchall_hashref('name');
+	my @scl = sort({lc($a) cmp lc($b)} keys %$section_create_list);
 
 	my @styles = ("styles/work_orders.css");
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_orders.js");
 	my $title = $config->{'company_name'} . " - Work Orders";
 	my $file = "work_orders.tt";
 
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, section_list => $section_list, section_create_list => $section_create_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, section_list => $section_list, section_create_list => $section_create_list, scl => \@scl};
 
 	print "Content-type: text/html\n\n";
 

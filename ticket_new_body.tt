@@ -5,7 +5,7 @@
 				<label for="site" class="short_label">Site:</label>
 				<select name="site" size="1" tabindex="1" id="site">
 					<option></option>
-					[% FOREACH site IN site_list.keys %]
+					[% FOREACH site IN ssite %]
 					<option value="[% site %]">[% site_list.$site.name %]</option>
 					[% END %]
 				</select>
@@ -28,8 +28,7 @@
 				<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="10" id="section">
-					<option></option>
-					[% FOREACH section IN section_create_list.keys %]
+					[% FOREACH section IN ssection %]
 					<option value="[% section %]">[% section_create_list.$section.name %]</option>
 					[% END %]
 				</select>
@@ -37,7 +36,7 @@
 				<label for="tech" class="short_label">Tech:</label>
 				<select name="tech" size="1" tabindex="10" id="tech">
 					<option></option>
-					[% FOREACH tech IN tech_list.keys %]
+					[% FOREACH tech IN stech %]
 					<option value="[% tech %]">[% tech_list.$tech.alias %]</option>
 					[% END %]
 				</select>

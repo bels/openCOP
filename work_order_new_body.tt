@@ -4,7 +4,7 @@
 				<h3>General Information</h3>
 				<label for="wo">Choose a work order template:</label>
 				<select name="wo" size="1" id="wo">
-				[% FOREACH wo IN wo_list.keys %]
+				[% FOREACH wo IN swo %]
 					<option value="[% wo_list.$wo.id %]">[% wo_list.$wo.name %]</option>
 				[% END %]
 				</select>
@@ -12,7 +12,7 @@
 				<label for="site" class="short_label">Site:</label>
 				<select name="site" size="1" tabindex="1" id="site">
 					<option></option>
-					[% FOREACH site IN site_list.keys %]
+					[% FOREACH site IN ssite %]
 					<option value="[% site %]">[% site_list.$site.name %]</option>
 					[% END %]
 				</select>

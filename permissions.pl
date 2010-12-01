@@ -44,7 +44,7 @@ if($authenticated == 1)
 	foreach(keys %$gid_list){
 		push(@pid,$gid_list->{$_}->{'name'});
 	}
-	my @gid = sort(@pid);
+	my @gid = sort({lc($a) cmp lc($b)}@pid);
 
 	$query = "select * from section;";
 	$sth = $dbh->prepare($query);
@@ -57,7 +57,8 @@ if($authenticated == 1)
 	foreach(keys %$sid_list){
 		push(@pid,$sid_list->{$_}->{'name'});
 	}
-	my @sid = sort(@pid);
+	shift(@pid);
+	my @sid = sort({lc($a) cmp lc($b)} @pid);
 
 	$query = "select * from section_aclgroup;";
 	$sth = $dbh->prepare($query);
