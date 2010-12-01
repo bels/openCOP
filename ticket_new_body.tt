@@ -46,7 +46,7 @@
 				<h3>Problem Details</h3>
 				<label for="problem">Problem:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
 				<textarea id="tech_problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
-				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?110" class="tooltip" target="_tips">?</a><br />
+				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?112" class="tooltip" target="_tips">?</a><br />
 				<textarea  id="troubleshoot" style="width: 690px;" cols="80" rows="5" name="troubleshoot" tabindex="12"></textarea> <br />
 				<button type="button" id="submit_button">Submit</button>
 			</div>
