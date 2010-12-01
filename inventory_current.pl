@@ -138,17 +138,11 @@ if($authenticated == 1)
 			);
 			my $i;
 			my @pid;
-			my @p;
 			foreach(keys %$results){
 				push(@pid,$_);
 			}
-			my @ppid = sort(@pid);
-			foreach(keys %$results){
-				push(@p,$results->{$_}->{'id'});
-			}
-			unshift(@ppid,'');
-			unshift(@p,'');
-			for ($i = 1; $i <= $#ppid; $i++){
+			my @ppid = sort({lc($a) cmp lc($b)} @pid);
+			for ($i = 0; $i <= $#ppid; $i++){
 				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$ppid[$i]</option>);
 			}
 
@@ -167,17 +161,11 @@ if($authenticated == 1)
 			);
 			my $i;
 			my @pid;
-			my @p;
 			foreach(keys %$results){
 				push(@pid,$results->{$_}->{'name'});
 			}
-			my @ppid = sort(@pid);
-			foreach(keys %$results){
-				push(@p,$results->{$_}->{'id'});
-			}
-			unshift(@ppid,'');
-			unshift(@p,'');
-			for ($i = 1; $i <= $#ppid; $i++){
+			my @ppid = sort({lc($a) cmp lc($b)} @pid);
+			for ($i = 0; $i <= $#ppid; $i++){
 				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$ppid[$i]</option>);
 			}
 
@@ -211,13 +199,11 @@ if($authenticated == 1)
 				foreach(keys %{$new_object->{$element}}){
 					push(@pid,$_);
 				}
-				my @ppid = sort(@pid);
+				my @ppid = sort({lc($a) cmp lc($b)} @pid);
 				foreach(keys %{$new_object->{$element}}){
 					push(@p,$new_object->{$element}->{$_});
 				}
-				unshift(@ppid,'');
-				unshift(@p,'');
-				for ($i = 1; $i <= $#ppid; $i++)	{
+				for ($i = 0; $i <= $#ppid; $i++){
 					if ($ppid[$i] eq "type"){
 						$query = "select template,id from template where id = '$new_object->{$element}->{'type'}[0]';";
 						$sth = $dbh->prepare($query);
@@ -241,9 +227,10 @@ if($authenticated == 1)
 					} elsif ($ppid[$i] eq "id"){
 					}
 					else {
+						#	<input class="object_detail" type="text" id="$p[$i][1]" value="$p[$i][0]">
 						print qq(
 							<label class="object_detail" for=") . $ppid[$i] . qq(_input">$ppid[$i]</label>
-							<input class="object_detail" type="text" id="$p[$i][1]" value="$p[$i][0]">
+							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}[1]" value="$new_object->{$element}->{$ppid[$i]}[0]">
 						);
 					}
 
@@ -270,13 +257,8 @@ if($authenticated == 1)
 		foreach(keys %$pid){
 			push(@pid,$pid->{$_}->{'property'});
 		}
-		my @ppid = sort(@pid);
-		foreach(keys %$pid){
-			push(@p,$pid->{$_}->{'id'});
-		}
-		unshift(@ppid,'');
-		unshift(@p,'');
-		for ($i = 1; $i <= $#ppid; $i++)
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		for ($i = 0; $i <= $#ppid; $i++)
 		{
 			$data .= qq(<option value=$pid->{$ppid[$i]}->{'id'}>$pid->{$ppid[$i]}->{'property'}</option>);
 		}

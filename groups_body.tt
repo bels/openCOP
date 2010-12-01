@@ -12,9 +12,8 @@
 			<form id="del_group_form">
 				<label id="del_group_header_text">Delete group</label>
 				<select id="delete_group_select">
-					<option value=""></option>
-				[% FOREACH group IN groups.keys %]
-					<option value="[% groups.$group.id %]">[% groups.$group.name %]</option>
+				[% FOREACH group IN groups.sort %]
+					<option value="[% gid.$group.id %]">[% gid.$group.name %]</option>
 				[% END %]
 				</select>
 				<button id="del_group_button">Delete</button>
@@ -29,9 +28,8 @@
 		<div id="select_group_div" class="select_div">
 			<span id="select_group_header">Group</span>
 			<select id="select_group_select">
-				<option value="" selected="selected"></option>
-			[% FOREACH id IN groups.keys %]
-				<option value="[% groups.$id.id %]">[% groups.$id.name %]</option>
+			[% FOREACH id IN groups.sort %]
+				<option value="[% gid.$id.id %]">[% gid.$id.name %]</option>
 			[% END %]
 			</select>
 			<button id="submit_a_gu" mode="a_gu" class="associate">Save</button>

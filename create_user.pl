@@ -12,7 +12,7 @@ my $q = CGI->new(); #create CGI
 my $alias = uri_unescape($q->param('username')); #getting the username from the form
 my $password = uri_unescape($q->param('password1')); #getting the password from the form
 my $email = uri_unescape($q->param('email'));
-my $section = uri_unescape($q->param('section'));
+my $group = uri_unescape($q->param('group'));
 
 chomp($alias);
 chomp($password);
@@ -39,6 +39,6 @@ else
 	{
 		die "Config file (config.yml) does not exist or the permissions on it are not correct.\n";
 	}
-	$user->create_user(alias => $alias,password => $password, email => $email,section => $section);
+	$user->create_user(alias => $alias,password => $password, email => $email,group => $group);
 	print $q->redirect(-URL => "user_admin.pl?success=1");
 }

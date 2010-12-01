@@ -28,26 +28,39 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $i;
+	my @pid;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+
 	my $query = "select id,alias from users where active = true;";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
-	my $uid = $sth->fetchall_hashref('id');
+
+	my $uid = $sth->fetchall_hashref('alias');
+	foreach(keys %$uid){
+		push(@pid,$uid->{$_}->{'alias'});
+	}
+	my @uid = sort(@pid);
 
 	$query = "select * from aclgroup;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $gid = $sth->fetchall_hashref('id');
 
+	my $gid = $sth->fetchall_hashref('name');
+	@pid = [];
+	foreach(keys %$gid){
+		push(@pid,$gid->{$_}->{'name'});
+	}
+	my @gid = sort(@pid);
 
 	my $meta_keywords = "";
 	my $meta_description = "";
-	my @styles = ( "styles/groups.css","styles/ui.multiselect.css");
-	my @javascripts = ("javascripts/jquery.validate.js","javascripts/groups.js","javascripts/main.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js");
+	my @styles = ("styles/ui.multiselect.css","styles/groups.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js","javascripts/main.js","javascripts/groups.js");
 
 	my $file = "groups.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, users => $uid, groups => $gid};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, users => \@uid, groups => \@gid, uid => $uid, gid => $gid};
 		
 	print "Content-type: text/html\n\n";
 

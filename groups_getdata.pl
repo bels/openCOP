@@ -33,19 +33,20 @@ if($authenticated == 1)
 	my @in_groups_order;
 	my $in_users;
 	my @in_users_order;
+	my $i;
+	my @pid;
 
 	my $vars = $q->Vars;
 	if ($vars->{'mode'} eq "init_ug"){
+		my $ig_again = {};
 		my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 		my $id = $vars->{'uid'};
 		$in_groups = $user->get_groups(id => $id);
-		@in_groups_order = sort (keys %$in_groups);
-	
+
 		$query = "select * from aclgroup;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $all_groups  = $sth->fetchall_hashref('id');
-		my @all_groups_order = sort (keys %$all_groups);
+		my $all_groups  = $sth->fetchall_hashref('name');
 		my @in_groups;
 	
 		$data .= qq(
@@ -53,39 +54,48 @@ if($authenticated == 1)
 		);
 	
 		if(defined($in_groups)){
-			foreach my $key (@in_groups_order){
-				push(@in_groups,$in_groups->{$key}->{'aclgroup_id'});
-				$data .= qq(<option selected="selected" value="$in_groups->{$key}->{'aclgroup_id'}">$in_groups->{$key}->{'name'}</option>);
+			foreach (keys %$in_groups){
+				push(@in_groups,$in_groups->{$_}->{'name'});
+				$ig_again->{$in_groups->{$_}->{'name'}} = {
+					'name'		=>	$in_groups->{$_}->{'name'},
+					'aclgroup_id'	=>	$in_groups->{$_}->{'aclgroup_id'},
+				};
 			}
 		}
+		my @sig = sort( {lc($a) cmp lc($b) } @in_groups);
+		for ($i = 0; $i <= $#sig; $i++){
+			$data .= qq(<option selected="selected" value="$ig_again->{$sig[$i]}->{'aclgroup_id'}">$ig_again->{$sig[$i]}->{'name'}</option>);
+		}
 
-		foreach my $key (@all_groups_order){
+		foreach (keys %$all_groups){
 			foreach (@in_groups){
-				if($_ =~ m/$all_groups->{$key}->{'id'}/) {
-					delete($all_groups->{$key});
+				if($_ =~ m/$all_groups->{$_}->{'name'}/) {
+					delete($all_groups->{$_});
 				}
 			}
-			if(defined($all_groups->{$key})){
-				$data .= qq(<option value="$all_groups->{$key}->{'id'}">$all_groups->{$key}->{'name'}</option>);
+			if(defined($all_groups->{$_})){
+				push(@pid,$all_groups->{$_}->{'name'});
 			}
+		}
+		my @gid = sort( {lc($a) cmp lc($b) } @pid);
+		for ($i = 0; $i <= $#gid; $i++){
+			$data .= qq(<option value="$all_groups->{$gid[$i]}->{'id'}">$all_groups->{$gid[$i]}->{'name'}</option>);
 		}
 	
 		$data .= qq(</select>);
 		print $data;
 	} elsif ($vars->{'mode'} eq "init_gu"){
+		my $iu_again = {};
 		my $id = $vars->{'gid'};
 		my $query = "select distinct(alias_aclgroup.alias_id),alias from alias_aclgroup join users on alias_aclgroup.alias_id = users.id where (aclgroup_id = '$id');";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		$in_users = $sth->fetchall_hashref('alias_id');
-		@in_users_order = sort (keys %$in_users);
 
 		$query = "select id,alias from users where active = true;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $all_users  = $sth->fetchall_hashref('id');
-		my @all_users_order = sort (keys %$all_users);
-
+		my $all_users  = $sth->fetchall_hashref('alias');
 		my @in_users;
 	
 		$data .= qq(
@@ -93,21 +103,32 @@ if($authenticated == 1)
 		);
 	
 		if(defined($in_users)){
-			foreach my $key (@in_users_order){
-				push(@in_users,$in_users->{$key}->{'alias_id'});
-				$data .= qq(<option selected="selected" value="$in_users->{$key}->{'alias_id'}">$in_users->{$key}->{'alias'}</option>);
+			foreach (keys %$in_users){
+				push(@in_users,$in_users->{$_}->{'alias'});
+				$iu_again->{$in_users->{$_}->{'alias'}} = {
+					'alias'		=>	$in_users->{$_}->{'alias'},
+					'alias_id'	=>	$in_users->{$_}->{'alias_id'},
+				};
 			}
 		}
+		my @siu = sort( {lc($a) cmp lc($b) } @in_users);
+		for ($i = 0; $i <= $#siu; $i++){
+			$data .= qq(<option selected="selected" value="$iu_again->{$siu[$i]}->{'alias_id'}">$iu_again->{$siu[$i]}->{'alias'}</option>);
+		}
 
-		foreach my $key (@all_users_order){
+		foreach (keys %$all_users){
 			foreach (@in_users){
-				if($_ =~ m/$all_users->{$key}->{'id'}/) {
-					delete($all_users->{$key});
+				if($_ =~ m/$all_users->{$_}->{'alias'}/) {
+					delete($all_users->{$_});
 				}
 			}
-			if(defined($all_users->{$key})){
-				$data .= qq(<option value="$all_users->{$key}->{'id'}">$all_users->{$key}->{'alias'}</option>);
+			if(defined($all_users->{$_})){
+				push(@pid,$all_users->{$_}->{'alias'});
 			}
+		}
+		my @uid = sort( {lc($a) cmp lc($b) } @pid);
+		for ($i = 0; $i <= $#uid; $i++){	
+			$data .= qq(<option value="$all_users->{$uid[$i]}->{'id'}">$all_users->{$uid[$i]}->{'alias'}</option>);
 		}
 	
 		$data .= qq(</select>);

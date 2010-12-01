@@ -97,7 +97,7 @@ if($authenticated == 1)
 	} else {
 		my @hash_order = (keys %{$section->{$data->{'section'}}});
 		
-		@hash_order = sort(@hash_order);
+		@hash_order = sort({$a <=> $b } @hash_order);
 	
 		print qq(
 			<table class="ticket_summary">

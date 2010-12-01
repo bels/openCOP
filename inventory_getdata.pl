@@ -29,7 +29,6 @@ if($authenticated == 1)
 	my $sth;
 	my $data;
 	my $used_properties;
-	my @used_properties_order;
 
 	my $vars = $q->Vars;
 	if ($vars->{'mode'} eq "init"){
@@ -39,14 +38,12 @@ if($authenticated == 1)
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			$used_properties = $sth->fetchall_hashref('property');
-			@used_properties_order = sort (keys %$used_properties);
 		}
 
 		$query = "select * from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $all_properties  = $sth->fetchall_hashref('property');
-		my @all_properties_order = sort (keys %$all_properties);
 		my @used_properties;
 
 		$data .= qq(
@@ -59,9 +56,8 @@ if($authenticated == 1)
 			foreach(keys %$used_properties){
 				push(@pid,$used_properties->{$_}->{'property'});
 			}
-			my @ppid = sort(@pid);
-			unshift(@ppid,'');
-			for ($i = 1; $i <= $#ppid; $i++)
+			my @ppid = sort({lc($a) cmp lc($b)} @pid);
+			for ($i = 0; $i <= $#ppid; $i++)
 			{
 				unless($used_properties->{$ppid[$i]}->{'property'} eq "type" || $used_properties->{$ppid[$i]}->{'property'} eq "company" || $used_properties->{$ppid[$i]}->{'property'} eq "name") {
 					push(@used_properties,$used_properties->{$ppid[$i]}->{'property_id'});
@@ -70,10 +66,10 @@ if($authenticated == 1)
 			}
 		}
 
-		foreach my $key (@all_properties_order){
+		foreach (keys %$all_properties){
 			foreach (@used_properties){
-				if($_ =~ m/$all_properties->{$key}->{'id'}/) {
-					delete($all_properties->{$key});
+				if($_ =~ m/$all_properties->{$_}->{'id'}/) {
+					delete($all_properties->{$_});
 				}
 			}
 		}
@@ -84,9 +80,8 @@ if($authenticated == 1)
 			foreach(keys %$all_properties){
 				push(@pid,$all_properties->{$_}->{'property'});
 			}
-			my @ppid = sort(@pid);
-			unshift(@ppid,'');
-			for ($i = 1; $i <= $#ppid; $i++){
+			my @ppid = sort({lc($a) cmp lc($b)} @pid);
+			for ($i = 0; $i <= $#ppid; $i++){
 				unless($all_properties->{$ppid[$i]}->{'property'} eq "type" || $all_properties->{$ppid[$i]}->{'property'} eq "company" || $all_properties->{$ppid[$i]}->{'property'} eq "name") {
 					$data .= qq(<option value=$all_properties->{$ppid[$i]}->{'id'}>$all_properties->{$ppid[$i]}->{'property'}</option>);
 				}
@@ -148,9 +143,8 @@ if($authenticated == 1)
 		foreach(keys %$results){
 			push(@pid,$results->{$_}->{'template'});
 		}
-		my @ppid = sort(@pid);
-		unshift(@ppid,'');
-		for ($i = 1; $i <= $#ppid; $i++){
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		for ($i = 0; $i <= $#ppid; $i++){
 			$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'template'}</option>);
 		}
 		$data .= qq(</select>);
@@ -192,9 +186,8 @@ if($authenticated == 1)
 		foreach(keys %$results){
 			push(@pid,$results->{$_}->{'template'});
 		}
-		my @ppid = sort(@pid);
-		unshift(@ppid,'');
-		for ($i = 1; $i <= $#ppid; $i++){
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		for ($i = 0; $i <= $#ppid; $i++){
 			$data .= qq(<option tpid="$special_case->{'type'}->{'id'}" value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'template'}</option>);
 		}
 
@@ -211,10 +204,10 @@ if($authenticated == 1)
 		foreach(keys %$companies){
 			push(@pid,$companies->{$_}->{'name'});
 		}
-		my @ppid = sort(@pid);
-		unshift(@ppid,'');
-		for ($i = 1; $i <= $#ppid; $i++){
-			$data .= qq(<option cpid="$special_case->{'company'}->{'id'}" value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'name'}</option>);
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		shift(@ppid);
+		for ($i = 0; $i <= $#ppid; $i++){
+			$data .= qq(<option cpid="$special_case->{'company'}->{'id'}" value=$companies->{$ppid[$i]}->{'id'}>$companies->{$ppid[$i]}->{'name'}</option>);
 		}
 		$data .= qq(	</select>
 				</div>
@@ -238,11 +231,10 @@ if($authenticated == 1)
 		foreach(keys %$properties){
 			push(@pid,$properties->{$_}->{'property'});
 		}
-		my @ppid = sort(@pid);
-		unshift(@ppid,'');
-		for ($i = 1; $i <= $#ppid; $i++){
-			unless($ppid[$i] eq "company" || $ppid[$i] eq "type" || $ppid[$i] eq "name"){
-				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'name'}</option>);
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		for ($i = 0; $i <= $#ppid; $i++){
+			unless($ppid[$i] eq "company" || $ppid[$i] eq "type" || $ppid[$i] eq "name" || $properties->{$ppid[$i]}->{'property'} eq ""){
+				$data .= qq(<option value=$properties->{$ppid[$i]}->{'id'}>$properties->{$ppid[$i]}->{'property'}</option>);
 			}
 		}
 		$data .= qq(	</select>
@@ -272,9 +264,8 @@ if($authenticated == 1)
 		foreach(keys %$results){
 			push(@pid,$results->{$_}->{'template'});
 		}
-		my @ppid = sort(@pid);
-		unshift(@ppid,'asdf');
-		for ($i = 1; $i <= $#ppid; $i++){
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		for ($i = 0; $i <= $#ppid; $i++){
 			$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'template'}</option>);
 		}
 
@@ -294,9 +285,8 @@ if($authenticated == 1)
 		foreach(keys %$results){
 			push(@pid,$results->{$_}->{'property'});
 		}
-		my @ppid = sort(@pid);
-		unshift(@ppid,'asdf');
-		for ($i = 1; $i <= $#ppid; $i++){
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		for ($i = 0; $i <= $#ppid; $i++){
 			unless($results->{$ppid[$i]}->{'property'} eq "type" || $results->{$ppid[$i]}->{'property'} eq "company"){
 				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'property'}</option>);
 			}

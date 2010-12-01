@@ -18,7 +18,6 @@
 				<a href="tips.pl?XXX" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="11" class="section">
-					<option></option>
 					[% FOREACH section IN section_create_list.keys %]
 					<option value="[% section %]">[% section_create_list.$section.name %]</option>
 					[% END %]

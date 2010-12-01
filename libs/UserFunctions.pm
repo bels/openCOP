@@ -81,6 +81,27 @@ sub create_user{
 			$password,
 			$args{'email'},
 	) or return undef;
+	$query = "
+		select
+			last_value
+		from
+			users_id_seq
+		;
+	";
+	$sth = $self->{'dbh'}->prepare($query);
+	$sth->execute;
+	my $uid = $sth->fetchrow_hashref;
+	$query = "
+		insert into alias_aclgroup (
+			alias_id,
+			aclgroup_id
+		) values (
+			?,
+			?
+		);
+	";
+	$sth = $self->{'dbh'}->prepare($query);
+	$sth->execute($uid->{'last_value'},$args{'group'}) or return undef;
 
 }
 

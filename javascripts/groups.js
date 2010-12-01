@@ -1,11 +1,11 @@
 $(document).ready(function(){
 	$('.multiselect').livequery(function(){
-		$('.multiselect').multiselect();
+		$(this).multiselect();
 		$('.ui-multiselect').show();
 	});
 
 	$('#select_user_select').livequery(function(){
-		$('#select_user_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			if($('#select_user_select').val()){
 				load_associations_ug();
@@ -14,7 +14,7 @@ $(document).ready(function(){
 	});
 
 	$('#select_group_select').livequery(function(){
-		$('#select_group_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			if($('#select_group_select').val()){
 				load_associations_gu();

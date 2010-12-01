@@ -29,28 +29,37 @@ my $success = $q->param('success');
 if($authenticated == 1)
 {
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+	my $i;
+	my @pid;
+
 	my $query = "select id,alias from users where active = true;";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
-	my $uid = $sth->fetchall_hashref('id');
+	my $uid_list = $sth->fetchall_hashref('alias');
+	foreach(keys %$uid_list){
+		push(@pid,$uid_list->{$_}->{'alias'});
+	}
+	my @uid = sort(@pid);
 	
 	my @styles = ("styles/user_admin.css","styles/ui.multiselect.css", "styles/groups.css");
 	my @javascripts = ("javascripts/groups.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js","javascripts/main.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select name from section";
+
+	my $query = "select * from aclgroup";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
-	my $results = $sth->fetchall_arrayref;
-	my @temp = @$results; #required because fetchall_arrayref returns a reference to an array that has a reference to a 1 element array in each element
-	my @sections = ();
-	foreach my $section (@temp){
-		push(@sections,shift(@$section));
+	my $gid_list = $sth->fetchall_hashref('name');
+	@pid = [];
+	foreach(keys %$gid_list){
+		push(@pid,$gid_list->{$_}->{'name'});
 	}
+	my @gid = sort(@pid);
+	shift(@gid);
+
 	my $file = "user_admin.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success,logo => $config->{'logo_image'}, sections => \@sections,users => $uid};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success,logo => $config->{'logo_image'}, groups => \@gid,users => \@uid, uid => $uid_list, gid => $gid_list};
 	
 	print "Content-type: text/html\n\n";
 

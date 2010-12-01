@@ -18,17 +18,15 @@
 				<tr id="add_permission">
 						<td>
 							<select id="select_group" class="new_permission">
-								<option value=""</option>
-							[% FOREACH id IN groups.keys %]
-								<option value="[% groups.$id.id %]">[% groups.$id.name %]</option>
+							[% FOREACH id IN gid_list.sort %]
+								<option value="[% groups_names.$id.id %]">[% groups_names.$id.name %]</option>
 							[% END %]
 							</select>
 						</td>
 						<td>
 							<select id="select_section" class="new_permission">
-								<option value=""</option>
-							[% FOREACH id IN sections.keys %]
-								<option value="[% sections.$id.id %]">[% sections.$id.name %]</option>
+							[% FOREACH id IN sid_list.sort %]
+								<option value="[% sections_names.$id.id %]">[% sections_names.$id.name %]</option>
 							[% END %]
 							</select>
 						</td>
