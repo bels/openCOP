@@ -6,7 +6,6 @@ use Ticket;
 use CGI;
 use SessionFunctions;
 use JSON;
-use UserFunctions;
 use URI::Escape;
 use DBI;
 
@@ -29,13 +28,8 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $user;
-	my $alias;
-	my $id;
 	my $data = $q->Vars;
-	$alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
-	$user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $sth;
 	my $query;
@@ -45,8 +39,7 @@ if($authenticated == 1)
 	$sth->execute($data->{'wo'});
 	my $wo_list = $sth->fetchall_hashref('step');
 
-	$data->{'submitter'} = $user->get_user_id(alias => $alias);
-	$data->{'customer'} = 0;
+	$data->{'submitter'} = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
 	my $access;
 

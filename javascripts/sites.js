@@ -22,6 +22,7 @@ $(document).ready(function(){
 					delete_site_level();
 				} else {
 					var str = data.replace(/^[\d\s]/,'');
+					$('#confirm_middle').text('');
 					$('#confirm_middle').append(str);
 					$('#behind_popup').css({'opacity':'0.7'}).fadeIn('slow');
 					$('#confirm_dialog').fadeIn('slow');

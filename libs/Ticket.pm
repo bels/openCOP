@@ -204,57 +204,31 @@ sub submit{
 	}
 
 
-	if($args{'customer'}){
-		$query = "
-			select
-				bool_or(section_aclgroup.aclcreate) as access
-			from
-				section_aclgroup
-				join
-					section on section.id = section_aclgroup.section_id
-				join
-					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
-			where
-				section_aclgroup.section_id = ?
-			and (
-				section_aclgroup.aclgroup_id in (
-					select
-						aclgroup_id
-					from
-						aclgroup
-					where
-						name = ?
-				)
-			);
-		";
-		$sth = $dbh->prepare($query);
-		$sth->execute($data->{'section'},"customers");
-	} else {
-		$query = "
-			select
-				bool_or(section_aclgroup.aclcreate) as access
-			from
-				section_aclgroup
-				join
-					section on section.id = section_aclgroup.section_id
-				join
-					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
-			where
-				section_aclgroup.section_id = ?
-			and (
-				section_aclgroup.aclgroup_id in (
-					select
-						aclgroup_id
-					from
-						alias_aclgroup
-					where
-						alias_id = ?
-				)
-			);
-		";
-		$sth = $dbh->prepare($query);
-		$sth->execute($data->{'section'},$data->{'submitter'});
-	}
+	$query = "
+		select
+			bool_or(section_aclgroup.aclcreate) as access
+		from
+			section_aclgroup
+			join
+				section on section.id = section_aclgroup.section_id
+			join
+				aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+		where
+			section_aclgroup.section_id = ?
+		and (
+			section_aclgroup.aclgroup_id in (
+				select
+					aclgroup_id
+				from
+					alias_aclgroup
+				where
+					alias_id = ?
+			)
+		);
+	";
+	$sth = $dbh->prepare($query);
+	$sth->execute($data->{'section'},$data->{'submitter'});
+
 	my $access = $sth->fetchrow_hashref;
 	if($access->{'access'}){
 		$query = "

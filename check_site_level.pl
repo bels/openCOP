@@ -27,22 +27,19 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $vars = $q->Vars;
-
+	my $query;
+	my $sth;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1}) or die "Database connection failed in $0";
-	my $query = "select id from site_level where type = ?";
-        my $sth = $dbh->prepare($query);
-        $sth->execute($vars->{'site'});
-	my $results = $sth->fetchrow_hashref;
 
 	$query = "select count(*) from site where level = ?";
 	$sth = $dbh->prepare($query);
-	$sth->execute($results->{'id'});
+        $sth->execute($vars->{'site'});
 	my $count = $sth->fetchrow_hashref;
 
 	if($count->{'count'}){
 		$query = "select * from site where level = ?";
 	        $sth = $dbh->prepare($query);
-	        $sth->execute($results->{'id'});
+	        $sth->execute($vars->{'site'});
 		my $sites = $sth->fetchall_hashref('id');
 		my $data = qq(Deleting this site level will remove the following sites. Are you sure you want to proceed? );
 		foreach (keys %$sites){
@@ -56,6 +53,8 @@ if($authenticated == 1)
 		print "Content-type: text/html\n\n";
 		print "0";
 	}
+} elsif($authenticated == 2){
+        print $q->redirect(-URL => $config->{'index_page'})
 }
 else
 {

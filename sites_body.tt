@@ -11,7 +11,7 @@
 			<span class="success">The company was created successfully.</span>
 		[% END %]
 		[% IF associate_success == 1 %]
-			<span class="success">The company and site was successfully associated.</span>
+			<span class="success">The company and site were successfully associated.</span>
 		[% END %]
 		[% IF delete_site_success == 1 %]
 			<span class="success">The site was deleted successfully.</span>
@@ -28,8 +28,8 @@
 						<label for="site_name">Site Name:</label><input type="text" name="site_name" id="site_name"><a href="tips.pl?304" class="tooltip">?</a><br />
 						<label for="site_level">Site Level:</label>
 						<select name="site_level" size="1" tabindex="1" id="site_level">
-							[% FOREACH sitelevel IN site_level_list %]
-							<option value="[% sitelevel %]">[% sitelevel %]</option>
+							[% FOREACH site_level IN site_level_list %]
+							<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
 							[% END %]
 						</select>
 						<a href="tips.pl?305" class="tooltip">?</a>
@@ -50,7 +50,7 @@
 						<label for="delete_site_name">Site Name:</label>
 						<select name="delete_site_name" id="delete_site_name">
 						[% FOREACH site IN sites_list %]
-							<option value="[% site %]">[% site %]</option>
+							<option value="[% sites.$site.id %]">[% sites.$site.name %]</option>
 						[% END %]
 						</select>
 						<input type="submit" value="Delete" id="delete_submit_button">
@@ -62,7 +62,7 @@
 						<label for="delete_site_level_name">Site Level Name:</label>
 						<select name="delete_site_level_name" id="delete_site_level_name">
 						[% FOREACH site_level IN site_level_list %]
-							<option value="[% site_level %]">[% site_level %]</option>
+							<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
 						[% END %]
 						</select>
 					</form>
@@ -84,13 +84,13 @@
 						<label for="associate_company_name">Company:</label>
 						<select name="associate_company_name" id="associate_company_name">
 							[% FOREACH company IN company_list %]
-							<option value="[% company %]">[% company %]</option>
+							<option value="[% companies.$company.id %]">[% companies.$company.name %]</option>
 							[% END %]
 						</select>
 						<label for="associate_site_name">Site:</label>
 						<select name="associate_site_name" id="associate_site_name">
 							[% FOREACH site IN sites_list %]
-							<option value="[% site %]">[% site %]</option>
+							<option value="[% sites.$site.id %]">[% sites.$site.name %]</option>
 							[% END %]
 						</select>
 						<input type="submit" value="Associate" id="associate_submit_button">

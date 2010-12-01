@@ -92,9 +92,7 @@ if($authenticated == 1)
 	if($vars->{'mode'} eq "save"){
 		print "Content-type: text/html\n\n";
 		my $aclgroup;
-		my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-		my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-		my $id = $user->get_user_id(alias => $alias);
+		my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 		my $insert = "insert into reports (report,name,aclgroup,owner) values(?,?,?,?);";
 		my $sth = $dbh->prepare($insert);
 		$sth->execute($query,$name,$aclgroup,$id);
@@ -134,6 +132,8 @@ if($authenticated == 1)
 	} else {
 		warn "What? How did you even get here?";
 	}
+} elsif($authenticated == 2){
+        print $q->redirect(-URL => $config->{'index_page'})
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});
 }

@@ -26,8 +26,7 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
-{
+if($authenticated == 2){
 	my @styles = ( "styles/customer.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
 	my @javascripts = ("javascripts/main.js","javascripts/ticket.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-timepicker-addon.min.js");
 	my $meta_keywords = "";
@@ -53,13 +52,13 @@ if($authenticated == 1)
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('id');
 
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-
 	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $id = $user->get_user_info(alias => $alias);
-	my $submitter = $id->{'first'} . " " . $id->{'last'};
-	my $email = $id->{'email'};
-	my $site = $id->{'site'};
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $info = $user->get_user_info(user_id => $id);
+
+	my $submitter = $info->{'first'} . " " . $info->{'last'};
+	my $email = $info->{'email'};
+	my $site = $info->{'site'};
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
@@ -69,9 +68,9 @@ if($authenticated == 1)
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
-}
-else
-{
+} elsif($authenticated == 1){
+	print $q->redirect(-URL => "main.pl");
+} else {
 	my $errorcode;
 	$errorcode = $q->param('errorcode') or $errorcode = 0;
 	my $vars;

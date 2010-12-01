@@ -29,11 +29,13 @@ if($authenticated == 1)
 	my $company_name = uri_unescape($q->param('company_name_input'));
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "insert into company (name,hidden) values ('$company_name',false)";
+	my $query = "insert into company (name) values (?)";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($company_name);
 
 	print $q->redirect(-URL=> "sites.pl?company_success=1");
+} elsif($authenticated == 2){
+	print $q->redirect(-URL => $config->{'index_page'})
 }
 else
 {

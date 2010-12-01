@@ -29,12 +29,11 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
-{
+if($authenticated == 1){
 	print $q->redirect(-URL => "main.pl");
-}
-else
-{
+} elsif($authenticated == 2){
+	print $q->redirect(-URL => "customer.pl");
+} else {
 	my $vars;
 	my $file = "index.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";

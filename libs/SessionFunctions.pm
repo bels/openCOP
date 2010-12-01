@@ -49,11 +49,48 @@ sub authenticate_user{
 	my $password = md5_hex($args{'password'});
 	
 	my $query = "select count(*) from $args{'users_table'} where alias = ? and password = ?";
-	my $sth = $self->{'dbh'}->prepare($query) or die "Preparing the query for authenticate_user in SessionFunctions";
-	$sth->execute($args{'alias'},$password) or die "Executing the query for authenticate_user in SessionFunctions";
-	my $result = $sth->fetchrow_hashref or die "Fetching the results for authenticate_user in SessionFunctions";
-	
-	return $result->{'count'};
+	my $sth = $self->{'dbh'}->prepare($query) or die "Preparing the query for authenticate_user in $0";
+	$sth->execute($args{'alias'},$password) or die "Executing the query for authenticate_user in $0";
+	my $result = $sth->fetchrow_hashref or die "Fetching the results for authenticate_user in $0";
+	my $count = $result->{'count'};
+
+	$query = "select * from $args{'users_table'} where alias = ? and password = ? limit 1";
+	$sth = $self->{'dbh'}->prepare($query) or die "Preparing the query for authenticate_user in $0";
+	$sth->execute($args{'alias'},$password) or die "Executing the query for authenticate_user in $0";
+	$result = $sth->fetchrow_hashref or die "Fetching the results for authenticate_user in $0";
+	my $uid = $result->{'id'};
+
+	$query = "
+		select
+			name
+		from
+			aclgroup
+		join
+			alias_aclgroup
+		on
+			alias_aclgroup.aclgroup_id = aclgroup.id
+		where
+			alias_aclgroup.alias_id = ?
+		;
+	";
+	$sth = $self->{'dbh'}->prepare($query);
+	$sth->execute($uid);
+	$result = $sth->fetchrow_hashref;
+	my $customer;
+
+	if(defined($result->{'name'}) && $result->{'name'} eq "customers"){
+		$customer = 1;
+	} else {
+		$customer = 0;
+	}
+	warn $result->{'name'};
+	warn $customer;
+	my $return = {
+		'count'		=>	$count,
+		'customer'	=>	$customer,
+		'id'		=>	$uid,
+	};
+	return $return;
 }
 
 sub create_session_id{
@@ -66,17 +103,17 @@ sub create_session_id{
 	my $random_number = int(rand(10000));
 
 	my $query = "select count(*) from $args{'auth_table'} where id = ?";
-	my $sth = $self->{'dbh'}->prepare($query)  or die "Preparing the query for create_session_id in SessionFunctions";
-	$sth->execute($random_number) or die "Executing the query for create_session_id in SessionFunctions";
-	my $result = $sth->fetchrow_hashref  or die "Fetching the results for create_session_id in SessionFunctions";
+	my $sth = $self->{'dbh'}->prepare($query)  or die "Preparing the query for create_session_id in $0";
+	$sth->execute($random_number) or die "Executing the query for create_session_id in $0";
+	my $result = $sth->fetchrow_hashref  or die "Fetching the results for create_session_id in $0";
 
 	if($result->{'count'} == 0)
 	{
 		my($sec,$min,$hour,$day,$month,$year) = (localtime)[0,1,2,3,4,5];
 		my $today = ($year + 1900) . "-" . ($month + 1) . "-" . $day . " $hour:$min:$sec";
-		$query = "insert into $args{'auth_table'} (id,user_id,session_key,created) values(?,?,?,?)";
-		$sth= $self->{'dbh'}->prepare($query)  or die "Preparing the second query for create_session_id in SessionFunctions";
-		$sth->execute($random_number,$args{'user_id'},$args{'session_key'},$today) or die "Executing the second query for create_session_id in SessionFunctions";
+		$query = "insert into $args{'auth_table'} (id,user_id,session_key,created,customer) values(?,?,?,?,?)";
+		$sth= $self->{'dbh'}->prepare($query)  or die "Preparing the second query for create_session_id in $0";
+		$sth->execute($random_number,$args{'user_id'},$args{'session_key'},$today,$args{'customer'}) or die "Executing the second query for create_session_id in $0";
 		return $random_number;
 	}
 	else
@@ -94,17 +131,22 @@ sub is_logged_in{
 	$sth->execute($args{'id'},$args{'session_key'});
 	my $result = $sth->fetchrow_hashref;
 	
-	if($result->{'count'} > 1 || $result->{'count'} < 0)
-	{
+	if($result->{'count'} > 1 || $result->{'count'} <= 0){
 		return 0;
-	}
-	else
-	{
-		return 1;
+	} else {
+		$query = "select customer from $args{'auth_table'} where id = ? and session_key = ?";
+		$sth = $self->{'dbh'}->prepare($query);
+		$sth->execute($args{'id'},$args{'session_key'});
+		$result = $sth->fetchrow_hashref;
+		if($result->{'customer'}){
+			return 2;
+		} else {
+			return 1;
+		}
 	}
 }
 
-sub get_name_for_session{
+sub get_id_for_session{
 	my $self = shift;
 	my %args = @_;
 	
@@ -156,6 +198,7 @@ Blah blah blah.
 
 =head2 VERSIONING
 
+.03 - Changed get_name_for_session to get_id_for_session. It now returns the id from the auth table.
 .02 - Modified the code to be more generic so it will be easier to implement this module in other projects
 .011 - Modified for use in germ
 .01 - Initial write. Function list

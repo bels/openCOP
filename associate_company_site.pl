@@ -27,21 +27,17 @@ if(%cookie)
 
 if($authenticated == 1)
 {	
-	my $company_name = uri_unescape($q->param('associate_company_name'));
-	my $site_name = uri_unescape($q->param('associate_site_name'));
-	chomp($site_name);
+	my $vars = $q->Vars;
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select id from company where name = '$company_name'";
+
+	my $query = "update site set company_id = ? where id = ?";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
-	my $result = $sth->fetchrow_hashref;
-	
-	$query = "update site company set id = $result->{'id'} where name = '$site_name'";
-	$sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($vars->{'associate_company_name'},$vars->{'associate_site_name'});
 
 	print $q->redirect(-URL=> "sites.pl?associate_success=1");
+} elsif($authenticated == 2){
+        print $q->redirect(-URL => $config->{'index_page'})
 }
 else
 {
