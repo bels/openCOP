@@ -6,6 +6,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use UserFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -24,6 +25,9 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
 	my $i;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query = "select id,type from site_level";
@@ -93,6 +97,7 @@ if($authenticated == 1)
 		associate_success		=>	$associate_success,
 		delete_site_success		=>	$delete_site_success,
 		delete_site_level_success	=>	$delete_site_level_success,
+		is_admin			=>	$user->is_admin(id => $id),
 	};
 	
 	print "Content-type: text/html\n\n";

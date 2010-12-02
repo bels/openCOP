@@ -25,7 +25,6 @@ if(%cookie)
 {
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
-warn $authenticated;
 if($authenticated == 1){
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
@@ -57,7 +56,7 @@ if($authenticated == 1){
 	my $title = $config->{'company_name'} . " - New Work Order";
 	my $file = "work_order_new.tt";
 
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, wo_list => $wo_list, ssite => \@s_site, swo => \@s_wo, info => $info};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, wo_list => $wo_list, ssite => \@s_site, swo => \@s_wo, info => $info, is_admin => $user->is_admin(id => $id)};
 
 	print "Content-type: text/html\n\n";
 

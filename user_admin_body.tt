@@ -31,7 +31,7 @@
 					<option value="[% uid.$id.id %]">[% uid.$id.alias %]</option>
 				[% END %]
 				</select>
-				<button id="submit_a_ug" mode="a_ug" class="associate">Save</button>
+				<button id="submit_a_ug" mode="a_ug" class="associate">Add</button>
 			</div>
 			<div id="associate_user_group_div">
 				<div id="onload_append_div" class="onload_append">

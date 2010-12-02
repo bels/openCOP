@@ -190,6 +190,18 @@ sub get_groups{
 	return $group;
 }
 
+sub is_admin{
+	my $self = shift;
+	my %args = @_;
+
+	my $query = "select is_admin(?)";
+	my $sth = $self->{'dbh'}->prepare($query);
+	$sth->execute($args{'id'});
+	my $result = $sth->fetchrow_hashref;
+	my $is_admin = $result->{'is_admin'};
+	return $is_admin;
+}
+
 sub get_permissions{
 	my $self = shift;
 	my %args = @_;

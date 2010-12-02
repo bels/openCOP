@@ -7,6 +7,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use UserFunctions;
 use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
@@ -26,7 +27,11 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
 	my $query;
+
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $sth;
 	my $title;
@@ -56,10 +61,10 @@ if($authenticated == 1)
 	} else {
 		$title = $config->{'company_name'} . " - Inventory Index";
 		$file = "inventory_index.tt";
-		push(@styles,"styles/inventory_index.css");
-		push(@javascripts,"javascripts/inventory_index.js");
+	#	push(@styles,"styles/inventory_index.css");
+	#	push(@javascripts,"javascripts/inventory_index.js");
 	}
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, types => $types};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, types => $types, is_admin => $user->is_admin(id => $id)};
 
 	print "Content-type: text/html\n\n";
 

@@ -28,6 +28,9 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
 	my $i;
 	my @pid;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
@@ -61,7 +64,7 @@ if($authenticated == 1)
 
 	my $file = "groups.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, users => \@uid, groups => \@gid, uid => $uid, gid => $gid};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, users => \@uid, groups => \@gid, uid => $uid, gid => $gid, is_admin => $user->is_admin(id => $id)};
 		
 	print "Content-type: text/html\n\n";
 

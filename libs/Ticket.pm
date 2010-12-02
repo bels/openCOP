@@ -125,6 +125,16 @@ sub render{
 		'name'		=>	"Tickets assigned directly",
 	};
 
+	my @list = sort({
+		if($a eq "pseudo"){
+			return -1;
+		} elsif($b eq "pseudo"){
+			return 1;
+		} else {
+			return lc($a) cmp lc($b);
+		}
+	} keys %$section_list);
+
 	# Get the list of available priorities
 	$query = "select * from priority;";
 	$sth = $dbh->prepare($query);
@@ -154,7 +164,7 @@ sub render{
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
 
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info, is_admin => $args{'is_admin'}, list => \@list};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();

@@ -7,6 +7,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use UserFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -28,6 +29,9 @@ my $success = $q->param('success');
 
 if($authenticated == 1)
 {
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
 	my @styles = ( "styles/customer.css");
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/customer_admin.js");
 	my $meta_keywords = "";
@@ -41,7 +45,7 @@ if($authenticated == 1)
 	my $site_list = $sth->fetchall_hashref('id');
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, site_list => $site_list,duplicate => $duplicate,success => $success};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, site_list => $site_list,duplicate => $duplicate,success => $success, is_admin => $user->is_admin(id => $id)};
 	
 	print "Content-type: text/html\n\n";
 

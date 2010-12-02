@@ -8,6 +8,7 @@ use lib './libs';
 use ReadConfig;
 use URI::Escape;
 use Digest::MD5 qw(md5_hex);
+use SessionFunctions;
 
 my $q = CGI->new();
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
@@ -44,9 +45,9 @@ if($authenticated){
 		my $query = "update users set password = ? where id = ?";
 		my $sth = $dbh->prepare($query);
 		$sth->execute($password,$id);
-		print $q->redirect(-URL=> "password.pl?success=1&id=$id&type=$type");
+		print $q->redirect(-URL=> "password.pl?success=1");
 	} else {
-		print $q->redirect(-URL=> "password.pl?success=0&id=$id&type=$type");
+		print $q->redirect(-URL=> "password.pl?success=0");
 	}
 } else {
 	print $q->redirect(-URL => $config->{'index_page'});

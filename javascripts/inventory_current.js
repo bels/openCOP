@@ -123,6 +123,15 @@ $(document).ready(function(){
 		});
 	});
 
+	$('.object_row').livequery(function(){
+		$(this).hover(function(){
+			$(this).addClass('selected');
+		},
+		function(){
+			$(this).removeClass('selected');
+		});
+	});
+
 	$('#property_search_button').livequery(function(){
 		$(this).bind('click', function(){
 			resetLogout();

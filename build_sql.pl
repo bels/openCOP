@@ -23,7 +23,7 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
@@ -126,7 +126,7 @@ if($authenticated == 1)
 		my $title = $config->{'company_name'} . " - Custom Report";
 		my $file = "display_report.tt";
 		my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, sorted_hash => \@sorted_hash, results => $results, columns => $columns, table_title => $name};
-	
+
 		my $template = Template->new();
 		$template->process($file,$vars) || die $template->error();
 	} else {

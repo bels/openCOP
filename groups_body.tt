@@ -33,7 +33,7 @@
 				<option value="[% gid.$id.id %]">[% gid.$id.name %]</option>
 			[% END %]
 			</select>
-			<button id="submit_a_gu" mode="a_gu" class="associate">Save</button>
+			<button id="submit_a_gu" mode="a_gu" class="associate">Add to group</button>
 		</div>
 		<div id="associate_group_user_div">
 			<div id="onload_append_div" class="onload_append">

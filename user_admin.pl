@@ -6,6 +6,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use UserFunctions;
 use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
@@ -28,6 +29,9 @@ my $success = $q->param('success');
 
 if($authenticated == 1)
 {
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $i;
 	my @pid;
@@ -59,7 +63,7 @@ if($authenticated == 1)
 
 	my $file = "user_admin.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success,logo => $config->{'logo_image'}, groups => \@gid,users => \@uid, uid => $uid_list, gid => $gid_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, duplicate => $duplicate, success => $success,logo => $config->{'logo_image'}, groups => \@gid,users => \@uid, uid => $uid_list, gid => $gid_list, is_admin => $user->is_admin(id => $id)};
 	
 	print "Content-type: text/html\n\n";
 

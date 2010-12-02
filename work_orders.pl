@@ -7,6 +7,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use UserFunctions;
 use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
@@ -28,6 +29,8 @@ if($authenticated == 1)
 {
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+
 	my $query = "
 		select
 			name,
@@ -83,7 +86,7 @@ if($authenticated == 1)
 	my $title = $config->{'company_name'} . " - Work Orders";
 	my $file = "work_orders.tt";
 
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, section_list => $section_list, section_create_list => $section_create_list, scl => \@scl};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, section_list => $section_list, section_create_list => $section_create_list, scl => \@scl, is_admin => $user->is_admin(id => $id)};
 
 	print "Content-type: text/html\n\n";
 

@@ -1,3 +1,8 @@
+.object_row.selected{
+	background-color: #757575;
+	cursor: pointer;
+}
+
 #select_menu{
 	width: 450px;
 	float: left;

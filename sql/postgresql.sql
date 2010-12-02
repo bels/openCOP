@@ -213,6 +213,10 @@ INSERT INTO site (level,name) values (1,'Test Site');
 
 -- Default groups
 INSERT INTO aclgroup(name) values('customers');
+INSERT INTO aclgroup(name) values('admins');
+
+-- Add admin to the admins group
+INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 
 -- Default permissions
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
@@ -447,6 +451,33 @@ BEGIN
 	return wt_id;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION is_admin(
+	id_val INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+	is_admin_val INTEGER;
+BEGIN
+	select into is_admin_val
+		count(
+			distinct(
+				alias_aclgroup.aclgroup_id
+			)
+		)
+	from
+		alias_aclgroup
+	join
+		aclgroup on alias_aclgroup.aclgroup_id = aclgroup.id
+	where (
+		alias_id = id_val
+	) and (
+		aclgroup.name = 'admins'
+	);
+	
+	return is_admin_val;
+END;
+$$ LANGUAGE plpgsql;
+
 
 -- Permissions and stuff
 DROP USER helpdesk;
