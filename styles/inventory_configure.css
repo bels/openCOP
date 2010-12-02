@@ -76,3 +76,17 @@
 div.available{
 	color: black;
 }
+
+#submit_add_button{
+	float: left;
+}
+
+#add_tp_form{
+	width: 440px;
+	float: left;
+}
+
+#del_tp_form{
+        width: 440px;
+        float: left;
+}
