@@ -497,8 +497,6 @@ GRANT SELECT, UPDATE ON section_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
 GRANT SELECT, UPDATE ON users_id_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON customers TO helpdesk;
-GRANT SELECT, UPDATE ON customers_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO helpdesk;
 GRANT SELECT, UPDATE ON troubleshooting_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON notes TO helpdesk;
