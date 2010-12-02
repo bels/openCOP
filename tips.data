@@ -26,3 +26,4 @@
 307	Compaines are used to segregate ownership of sites, users and equipment.
 308	The Company Name field should contain the name of the new company you are adding.
 309	This specifies which of the other steps of the work order is required to be completed before this step will be available for work. For example, if Step 3 requires Step 1, then the ticket created for Step 1 must be closed before the ticket for Step 3 will be visible to the technician.
+310	The Work Requested field should contain generic information about the type of work to be performed in this step of the work order. Information specific to the ticket instance can be placed in the Notes field when creating a new work order from this template.

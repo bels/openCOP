@@ -101,7 +101,7 @@ $(document).ready(function(){
 	});
 	$("#customer_submit_button").click(function(){
 		resetLogout();
-		validateTicket();		
+		validateTicket();
 		if($("#newticket").valid())
 		{
 			$.blockUI({message: "Submitting"});

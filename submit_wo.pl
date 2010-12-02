@@ -48,9 +48,8 @@ if($authenticated == 1)
 		$data->{'section'} = $wo_list->{$_}->{'section_id'};
 		$data->{'problem'} = $wo_list->{$_}->{'problem'};
 
-		$access = $ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data) or die "Access denied to section $data->{'section'} for user $alias"; #need to pass in hashref named data
+		$access = $ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data) or die "Access denied to section $data->{'section'} for user  $data->{'submitter'}"; #need to pass in hashref named data
 		unless($access->{'error'}){
-		#	$ticket_list->{$wo_list->{$_}->{'step'}}
 			$wo_list->{$_}->{'ticket'} = $access->{'id'};
 		}
 	}

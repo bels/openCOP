@@ -8,7 +8,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
-use CustomerFunctions;
+use UserFunctions;
 use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
@@ -52,7 +52,7 @@ if($authenticated == 2){
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('id');
 
-	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 	my $info = $user->get_user_info(user_id => $id);
 

@@ -11,6 +11,7 @@ use lib './libs';
 use ReadConfig;
 use DBI;
 use Notification;
+use UserFunctions;
 
 require Exporter;
 
@@ -144,13 +145,16 @@ sub render{
 	my $tech_list = $sth->fetchall_hashref('alias');
 	my @s_tech = sort({lc($a) cmp lc($b)} keys %$tech_list);
 
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $info = $user->get_user_info(user_id => $args{'id'});
+
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
 	my @styles = ("styles/jquery.jscrollpane.css","styles/ticket.css");
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
 
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
@@ -172,7 +176,7 @@ sub submit{
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
 	
-	if(defined($data->{'site'})){
+	if(defined($data->{'site'}) && $data->{'site'} > 0){
 		$site = $data->{'site'};
 	} else {
 		$site = "1";

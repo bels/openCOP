@@ -13,15 +13,15 @@
 				<select name="site" size="1" tabindex="1" id="site">
 					<option></option>
 					[% FOREACH site IN ssite %]
-					<option value="[% site %]">[% site_list.$site.name %]</option>
+					<option value="[% site_list.$site.id %]">[% site_list.$site.name %]</option>
 					[% END %]
 				</select>
 				<br />
-				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
-				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" tabindex=5><a href="tips.pl?104" class="tooltip" target="_tips">?</a>
+				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" value="[% info.first _ ' ' _ info.last %]" tabindex=2><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
+				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" value="[% info.first _ ' ' _ info.last %]" tabindex=5><a href="tips.pl?104" class="tooltip" target="_tips">?</a>
 				<label for="phone" class="short_label">Phone:</label><input type="text" name="phone" id="phone" tabindex=6><a href="tips.pl?105" class="tooltip" target="_tips">?</a>
 				<br />
-				<label for="email" class="short_label">Email:</label><input type="text" name="email" id="email" tabindex=7><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
+				<label for="email" class="short_label">Email:</label><input type="text" name="email" id="email" value="[% info.email %]" tabindex=7><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
 				<label for="location" class="short_label">Location:</label><input type="text" name="location" id="location" tabindex=8><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
 				<br />
 				<label for="priority" class="short_label">Priority:</label>

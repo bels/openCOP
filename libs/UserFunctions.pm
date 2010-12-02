@@ -146,6 +146,7 @@ sub get_user_info{
 	$sth->execute($args{'user_id'});
 
 	my $results = $sth->fetchrow_hashref;
+
 	#need to get the number of views, friends, followers? and add it to the results hashref that is passing back.  Need to implement these things first though
 	return $results;
 }

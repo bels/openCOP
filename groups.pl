@@ -51,6 +51,7 @@ if($authenticated == 1)
 	foreach(keys %$gid){
 		push(@pid,$gid->{$_}->{'name'});
 	}
+	shift(@pid);
 	my @gid = sort(@pid);
 
 	my $meta_keywords = "";

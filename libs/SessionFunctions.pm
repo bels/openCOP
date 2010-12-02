@@ -83,8 +83,6 @@ sub authenticate_user{
 	} else {
 		$customer = 0;
 	}
-	warn $result->{'name'};
-	warn $customer;
 	my $return = {
 		'count'		=>	$count,
 		'customer'	=>	$customer,

@@ -25,7 +25,7 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
+if($authenticated)
 {
 	my $data = $q->Vars;
 

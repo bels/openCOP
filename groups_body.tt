@@ -28,6 +28,7 @@
 		<div id="select_group_div" class="select_div">
 			<span id="select_group_header">Group</span>
 			<select id="select_group_select">
+			<option></option>
 			[% FOREACH id IN groups.sort %]
 				<option value="[% gid.$id.id %]">[% gid.$id.name %]</option>
 			[% END %]
