@@ -342,9 +342,11 @@ if($authenticated == 1)
 		}
 		for (my $i = 0; $i <= $#value; $i++){
 			$value[$i] =~ s/'/''/g;
-			$query = "select insert_object_value('$value[$i]','$property[$i]')";
+			$query = "select insert_object_value(?,?)";
 			$sth = $dbh->prepare($query);
-			$sth->execute;
+			warn $value[$i];
+			warn $property[$i];
+			$sth->execute($value[$i],$property[$i]);
 		}
 		print "Content-type: text/html\n\n";
 	} elsif ($vars->{'mode'} eq "delete_object"){
@@ -360,18 +362,31 @@ if($authenticated == 1)
 		print "Content-type: text/html\n\n";
 		print "0";
 	} elsif ($vars->{'mode'} eq "update_object"){
-		for($vars->{'value'},$vars->{'vid'}){
+		for($vars->{'value'},$vars->{'vid'},$vars->{'pid'}){
 			$_ =~ s/:$//;
 		}
 
 		my @value = split(":",$vars->{'value'});
 		my @vid = split(":",$vars->{'vid'});
+		my @pid = split(":",$vars->{'pid'});
 		for (my $i = 0; $i <= $#value; $i++){
 			$value[$i] =~ s/'/''/g;
-			$query = "select update_object_value('$value[$i]','$vid[$i]')";
-			$sth = $dbh->prepare($query);
-			$sth->execute;
-			warn $query;
+			if($vid[$i]){
+				$query = "select update_object_value(?,?)";
+				$sth = $dbh->prepare($query);
+				warn $query;
+				warn $value[$i];
+				warn $vid[$i];
+				$sth->execute($value[$i],$vid[$i]);
+			} else {
+				$query = "select update_insert_object_value(?,?,?);";
+				$sth = $dbh->prepare($query);
+				warn $query;
+				warn $value[$i];
+				warn $pid[$i];
+				warn $vars->{'object_id'};
+				$sth->execute($value[$i],$pid[$i],$vars->{'object_id'});
+			}
 		}
 		print "Content-type: text/html\n\n";
 		print "0";

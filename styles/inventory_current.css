@@ -3,6 +3,7 @@
 	cursor: pointer;
 }
 
+
 #select_menu{
 	width: 450px;
 	float: left;
@@ -81,23 +82,24 @@ td{
 	border: 1px solid black;
 }
 
-.object_detail{
-	_clear: both;
-}
-
 label.object_detail{
 	clear: left;
 	display: inline-block;
 	margin-top: 4px;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	float: left;
+	width: 200px;
+}
+
+select.object_detail{
+	clear: left;
+	display: inline-block;
+	margin-left: 0px;
 	width: 200px;
 }
 
 input.object_detail{
 	clear:right;
-	display: block;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	height: 19px;

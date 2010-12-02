@@ -56,7 +56,9 @@ if($authenticated == 1)
 	my $gid_list = $sth->fetchall_hashref('name');
 	@pid = [];
 	foreach(keys %$gid_list){
-		push(@pid,$gid_list->{$_}->{'name'});
+		unless($gid_list->{$_}->{'name'} eq "customers"){
+			push(@pid,$gid_list->{$_}->{'name'});
+		}
 	}
 	my @gid = sort(@pid);
 	shift(@gid);

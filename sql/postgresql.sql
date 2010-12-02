@@ -233,6 +233,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION delete_object(object_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	DELETE from value where id in (select value_id from object_value where object_value.id = object_val);
+	DELETE from object where id = object_val;
+
+	RETURN 1;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION insert_object_value(value_val VARCHAR(255), property_val INTEGER) RETURNS INTEGER AS $$
 DECLARE
 	last_value_id INTEGER;
@@ -245,6 +254,21 @@ BEGIN
 
 	INSERT INTO value_property (property_id,value_id) values(property_val, last_value_id);
 	INSERT INTO object_value (object_id,value_id) values(last_object_id, last_value_id);
+
+	RETURN last_value_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_insert_object_value(value_val VARCHAR(255), property_val INTEGER, object_val INTEGER) RETURNS INTEGER AS $$
+DECLARE
+	last_value_id INTEGER;
+BEGIN
+	INSERT INTO value (value) values(value_val);
+
+	SELECT INTO last_value_id currval('value_id_seq');
+
+	INSERT INTO value_property (property_id,value_id) values(property_val, last_value_id);
+	INSERT INTO object_value (object_id,value_id) values(object_val, last_value_id);
 
 	RETURN last_value_id;
 END;

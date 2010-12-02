@@ -14,6 +14,7 @@ function by_property(){
 	$('#update_object_button').remove();
 	$('#disable_object_button').remove();
 	$('#delete_object_button').remove();
+	$('.add_property').remove();
 	if($('#by_property').val() !== ""){
 		var pid = $('#by_property').val();
 		var property = $('#by_property :selected').text();
@@ -115,6 +116,40 @@ $(document).ready(function(){
 		}
 	});
 
+	$('.add_property').livequery(function(){
+		$(this).bind('click',function(e){
+			e.preventDefault();
+			resetLogout();
+			var url = 'inventory_current.pl';
+			var mode = 'add_property';
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data:{mode: mode},
+				success: function(data){
+					$('#update_object_form').append(data);
+					$('#update_object_form').append('<input type="text" id="0" class="object_detail"><button class="del_property">-</button><br>');
+				},
+				error: function(){
+					alert("A more different error");
+				}
+			});
+
+		});
+	});
+
+
+	$('.del_property').livequery(function(){
+		$(this).bind('click',function(e){
+			e.preventDefault();
+			resetLogout();
+			$(this).prev().prev().remove();
+			$(this).prev().remove();
+			$(this).next().remove();
+			$(this).remove();
+		});
+	});
+
 	$('#by_property').livequery(function(){
 		$(this).change(function(){
 			resetLogout();
@@ -140,6 +175,7 @@ $(document).ready(function(){
 			$('#disable_object_button').remove();
 			$('#delete_object_button').remove();
 			$('#update_object_form').remove();
+			$('.add_property').remove();
 		});
 	});
 
@@ -152,6 +188,7 @@ $(document).ready(function(){
 			$('#disable_object_button').remove();
 			$('#delete_object_button').remove();
 			$('#update_object_form').remove();
+			$('.add_property').remove();
 		});
 	});
 
@@ -164,6 +201,7 @@ $(document).ready(function(){
 			$('#disable_object_button').remove();
 			$('#delete_object_button').remove();
 			$('#update_object_form').remove();
+			$('.add_property').remove();
 		});
 	});
 
@@ -188,18 +226,31 @@ $(document).ready(function(){
 			var mode = "update_object";
 			var submitvalue = "";
 			var submitvid = "";
+			var submitpid = "";
 			var object_id = $(this).attr("object");
 			$('input.object_detail').each(function(){
 				if($(this).prev().text() != "type" && $(this).prev().text() != "company"){
-						submitvalue += $(this).val() + ":";
+					if($(this).prev('select').length){
+						if($(this).prev().val() !== ""){
+							submitpid += $(this).prev().val() + ":";
+							submitvid += $(this).attr("id") + ":";
+						}
+					} else {
+						submitpid += "0" + ":";						
 						submitvid += $(this).attr("id") + ":";
+					}
+					submitvalue += $(this).val() + ":";
 				}
 			});
+			alert("submitvalue: " + submitvalue);
+			alert("submitvid: " + submitvid);
+			alert("submitpid: " + submitpid);
+			alert("object_id: " + object_id);
 			$.blockUI({message: "Submitting"});
 			$.ajax({
 				type: 'POST',
 				url: 'inventory_getdata.pl',
-				data: {mode: mode, value: submitvalue, vid: submitvid},
+				data: {mode: mode, value: submitvalue, vid: submitvid, pid: submitpid, object_id: object_id},
 				success: function(data){
 					$.unblockUI();
 					var url = "inventory_current.pl?mode=object_details&object_id=" + object_id;

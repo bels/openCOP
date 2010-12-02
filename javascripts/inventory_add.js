@@ -1,13 +1,8 @@
 $(document).ready(function(){
 	load_types3();
 
-	$('#add_object_form').submit(function(e){
-		$(this).preventDefault();
-		return false;
-	});
-
 	$('.object_remove_property_button').livequery(function(){
-		$('.object_remove_property_button').bind('click', function(){
+		$(this).bind('click', function(){
 			resetLogout();
 			$(this).prev().remove();
 			$(this).prev().remove();
@@ -17,7 +12,8 @@ $(document).ready(function(){
 	});
 
 	$('#submit_create_object_button').livequery(function(){
-		$('#submit_create_object_button').bind('click', function(){
+		$(this).bind('click', function(e){
+			e.preventDefault();
 			resetLogout();
 			var type = $('#object_type_select').val();
 			var company = $('#object_company_select').val();
@@ -84,7 +80,7 @@ $(document).ready(function(){
 	});
 
 	$('#object_type_select').livequery(function(){
-		$('#object_type_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			var type = $('#object_type_select').val();
 			var mode = "populate_create_form";
