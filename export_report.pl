@@ -25,16 +25,16 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
 {
 	my $vars = $q->Vars;
 	my $json = JSON->new;
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $userinfo = $user->get_user_info(alias => $alias);
+	my $userinfo = $user->get_user_info(user_id => $id);
 
 	my $email = $userinfo->{'email'};
 
@@ -70,9 +70,9 @@ if($authenticated == 1)
 		my $notify = Notification->new;
 		$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text", to => $email);
 		print "Content-type: text/html\n\n";
-	} else if($vars->{'mode'} eq "pdf"){
+	} elsif($vars->{'mode'} eq "pdf"){
 
-	} else if($vars->{'mode'} eq "excel"){
+	} elsif($vars->{'mode'} eq "excel"){
 
 	}
 } else {

@@ -25,65 +25,17 @@ if(%cookie)
 {
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
-
 if($authenticated == 1){
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $id = $user->get_user_id(alias => $alias);
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "
-		select
-			name,
-			section_aclgroup.section_id
-		from
-			section_aclgroup
-			join section on section.id = section_aclgroup.section_id
-		where
-			aclgroup_id in (
-				select
-					distinct(aclgroup_id)
-				from
-					alias_aclgroup
-				where (
-					alias_id = ?
-				)
-			)
-		and
-			section_aclgroup.aclread;
-	";
-	my $sth = $dbh->prepare($query);
-	$sth->execute($id);
-	my $section_list = $sth->fetchall_hashref('section_id');
-
-	$query = "
-		select
-			name,
-			section_aclgroup.section_id
-		from
-			section_aclgroup
-			join
-				section on section.id = section_aclgroup.section_id
-		where
-			aclgroup_id in (
-				select
-					distinct(aclgroup_id)
-				from
-					alias_aclgroup
-				where (
-					alias_id = ?
-				)
-			)
-		and
-			section_aclgroup.aclcreate;
-	";
-	$sth = $dbh->prepare($query);
-	$sth->execute($id);
-	my $section_create_list = $sth->fetchall_hashref('section_id');
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $sth;
+	my $query;
 
 	$query = "select * from wo;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $wo_list = $sth->fetchall_hashref('id');
+	my $wo_list = $sth->fetchall_hashref('name');
+	my @s_wo = sort({lc($a) cmp lc($b)} keys %$wo_list);
 
 	$query = "select * from priority;";
 	$sth = $dbh->prepare($query);
@@ -93,14 +45,18 @@ if($authenticated == 1){
 	$query = "select * from site where not deleted;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $site_list = $sth->fetchall_hashref('id');
+	my $site_list = $sth->fetchall_hashref('name');
+	my @s_site = sort({lc($a) cmp lc($b)} keys %$site_list);
 
-	my @styles = ("styles/layout.css","styles/smoothness/jquery-ui-1.8.5.custom.css","styles/work_order_new.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.livequery.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_order_new.js");
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $info = $user->get_user_info(user_id => $id);
+
+	my @styles = ("styles/work_order_new.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_order_new.js");
 	my $title = $config->{'company_name'} . " - New Work Order";
 	my $file = "work_order_new.tt";
 
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, wo_list => $wo_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, wo_list => $wo_list, ssite => \@s_site, swo => \@s_wo, info => $info, is_admin => $user->is_admin(id => $id)};
 
 	print "Content-type: text/html\n\n";
 

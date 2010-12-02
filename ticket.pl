@@ -29,11 +29,12 @@ if($authenticated == 1)
 	my $mode = $q->param('mode');
 
 	my $ticket = Ticket->new(mode => $mode);
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $id = $user->get_user_id(alias => $alias);
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
-	$ticket->render(id => $id);
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+
+	$ticket->render(id => $id, is_admin => $user->is_admin(id => $id));
+
 }
 else
 {

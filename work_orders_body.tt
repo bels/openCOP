@@ -15,19 +15,18 @@
 				<select name="requires" size="1" tabindex="9" class="requires">
 					<option></option>
 				</select>
-				<a href="tips.pl?XXX" class="tooltip" target="_tips">?</a>
+				<a href="tips.pl?309" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="11" class="section">
-					<option></option>
-					[% FOREACH section IN section_create_list.keys %]
-					<option value="[% section %]">[% section_create_list.$section.name %]</option>
+					[% FOREACH section IN scl.sort %]
+					<option value="[% section_create_list.$section.section_id %]">[% section_create_list.$section.name %]</option>
 					[% END %]
 				</select>
-				<a href="tips.pl?108" class="tooltip" target="_tips">?</a>
+				<a href="tips.pl?109" class="tooltip" target="_tips">?</a>
 			</div>
 			<div class="problem_details">
 				<h3>Problem Details</h3>
-				<label for="problem">Work Requested:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
+				<label for="problem">Work Requested:</label><a href="tips.pl?310" class="tooltip" target="_tips">?</a><br />
 				<textarea class="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
 				<button type="button" class="create_button">Create Work Order</button>
 			</div>

@@ -24,6 +24,8 @@
 				</form>
 				<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
 			</div>
+			<div id="errorspace">
+			</div>
 		</div>
 		<div id="configure_bottom" class="bottom">
 			<span id="configure_bottom_header_text" class="header_text">Associate properties with types</span>

@@ -9,8 +9,8 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 
-my @styles = ("styles/layout.css", "styles/index.css");
-my @javascripts = ("javascripts/jquery.js","javascripts/index.js");
+my @styles = ( "styles/index.css");
+my @javascripts = ("javascripts/index.js");
 my $meta_keywords = "";
 my $meta_description = "";
 
@@ -29,12 +29,11 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
-{
+if($authenticated == 1){
 	print $q->redirect(-URL => "main.pl");
-}
-else
-{
+} elsif($authenticated == 2){
+	print $q->redirect(-URL => "customer.pl");
+} else {
 	my $vars;
 	my $file = "index.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";

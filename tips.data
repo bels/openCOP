@@ -2,16 +2,28 @@
 100	Don't take any wooden coins. 100-series tips are for the helpdesk.
 101	The Author field should contain your name. No matter who you are or who you are putting the ticket in for, you are the author and your name is required.
 102	The Barcode field should contain the barcode of the computer or other piece of equipment that has the problem you are describing. If the device does not have a barcode but does have a serial number, use the Serial field instead. If there is no barcode do not put anything in the Barcode field.
-103	The person who should be contacted who will have first hand knowledge of the problem and be able to explain it in detail. If this would be the same as Author feel free to leave blank.
-104	The Phone field should contain the phone number of either the contact person (preferred) or the author.
-105	The Email field should contain the email address of either the contact person (preferred) or the author.
-106	The Location field should indicate the room in which the equipment which is experiencing trouble resides. Or, it should describe the area where the problem is felt, or most felt. Additionally, it could specify which piece of equipment in the room/area is experiencing the problem, or experiencing it the most, if there is more than one piece of equipment in the designated area which could be confused with the affected equipment.
-107	The Priority field is for classifying the urgency of the problem being described. In almost all cases the priority will be "Normal" or less. If you are unsure of what the appropriate priority is use "Normal."
-108	The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, put it in the Helpdesk section and they will review it and make further adjustments if necessary.
-109	The Problem field should contain a verbose description of the problem you observed, including any details that may be important or seem related.
-110	The Troubleshooting Tried field should contain a description of all steps you took while attempting to resolve the Problem described above, as well as any results of that troubleshooting and a summary of where the problem now stands.
-111	The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on.
+103	The Serial field should contain the serial number of the equipment experiencing the problem. If this is not relevant, leave it blank.
+104	The Contact field should contain the name of the person who should be contacted who will have first hand knowledge of the problem and be able to explain it in detail. This field is required.
+105	The Phone field should contain the phone number of either the contact person (preferred) or the author. This may be left blank.
+106	The Email field should contain the email address of either the contact person (preferred) or the author. This must be a valid email address.
+107	The Location field should indicate the room in which the equipment which is experiencing trouble resides. Or, it should describe the area where the problem is felt, or most felt. Additionally, it could specify which piece of equipment in the room/area is experiencing the problem, or experiencing it the most, if there is more than one piece of equipment in the designated area which could be confused with the affected equipment.
+108	The Priority field is for classifying the urgency of the problem being described. In almost all cases the priority will be "Normal" or less. If you are unsure of what the appropriate priority is use "Normal."
+109	The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, put it in the Helpdesk section and they will review it and make further adjustments if necessary.
+110	The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator.
+111	The Problem field should contain a verbose description of the problem you observed, including any details that may be important or seem related. This field is required.
+112	The Troubleshooting Tried field should contain a description of all steps you took while attempting to resolve the Problem described above, as well as any results of that troubleshooting and a summary of where the problem now stands. This may be left blank.
+113	The Free Date field should contain the date on which the contact person (preferred) or the author will be available should it be necessary to contact someone regarding the ticket. If left blank, the current date will be used.
+114	The Free Time field should contain the time of day at which the contact person (preferred) or the author will be available should it be necessary to contact someone regarding the ticket. If left blank, the current time will be used.
+115	The Notes field should contain any additional information for the technician. This may be left blank.
 200	Tips in the 200 range are for the inventory side.
-201	The Location field is the room the equipment is in, or any other information that will help you to physically locate it. Remember: There are no firm rules. While this is usually just the room name/number it can also be "Under the oval desk in room 57" or "media offce, computer on the back wall." Do what makes sense.
-202	"Inventoried by" should be your name, whoever you are. By signing this field you sign off on the inventory information and are certifying (more or less) the accuracy of it at the date and time it was entered. This is also who we'll come looking for when the equipment goes missing or needs servicing.
-203	"Replacing" should hold a CCPS barcode of the equipment that was taken out when this equipment was installed. If a one-to-one swap has been done the old machine can be said to have been "replaced" by this one which is "replacing" it.
+300	Tips in the 300 range are for administrative configuration.
+301	The Section Name field should contain the name of the ticket queue as it will appear to users. It should be descriptive of what type of tickets will be assigned to it.
+302	The Section Email field should contain the email address at which emails for that section should be received. It may be desirable to make it a distribution list.
+303	Sites represent physical locations within a single company. For instance, the company "My Company" might have the sites "Main Offce" and "Satellite Office". This is useful for physically locating the equipment or user easily.
+304	The Site Name field should contain a descriptive label for the physical location.
+305	Site Level describes a category of physical locations (sites).
+306	The Site Level Name field should contain a descriptive label for the type of physical location.
+307	Compaines are used to segregate ownership of sites, users and equipment.
+308	The Company Name field should contain the name of the new company you are adding.
+309	This specifies which of the other steps of the work order is required to be completed before this step will be available for work. For example, if Step 3 requires Step 1, then the ticket created for Step 1 must be closed before the ticket for Step 3 will be visible to the technician.
+310	The Work Requested field should contain generic information about the type of work to be performed in this step of the work order. Information specific to the ticket instance can be placed in the Notes field when creating a new work order from this template.

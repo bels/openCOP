@@ -1,7 +1,10 @@
+#errorspace{
+	width: auto;
+}
 
 #configure_top{
 	float: left;
-	width: 530px;
+	width: 600px;
 	height: 105px;
 	min-width: 530px;
 	padding: 10px;
@@ -33,7 +36,7 @@
 
 .tp_div{
 	_border: 1px red solid;
-	width: 700px;
+	width: 470px;
 	height: 30px;
 }
 
@@ -56,7 +59,7 @@
 }
 
 .tp_return{
-	float: left;
+	display: inline-block;	
 	color: red;
 }
 
@@ -89,4 +92,22 @@ div.available{
 #del_tp_form{
         width: 440px;
         float: left;
+}
+
+#add_tp_form{
+	width: 400px;
+	display: inline;
+}
+
+#add_tp_form label{
+	max-width: 90px;
+}
+
+#del_tp_form{
+	width: 400px;
+	display: inline;
+}
+
+#del_tp_form label{
+	max-width: 90px;
 }

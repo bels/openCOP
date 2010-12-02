@@ -21,7 +21,7 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
+if($authenticated == 2)
 {
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $ticket_number = $q->param('ticket_number');

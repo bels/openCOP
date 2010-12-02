@@ -130,17 +130,22 @@ if($authenticated == 1)
 			$query = "select * from template;";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			my $id = $sth->fetchall_hashref('id');
+			my $results = $sth->fetchall_hashref('template');
 	
 			$data = qq(
 				<select id="template_select" class="type_select">
 					<option value="" selected="selected"></option>
 			);
-			foreach my $key (keys %$id){
-				$data .= qq(
-					<option value="$id->{$key}->{'id'}">$id->{$key}->{'template'}</option>
-				);
+			my $i;
+			my @pid;
+			foreach(keys %$results){
+				push(@pid,$_);
 			}
+			my @ppid = sort({lc($a) cmp lc($b)} @pid);
+			for ($i = 0; $i <= $#ppid; $i++){
+				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$ppid[$i]</option>);
+			}
+
 			$data .= qq(
 				</select>
 			);
@@ -148,17 +153,22 @@ if($authenticated == 1)
 			$query = "select id,name from company;";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			my $id = $sth->fetchall_hashref('id');
+			my $results = $sth->fetchall_hashref('name');
 	
 			$data = qq(<label for="company_select">Choose a company</label>
 				<select id="company_select" class="type_select">
 					<option value="" selected="selected"></option>
 			);
-			foreach my $key (keys %$id){
-				$data .= qq(
-					<option value="$id->{$key}->{'id'}">$id->{$key}->{'name'}</option>
-				);
+			my $i;
+			my @pid;
+			foreach(keys %$results){
+				push(@pid,$results->{$_}->{'name'});
 			}
+			my @ppid = sort({lc($a) cmp lc($b)} @pid);
+			for ($i = 0; $i <= $#ppid; $i++){
+				$data .= qq(<option value=$results->{$ppid[$i]}->{'id'}>$ppid[$i]</option>);
+			}
+
 			$data .= qq(
 				</select>
 			);
@@ -180,38 +190,50 @@ if($authenticated == 1)
 		print qq(<button id="disable_object_button" object="$object_id">Disable</button>);
 		print qq(<button id="delete_object_button" object="$object_id">Delete</button>);
 		print qq(<form id="update_object_form">);
+
 		foreach my $element (@hash_order){
 			if($element == $object_id){
-				foreach my $key (keys %{$new_object->{$element}}){
-					if ($key eq "type"){
+				my $i;
+				my @pid;
+				my @p;
+				foreach(keys %{$new_object->{$element}}){
+					push(@pid,$_);
+				}
+				my @ppid = sort({lc($a) cmp lc($b)} @pid);
+				foreach(keys %{$new_object->{$element}}){
+					push(@p,$new_object->{$element}->{$_});
+				}
+				for ($i = 0; $i <= $#ppid; $i++){
+					if ($ppid[$i] eq "type"){
 						$query = "select template,id from template where id = '$new_object->{$element}->{'type'}[0]';";
 						$sth = $dbh->prepare($query);
 						$sth->execute;
 						my $tid = $sth->fetchrow_hashref;
 						$type = $tid->{'template'};
 						print qq(
-							<label class="object_detail" for=") . $key . qq(_input">$key</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$type" readonly="readonly">
+							<label class="object_detail" for=") . $ppid[$i] . qq(_input">$ppid[$i]</label>
+							<input class="object_detail" type="text" id="$new_object->{$element}->{'type'}[0]" value="$type" readonly="readonly">
 						);
-					} elsif ($key eq "company"){
+					} elsif ($ppid[$i] eq "company"){
 						$query = "select name,id from company where id = '$new_object->{$element}->{'company'}[0]';";
 						$sth = $dbh->prepare($query);
 						$sth->execute;
 						my $cpid = $sth->fetchrow_hashref;
 						$company = $cpid->{'name'};
 						print qq(
-							<label class="object_detail" for=") . $key . qq(_input">$key</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$company" readonly="readonly">
+							<label class="object_detail" for=") . $ppid[$i] . qq(_input">$ppid[$i]</label>
+							<input class="object_detail" type="text" id="$new_object->{$element}->{'company'}[0]" value="$company" readonly="readonly">
 						);
-					} elsif ($key eq "id"){
+					} elsif ($ppid[$i] eq "id"){
 					}
 					else {
+						#	<input class="object_detail" type="text" id="$p[$i][1]" value="$p[$i][0]">
 						print qq(
-							<label class="object_detail" for=") . $key . qq(_input">$key</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$key}[1]" value="$new_object->{$element}->{$key}[0]">
-							<br>
+							<label class="object_detail" for=") . $ppid[$i] . qq(_input">$ppid[$i]</label>
+							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}[1]" value="$new_object->{$element}->{$ppid[$i]}[0]">
 						);
 					}
+
 				}
 			}
 		}
@@ -223,7 +245,7 @@ if($authenticated == 1)
 		$query = "select id,property from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $pid = $sth->fetchall_hashref('id');
+		my $pid = $sth->fetchall_hashref('property');
 
 		$data = qq(<label for="by_property">Select criteria to display by</label>
 			<select id="by_property">
@@ -235,13 +257,10 @@ if($authenticated == 1)
 		foreach(keys %$pid){
 			push(@pid,$pid->{$_}->{'property'});
 		}
-		my @ppid = sort(@pid);
-		foreach(keys %$pid){
-			push(@p,$pid->{$_}->{'id'});
-		}
-		for ($i = 1; $i <= $#pid; $i++)
+		my @ppid = sort({lc($a) cmp lc($b)} @pid);
+		for ($i = 0; $i <= $#ppid; $i++)
 		{
-			$data .= qq(<option value=$p[$i]>$ppid[$i]</option>);
+			$data .= qq(<option value=$pid->{$ppid[$i]}->{'id'}>$pid->{$ppid[$i]}->{'property'}</option>);
 		}
 		$data .= qq(
 			</select>

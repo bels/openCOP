@@ -11,6 +11,7 @@ use lib './libs';
 use ReadConfig;
 use DBI;
 use Notification;
+use UserFunctions;
 
 require Exporter;
 
@@ -115,13 +116,24 @@ sub render{
 	";
 	$sth = $dbh->prepare($query);
 	$sth->execute($args{'id'});
-	my $section_create_list = $sth->fetchall_hashref('section_id');
+	my $section_create_list = $sth->fetchall_hashref('name');
+	my @s_section = sort({lc($a) cmp lc($b)} keys %$section_create_list);
 
 	# Create a psuedo-section for tickets which are assigned to the technician but not on a board to which the technician has read rights
 	$section_list->{'pseudo'} = {
 		'section_id'	=>	"pseudo",
 		'name'		=>	"Tickets assigned directly",
 	};
+
+	my @list = sort({
+		if($a eq "pseudo"){
+			return -1;
+		} elsif($b eq "pseudo"){
+			return 1;
+		} else {
+			return lc($a) cmp lc($b);
+		}
+	} keys %$section_list);
 
 	# Get the list of available priorities
 	$query = "select * from priority;";
@@ -133,21 +145,26 @@ sub render{
 	$query = "select * from site where not deleted;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $site_list = $sth->fetchall_hashref('id');
+	my $site_list = $sth->fetchall_hashref('name');
+	my @s_site = sort({lc($a) cmp lc($b)} keys %$site_list);
 
 	# Get the list of technicians
 	$query = "select id,alias from users where active;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $tech_list = $sth->fetchall_hashref('id');
+	my $tech_list = $sth->fetchall_hashref('alias');
+	my @s_tech = sort({lc($a) cmp lc($b)} keys %$tech_list);
+
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $info = $user->get_user_info(user_id => $args{'id'});
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
-	my @styles = ("styles/jquery.jscrollpane.css","styles/layout.css","styles/ticket.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.livequery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.blockui.js");
+	my @styles = ("styles/jquery.jscrollpane.css","styles/ticket.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
 
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info, is_admin => $args{'is_admin'}, list => \@list};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
@@ -169,7 +186,7 @@ sub submit{
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
 	
-	if(defined($data->{'site'})){
+	if(defined($data->{'site'}) && $data->{'site'} > 0){
 		$site = $data->{'site'};
 	} else {
 		$site = "1";
@@ -201,57 +218,31 @@ sub submit{
 	}
 
 
-	if($args{'customer'}){
-		$query = "
-			select
-				bool_or(section_aclgroup.aclcreate) as access
-			from
-				section_aclgroup
-				join
-					section on section.id = section_aclgroup.section_id
-				join
-					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
-			where
-				section_aclgroup.section_id = ?
-			and (
-				section_aclgroup.aclgroup_id in (
-					select
-						aclgroup_id
-					from
-						aclgroup
-					where
-						name = ?
-				)
-			);
-		";
-		$sth = $dbh->prepare($query);
-		$sth->execute($data->{'section'},"customers");
-	} else {
-		$query = "
-			select
-				bool_or(section_aclgroup.aclcreate) as access
-			from
-				section_aclgroup
-				join
-					section on section.id = section_aclgroup.section_id
-				join
-					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
-			where
-				section_aclgroup.section_id = ?
-			and (
-				section_aclgroup.aclgroup_id in (
-					select
-						aclgroup_id
-					from
-						alias_aclgroup
-					where
-						alias_id = ?
-				)
-			);
-		";
-		$sth = $dbh->prepare($query);
-		$sth->execute($data->{'section'},$data->{'submitter'});
-	}
+	$query = "
+		select
+			bool_or(section_aclgroup.aclcreate) as access
+		from
+			section_aclgroup
+			join
+				section on section.id = section_aclgroup.section_id
+			join
+				aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+		where
+			section_aclgroup.section_id = ?
+		and (
+			section_aclgroup.aclgroup_id in (
+				select
+					aclgroup_id
+				from
+					alias_aclgroup
+				where
+					alias_id = ?
+			)
+		);
+	";
+	$sth = $dbh->prepare($query);
+	$sth->execute($data->{'section'},$data->{'submitter'});
+
 	my $access = $sth->fetchrow_hashref;
 	if($access->{'access'}){
 		$query = "

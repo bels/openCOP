@@ -38,6 +38,11 @@
 	border: 1px solid black;
 }
 
+.lookup_row.selected{
+	background-color: #757575;
+	cursor: pointer;
+}
+
 table{
 	width: 100%;
 	border-collapse:collapse;
@@ -116,17 +121,17 @@ td{
 }
 
 #past_troubleshoot{
-	white-space: pre;
+	white-space: pre-wrap;
 	margin-left: 160px;
 }
 
 #problem{
-	white-space: pre;
+	white-space: pre-wrap;
 	margin-left: 160px;
 }
 
 #past_notes{
-	white-space: pre;
+	white-space: pre-wrap;
 	margin-left: 160px;
 }
 

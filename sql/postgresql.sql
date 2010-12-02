@@ -1,27 +1,37 @@
 -- This will remove any data in the database.  I would not recommend using this to recreate tables that got "messed up".  This file should only be used to do an initial creation of the database or to wipe everything and start over.
 
-DROP TABLE IF EXISTS site_level;
+DROP TABLE IF EXISTS site_level CASCADE;
 CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE);
 
-DROP TABLE IF EXISTS company;
-CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN);
+DROP TABLE IF EXISTS company CASCADE;
+CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN DEFAULT FALSE);
 
-DROP TABLE IF EXISTS site;
+DROP TABLE IF EXISTS site CASCADE;
 CREATE TABLE site (id SERIAL PRIMARY KEY, level INTEGER references site_level(id) ON DELETE CASCADE, name VARCHAR(255), deleted BOOLEAN DEFAULT false, company_id INTEGER references company(id) ON DELETE CASCADE);
 
-DROP TABLE IF EXISTS status;
+DROP TABLE IF EXISTS status CASCADE;
 CREATE TABLE status (id SERIAL PRIMARY KEY, status VARCHAR(255));
 
-DROP TABLE IF EXISTS section;
-CREATE TABLE section (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));
+DROP TABLE IF EXISTS section CASCADE;
+CREATE TABLE section (id SERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, email VARCHAR(255));
 
-DROP TABLE IF EXISTS priority;
+DROP TABLE IF EXISTS priority CASCADE;
 CREATE TABLE priority (id SERIAL PRIMARY KEY, severity INTEGER, description varchar(255));
 
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (id SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN DEFAULT true);
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	first VARCHAR(100),
+	last VARCHAR(100),
+	middle_initial VARCHAR(100),
+	alias VARCHAR(100) UNIQUE,
+	email VARCHAR(100),
+	password VARCHAR(100),
+	active BOOLEAN DEFAULT true,
+	site INTEGER DEFAULT null
+);
 
-DROP TABLE IF EXISTS helpdesk;
+DROP TABLE IF EXISTS helpdesk CASCADE;
 CREATE TABLE helpdesk (
 	ticket BIGSERIAL PRIMARY KEY,
 	status INTEGER references status(id),
@@ -180,17 +190,15 @@ INSERT INTO property(property) values('scan_to_type');
 INSERT INTO property(property) values('bandwidth');
 INSERT INTO property(property) values('application_version');
 
--- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
-DROP TABLE IF EXISTS customers;
-CREATE TABLE customers(id SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN DEFAULT true, site INTEGER);
-
 -- Adding admin user
 INSERT INTO users(alias,email,password) values('admin','admin@localhost',MD5('admin'));
+-- Adding default Helpdesk section.
+INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address'); -- Need to add the ability to change section's email addresses...
+-- Adding priorities
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
 INSERT INTO priority(severity,description) values(3,'High');
 INSERT INTO priority(severity,description) values(4,'Business Critical');
-INSERT INTO section(name,email) values('Helpdesk','helpdesk@testcompany.com');
 -- some starting ticket status
 INSERT INTO status (status) values ('New');
 INSERT INTO status (status) values ('In Progress');
@@ -200,14 +208,19 @@ INSERT INTO status (status) values ('Waiting Other');
 INSERT INTO status (status) values ('Closed');
 INSERT INTO status (status) values ('Completed');
 -- test data to start with 
-INSERT INTO site_level(type) values ('test');
+INSERT INTO site_level(type) values ('Test Level');
 INSERT INTO site (level,name) values (1,'Test Site');
 
 -- Default groups
 INSERT INTO aclgroup(name) values('customers');
+INSERT INTO aclgroup(name) values('admins');
+
+-- Add admin to the admins group
+INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 
 -- Default permissions
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
+INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ('1',1,'t','t','t','t');
 
 CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
@@ -438,6 +451,33 @@ BEGIN
 	return wt_id;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION is_admin(
+	id_val INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+	is_admin_val INTEGER;
+BEGIN
+	select into is_admin_val
+		count(
+			distinct(
+				alias_aclgroup.aclgroup_id
+			)
+		)
+	from
+		alias_aclgroup
+	join
+		aclgroup on alias_aclgroup.aclgroup_id = aclgroup.id
+	where (
+		alias_id = id_val
+	) and (
+		aclgroup.name = 'admins'
+	);
+	
+	return is_admin_val;
+END;
+$$ LANGUAGE plpgsql;
+
 
 -- Permissions and stuff
 DROP USER helpdesk;

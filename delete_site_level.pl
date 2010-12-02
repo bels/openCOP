@@ -10,11 +10,10 @@ use SessionFunctions;
 use URI::Escape;
 
 my $q = CGI->new();
-
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
 $config->read_config;
-	
+
 my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 my %cookie = $q->cookie('session');
 
@@ -26,18 +25,17 @@ if(%cookie)
 }
 
 if($authenticated == 1)
-{	
+{
 	my $vars = $q->Vars;
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 
-	my $query = "update site set company_id = ? where id = ?";
+	my $query = "delete from site_level where id = ?";
+	warn "deleting site $vars->{'site'}";
 	my $sth = $dbh->prepare($query);
-	$sth->execute($vars->{'associate_company_name'},$vars->{'associate_site_name'});
+	$sth->execute($vars->{'site'});
 
-	print $q->redirect(-URL=> "sites.pl?associate_success=1");
-} elsif($authenticated == 2){
-        print $q->redirect(-URL => $config->{'index_page'})
+	print $q->redirect(-URL=> "sites.pl?delete_site_level_success=1");
 }
 else
 {

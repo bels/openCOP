@@ -64,11 +64,19 @@ sub create_user{
 
 	my $query = "
 		insert into users (
+			first,
+			last,
+			middle_initial,
 			alias,
 			password,
 			email,
+			site,
 			active
 		) values (
+			?,
+			?,
+			?,
+			?,
 			?,
 			?,
 			?,
@@ -77,10 +85,35 @@ sub create_user{
 	";
 	my $sth = $self->{'dbh'}->prepare($query) or return undef;
 	$sth->execute(
+			$args{'first'},
+			$args{'last'},
+			$args{'mi'},
 			$args{'alias'},
 			$password,
 			$args{'email'},
+			$args{'site'}
 	) or return undef;
+	$query = "
+		select
+			last_value
+		from
+			users_id_seq
+		;
+	";
+	$sth = $self->{'dbh'}->prepare($query);
+	$sth->execute;
+	my $uid = $sth->fetchrow_hashref;
+	$query = "
+		insert into alias_aclgroup (
+			alias_id,
+			aclgroup_id
+		) values (
+			?,
+			?
+		);
+	";
+	$sth = $self->{'dbh'}->prepare($query);
+	$sth->execute($uid->{'last_value'},$args{'group'}) or return undef;
 
 }
 
@@ -108,11 +141,12 @@ sub get_user_info{
 	my $self = shift;
 	my %args = @_;
 
-	my $query = "select * from users where alias = ?";
+	my $query = "select * from users where id = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute($args{'alias'});
+	$sth->execute($args{'user_id'});
 
 	my $results = $sth->fetchrow_hashref;
+
 	#need to get the number of views, friends, followers? and add it to the results hashref that is passing back.  Need to implement these things first though
 	return $results;
 }
@@ -135,13 +169,13 @@ sub update_profile{
 	$sth->execute($args{'value'},$args{'alias'});
 }
 
-sub get_user_id{
+sub get_user_name{
 	my $self = shift;
 	my %args = @_;
 	
-	my $query = "select id from users where alias = ?";
+	my $query = "select alias from users where id = ?";
 	my $sth = $self->{'dbh'}->prepare($query);
-	$sth->execute($args{'alias'});
+	$sth->execute($args{'user_id'});
 	my $result = $sth->fetchrow_hashref;
 	return $result->{'id'};
 }
@@ -154,6 +188,18 @@ sub get_groups{
 	$sth->execute($args{'id'});
 	my $group = $sth->fetchall_hashref('aclgroup_id');
 	return $group;
+}
+
+sub is_admin{
+	my $self = shift;
+	my %args = @_;
+
+	my $query = "select is_admin(?)";
+	my $sth = $self->{'dbh'}->prepare($query);
+	$sth->execute($args{'id'});
+	my $result = $sth->fetchrow_hashref;
+	my $is_admin = $result->{'is_admin'};
+	return $is_admin;
 }
 
 sub get_permissions{

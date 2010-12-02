@@ -3,6 +3,7 @@ $(document).ready(function(){
 	var wo_tabs;
 	var tickets;
 	var user_admin_page;
+	var group_admin_page;
 	var inventory_current;
 	if($("#current_object_div").length){
 		inventory_current = 1;
@@ -31,6 +32,11 @@ $(document).ready(function(){
 		user_admin_page = 1;
 	} else {
 		user_admin_page = 0;
+	}
+	if($('#associate_group_user_div').length){
+		group_admin_page = 1;
+	} else {
+		group_admin_page = 0;
 	}
 
 	$.ajaxSetup({
@@ -76,6 +82,13 @@ $(document).ready(function(){
 			$(".selected").addClass("lower");
 			$(".available").addClass("lower");
 		}
+		if(group_admin_page){
+			$("#associate_group_user_div").addClass("lower");
+			$("#a_gu_append_div").addClass("lower");
+			$(".ui-multiselect").addClass("lower");
+			$(".selected").addClass("lower");
+			$(".available").addClass("lower");
+		}
 		if(inventory_current){
 
 			$(".jspContainer").addClass("lower");
@@ -92,6 +105,13 @@ $(document).ready(function(){
 			if(user_admin_page){
 				$("#associate_user_group_div").removeClass("lower");
 				$("#a_ug_append_div").removeClass("lower");
+				$(".ui-multiselect").removeClass("lower");
+				$(".selected").removeClass("lower");
+				$(".available").removeClass("lower");
+			}
+			if(group_admin_page){
+				$("#associate_group_user_div").removeClass("lower");
+				$("#a_gu_append_div").removeClass("lower");
 				$(".ui-multiselect").removeClass("lower");
 				$(".selected").removeClass("lower");
 				$(".available").removeClass("lower");

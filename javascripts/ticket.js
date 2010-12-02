@@ -40,8 +40,9 @@ $(document).ready(function(){
 			pane.reinitialise();
 		});
 		$('.ticket_summary').livequery(function(){
-			$('.ticket_summary').tablesorter();
+			$(this).tablesorter();
 		});
+		$('.toggle_link:not(:first)').children().toggle();
 	};
 
 	$("#submit_button").click(function(){
@@ -75,6 +76,15 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	$('.lookup_row').livequery(function(){
+		$(this).hover(function(){
+			$(this).addClass('selected');
+		},
+		function(){
+			$(this).removeClass('selected');
+		});
+	});
 	
 	$(".lookup_row").live("click",function(){
 		resetLogout();
@@ -91,7 +101,7 @@ $(document).ready(function(){
 	});
 	$("#customer_submit_button").click(function(){
 		resetLogout();
-		validateTicket();		
+		validateTicket();
 		if($("#newticket").valid())
 		{
 			$.blockUI({message: "Submitting"});
@@ -145,11 +155,11 @@ $(document).ready(function(){
 	
 	$(".ticket_section_toggle").click(function(){
 		resetLogout();
-		$(".toggle_img").toggle();
+		$(this).prev('a').children('.toggle_img').toggle();
 	});
 	
 	$(".toggle_link").click(function(){
 		resetLogout();
-		$(".toggle_img").toggle();
+		$(this).children().toggle();
 	});
 });

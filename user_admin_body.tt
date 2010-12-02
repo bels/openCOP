@@ -11,10 +11,10 @@
 				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br />
 				<label for="password2">Retype Password:</label><input type="password" id="password2" name="password2"><br />
 				<label for="email">Email Address:</label><input type="text" id="email" name="email"><br />
-				<label for="section" class="short_label">Section:</label>
-				<select name="section" size="1" id="section">
-					[% FOREACH section IN sections %]
-					<option value="[% section %]">[% section %]</option>
+				<label for="group" class="short_label">Group:</label>
+				<select name="group" size="1" id="group">
+					[% FOREACH group IN groups.sort %]
+					<option value="[% gid.$group.id %]">[% gid.$group.name %]</option>
 					[% END %]
 				</select>
 				<input type="submit" id="submit_button" value="Add User">
@@ -27,11 +27,11 @@
 				<label id="select_user_header">User</label>
 				<select id="select_user_select">
 					<option value="" selected="selected"></option>
-				[% FOREACH id IN users.keys %]
-					<option value="[% users.$id.id %]">[% users.$id.alias %]</option>
+				[% FOREACH id IN users.sort %]
+					<option value="[% uid.$id.id %]">[% uid.$id.alias %]</option>
 				[% END %]
 				</select>
-				<button id="submit_a_ug" mode="a_ug" class="associate">Save</button>
+				<button id="submit_a_ug" mode="a_ug" class="associate">Add</button>
 			</div>
 			<div id="associate_user_group_div">
 				<div id="onload_append_div" class="onload_append">

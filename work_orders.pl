@@ -7,8 +7,8 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
-use DBI;
 use UserFunctions;
+use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -27,11 +27,10 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $id = $user->get_user_id(alias => $alias);
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+
 	my $query = "
 		select
 			name,
@@ -79,19 +78,15 @@ if($authenticated == 1)
 	";
 	$sth = $dbh->prepare($query);
 	$sth->execute($id);
-	my $section_create_list = $sth->fetchall_hashref('section_id');
+	my $section_create_list = $sth->fetchall_hashref('name');
+	my @scl = sort({lc($a) cmp lc($b)} keys %$section_create_list);
 
-	$query = "select id,alias from users where active;";
-	$sth = $dbh->prepare($query);
-	$sth->execute;
-	my $tech_list = $sth->fetchall_hashref('id');
-
-	my @styles = ("styles/layout.css","styles/smoothness/jquery-ui-1.8.5.custom.css","styles/work_orders.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.livequery.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_orders.js");
+	my @styles = ("styles/work_orders.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_orders.js");
 	my $title = $config->{'company_name'} . " - Work Orders";
 	my $file = "work_orders.tt";
 
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, section_list => $section_list, section_create_list => $section_create_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, section_list => $section_list, section_create_list => $section_create_list, scl => \@scl, is_admin => $user->is_admin(id => $id)};
 
 	print "Content-type: text/html\n\n";
 

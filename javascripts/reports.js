@@ -325,7 +325,7 @@ $(document).ready(function(){
 				alert("Error");
 			}
 		});
-		$('#from_div select.table').change(function(){
+		$(this).change(function(){
 
 		var all_columns_select = $(this);
 		$('div select.table').each(function(){
@@ -437,7 +437,7 @@ $(document).ready(function(){
 				alert("Error");
 			}
 		});
-		$('.join_div select.table').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			populate_select_columns();
 			var mode = "first_join";
@@ -573,7 +573,7 @@ $(document).ready(function(){
 		}
 	});
 	$('#submit_div button').bind('click',function(){
-	//	alert($.toJSON($('#select_div select.column').serializeObject()));
+		alert($.toJSON($('#select_div select.column').serializeObject()));
 		resetLogout();
 		var mode = $(this).attr('id');
 		var h = {};

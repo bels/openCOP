@@ -123,8 +123,17 @@ $(document).ready(function(){
 		});
 	});
 
+	$('.object_row').livequery(function(){
+		$(this).hover(function(){
+			$(this).addClass('selected');
+		},
+		function(){
+			$(this).removeClass('selected');
+		});
+	});
+
 	$('#property_search_button').livequery(function(){
-		$('#property_search_button').bind('click', function(){
+		$(this).bind('click', function(){
 			resetLogout();
 			property_search();
 			$('#update_object_button').remove();
@@ -135,7 +144,7 @@ $(document).ready(function(){
 	});
 
 	$('#company_select').livequery(function(){
-		$('#company_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			$('#table_body').text("");
 			company_select();
@@ -147,7 +156,7 @@ $(document).ready(function(){
 	});
 
 	$('#template_select').livequery(function(){
-		$('#template_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			$('#table_body').text("");
 			template_select();
@@ -159,7 +168,7 @@ $(document).ready(function(){
 	});
 
 	$(".object_row").livequery(function(){
-		$(".object_row").bind('click', function(){
+		$(this).bind('click', function(){
 			resetLogout();
 			var object_id = $(this).children(".object_id").text();
 			var url = "inventory_current.pl?mode=object_details&object_id=" + object_id;
@@ -174,7 +183,7 @@ $(document).ready(function(){
 		});
 	});
 	$("#update_object_button").livequery(function(){
-		$("#update_object_button").bind('click', function(){
+		$(this).bind('click', function(){
 			resetLogout();
 			var mode = "update_object";
 			var submitvalue = "";
@@ -212,7 +221,7 @@ $(document).ready(function(){
 		});
 	});
 	$("#delete_object_button").livequery(function(){
-		$("#delete_object_button").bind('click', function(){
+		$(this).bind('click', function(){
 			resetLogout();
 			var mode = "delete_object";
 			var object = $(this).attr("object");
@@ -246,7 +255,7 @@ $(document).ready(function(){
 		});
 	});
 	$("#disable_object_button").livequery(function(){
-		$("#disable_object_button").bind('click', function(){
+		$(this).bind('click', function(){
 			resetLogout();
 			var mode = "disable_object";
 			var object = $(this).attr("object");
