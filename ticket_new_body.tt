@@ -1,7 +1,7 @@
 		<h2>[% company_name %] Helpdesk - Input a new ticket</h2>
 		<form id="newticket">
 			<div id="author_div">
-				<h3>General Information</h3>
+				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;General Information</div>
 				<label for="site" class="short_label">Site:</label>
 				<select name="site" size="1" tabindex="1" id="site">
 					<option></option>
@@ -43,7 +43,7 @@
 				<a href="tips.pl?111" class="tooltip" target="_tips">?</a>
 			</div>
 			<div id="problem_details">
-				<h3>Problem Details</h3>
+				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Problem Details</div>
 				<label for="problem">Problem:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
 				<textarea id="tech_problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
 				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?112" class="tooltip" target="_tips">?</a><br />
