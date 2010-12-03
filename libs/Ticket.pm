@@ -317,6 +317,29 @@ sub lookup{
 	my $results;
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 
+	my $sth;
+	my @placeholders;
+	my $where = " AND ("; #this gets tacked on the end if search is defined.
+	if(defined($args{'criteria'})){
+		if($args{'criteria'} =~ m/\D/){
+			my @columns = ('troubleshooting.troubleshooting','users.alias','helpdesk.location','helpdesk.author','helpdesk.contact','helpdesk.notes','section.name','helpdesk.problem','priority.description','helpdesk.serial','helpdesk.contact_email','status.status','site.name');
+			foreach my $key (@columns){
+				$where .= "$key ILIKE ? OR ";
+				push(@placeholders,"%".$args{'criteria'}."%");
+			}
+		} else {
+			my @columns = ('helpdesk.ticket');
+			foreach my $key (@columns){
+				$where .= "$key = ? OR ";
+				push(@placeholders,$args{'criteria'});
+			}
+		}
+		chomp($where);
+		chop($where); #removing the extra OR at the end
+		chop($where);
+		chop($where);
+		$where .= ") ";
+	}
 	if($args{'customer'}){
 		$query = "
 			select
@@ -366,52 +389,88 @@ sub lookup{
 			);
 		";
 	}
-	my $sth = $dbh->prepare($query);
+	$sth = $dbh->prepare($query);
 	$sth->execute($args{'section'},$args{'id'});
 	my $access = $sth->fetchrow_hashref;
 	if ($access->{'complete'}) {
 		$query = "
 			select
-				*
+				helpdesk.ticket as ticket,section.name as name,status.status as status, priority.description as priority, helpdesk.contact as contact
 			from
 				helpdesk
 				join
 					section on section.id = helpdesk.section
+				left outer join
+					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
+				left outer join
+					notes on notes.ticket_id = helpdesk.ticket
+				join
+					users on users.id = helpdesk.technician
+				left outer join
+					site on site.id = helpdesk.site
+				join
+					priority on priority.severity = helpdesk.priority
+				join
+					status on status.id = helpdesk.status
 			where
-				status not in ('7')
+				helpdesk.status not in ('7')
 			and
-				active
+				helpdesk.active
 			and
-				section = ?
+				helpdesk.section = ?
+		";		
+		if(defined($args{'criteria'})){
+			$query .= $where;
+		}
+		$query .= "
 			order by
 				ticket
 		";
 		#Currently 7 is the ticket status Completed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
-		$sth->execute($args{'section'});
+		unshift(@placeholders,$args{'section'});
+		$sth->execute(@placeholders);
 		$results = $sth->fetchall_hashref('ticket');
 	
 		return $results;		
 	} elsif($access->{'read'}){
 		$query = "
 			select
-				*
+				helpdesk.ticket as ticket,section.name as name,status.status as status, priority.description as priority, helpdesk.contact as contact
 			from
 				helpdesk
 				join
 					section on section.id = helpdesk.section
+				left outer join
+					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
+				left outer join
+					notes on notes.ticket_id = helpdesk.ticket
+				join
+					users on users.id = helpdesk.technician
+				left outer join
+					site on site.id = helpdesk.site
+				join
+					priority on priority.severity = helpdesk.priority
+				join
+					status on status.id = helpdesk.status
 			where
-				status not in ('6','7')
+				helpdesk.status not in ('6','7')
 			and
-				active
+				helpdesk.active
 			and
-				section = ?
+				helpdesk.section = ?
+		";		
+		if(defined($args{'criteria'})){
+			$query .= $where;
+		}
+		$query .= "
 			order by
 				ticket
 		";
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
-		$sth->execute($args{'section'});
+		unshift(@placeholders,$args{'section'});
+		$sth->execute(@placeholders);
 		$results = $sth->fetchall_hashref('ticket');
 	
 		return $results;

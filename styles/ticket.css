@@ -65,13 +65,13 @@ table{
 }
 
 th{
-	width: 25%;
+	width: 150px;
 	height: 30px;
 	border-bottom: 1px solid black;
 }
 
 td{
-	width: 25%;
+	width: 150px;
 	height: 30px;
 }
 
@@ -161,4 +161,13 @@ td{
 	background-color: #333;
 	height: 30px;
 	font-size: 1.2em;
+}
+
+#search_form{
+	float: right;
+	margin-right: 20px;
+}
+
+#search_form input{
+	margin-left: 10px;
 }

@@ -162,4 +162,28 @@ $(document).ready(function(){
 		resetLogout();
 		$(this).children().toggle();
 	});
+	
+	$("#search_box").click(function(){
+		$(this).val("");
+	});
+	
+	$("#search_button").click(function(e){
+		e.preventDefault();
+		$(".ticket_lookup").each(function(){
+			var C = $(this);
+			var section = C.attr("id");
+			var pane = C.jScrollPane({
+				showArrows: true,
+				maintainPosition: false
+			}).data('jsp');
+			var search_criteria = $("#search_box").val();
+			var url = "lookup_ticket.pl?section=" + section + "&search=" + escape(search_criteria);
+			pane.getContentPane().load(url,function(data){
+				pane.reinitialise();
+			});
+			$('.ticket_summary').livequery(function(){
+				$(this).tablesorter();
+			});
+		});
+	});
 });

@@ -4,10 +4,8 @@
 				<li><a href=#>Tickets</a>
 					<ul class="subnav">
 						<li><a href="ticket.pl?mode=new">New Ticket</a></li>
-						<li><a href="ticket.pl?mode=lookup">Ticket Lookup</a></li>
+						<li><a href="ticket.pl?mode=lookup">Ticket Queue</a></li>
 						<li><a href="work_order_new.pl">New Work Order</a></li>
-						<li><a href="#">Work Order Lookup</a></li>
-						<li><a href="#">Ticket Queue</a></li>
 						<li><a href="#">Work Order Queue</a></li>
 					</ul>
 				</li>
