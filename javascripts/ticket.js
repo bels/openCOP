@@ -77,13 +77,12 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.lookup_row').livequery(function(){
-		$(this).hover(function(){
+	$('.lookup_row').live("mouseover mouseout",function(event){
+		if(event.type == 'mouseover'){	
 			$(this).addClass('selected');
-		},
-		function(){
+		} else {
 			$(this).removeClass('selected');
-		});
+		}
 	});
 	
 	$(".lookup_row").live("click",function(){
