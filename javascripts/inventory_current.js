@@ -64,10 +64,6 @@ function company_select(){
 				showArrows:true,
 				maintainPosition: false
 			}).data('jsp');
-			var details_pane = $("#object_details").jScrollPane({
-				showArrows:true,
-				maintainPosition: false
-			}).data('jsp');
 			var url = "inventory_current.pl?mode=by_company&cpid=" + cpid;
 			pane.getContentPane().load(url,function(data){
 				pane.reinitialise();
@@ -134,7 +130,13 @@ $(document).ready(function(){
 					alert("A more different error");
 				}
 			});
-
+			var formHeight = $('#update_object_form').innerHeight();
+			$('#update_object_form').css('height', (formHeight + 26) + 'px');
+			details_pane = $("#object_details").jScrollPane({
+				showArrows:true,
+				maintainPosition: false
+			}).data('jsp');
+			details_pane.reinitialise();			
 		});
 	});
 
@@ -242,10 +244,6 @@ $(document).ready(function(){
 					submitvalue += $(this).val() + ":";
 				}
 			});
-			alert("submitvalue: " + submitvalue);
-			alert("submitvid: " + submitvid);
-			alert("submitpid: " + submitpid);
-			alert("object_id: " + object_id);
 			$.blockUI({message: "Submitting"});
 			$.ajax({
 				type: 'POST',

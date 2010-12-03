@@ -53,31 +53,28 @@ if($authenticated == 1) {
 	$sth->execute;
 	my $object = $sth->fetchall_hashref('vid');
 	my $new_object = {};
-	foreach my $key (keys %$object){
-		$new_object->
-			{$object->{$key}->{'object'}}->
-				{$object->{$key}->{'vid'}} = [
-					$object->{$key}->{'value'},
-					$object->{$key}->{'vid'},
-					$object->{$key}->{'property'},
-				];
-	}
 
+	foreach my $key (keys %$object){
+		$new_object->{$object->{$key}->{'object'}}->{$object->{$key}->{'vid'}} = {
+				'value' => $object->{$key}->{'value'},
+				'property' => $object->{$key}->{'property'},
+		};
+	}
 	print "Content-type: text/html\n\n";
 
 	if($vars->{'mode'} eq "by_company"){
 		my $cpid = $vars->{'cpid'};
 
 		print qq(
-		<table id="object_summary_header">
-			<thead>
-				<tr id="object_summary_header_row" class="header_row">
-					<th id="object_id" class="header_row_item">ID</th>
-					<th id="object_name" class="header_row_item">Name</th>
-					<th id="object_type" class="header_row_item">Type</th>
-				</tr>
-			</thead>
-		<tbody id="table_body">
+			<table id="object_summary_header">
+				<thead>
+					<tr id="object_summary_header_row" class="header_row">
+						<th id="object_id" class="header_row_item">ID</th>
+						<th id="object_name" class="header_row_item">Name</th>
+						<th id="object_type" class="header_row_item">Type</th>
+					</tr>
+				</thead>
+			<tbody id="table_body">
 		);
 		foreach my $element (keys %$new_object)
 		{
@@ -85,23 +82,21 @@ if($authenticated == 1) {
 			my $name;
 
 			foreach(keys %{$new_object->{$element}}){
-				if ($new_object->{$element}->{$_}[2] eq "type"){
-					$query = "select template,id from template where id = '$new_object->{$element}->{$_}[0]';";
+				if ($new_object->{$element}->{$_}->{'property'} eq "type"){
+					$query = "select template,id from template where id = '$new_object->{$element}->{$_}->{'value'}';";
 					$sth = $dbh->prepare($query);
 					$sth->execute;
 					my $tid = $sth->fetchrow_hashref;
 					$type = $tid->{'template'};
 				}
-	
-				if ($new_object->{$element}->{$_}[2] eq "name"){
-					$new_object->{$element}->{'name'} = $new_object->{$element}->{$_}[0];
+		
+				if ($new_object->{$element}->{$_}->{'property'} eq "name"){
+					$new_object->{$element}->{'name'} = $new_object->{$element}->{$_}->{'value'};
 				}
-				if ($new_object->{$element}->{$_}[2] eq "company" && $new_object->{$element}->{$_}[0] == $cpid){
-					$new_object->{$element}->{'company'} = $new_object->{$element}->{$_}[0];
+				if ($new_object->{$element}->{$_}->{'property'} eq "company" && $new_object->{$element}->{$_}->{'value'} == $cpid){
+					$new_object->{$element}->{'company'} = $new_object->{$element}->{$_}->{'value'};
 				}
 			}
-			warn $new_object->{$element}->{'company'};
-			warn $cpid;
 			if($new_object->{$element}->{'company'} == $cpid){
 				print qq(
 					<tr class="object_row">
@@ -111,6 +106,7 @@ if($authenticated == 1) {
 					</tr>
 				);
 			}
+			
 		}
 		print qq(</tbody></table>);
 	} elsif ($vars->{'mode'} eq "by_type"){
@@ -132,16 +128,16 @@ if($authenticated == 1) {
 			my $name;
 
 			foreach(keys %{$new_object->{$element}}){
-				if ($new_object->{$element}->{$_}[2] eq "company"){
-					$query = "select name,id from company where id = '$new_object->{$element}->{$_}[0]';";
+				if ($new_object->{$element}->{$_}->{'property'} eq "company"){
+					$query = "select name,id from company where id = '$new_object->{$element}->{$_}->{'value'}';";
 					$sth = $dbh->prepare($query);
 					$sth->execute;
 					my $cpid = $sth->fetchrow_hashref;
 					$company = $cpid->{'name'};
-				} elsif ($new_object->{$element}->{$_}[2] eq "name"){
-					$new_object->{$element}->{'name'} = $new_object->{$element}->{$_}[0];
-				} elsif ($new_object->{$element}->{$_}[2] eq "type" && $new_object->{$element}->{$_}[0] == $tid){
-					$new_object->{$element}->{'type'} = $new_object->{$element}->{$_}[0];
+				} elsif ($new_object->{$element}->{$_}->{'property'} eq "name"){
+					$new_object->{$element}->{'name'} = $new_object->{$element}->{$_}->{'value'};
+				} elsif ($new_object->{$element}->{$_}->{'property'} eq "type" && $new_object->{$element}->{$_}->{'value'} == $tid){
+					$new_object->{$element}->{'type'} = $new_object->{$element}->{$_}->{'value'};
 				}
 
 
@@ -234,33 +230,32 @@ if($authenticated == 1) {
 				}
 				my @ppid = sort({lc($a) cmp lc($b)} @pid);
 				for ($i = 0; $i <= $#ppid; $i++){
-					if ($new_object->{$element}->{$ppid[$i]}[2] eq "type"){
-						$query = "select template,id from template where id = '$new_object->{$element}->{$ppid[$i]}[0]';";
+					if ($new_object->{$element}->{$ppid[$i]}->{'property'} eq "type"){
+						$query = "select template,id from template where id = '$new_object->{$element}->{$ppid[$i]}->{'value'}';";
 						$sth = $dbh->prepare($query);
 						$sth->execute;
 						my $tid = $sth->fetchrow_hashref;
 						$type = $tid->{'template'};
 						print qq(
-							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}[2] . qq(_input">$new_object->{$element}->{$ppid[$i]}[2]</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}[0]" value="$type" readonly="readonly"><br>
+							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}->{'property'} . qq(_input">$new_object->{$element}->{$ppid[$i]}->{'property'}</label>
+							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}->{'value'}" value="$type" readonly="readonly"><br>
 						);
-					} elsif ($new_object->{$element}->{$ppid[$i]}[2] eq "company"){
-						$query = "select name,id from company where id = '$new_object->{$element}->{$ppid[$i]}[0]';";
+					} elsif ($new_object->{$element}->{$ppid[$i]}->{'property'} eq "company"){
+						$query = "select name,id from company where id = '$new_object->{$element}->{$ppid[$i]}->{'value'}';";
 						$sth = $dbh->prepare($query);
 						$sth->execute;
 						my $cpid = $sth->fetchrow_hashref;
 						$company = $cpid->{'name'};
 						print qq(
-							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}[2] . qq(_input">$new_object->{$element}->{$ppid[$i]}[2]</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}[0]" value="$company" readonly="readonly"><br>
+							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}->{'property'} . qq(_input">$new_object->{$element}->{$ppid[$i]}->{'property'}</label>
+							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}->{'value'}" value="$company" readonly="readonly"><br>
 						);
 					} elsif ($ppid[$i] eq "id"){
 					}
 					else {
-						#	<input class="object_detail" type="text" id="$p[$i][1]" value="$p[$i][0]">
 						print qq(
-							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}[2] . qq(_input">$new_object->{$element}->{$ppid[$i]}[2]</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}[1]" value="$new_object->{$element}->{$ppid[$i]}[0]">
+							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}->{'property'} . qq(_input">$new_object->{$element}->{$ppid[$i]}->{'property'}</label>
+							<input class="object_detail" type="text" id="$ppid[$i]" value="$new_object->{$element}->{$ppid[$i]}->{'value'}">
 							<button class="del_property">-</button><br>
 						);
 					}
@@ -314,7 +309,9 @@ if($authenticated == 1) {
 		my @ppid = sort({lc($a) cmp lc($b)} @pid);
 		for ($i = 0; $i <= $#ppid; $i++)
 		{
-			$data .= qq(<option value=$pid->{$ppid[$i]}->{'id'}>$pid->{$ppid[$i]}->{'property'}</option>);
+			unless($pid->{$ppid[$i]}->{'property'} eq "name" || $pid->{$ppid[$i]}->{'property'} eq "company" || $pid->{$ppid[$i]}->{'property'} eq "type"){
+				$data .= qq(<option value=$pid->{$ppid[$i]}->{'id'}>$pid->{$ppid[$i]}->{'property'}</option>);
+			}
 		}
 		$data .= qq(
 			</select>
@@ -335,51 +332,33 @@ if($authenticated == 1) {
 			</thead>
 		<tbody id="table_body">
 		);
-		$query = "select object_value.id as ovid, object.id as object, object.active, value.value, property.property from object join object_value on object.id = object_value.object_id join value on object_value.value_id = value.id join value_property on value.id = value_property.value_id join property on value_property.property_id = property.id where value ilike '%" . $vars->{'search'} . "%';";
-		$sth = $dbh->prepare($query);
-		$sth->execute;
-		my $o = $sth->fetchall_hashref('ovid');
-	
-		my $newer_object = {};
-		foreach my $key (keys %$o){
-			$newer_object->{$o->{$key}->{'object'}}->{$o->{$key}->{'property'}} = $o->{$key}->{'value'};
-			warn $object->{$key}->{'property'};
-			unless($object->{$key}->{'property'} eq $vars->{'property'}){
-				delete($new_object->{$o->{$key}->{'object'}}->{'property'});
-				delete($newer_object->{$o->{$key}->{'object'}}->{'property'});
-			}
-		}
-	
-		my @new_hash_order = keys %$newer_object;
 
-		@new_hash_order = sort(@new_hash_order);
-
-		foreach my $element (@new_hash_order)
-		{
+		foreach my $element (keys %$new_object){
 			my $type;
 			my $company;
 			my $name;
-	
-			if ($new_object->{$element}->{'type'}){
-				$query = "select template,id from template where id = '$new_object->{$element}->{'type'}[0]';";
-				$sth = $dbh->prepare($query);
-				$sth->execute;
-				my $tid = $sth->fetchrow_hashref;
-				$type = $tid->{'template'};
-			}
 
-			if ($new_object->{$element}->{'company'}){
-				$query = "select name,id from company where id = '$new_object->{$element}->{'company'}[0]';";
-				$sth = $dbh->prepare($query);
-				$sth->execute;
-				my $cpid = $sth->fetchrow_hashref;
-				$company = $cpid->{'name'};
+			foreach(keys %{$new_object->{$element}}){
+				if ($new_object->{$element}->{$_}->{'property'} eq "type"){
+					$query = "select template,id from template where id = '$new_object->{$element}->{$_}->{'value'}';";
+					$sth = $dbh->prepare($query);
+					$sth->execute;
+					my $tid = $sth->fetchrow_hashref;
+					$type = $tid->{'template'};
+				} elsif ($new_object->{$element}->{$_}->{'property'} eq "company"){
+					$query = "select name,id from company where id = '$new_object->{$element}->{$_}->{'value'}';";
+					$sth = $dbh->prepare($query);
+					$sth->execute;
+					my $cpid = $sth->fetchrow_hashref;
+					$company = $cpid->{'name'};
+				} elsif ($new_object->{$element}->{$_}->{'property'} eq "name"){
+					$name = $new_object->{$element}->{$_}->{'value'};
+				}
 			}
-
 				print qq(
 					<tr class="object_row">
 						<td class="row_object object_id">$element</td>
-						<td class="row_object object_name">$new_object->{$element}->{'name'}[0]</td>
+						<td class="row_object object_name">$name</td>
 						<td class="row_object object_type">$type</td>
 						<td class="row_object object_company">$company</td>
 					</tr>
