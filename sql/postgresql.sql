@@ -72,10 +72,13 @@ DROP TABLE IF EXISTS reports;
 CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
 
 DROP TABLE IF EXISTS wo;
-CREATE TABLE wo(id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE);
+CREATE TABLE wo(id BIGSERIAL PRIMARY KEY, active BOOLEAN DEFAULT true);
+
+DROP TABLE IF EXISTS wo_name;
+CREATE TABLE wo_name(id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE);
 
 DROP TABLE IF EXISTS wo_template;
-CREATE TABLE wo_template(wo_id INTEGER references wo(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, requires_id INTEGER DEFAULT null, step INTEGER, problem TEXT DEFAULT null);
+CREATE TABLE wo_template(wo_id INTEGER references wo_name(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, requires_id INTEGER DEFAULT null, step INTEGER, problem TEXT DEFAULT null);
 
 DROP TABLE IF EXISTS wo_ticket;
 CREATE TABLE wo_ticket (id BIGSERIAL PRIMARY KEY, ticket_id INTEGER, requires INTEGER DEFAULT null, wo_id INTEGER, step INTEGER);
@@ -191,7 +194,7 @@ INSERT INTO property(property) values('bandwidth');
 INSERT INTO property(property) values('application_version');
 
 -- Adding admin user
-INSERT INTO users(alias,email,password) values('admin','admin@localhost',MD5('admin'));
+INSERT INTO users(alias,email,password,first, last) values('admin','admin@localhost',MD5('admin'),'admin','admin');
 -- Adding default Helpdesk section.
 INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address'); -- Need to add the ability to change section's email addresses...
 -- Adding priorities
@@ -402,25 +405,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION create_wo(
+CREATE OR REPLACE FUNCTION create_wo_name(
 	name_val VARCHAR(255)
 ) RETURNS INTEGER AS $$
 DECLARE
 	wo_id INTEGER;
 BEGIN
-	insert into wo(
+	insert into wo_name(
 		name
 	)
 	values(
 		name_val
 	);
 
-	select into wo_id currval('wo_id_seq');
+	select into wo_id currval('wo_name_id_seq');
 	return wo_id;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insert_wo(
+CREATE OR REPLACE FUNCTION insert_wo_template(
 	wo_val INTEGER,
 	section_val INTEGER,
 	requires_val INTEGER,
@@ -528,6 +531,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON reports TO helpdesk;
 GRANT SELECT, UPDATE ON reports_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON wo TO helpdesk;
 GRANT SELECT, UPDATE ON wo_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo_name TO helpdesk;
+GRANT SELECT, UPDATE ON wo_name_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON wo_ticket TO helpdesk;
 GRANT SELECT, UPDATE ON wo_ticket_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON wo_template TO helpdesk;

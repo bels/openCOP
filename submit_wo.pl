@@ -43,8 +43,19 @@ if($authenticated == 1)
 
 	my $access;
 
+	$query = "
+		insert into wo(
+			active
+		) values (
+			true
+		);";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	$query = "select last_value from wo_id_seq";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $wo_number = $sth->fetchrow_hashref;
 	foreach(keys %$wo_list){
-		warn $_;
 		$data->{'section'} = $wo_list->{$_}->{'section_id'};
 		$data->{'problem'} = $wo_list->{$_}->{'problem'};
 
@@ -89,11 +100,10 @@ if($authenticated == 1)
 			) values (
 				'$wo_list->{$_}->{'ticket'}',
 				'$wo_list->{$_}->{'requires'}',
-				'$wo_list->{$_}->{'wo_id'}',
+				'$wo_number->{'last_value'}',
 				'$wo_list->{$_}->{'step'}'
 			);
 		";
-		warn $query;
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		if($wo_list->{$_}->{'requires'}){
@@ -101,6 +111,8 @@ if($authenticated == 1)
 			$sth = $dbh->prepare($query);
 			$sth->execute($wo_list->{$_}->{'ticket'});
 		}
+		
+		
 	}
 
 	print "Content-type: text/html\n\n";

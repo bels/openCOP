@@ -26,14 +26,14 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
-	my $query = "select * from wo";
+	my $query = "select * from wo where active";
 	
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $results = $sth->fetchall_arrayref;
 	
 	my @styles = ( "styles/wo_queue.css","styles/jquery.jscrollpane.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js","javascripts/wo_queue.js");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js","javascripts/wo_queue.js","javascripts/main.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

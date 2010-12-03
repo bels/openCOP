@@ -31,7 +31,7 @@ if($authenticated == 1){
 	my $sth;
 	my $query;
 
-	$query = "select * from wo;";
+	$query = "select * from wo_name;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $wo_list = $sth->fetchall_hashref('name');

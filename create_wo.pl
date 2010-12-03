@@ -41,7 +41,7 @@ if($authenticated == 1)
 	shift(@{$object});
 
 	my $step = 0;
-	$query = "select count(*) from wo where name = ?;";
+	$query = "select count(*) from wo_name where name = ?;";
 	$sth = $dbh->prepare($query);
 	$sth->execute($name);
 	my $result = $sth->fetchrow_hashref;
@@ -49,7 +49,7 @@ if($authenticated == 1)
 	print "Content-type: text/html\n\n";
 
 	unless($result->{'count'}){
-		$query = "select create_wo(?)";
+		$query = "select create_wo_name(?)";
 		$sth = $dbh->prepare($query);
 		$sth->execute($name);
 		my $wo_id = $sth->fetchrow_hashref;
@@ -67,7 +67,7 @@ if($authenticated == 1)
 			}
 			$step++;
 	
-			$query = "select insert_wo(
+			$query = "select insert_wo_template(
 				?,
 				?,
 				?,
@@ -75,7 +75,7 @@ if($authenticated == 1)
 				?
 			)";
 			$sth = $dbh->prepare($query);
-			$sth->execute($wo_id->{'create_wo'},$data->{'section'},$data->{'requires'},$step,$data->{'problem'});
+			$sth->execute($wo_id->{'create_wo_name'},$data->{'section'},$data->{'requires'},$step,$data->{'problem'});
 		}
 		print "0";
 	} else {
