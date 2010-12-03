@@ -29,6 +29,9 @@ if($authenticated == 1)
 	my $password = uri_unescape($q->param('password1')); #getting the password from the form
 	my $email = uri_unescape($q->param('email'));
 	my $group = uri_unescape($q->param('group'));
+	my $first = uri_unescape($q->param('first'));
+	my $mi = uri_unescape($q->param('middle_initial'));
+	my $last = uri_unescape($q->param('last'));
 	
 	chomp($alias);
 	chomp($password);
@@ -46,7 +49,7 @@ if($authenticated == 1)
 	}
 	else
 	{
-		$user->create_user(alias => $alias,password => $password, email => $email,group => $group);
+		$user->create_user(alias => $alias,password => $password, email => $email,group => $group, first => $first, mi => $mi, last =>$last);
 		print $q->redirect(-URL => "user_admin.pl?success=1");
 	}
 } elsif($authenticated == 2){

@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS notes;
 CREATE TABLE notes(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), note TEXT, performed TIMESTAMP DEFAULT current_timestamp);
 
 DROP TABLE IF EXISTS auth;
-CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20));
+CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20),customer BOOLEAN DEFAULT true);
 
 DROP TABLE IF EXISTS reports;
 CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
@@ -207,9 +207,6 @@ INSERT INTO status (status) values ('Waiting Vendor');
 INSERT INTO status (status) values ('Waiting Other');
 INSERT INTO status (status) values ('Closed');
 INSERT INTO status (status) values ('Completed');
--- test data to start with 
-INSERT INTO site_level(type) values ('Test Level');
-INSERT INTO site (level,name) values (1,'Test Site');
 
 -- Default groups
 INSERT INTO aclgroup(name) values('customers');
@@ -220,7 +217,7 @@ INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 
 -- Default permissions
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
-INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ('1',1,'t','t','t','t');
+INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'admins'),1,'t','t','t','t');
 
 CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
@@ -521,8 +518,6 @@ GRANT SELECT, UPDATE ON section_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
 GRANT SELECT, UPDATE ON users_id_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON customers TO helpdesk;
-GRANT SELECT, UPDATE ON customers_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO helpdesk;
 GRANT SELECT, UPDATE ON troubleshooting_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON notes TO helpdesk;

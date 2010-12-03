@@ -7,6 +7,9 @@
 			[% END %]
 			<h3>Add User</h3>
 			<form id="login_form" action="create_user.pl" method="POST">
+				<label for="first">First Name:</label><input type="text" name="first" id="first">
+				<label for="middle_initial">Middle Initial:</label><input type="text" name="middle_initial" id="middle_initial">
+				<label for="last">Last Name:</label><input type="text" name="last" id="last">
 				<label for="username">Username:</label><input type="text" id="username" name="username"><br />
 				<label for="password1">Password:</label><input type="password" id="password1" name="password1"><br />
 				<label for="password2">Retype Password:</label><input type="password" id="password2" name="password2"><br />

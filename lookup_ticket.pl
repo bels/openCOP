@@ -6,6 +6,7 @@ use Ticket;
 use CGI;
 use SessionFunctions;
 use UserFunctions;
+use URI::Escape;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -29,65 +30,81 @@ if($authenticated == 1)
 	my $data = $q->Vars;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 
-	my %ticket_statuses = (1 => "New",2 => "In Progress",3 => "Waiting Customer",4 => "Waiting Vendor",5 => "Waiting Other",6 => "Closed", 7 => "Completed");
-	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
-
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
+	my @placeholders = ($id);
+	#This part will build the where clause to search all columns of the same datatype as the data passed in from the search box
+	my $query;
+	my $sth;
+	my $where = " AND ("; #this gets tacked on the end if search is defined.
+	if(defined($data->{'search'})){
+		if($data->{'search'} =~ m/\D/){
+			my @columns = ('troubleshooting.troubleshooting','users.alias','helpdesk.location','helpdesk.author','helpdesk.contact','helpdesk.notes','section.name','helpdesk.problem','priority.description','helpdesk.serial','helpdesk.contact_email','status.status','site.name');
+			foreach my $key (@columns){
+				$where .= "$key ILIKE ? OR ";
+				push(@placeholders,"%".uri_unescape($data->{'search'})."%");
+			}
+		} else {
+			my @columns = ('helpdesk.ticket');
+			foreach my $key (@columns){
+				$where .= "$key = ? OR ";
+				push(@placeholders,uri_unescape($data->{'search'}));
+			}
+		}
+		chomp($where);
+		chop($where); #removing the extra OR at the end
+		chop($where);
+		chop($where);
+		$where .= ")";
+	}
+	
 	my $section = {};
 
 	print "Content-type: text/html\n\n";
 
-	my $query = "select id,name from section;";
-	my $sth = $dbh->prepare($query);
+	$query = "select id,name from section;";
+	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('id');
-
+	
 	unless($data->{'section'} eq "pseudo"){
-		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id, customer => "0") or die "What?"; #need to pass in hashref named data
+		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id, customer => "0", criteria => uri_unescape($data->{'search'})) or die "What?"; #need to pass in hashref named data
 	} else {
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$query = "
 			select
-				*
+				helpdesk.ticket as ticket,section.name as name,status.status as status, priority.description as priority, helpdesk.contact as contact
 			from
 				helpdesk
 				join
 					section on section.id = helpdesk.section
+				left outer join
+					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
+				left outer join
+					notes on notes.ticket_id = helpdesk.ticket
+				join
+					users on users.id = helpdesk.technician
+				left outer join
+					site on site.id = helpdesk.site
+				join
+					priority on priority.severity = helpdesk.priority
+				join
+					status on status.id = helpdesk.status
 			where
-				status not in ('6','7')
+				helpdesk.status not in ('6','7')
 			and
-				active
+				helpdesk.active
 			and
-				technician = ?
-			and
-				section not in (
-					select
-						section_id
-					from
-						section_aclgroup
-						join
-							section on section.id = section_aclgroup.section_id
-						join
-							aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
-					where (
-						section_aclgroup.aclgroup_id in (
-							select 
-								aclgroup_id
-							from
-								alias_aclgroup
-							where
-								alias_id = ?
-						)
-						and
-							aclread
-					)
-				)
-			order by ticket;
-			
+				helpdesk.technician = ?
+			";
+		if(defined($data->{'search'})){
+			$query .= $where;
+		}
+		$query .= "
+					order by ticket;
 		";
 		$sth = $dbh->prepare($query);
-		$sth->execute($id,$id);
+		$sth->execute(@placeholders);
 		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
 	}
 	if($section->{$data->{'section'}}->{'error'}) {
@@ -115,8 +132,8 @@ if($authenticated == 1)
 			print qq(
 					<tr class="lookup_row">
 						<td class="row_ticket_number">$section->{$data->{'section'}}->{$element}->{'ticket'}</td>
-						<td class="row_ticket_status">$ticket_statuses{$section->{$data->{'section'}}->{$element}->{'status'}}</td>
-						<td class="row_ticket_priority">$priorities{$section->{$data->{'section'}}->{$element}->{'priority'}}</td>
+						<td class="row_ticket_status">$section->{$data->{'section'}}->{$element}->{'status'}</td>
+						<td class="row_ticket_priority">$section->{$data->{'section'}}->{$element}->{'priority'}</td>
 						<td class="row_ticket_contact">$section->{$data->{'section'}}->{$element}->{'contact'}</td>
 						<td class="row_ticket_section">$section->{$data->{'section'}}->{$element}->{'name'}</td>
 					</tr>

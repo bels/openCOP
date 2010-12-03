@@ -24,7 +24,7 @@ my @load = ($temp[3],$temp[4],$temp[5]);
 #thresholds
 my $disk_threshold = 75;
 my $mem_threshold = 75;
-my $load_threshold = .75;
+my $load_threshold = 2;
 my $diskio_threshold = 2;
 
 print "Content-type: text/html\n\n";

@@ -20,7 +20,7 @@
 
 .multiselect{
 	width: 460px;
-	height: 200px;
+	height: 250px;
 	display: none;
 }        
 
@@ -71,7 +71,7 @@ button.associate{
 }
 
 #group_to_user{
-	height: 300px;
+	height: 330px;
 	width: 750px;
 	margin-left: 50px;
 	margin-top: 20px;

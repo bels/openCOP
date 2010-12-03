@@ -1,8 +1,8 @@
 		<h2>[% company_name %] Helpdesk - Input a new work order</h2>
 		<form id="newwo">
 			<div id="author_div">
-				<h3>General Information</h3>
-				<label for="wo">Choose a work order template:</label>
+				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;General Information</div>
+				<label for="wo" id="wo_label">Choose a work order template:</label>
 				<select name="wo" size="1" id="wo">
 				[% FOREACH wo IN swo %]
 					<option value="[% wo_list.$wo.id %]">[% wo_list.$wo.name %]</option>
@@ -34,7 +34,7 @@
 				<a href="tips.pl?106" class="tooltip" target="_tips">?</a>
 			</div>
 			<div id="problem_details">
-				<h3>Additional Information</h3>
+				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Additional Information</div>
 				<label for="notes">Notes:</label><a href="tips.pl?115" class="tooltip" target="_tips">?</a><br />
 				<textarea id="notes" style="width: 690px;" cols="80" rows="5" name="notes" tabindex="10"></textarea><br />
 				<button type="button" id="submit_button">Submit</button>
