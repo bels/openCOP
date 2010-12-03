@@ -162,9 +162,6 @@ function submit_tp(button){
 	} else {
 			var mode = "configure";
 			var type = $('#' + which + '_select').val();
-			alert(type);
-			alert(value);
-			alert(which);
 			$.blockUI({message: "Submitting"});
 			$.ajax({
 				type: 'POST',

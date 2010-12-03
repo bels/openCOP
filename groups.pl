@@ -52,7 +52,9 @@ if($authenticated == 1)
 	my $gid = $sth->fetchall_hashref('name');
 	@pid = [];
 	foreach(keys %$gid){
-		push(@pid,$gid->{$_}->{'name'});
+		unless($gid->{$_}->{'name'} eq "customers"){
+			push(@pid,$gid->{$_}->{'name'});
+		}
 	}
 	shift(@pid);
 	my @gid = sort(@pid);

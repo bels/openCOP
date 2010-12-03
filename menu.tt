@@ -9,11 +9,13 @@
 						<li><a href="wo_queue.pl">Work Order Queue</a></li>
 					</ul>
 				</li>
+			[% IF is_admin %]
 				<li><a href=#>Reports</a>
 					<ul class="subnav">
 						<li><a href="reports.pl">Query Builder</a></li>
 					</ul>
 				</li>
+			[% END %]
 				<li><a href=#>Inventory</a>
 					<ul class="subnav">
 						<li><a href="inventory.pl?mode=add">Add</a></li>
