@@ -34,8 +34,8 @@ if($authenticated == 1)
 	$sth->execute;
 	my $results = $sth->fetchall_arrayref;
 	
-	my @styles = ( "styles/wo_queue.css","styles/jquery.jscrollpane.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js","javascripts/wo_queue.js","javascripts/main.js");
+	my @styles = ("styles/smoothness/jquery-ui-1.8.5.custom.css","styles/jquery.jscrollpane.css","styles/wo_queue.css");
+	my @javascripts = ("javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery.tablesorter.js","javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.js","javascripts/main.js","javascripts/wo_queue.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 
