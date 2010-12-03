@@ -6,7 +6,7 @@
 						<li><a href="ticket.pl?mode=new">New Ticket</a></li>
 						<li><a href="ticket.pl?mode=lookup">Ticket Queue</a></li>
 						<li><a href="work_order_new.pl">New Work Order</a></li>
-						<li><a href="#">Work Order Queue</a></li>
+						<li><a href="wo_queue.pl">Work Order Queue</a></li>
 					</ul>
 				</li>
 				<li><a href=#>Reports</a>
