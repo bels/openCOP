@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-touch temp.file
-echo Bleegle >> temp.file
