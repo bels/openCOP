@@ -6,6 +6,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use UserFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
 
@@ -24,13 +25,16 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my @styles = ("styles/layout.css","styles/smoothness/jquery-ui-1.8.5.custom.css","styles/main.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js");
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
+	my @styles = ("styles/main.css");
+	my @javascripts = ("javascripts/main.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $file = "main.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, is_admin => $user->is_admin(id => $id)};
 	
 	print "Content-type: text/html\n\n";
 

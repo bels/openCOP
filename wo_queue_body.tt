@@ -1,0 +1,16 @@
+		<div id="left">
+			<center><h4>Work Order #</h4></center>
+			<div id="wo">
+			[% FOREACH wo IN work_orders %]
+				<a href="#" id=[% wo.0 %] class="wo_link">[% wo.0 %]</a><br />
+			[% END %]
+			</div>
+		</div>
+		<div id="right_holder">
+			<div id="right">
+			</div>
+		</div>
+		<div id="ticket_details">
+		</div>
+		<div id="behind_popup">
+		</div>

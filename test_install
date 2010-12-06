@@ -23,6 +23,9 @@ declare -A REQHASH=(		# Define a list of required ports
 	["p5-Authen-SASL"]="p5-Authen-SASL"
 	["p5-libwww"]="p5-libwww"
 	["p5-JSON"]="p5-JSON"
+	["p5-DBD-Excel"]="p5-DBD-Excel"
+	["p5-SQL-Statement"]="p5-SQL-Statement"
+	["Net::LDAP"]="p5-perl-ldap"
 )
 
 function die() {
@@ -50,7 +53,7 @@ function checkFor_freebsd() {		# Check if it's installed under FreeBSD
 	PKG_PATH=${REQHASH[${1}]}
 
 	CHDIR=`find /usr/ports/ -iname "$PKG_PATH" |awk '{print $0 "\n" }'`
-	`cd $CHDIR && make -DBATCH -DDISABLE_VULNERABILITIES install clean >$INSTALL_LOG` || echo "Could not install $1 at $CHDIR"; return 2
+	`cd $CHDIR && make -DBATCH -DDISABLE_VULNERABILITIES install clean >$INSTALL_LOG` || echo "ERROR: Could not install $1 at $CHDIR"; return 2
 #	echo "no"
 	return 1
 }
@@ -78,7 +81,16 @@ if [ $OSVER == "FreeBSD" ]; then
 	chown -R www:www $INSTALL_DIR/*
 	echo -en "done\nSetting up postgres ... "
 	su - pgsql -c "cd $INSTALL_DIR/sql && ./setup_postgresql.sh" || die "Could not execute setup_postgresql.sh"
-	echo "done"
+	echo -en "done\nCreating service account ... "
+	echo "opencop" | pw useradd opencop -q -n opencop -G www -s csh -m -d /home/opencop -c 'openCOP service account' -h 0
+	if [ $? == 0 ]; then
+		echo "Created user opencop."
+	else
+		echo "Error creating user."
+	fi
+	echo "Note: this script relies on the line '#includedir /usr/local/etc/sudoers.d/' being present in your sudoers file. If this is not the case you will have to integrate the new sudoers settings manually."
+	cp opencop_sudoers /usr/local/etc/sudoers.d/
+
 elif [ $OSVER == "Linux" ]; then
 	echo "This is a Linux distribution"
 else

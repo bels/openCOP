@@ -10,6 +10,7 @@ $(document).ready(function(){
 	$("#email2").rules("add",{equalTo: "#email1"});
 
 	$('.change_form').submit(function(){
+		resetLogout();
 		$(this).find('#id').val($('#select_customer_select').val());
 	});
 });

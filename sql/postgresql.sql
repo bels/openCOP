@@ -1,31 +1,63 @@
 -- This will remove any data in the database.  I would not recommend using this to recreate tables that got "messed up".  This file should only be used to do an initial creation of the database or to wipe everything and start over.
 
-DROP TABLE IF EXISTS site_level;
+DROP TABLE IF EXISTS site_level CASCADE;
 CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE);
 
-DROP TABLE IF EXISTS company;
-CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN);
+DROP TABLE IF EXISTS company CASCADE;
+CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN DEFAULT FALSE);
 
-DROP TABLE IF EXISTS site;
+DROP TABLE IF EXISTS site CASCADE;
 CREATE TABLE site (id SERIAL PRIMARY KEY, level INTEGER references site_level(id) ON DELETE CASCADE, name VARCHAR(255), deleted BOOLEAN DEFAULT false, company_id INTEGER references company(id) ON DELETE CASCADE);
 
-DROP TABLE IF EXISTS status;
+DROP TABLE IF EXISTS status CASCADE;
 CREATE TABLE status (id SERIAL PRIMARY KEY, status VARCHAR(255));
 
-DROP TABLE IF EXISTS section;
-CREATE TABLE section (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255));
+DROP TABLE IF EXISTS section CASCADE;
+CREATE TABLE section (id SERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, email VARCHAR(255));
 
-DROP TABLE IF EXISTS priority;
+DROP TABLE IF EXISTS priority CASCADE;
 CREATE TABLE priority (id SERIAL PRIMARY KEY, severity INTEGER, description varchar(255));
 
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (id SERIAL PRIMARY KEY, alias VARCHAR(100), email VARCHAR(100), password VARCHAR(100), active BOOLEAN DEFAULT true);
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	first VARCHAR(100),
+	last VARCHAR(100),
+	middle_initial VARCHAR(100),
+	alias VARCHAR(100) UNIQUE,
+	email VARCHAR(100),
+	password VARCHAR(100),
+	active BOOLEAN DEFAULT true,
+	site INTEGER DEFAULT null
+);
 
-DROP TABLE IF EXISTS ticket_status;
-CREATE TABLE ticket_status (id BIGSERIAL PRIMARY KEY, name VARCHAR(255));
-
-DROP TABLE IF EXISTS helpdesk;
-CREATE TABLE helpdesk (ticket BIGSERIAL PRIMARY KEY, status INTEGER references ticket_status(id), barcode VARCHAR(255), site INTEGER references site(id) DEFAULT '1', location TEXT, requested TIMESTAMP DEFAULT current_timestamp, updated TIMESTAMP, author TEXT, contact VARCHAR(255), contact_phone VARCHAR(255), notes TEXT, section INT DEFAULT '1', problem TEXT, priority INT  DEFAULT '2', serial VARCHAR(255), tech VARCHAR(255), contact_email VARCHAR(255), technician INTEGER DEFAULT '1', submitter INTEGER, free_date DATE, free_time TIME, closed_by VARCHAR(255) DEFAULT null, completed_by VARCHAR(255) DEFAULT null);
+DROP TABLE IF EXISTS helpdesk CASCADE;
+CREATE TABLE helpdesk (
+	ticket BIGSERIAL PRIMARY KEY,
+	status INTEGER references status(id),
+	barcode VARCHAR(255),
+	site INTEGER references site(id) DEFAULT '1',
+	location TEXT,
+	requested TIMESTAMP DEFAULT current_timestamp,
+	updated TIMESTAMP,
+	author TEXT,
+	contact VARCHAR(255),
+	contact_phone VARCHAR(255),
+	notes TEXT,
+	section INT DEFAULT '1',
+	problem TEXT,
+	priority INT DEFAULT '2',
+	serial VARCHAR(255),
+	tech VARCHAR(255),
+	contact_email VARCHAR(255),
+	technician INTEGER DEFAULT '1',
+	submitter INTEGER,
+	free_date DATE,
+	free_time TIME,
+	closed_by VARCHAR(255) DEFAULT null,
+	completed_by VARCHAR(255) DEFAULT null,
+	active BOOLEAN DEFAULT true
+);
 
 DROP TABLE IF EXISTS troubleshooting;
 CREATE TABLE troubleshooting(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), troubleshooting TEXT, performed TIMESTAMP DEFAULT current_timestamp);
@@ -34,10 +66,22 @@ DROP TABLE IF EXISTS notes;
 CREATE TABLE notes(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), note TEXT, performed TIMESTAMP DEFAULT current_timestamp);
 
 DROP TABLE IF EXISTS auth;
-CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20));
+CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20),customer BOOLEAN DEFAULT true);
 
 DROP TABLE IF EXISTS reports;
-CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
+CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
+
+DROP TABLE IF EXISTS wo;
+CREATE TABLE wo(id BIGSERIAL PRIMARY KEY, active BOOLEAN DEFAULT true);
+
+DROP TABLE IF EXISTS wo_name;
+CREATE TABLE wo_name(id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE);
+
+DROP TABLE IF EXISTS wo_template;
+CREATE TABLE wo_template(wo_id INTEGER references wo_name(id) ON DELETE CASCADE, section_id INTEGER references section(id) ON DELETE CASCADE, requires_id INTEGER DEFAULT null, step INTEGER, problem TEXT DEFAULT null);
+
+DROP TABLE IF EXISTS wo_ticket;
+CREATE TABLE wo_ticket (id BIGSERIAL PRIMARY KEY, ticket_id INTEGER, requires INTEGER DEFAULT null, wo_id INTEGER, step INTEGER);
 
 DROP TABLE IF EXISTS audit;
 CREATE TABLE audit (
@@ -149,35 +193,34 @@ INSERT INTO property(property) values('scan_to_type');
 INSERT INTO property(property) values('bandwidth');
 INSERT INTO property(property) values('application_version');
 
--- This will allow customer accounts to be created so the system can authenticate them.  The reason for this is so someone/thing can't spam the helpdesk system with tickets.  This is just one available backend for this, I also plan on add LDAP as a backend
-DROP TABLE IF EXISTS customers;
-CREATE TABLE customers(id SERIAL PRIMARY KEY, first VARCHAR(100), last VARCHAR(100), middle_initial VARCHAR(100), alias VARCHAR(100), password VARCHAR(100), email VARCHAR(100), active BOOLEAN DEFAULT true, site INTEGER);
-
 -- Adding admin user
-INSERT INTO users(alias,email,password) values('admin','admin@localhost',MD5('admin'));
--- this will get phased out in favor of the config file for ease of use for people who don't know a lot of SQL
+INSERT INTO users(alias,email,password,first, last) values('admin','admin@localhost',MD5('admin'),'admin','admin');
+-- Adding default Helpdesk section.
+INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address'); -- Need to add the ability to change section's email addresses...
+-- Adding priorities
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
 INSERT INTO priority(severity,description) values(3,'High');
 INSERT INTO priority(severity,description) values(4,'Business Critical');
-INSERT INTO section(name,email) values('Helpdesk','helpdesk@testcompany.com');
 -- some starting ticket status
-INSERT INTO ticket_status (name) values ('New');
-INSERT INTO ticket_status (name) values ('In Progress');
-INSERT INTO ticket_status (name) values ('Waiting Customer');
-INSERT INTO ticket_status (name) values ('Waiting Vendor');
-INSERT INTO ticket_status (name) values ('Waiting Other');
-INSERT INTO ticket_status (name) values ('Closed');
-INSERT INTO ticket_status (name) values ('Completed');
--- test data to start with 
-INSERT INTO site_level(type) values ('test');
-INSERT INTO site (level,name) values (1,'Test Site');
+INSERT INTO status (status) values ('New');
+INSERT INTO status (status) values ('In Progress');
+INSERT INTO status (status) values ('Waiting Customer');
+INSERT INTO status (status) values ('Waiting Vendor');
+INSERT INTO status (status) values ('Waiting Other');
+INSERT INTO status (status) values ('Closed');
+INSERT INTO status (status) values ('Completed');
 
 -- Default groups
 INSERT INTO aclgroup(name) values('customers');
+INSERT INTO aclgroup(name) values('admins');
+
+-- Add admin to the admins group
+INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 
 -- Default permissions
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
+INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'admins'),1,'t','t','t','t');
 
 CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
@@ -187,6 +230,15 @@ BEGIN
 	SELECT INTO last_id currval('object_id_seq');
 
 	RETURN last_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_object(object_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	DELETE from value where id in (select value_id from object_value where object_value.id = object_val);
+	DELETE from object where id = object_val;
+
+	RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -202,6 +254,21 @@ BEGIN
 
 	INSERT INTO value_property (property_id,value_id) values(property_val, last_value_id);
 	INSERT INTO object_value (object_id,value_id) values(last_object_id, last_value_id);
+
+	RETURN last_value_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_insert_object_value(value_val VARCHAR(255), property_val INTEGER, object_val INTEGER) RETURNS INTEGER AS $$
+DECLARE
+	last_value_id INTEGER;
+BEGIN
+	INSERT INTO value (value) values(value_val);
+
+	SELECT INTO last_value_id currval('value_id_seq');
+
+	INSERT INTO value_property (property_id,value_id) values(property_val, last_value_id);
+	INSERT INTO object_value (object_id,value_id) values(object_val, last_value_id);
 
 	RETURN last_value_id;
 END;
@@ -319,9 +386,9 @@ BEGIN
 	IF notes_val NOT LIKE '' THEN
 		insert into notes (ticket_id,note) values(ticket_number,notes_val);
 	END IF;
-	
-	last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
-	RETURN last_id;
+	-- select into last_id last_value from helpdesk_ticket_seq;
+	-- last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
+	RETURN ticket_number;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -362,17 +429,89 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION create_wo_name(
+	name_val VARCHAR(255)
+) RETURNS INTEGER AS $$
+DECLARE
+	wo_id INTEGER;
+BEGIN
+	insert into wo_name(
+		name
+	)
+	values(
+		name_val
+	);
+
+	select into wo_id currval('wo_name_id_seq');
+	return wo_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_wo_template(
+	wo_val INTEGER,
+	section_val INTEGER,
+	requires_val INTEGER,
+	step_val INTEGER,
+	problem_val TEXT
+) RETURNS INTEGER AS $$
+DECLARE
+	wt_id INTEGER;
+BEGIN
+	insert into wo_template(
+		wo_id,
+		section_id,
+		requires_id,
+		step,
+		problem
+	)
+	values(
+		wo_val,
+		section_val,
+		requires_val,
+		step_val,
+		problem_val
+	);
+	wt_id := -1;
+	return wt_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION is_admin(
+	id_val INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+	is_admin_val INTEGER;
+BEGIN
+	select into is_admin_val
+		count(
+			distinct(
+				alias_aclgroup.aclgroup_id
+			)
+		)
+	from
+		alias_aclgroup
+	join
+		aclgroup on alias_aclgroup.aclgroup_id = aclgroup.id
+	where (
+		alias_id = id_val
+	) and (
+		aclgroup.name = 'admins'
+	);
+	
+	return is_admin_val;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- Permissions and stuff
 DROP USER helpdesk;
 CREATE USER helpdesk WITH PASSWORD 'helpdesk';
-GRANT SELECT, INSERT, UPDATE, DELETE ON ticket_status TO helpdesk;
-GRANT SELECT, UPDATE ON ticket_status_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
+GRANT SELECT, UPDATE ON status_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site_level TO helpdesk;
 GRANT SELECT, UPDATE ON site_level_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site TO helpdesk;
 GRANT SELECT, UPDATE ON site_id_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
-GRANT SELECT, UPDATE ON status_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk TO helpdesk;
 GRANT SELECT, UPDATE ON helpdesk_ticket_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO helpdesk;
@@ -382,8 +521,6 @@ GRANT SELECT, UPDATE ON section_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON auth TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO helpdesk;
 GRANT SELECT, UPDATE ON users_id_seq TO helpdesk;
-GRANT SELECT, INSERT, UPDATE, DELETE ON customers TO helpdesk;
-GRANT SELECT, UPDATE ON customers_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO helpdesk;
 GRANT SELECT, UPDATE ON troubleshooting_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON notes TO helpdesk;
@@ -416,3 +553,10 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON enabled_modules TO helpdesk;
 GRANT SELECT, UPDATE ON enabled_modules_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON reports TO helpdesk;
 GRANT SELECT, UPDATE ON reports_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo TO helpdesk;
+GRANT SELECT, UPDATE ON wo_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo_name TO helpdesk;
+GRANT SELECT, UPDATE ON wo_name_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo_ticket TO helpdesk;
+GRANT SELECT, UPDATE ON wo_ticket_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON wo_template TO helpdesk;

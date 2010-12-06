@@ -11,6 +11,7 @@ use lib './libs';
 use ReadConfig;
 use DBI;
 use Notification;
+use UserFunctions;
 
 require Exporter;
 
@@ -65,6 +66,7 @@ sub render{
 
 	$config->read_config;
 
+	# Pull available sections from the database
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query = "
 		select
@@ -90,6 +92,7 @@ sub render{
 	$sth->execute($args{'id'});
 	my $section_list = $sth->fetchall_hashref('section_id');
 
+	# Pull sections to which this user has create rights from the database
 	$query = "
 		select
 			name,
@@ -113,35 +116,55 @@ sub render{
 	";
 	$sth = $dbh->prepare($query);
 	$sth->execute($args{'id'});
-	my $section_create_list = $sth->fetchall_hashref('section_id');
+	my $section_create_list = $sth->fetchall_hashref('name');
+	my @s_section = sort({lc($a) cmp lc($b)} keys %$section_create_list);
 
+	# Create a psuedo-section for tickets which are assigned to the technician but not on a board to which the technician has read rights
 	$section_list->{'pseudo'} = {
 		'section_id'	=>	"pseudo",
 		'name'		=>	"Tickets assigned directly",
 	};
 
+	my @list = sort({
+		if($a eq "pseudo"){
+			return -1;
+		} elsif($b eq "pseudo"){
+			return 1;
+		} else {
+			return lc($a) cmp lc($b);
+		}
+	} keys %$section_list);
+
+	# Get the list of available priorities
 	$query = "select * from priority;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $priority_list = $sth->fetchall_hashref('id');
 
+	# Get the list of available sites
 	$query = "select * from site where not deleted;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $site_list = $sth->fetchall_hashref('id');
+	my $site_list = $sth->fetchall_hashref('name');
+	my @s_site = sort({lc($a) cmp lc($b)} keys %$site_list);
 
+	# Get the list of technicians
 	$query = "select id,alias from users where active;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
-	my $tech_list = $sth->fetchall_hashref('id');
+	my $tech_list = $sth->fetchall_hashref('alias');
+	my @s_tech = sort({lc($a) cmp lc($b)} keys %$tech_list);
+
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $info = $user->get_user_info(user_id => $args{'id'});
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
-	my @styles = ("styles/jquery.jscrollpane.css","styles/layout.css","styles/ticket.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/ticket.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.livequery.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.blockui.js");
+	my @styles = ("styles/jquery.jscrollpane.css","styles/ticket.css");
+	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
 
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info, is_admin => $args{'is_admin'}, list => \@list};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
@@ -163,7 +186,7 @@ sub submit{
 		$data->{$element} =~ s/\'/\'\'/g;
 	}
 	
-	if(defined($data->{'site'})){
+	if(defined($data->{'site'}) && $data->{'site'} > 0){
 		$site = $data->{'site'};
 	} else {
 		$site = "1";
@@ -195,57 +218,31 @@ sub submit{
 	}
 
 
-	if($args{'customer'}){
-		$query = "
-			select
-				bool_or(section_aclgroup.aclcreate) as access
-			from
-				section_aclgroup
-				join
-					section on section.id = section_aclgroup.section_id
-				join
-					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
-			where
-				section_aclgroup.section_id = ?
-			and (
-				section_aclgroup.aclgroup_id in (
-					select
-						aclgroup_id
-					from
-						aclgroup
-					where
-						name = ?
-				)
-			);
-		";
-		$sth = $dbh->prepare($query);
-		$sth->execute($data->{'section'},"customers");
-	} else {
-		$query = "
-			select
-				bool_or(section_aclgroup.aclcreate) as access
-			from
-				section_aclgroup
-				join
-					section on section.id = section_aclgroup.section_id
-				join
-					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
-			where
-				section_aclgroup.section_id = ?
-			and (
-				section_aclgroup.aclgroup_id in (
-					select
-						aclgroup_id
-					from
-						alias_aclgroup
-					where
-						alias_id = ?
-				)
-			);
-		";
-		$sth = $dbh->prepare($query);
-		$sth->execute($data->{'section'},$data->{'submitter'});
-	}
+	$query = "
+		select
+			bool_or(section_aclgroup.aclcreate) as access
+		from
+			section_aclgroup
+			join
+				section on section.id = section_aclgroup.section_id
+			join
+				aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+		where
+			section_aclgroup.section_id = ?
+		and (
+			section_aclgroup.aclgroup_id in (
+				select
+					aclgroup_id
+				from
+					alias_aclgroup
+				where
+					alias_id = ?
+			)
+		);
+	";
+	$sth = $dbh->prepare($query);
+	$sth->execute($data->{'section'},$data->{'submitter'});
+
 	my $access = $sth->fetchrow_hashref;
 	if($access->{'access'}){
 		$query = "
@@ -302,10 +299,12 @@ sub submit{
 		}
 		return $results = {
 			'error'		=>	"0",
+			'id'		=>	$id->{'insert_ticket'},
 		};
 	} else {
 		return $results = {
 			'error'		=>	"1",
+			'id'		=>	"0",
 		};
 	}
 }
@@ -318,6 +317,29 @@ sub lookup{
 	my $results;
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 
+	my $sth;
+	my @placeholders;
+	my $where = " AND ("; #this gets tacked on the end if search is defined.
+	if(defined($args{'criteria'})){
+		if($args{'criteria'} =~ m/\D/){
+			my @columns = ('troubleshooting.troubleshooting','users.alias','helpdesk.location','helpdesk.author','helpdesk.contact','helpdesk.notes','section.name','helpdesk.problem','priority.description','helpdesk.serial','helpdesk.contact_email','status.status','site.name');
+			foreach my $key (@columns){
+				$where .= "$key ILIKE ? OR ";
+				push(@placeholders,"%".$args{'criteria'}."%");
+			}
+		} else {
+			my @columns = ('helpdesk.ticket');
+			foreach my $key (@columns){
+				$where .= "$key = ? OR ";
+				push(@placeholders,$args{'criteria'});
+			}
+		}
+		chomp($where);
+		chop($where); #removing the extra OR at the end
+		chop($where);
+		chop($where);
+		$where .= ") ";
+	}
 	if($args{'customer'}){
 		$query = "
 			select
@@ -367,48 +389,88 @@ sub lookup{
 			);
 		";
 	}
-	my $sth = $dbh->prepare($query);
+	$sth = $dbh->prepare($query);
 	$sth->execute($args{'section'},$args{'id'});
 	my $access = $sth->fetchrow_hashref;
 	if ($access->{'complete'}) {
 		$query = "
 			select
-				*
+				helpdesk.ticket as ticket,section.name as name,status.status as status, priority.description as priority, helpdesk.contact as contact
 			from
 				helpdesk
 				join
 					section on section.id = helpdesk.section
+				left outer join
+					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
+				left outer join
+					notes on notes.ticket_id = helpdesk.ticket
+				join
+					users on users.id = helpdesk.technician
+				left outer join
+					site on site.id = helpdesk.site
+				join
+					priority on priority.severity = helpdesk.priority
+				join
+					status on status.id = helpdesk.status
 			where
-				status not in ('7')
+				helpdesk.status not in ('7')
 			and
-				section = ?
+				helpdesk.active
+			and
+				helpdesk.section = ?
+		";		
+		if(defined($args{'criteria'})){
+			$query .= $where;
+		}
+		$query .= "
 			order by
 				ticket
 		";
 		#Currently 7 is the ticket status Completed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
-		$sth->execute($args{'section'});
+		unshift(@placeholders,$args{'section'});
+		$sth->execute(@placeholders);
 		$results = $sth->fetchall_hashref('ticket');
 	
 		return $results;		
 	} elsif($access->{'read'}){
 		$query = "
 			select
-				*
+				helpdesk.ticket as ticket,section.name as name,status.status as status, priority.description as priority, helpdesk.contact as contact
 			from
 				helpdesk
 				join
 					section on section.id = helpdesk.section
+				left outer join
+					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
+				left outer join
+					notes on notes.ticket_id = helpdesk.ticket
+				join
+					users on users.id = helpdesk.technician
+				left outer join
+					site on site.id = helpdesk.site
+				join
+					priority on priority.severity = helpdesk.priority
+				join
+					status on status.id = helpdesk.status
 			where
-				status not in ('6','7')
+				helpdesk.status not in ('6','7')
 			and
-				section = ?
+				helpdesk.active
+			and
+				helpdesk.section = ?
+		";		
+		if(defined($args{'criteria'})){
+			$query .= $where;
+		}
+		$query .= "
 			order by
 				ticket
 		";
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
-		$sth->execute($args{'section'});
+		unshift(@placeholders,$args{'section'});
+		$sth->execute(@placeholders);
 		$results = $sth->fetchall_hashref('ticket');
 	
 		return $results;
@@ -424,7 +486,7 @@ sub details{
 	my %args = @_;
 	
 	my $dbh = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select * from helpdesk where ticket = ?";
+	my $query = "select * from helpdesk where ticket = ? and active";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($args{'data'});
 	my $results = $sth->fetchrow_hashref;
@@ -566,6 +628,25 @@ sub update{
 		);
 		#this will return the id of the insert record if we ever find a use for it
 		my $results = $sth->fetchrow_hashref;
+		if($data->{'status'} == "6" || $data->{'status'} == "7"){
+			$query = "
+				update
+					helpdesk
+				set
+					active = true
+				where
+					ticket in (
+						select
+							ticket_id
+						from
+							wo_ticket
+						where
+							requires = ?
+					);
+			";
+			$sth = $dbh->prepare($query);
+			$sth->execute($results->{'update_ticket'});
+		}
 		return $results;
 	} else {
 		return $results = {

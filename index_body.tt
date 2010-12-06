@@ -2,6 +2,9 @@
 		<div id="low_resolution_warning">
 			<span id="lrw_text">You appear to have a resolution lower than 1024x768. You may experience display issues.</span>
 		</div>
+		<div id="unsupported_warning">
+			<span id="lrw_text">You appear to be running an unsupported browser. Either install IE9, FIrefox 3.5+, Opera, Chrome or Safari 3+ or you may experience display issues.</span>
+		</div>
 		
 		<div id="login_box">
 			<span id="login_title">Login</span>

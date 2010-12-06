@@ -1,0 +1,46 @@
+.ui-tabs .ui-tabs-hide{
+     display: none;
+}
+
+.short_label{
+	display: inline-block;
+	width: 90px;
+	text-align: right;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+
+#problem_details{
+	width: 725px;
+	margin-top: 15px;
+	margin-left: 15px;
+	border: 1px solid black;
+	padding: 10px;
+	padding-left: 35px;
+}
+
+#author_div{
+	width: 890px;
+	border: 1px solid black;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 35px;
+	margin-left: 15px;
+}
+
+#problem{
+	white-space: pre;
+}
+
+.ui-widget{
+	font-size: 1em;
+	font-family: tahoma,georgia,verdana;
+}
+
+#new_tab{
+	opacity: 1.00;
+}
+
+#new_tab a{
+	cursor: pointer;
+}

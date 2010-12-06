@@ -16,30 +16,28 @@
 			</thead>
 			<tbody id="permissions_body">
 				<tr id="add_permission">
-						<td>
-							<select id="select_group" class="new_permission">
-								<option value=""</option>
-							[% FOREACH id IN groups.keys %]
-								<option value="[% groups.$id.id %]">[% groups.$id.name %]</option>
-							[% END %]
-							</select>
-						</td>
-						<td>
-							<select id="select_section" class="new_permission">
-								<option value=""</option>
-							[% FOREACH id IN sections.keys %]
-								<option value="[% sections.$id.id %]">[% sections.$id.name %]</option>
-							[% END %]
-							</select>
-						</td>
-						<td><input type="checkbox" name="read" id="read" checked="checked" class="new_permission" title="Read"></td>
-						<td><input type="checkbox" name="create" id="create" class="new_permission" title="Create"></td>
-						<td><input type="checkbox" name="update" id="update" class="new_permission" title="Update"></td>
-						<td><input type="checkbox" name="complete" id="complete" class="new_permission" title="Complete"></td>
-						<td><button id="submit_a_gs" mode="a_gs" class="associate">Add</button></td>
+					<td>
+						<select id="select_group" class="new_permission">
+						[% FOREACH id IN gid_list.sort %]
+							<option value="[% groups_names.$id.id %]">[% groups_names.$id.name %]</option>
+						[% END %]
+						</select>
+					</td>
+					<td>
+						<select id="select_section" class="new_permission">
+						[% FOREACH id IN sid_list.sort %]
+							<option value="[% sections_names.$id.id %]">[% sections_names.$id.name %]</option>
+						[% END %]
+						</select>
+					</td>
+					<td><input type="checkbox" name="read" id="read" checked="checked" class="new_permission" title="Read"></td>
+					<td><input type="checkbox" name="create" id="create" class="new_permission" title="Create"></td>
+					<td><input type="checkbox" name="update" id="update" class="new_permission" title="Update"></td>
+					<td><input type="checkbox" name="complete" id="complete" class="new_permission" title="Complete"></td>
+					<td><button id="submit_a_gs" mode="a_gs" class="associate">Add</button></td>
 				</tr>
 				[% zebra = "even" %]
-				[% FOREACH id IN gsp.keys %]
+				[% FOREACH id IN gsp.sort %]
 					[% IF zebra == "even" %]
 						[% zebra = "odd" %]
 					[% ELSIF zebra == "odd" %]

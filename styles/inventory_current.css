@@ -1,7 +1,28 @@
+.object_row.selected{
+	background-color: #757575;
+	cursor: pointer;
+}
+
+
 #select_menu{
+	width: 450px;
+	float: left;
+}
+
+#company_select_div{
+	float: left;
+}
+
+#current_object_div{
 	width: 100%;
 	height: 30px;
-	background-color: #c2c8d2;
+	background-color: #333;
+}
+
+#current_object_div label{
+	color: white;
+	font-weight: bold;
+	font-size: .9em;
 }
 
 .select_menu_item{
@@ -17,12 +38,6 @@
 	padding-right: 15px;
 	display: inline-block;
 	text-align: center;
-}
-
-#search{
-	float: right;
-	margin-top: 1px;
-	margin-right: 4px;
 }
 
 .wrapper{
@@ -67,22 +82,29 @@ td{
 	border: 1px solid black;
 }
 
-.object_detail{
-	_clear: both;
-}
-
 label.object_detail{
 	clear: left;
 	display: inline-block;
 	margin-top: 4px;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	float: left;
 	width: 200px;
+	height: 20px;
+}
+
+select.object_detail{
+	clear: left;
+	display: inline-block;
+	margin-left: 0px;
+	width: 200px;
+	height: 20px;
 }
 
 input.object_detail{
 	clear:right;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 20px;
 }
 
 h2{
@@ -94,20 +116,11 @@ h2{
 	margin-left: 10px;
 	margin-bottom: 10px;
 	margin-right: 10px;
+	width: 100%;
+	_height: 100%;
 }
 
-#property_search{
-	float: none;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 4px;
-}
-
-#property_search_button{
-	clear: right;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 4px;
+#object_summary_header_row{
+	background-color: #333;
+	color: white;
 }

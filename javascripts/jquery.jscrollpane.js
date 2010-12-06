@@ -238,9 +238,9 @@
 			}
 
 			function initialiseVerticalScroll()
-			{
-				if (isScrollableV) {
+				{
 
+				if (isScrollableV) {
 					container.append(
 						$('<div class="jspVerticalBar" />').append(
 							$('<div class="jspCap jspCapTop" />'),

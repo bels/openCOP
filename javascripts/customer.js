@@ -3,13 +3,17 @@ $(document).ready(function(){
 		cache: false
 	});
 
+	var logoutTimer = window.setTimeout('logout()', '3600000');
+
 	$("#free_date").live('focus', function(){
+		resetLogout();
 		if($(this).attr("readonly") === true){
 		} else {
 			$("#free_date").datepicker();
 		}
 	});
 	$("#free_time").live('focus', function(){
+		resetLogout();
 		if($(this).attr("readonly") === true){
 		} else {
 			$('#free_time').timepicker({
@@ -22,6 +26,7 @@ $(document).ready(function(){
 	});
 
 	$(".ticket_link").click(function(){
+		resetLogout();
 		var ticket_number = $(this).attr("id");
 		var oc = $('h4#oc').attr("value");
 		var url = "customer_ticket_lookup.pl?ticket_number=" + ticket_number + "&oc=" + oc;
@@ -34,6 +39,7 @@ $(document).ready(function(){
 	});
 
 	$("#update_ticket_button").live("click",function(){
+		resetLogout();
 		$('#add_notes_form').validate({
 			rules: {
 				new_note: {
@@ -59,3 +65,6 @@ $(document).ready(function(){
 		}
 	});
 });
+function resetLogout(){
+	logoutTimer = window.setTimeout('logout()', '3600000');
+}

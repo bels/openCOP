@@ -20,7 +20,7 @@
 
 .multiselect{
 	width: 460px;
-	height: 400px;
+	height: 250px;
 	display: none;
 }        
 
@@ -39,16 +39,76 @@ button.associate{
 	width: 457px;
 }
 
-#del_group_div{
-	_float: right;
-}
-
-.modify_group_div{
-	margin-left: 50px;
-	float: left;
-	max-width: 500px;
-	text-align: center;
-}
 .div_wrapper{
 	height: 50px;
+}
+
+.group_title{
+	width: 195px;
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 1.1em;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+#modify_group_wrapper{
+	height: 100px;
+	width: 750px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+#group_to_user{
+	height: 330px;
+	width: 750px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+#del_group_div{
+	float: left;
+	width: 300px;
+}
+
+#add_group_div{
+	float: left;
+	width: 400px;
+}
+
+#select_group_div{
+	width: 460px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ui-multiselect{
+	width: 460px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.available{
+	color: black;
 }

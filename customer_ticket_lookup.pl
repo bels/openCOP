@@ -21,12 +21,12 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
+if($authenticated == 2)
 {
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $ticket_number = $q->param('ticket_number');
 	my $oc = $q->param('oc');
-	my $query = "select * from helpdesk where ticket = ?";
+	my $query = "select * from helpdesk where ticket = ? and active";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($ticket_number);
 	my $results = $sth->fetchrow_hashref;
@@ -42,7 +42,8 @@ if($authenticated == 1)
 	my %priorities = (1 => "Low",2 =>"Normal",3 => "High",4=>"Business Critical");
 	
 	print qq(
-		<div class="ticket_details">
+		<div id="ticket_details">
+			<div id="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Test company Helpdesk - Ticket #$ticket_number</div>
 			<label>Ticket Contact:</label>$results->{'contact'}<br>
 			<label>Ticket Number:</label>$results->{'ticket'}<br>
 			<label>Ticket Status:</label>$ticket_statuses{$results->{'status'}}<br>

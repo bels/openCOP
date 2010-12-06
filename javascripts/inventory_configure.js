@@ -11,21 +11,24 @@ $(document).ready(function(){
 	});
 
 	$('#submit_add_button').bind('click',function(){
+		resetLogout();
 		submit_tp($(this));
 	});
 
 	$('#submit_del_button').bind('click',function(){
+		resetLogout();
 		submit_tp($(this));
 	});
 
 	$('.multiselect').livequery(function(){
-		$('.multiselect').multiselect();
+		$(this).multiselect();
 		$('.ui-multiselect').show();
 	});
 
 
 	$('#del_tp_select').livequery(function(){
-		$('#del_tp_select').change(function(){
+		$(this).change(function(){
+			resetLogout();
 			if($('#del_tp_select').val() == "property"){
 				load_properties();
 			} else {
@@ -35,12 +38,14 @@ $(document).ready(function(){
 	});
 
 	$('.type_select').livequery(function(){
-		$('.type_select').change(function(){
+		$(this).change(function(){
+			resetLogout();
 			load_associations();
 		});
 	});
 
 	$('#submit_a_tp').bind('click', function(){
+		resetLogout();
 		var tp_select_string = "";
 		var tp_unselect_string = "";
 		var mode = "associate";
@@ -55,7 +60,7 @@ $(document).ready(function(){
 				tp_unselect_string += $(this).attr("value") + ":";
 			}
 		});
-		$.blockUI({message: "Submitting"});
+		$.blockUI({message: "Please Wait"});
 		$.ajax({
 			type: 'POST',
 			url: 'inventory_getdata.pl',
@@ -77,8 +82,11 @@ $(document).ready(function(){
 	});
 
 });
-function load_associations(){
+function load_associations(t){
 	var type = $('#type_select').val();
+	if($('#type_select').val() == ""){
+		type = t;
+	}
 	var mode = "init";
 	$.ajax({
 		type: 'POST',
@@ -87,7 +95,7 @@ function load_associations(){
 		success: function(data){
 			$('#a_tp_append_div').text("");
 			$('#a_tp_append_div').append(data);
-			remove_error_label();
+			$('#type_select option[value="' + type + '"]').attr('selected','selected');
 		},
 		error: function(){
 			alert("Error");
@@ -104,7 +112,6 @@ function load_properties(){
 			success: function(data){
 				$('#t_tp_append_div').text("");
 				$('#t_tp_append_div').append(data);
-				remove_error_label();
 			},
 			error: function(){
 				alert("Error");
@@ -121,7 +128,6 @@ function load_types(){
 			success: function(data){
 				$('#onload_append_div').text("");
 				$('#onload_append_div').append(data);
-				remove_error_label();
 			},
 			error: function(){
 				alert("Error");
@@ -138,7 +144,6 @@ function load_types2(){
 			success: function(data){
 				$('#t_tp_append_div').text("");
 				$('#t_tp_append_div').append(data);
-				remove_error_label();
 			},
 			error: function(){
 				alert("Error");
@@ -147,16 +152,17 @@ function load_types2(){
 }
 
 function submit_tp(button){
-	which = button.attr("mode");
-	value = $('#' + which).val();
+	var t = $('#type_select').val();
+	var which = button.attr("mode");
+	var value = $('#' + which).val();
+	var errorspace = $('#errorspace');
 	if(value == "") {
 		$('.tp_return').remove();
-		$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' cannot be blank</label>').appendTo('#' + which + '_form');
+		$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' cannot be blank</label>').appendTo(errorspace);
 	} else {
-			mode = "configure";
-			type = $('#' + which + '_select').val();
-			value = $('#' + which).val();
-			$.blockUI({message: "Submitting"});			
+			var mode = "configure";
+			var type = $('#' + which + '_select').val();
+			$.blockUI({message: "Submitting"});
 			$.ajax({
 				type: 'POST',
 				url: 'inventory_submit.pl',
@@ -168,18 +174,18 @@ function submit_tp(button){
 						$('#' + which).val("");
 						$('#' + which).focus();
 						$('.tp_return').remove();
-						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo('#' + which + '_form');
+						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo(errorspace);
 						load_types();
 						load_types2();
-						load_associations();
+						load_associations(t);
 					} else if(error == "1"){
                                                 var str = data.replace(/^[\d\s]/,'');
 						$('.tp_return').remove();
-						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' already exists</label>').appendTo('#' + which + '_form');
+						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' already exists</label>').appendTo(errorspace);
 					} else if(error == "2"){
                                                 var str = data.replace(/^[\d\s]/,'');
 						$('.tp_return').remove();
-						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' does not exist</label>').appendTo('#' + which + '_form');
+						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' does not exist</label>').appendTo(errorspace);
 					}
 					$.unblockUI();
 				},
@@ -190,4 +196,3 @@ function submit_tp(button){
 			});
 	}
 }
-

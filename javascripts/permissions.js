@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	$('.delete_button').bind('click', function(){
+		resetLogout();
 		var id = $(this).attr('id');
 		var mode = "delete_permission";
 		$.blockUI({message: "Submitting"});
@@ -26,6 +27,7 @@ $(document).ready(function(){
 	});
 
 	$('.update_button').bind('click', function(){
+		resetLogout();
 		var id = $(this).attr('id');
 		var mode = "update_permission";
 		var permission_string = "";
@@ -60,6 +62,7 @@ $(document).ready(function(){
 	});
 
 	$('#submit_a_gs').bind('click', function(){
+		resetLogout();
 		var gid = $('#select_group').val();
 		var sid = $('#select_section').val();
 		var mode = "add_gs";
@@ -72,25 +75,27 @@ $(document).ready(function(){
 			}
 		});
 		$.blockUI({message: "Submitting"});
-		$.ajax({
-			type: 'POST',
-			url: 'permissions_submit.pl',
-			data: {gid: gid, sid: sid, mode: mode, permission: permission_string},
-			success: function(data){
-				var error = data.substr(0,1);
-				if(error == "0"){
-					var str = data.replace(/^[\d\s]/,'');
-				} else if(error == "1"){
-					var str = data.replace(/^[\d\s]/,'');
-					alert("Duplicate entry encountered");
+		if(gid && sid){
+			$.ajax({
+				type: 'POST',
+				url: 'permissions_submit.pl',
+				data: {gid: gid, sid: sid, mode: mode, permission: permission_string},
+				success: function(data){
+					var error = data.substr(0,1);
+					if(error == "0"){
+						var str = data.replace(/^[\d\s]/,'');
+					} else if(error == "1"){
+						var str = data.replace(/^[\d\s]/,'');
+						alert("Duplicate entry encountered");
+					}
+					$.unblockUI();
+					location.reload(true);
+				},
+				error: function(){
+					alert("Error");
+					$.unblockUI();
 				}
-				$.unblockUI();
-				location.reload(true);
-			},
-			error: function(){
-				alert("Error");
-				$.unblockUI();
-			}
-		});
+			});
+		}
 	});
 });

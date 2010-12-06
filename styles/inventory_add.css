@@ -4,12 +4,9 @@
 	width: 100%;
 }
 
-.object_form_input{
-	float: right;
-}
-
 .object_form_label{
-	float: left;
+	width: 150px;
+	text-align: right;
 }
 
 #add_object_form{
@@ -20,14 +17,19 @@
 
 #object_type_append_div{
 	min-width: 200px;
+	padding: 10px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 #submit_create_object_button{
 	display: block;
-}
-
-#property_select_div{
-	float: right;
 }
 
 .object_div{
@@ -80,30 +82,14 @@ _#right_add_object_div{
 
 .object_remove_property_button{
 	margin-top: 5px;
-	float: right;
 }
 
 #validate_error{
 	float: left;
 }
 
-.select_div{
-	clear: left;
-}
-
-.left_add_object{
-	clear: left;
-}
-
-#submit_add_property_button{
-	float: left;
-}
 
 label.error{
 	float: right;
 	color: red;
-}
-
-#object_name_input_div{
-	clear: left;
 }

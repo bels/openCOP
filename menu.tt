@@ -4,39 +4,48 @@
 				<li><a href=#>Tickets</a>
 					<ul class="subnav">
 						<li><a href="ticket.pl?mode=new">New Ticket</a></li>
-						<li><a href="ticket.pl?mode=lookup">Ticket Lookup</a></li>
-						<li><a href="work_order.pl?mode=new">New Work Order</a></li>
-						<li><a href="work_order.pl?mode=lookup">Work Order Lookup</a></li>
-						<li><a href="#">Ticket Queue</a></li>
-						<li><a href="#">Work Order Queue</a></li>
+						<li><a href="ticket.pl?mode=lookup">Ticket Queue</a></li>
+				[% IF is_admin %]
+						<li><a href="work_order_new.pl">New Work Order</a></li>
+						<li><a href="wo_queue.pl">Work Order Queue</a></li>
 					</ul>
+				[% END %]
 				</li>
+			[% IF is_admin %]
 				<li><a href=#>Reports</a>
 					<ul class="subnav">
 						<li><a href="reports.pl">Query Builder</a></li>
 					</ul>
 				</li>
+			[% END %]
 				<li><a href=#>Inventory</a>
 					<ul class="subnav">
 						<li><a href="inventory.pl?mode=add">Add</a></li>
 						<li><a href="inventory.pl?mode=current">Current</a></li>
+					[% IF is_admin %]
 						<li><a href="inventory.pl?mode=configure">Configure</a></li>
+					[% END %]
 					</ul>
 				</li>
+			[% IF is_admin %]
 				<li><a href=#>Customer Admin</a>
 					<ul class="subnav">
 						<li><a href="customer_admin.pl">Add Customer</a></li>
 						<li><a href="customer_edit.pl">Edit Customer</a></li>
 					</ul>
 				</lI>
+			[% END %]
 				<li><a href=#>Admin</a>
 					<ul class="subnav">
+					[% IF is_admin %]
+						<li><a href="work_orders.pl">Work Orders</a></li>
 						<li><a href="user_admin.pl">User Admin</a></li>
 						<li><a href="sites.pl">Companies/Sites</a></li>
 						<li><a href="global_settings.pl">Global Settings</a></li>
-						<li><a href="password.pl">Change Password</a></li>
 						<li><a href="groups.pl">Groups</a></li>
 						<li><a href="permissions.pl">Permissions</a></li>
+					[% END %]
+						<li><a href="password.pl">Change Password</a></li>
 						<li><a href="logout.pl">Logout</a></li>
 					</ul>
 				</li>

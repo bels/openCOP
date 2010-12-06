@@ -5,7 +5,6 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
-use UserFunctions;
 use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");

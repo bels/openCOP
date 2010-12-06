@@ -1,11 +1,12 @@
 $(document).ready(function(){
 	$('.multiselect').livequery(function(){
-		$('.multiselect').multiselect();
+		$(this).multiselect();
 		$('.ui-multiselect').show();
 	});
 
 	$('#select_user_select').livequery(function(){
-		$('#select_user_select').change(function(){
+		$(this).change(function(){
+			resetLogout();
 			if($('#select_user_select').val()){
 				load_associations_ug();
 			}
@@ -13,7 +14,8 @@ $(document).ready(function(){
 	});
 
 	$('#select_group_select').livequery(function(){
-		$('#select_group_select').change(function(){
+		$(this).change(function(){
+			resetLogout();
 			if($('#select_group_select').val()){
 				load_associations_gu();
 			}
@@ -21,6 +23,7 @@ $(document).ready(function(){
 	});
 
 	$('#submit_a_ug').bind('click', function(){
+		resetLogout();
 		var ug_select_string = "";
 		var ug_unselect_string = "";
 		var mode = "associate_ug";
@@ -60,6 +63,7 @@ $(document).ready(function(){
 	});
 
 	$('#add_group_button').bind('click', function(){
+		resetLogout();
 		var groupname = $('input#group_name').val();
 		var mode = "add_group";
 		$.blockUI({message: "Submitting"});
@@ -71,6 +75,7 @@ $(document).ready(function(){
 				var error = data.substr(0,1);
 				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
+					alert("Group added successfully");
 				} else if(error == "1"){
 					var str = data.replace(/^[\d\s]/,'');
 					alert("Duplicate entry encountered");
@@ -93,6 +98,7 @@ $(document).ready(function(){
 	});
 
 	$('#del_group_button').bind('click', function(){
+		resetLogout();
 		var group = $('select#delete_group_select').val();
 		var mode = "del_group";
 		$.blockUI({message: "Submitting"});
@@ -104,6 +110,7 @@ $(document).ready(function(){
 				var error = data.substr(0,1);
 				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
+					alert("Group deleted successfully");
 				} else if(error == "1"){
 					alert("Error executing delete statement");
 				}
@@ -122,6 +129,7 @@ $(document).ready(function(){
 	});
 
 	$('#submit_a_gu').bind('click', function(){
+		resetLogout();
 		var gu_select_string = "";
 		var gu_unselect_string = "";
 		var mode = "associate_gu";

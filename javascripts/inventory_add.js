@@ -2,7 +2,8 @@ $(document).ready(function(){
 	load_types3();
 
 	$('.object_remove_property_button').livequery(function(){
-		$('.object_remove_property_button').bind('click', function(){
+		$(this).bind('click', function(){
+			resetLogout();
 			$(this).prev().remove();
 			$(this).prev().remove();
 			$(this).prev().remove();
@@ -11,7 +12,9 @@ $(document).ready(function(){
 	});
 
 	$('#submit_create_object_button').livequery(function(){
-		$('#submit_create_object_button').bind('click', function(){
+		$(this).bind('click', function(e){
+			e.preventDefault();
+			resetLogout();
 			var type = $('#object_type_select').val();
 			var company = $('#object_company_select').val();
 			var name = $('#object_name').val();
@@ -31,13 +34,14 @@ $(document).ready(function(){
 				});
 				submitvalue += type + ":" + company + ":" + name;
 				submitproperty += tpid + ":" + cpid + ":" + npid;
-				$.blockUI({message: "Submitting"});
+				$.blockUI({message: "Please Wait"});
 				$.ajax({
 					type: 'POST',
 					url: 'inventory_getdata.pl',
 					data: {mode: mode, value: submitvalue, property: submitproperty},
 					success: function(data){
 						$.unblockUI();
+						location.href="inventory.pl?mode=add";
 					},
 					error: function(){
 						alert("Error");
@@ -49,12 +53,14 @@ $(document).ready(function(){
 	});
 
 	$('#submit_add_property_button').livequery(function(){
-		$('#submit_add_property_button').bind('click', function(){
+		$(this).bind('click', function(e){
+			e.preventDefault();
+			resetLogout();
 			if($('#object_type_select').val() == "" || $('#object_property_select').val() == ""){
 			} else {
 				var property = $('#object_property_select').val();
 				var mode = "add_property_field";
-				$.blockUI({message: "Submitting"});
+				$.blockUI({message: "Please Wait"});
 				$.ajax({
 					type: 'POST',
 					url: 'inventory_getdata.pl',
@@ -74,10 +80,11 @@ $(document).ready(function(){
 	});
 
 	$('#object_type_select').livequery(function(){
-		$('#object_type_select').change(function(){
+		$(this).change(function(){
+			resetLogout();
 			var type = $('#object_type_select').val();
 			var mode = "populate_create_form";
-			$.blockUI({message: "Submitting"});
+			$.blockUI({message: "Please Wait"});
 			$.ajax({
 				type: 'POST',
 				url: 'inventory_getdata.pl',

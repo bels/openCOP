@@ -1,19 +1,44 @@
 #add_user_div{
-	height: 270px;
+	height: 350px;
 	width: 375px;
-	margin-right: auto;
-	margin-left: auto;
-	margin-top: 100px;
+	margin-left: 35px;
+	margin-top: 20px;
 	padding-top: 20px;
 	padding-left: 25px;
-	background-color: #bdbdd2;
-	border: 3px solid #9696a7;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	float: left;
 }
 
-h2{
-	width: 125px;
+#user_to_group{
+	height: 350px;
+	width: 475px;
+	margin-left: 35px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	float: left;
+}
+
+h3{
+	width: 325px;
 	margin-right: auto;
 	margin-left: auto;
+	text-align: center;
 }
 
 label{

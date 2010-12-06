@@ -13,6 +13,7 @@
 	border: 3px ridge #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 label{
@@ -77,10 +78,6 @@ input{
 	width: 100%;
 }
 
-.ticket_link{
-	margin-left: 60px;
-}
-
 #right label{
 	width: 180px;
 }
@@ -137,7 +134,7 @@ input.error{
 
 #add_customer_div{
 	height: 340px;
-	width: 375px;
+	width: 400px;
 	color: white;
 	margin-right: auto;
 	margin-left: auto;
@@ -150,6 +147,7 @@ input.error{
 	border: 3px ridge #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 #customer_admin_form h2{
@@ -162,6 +160,13 @@ input.error{
 	display: inline-block;
 	width: 170px;
 	margin-bottom: 10px;
+}
+
+#customer_admin_form label.error{
+	display: inline-block;
+	font-size: 1.2em;
+	width: auto;
+	margin-bottom: 0px;
 }
 
 #customer_admin_form #submit_button{
@@ -207,6 +212,13 @@ h3{
 	background-color: #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	width: 100px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 }
 
 #ticket_group a{
@@ -226,4 +238,27 @@ h3{
 
 .note{
 	white-space: pre;
+}
+
+#ticket_details{
+	width: 1000px;
+	margin-top: 15px;
+	border: 2px solid #333;
+}
+
+#new_note{
+	margin-left: 15px;
+}
+
+#update_ticket_button{
+	margin-left: 15px;
+}
+
+h4{
+	margin-left: 15px;
+}
+
+.note_div{
+	padding-left: 15px;
+	padding: 5px;
 }

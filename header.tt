@@ -5,9 +5,15 @@
 		<META name="keywords" content="[% keywords %]">
 		<META name="description" content="[% description %]">
 		<title>[% title %]</title>
+		<link rel="stylesheet" href="styles/smoothness/jquery-ui-1.8.5.custom.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="styles/layout.css" type="text/css" media="screen">
 		[% FOREACH style IN styles %]
-	        <link rel="stylesheet" href="[% style %]" type="text/css" media="screen">
-        	[% END %]
+		<link rel="stylesheet" href="[% style %]" type="text/css" media="screen">
+		[% END %]
+		<script type="text/javascript" src="javascripts/jquery.js"></script>
+		<script type="text/javascript" src="javascripts/jquery.livequery.js"></script>
+		<script type="text/javascript" src="javascripts/jquery-ui-1.8.5.custom.min.js"></script>
+		<script type="text/javascript" src="javascripts/jquery.hoverIntent.minified.js"></script>
 		[% FOREACH javascript IN javascripts %]
 		<script type="text/javascript" src="[% javascript %]"></script>
 		[% END %]

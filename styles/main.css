@@ -2,6 +2,48 @@
      display: none;
 }
 
-.lower{
-	z-index: -1;
+.drive_data{
+	display: inline-block;
+	float: left;
+	width: 185px;
+}
+
+.data_title{
+	font-weight: bold;
+	font-size: 1em;
+}
+
+.load_data{
+	display: inline-block;
+	float: left;
+	width: 175px;
+}
+
+.diskio_data{
+	display: inline-block;
+	float: left;
+	width: 85px;
+}
+
+.server_data_row{
+	width: 100%;
+	height: 35px;
+	font-size: .8em;
+	margin-bottom: 5px;
+}
+
+.memory_data{
+	display: inline-block;
+	float: left;
+	width: 330px;
+}
+
+.diskio_title{
+	display: inline-block;
+	float: left;
+	width: 255px;
+}
+
+.data_title.memory_data{
+	width: 210px;
 }

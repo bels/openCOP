@@ -32,16 +32,18 @@ my $result = $sth->fetchall_hashref('id');
 ########################
 
 print "Content-type: text/html\n\n";
-print "Enable/disable addtional modules<br/>";
+print "<h4>Enable/disable addtional modules</h4>";
 #### creating list of enabled and disabled modules
 my $enabled;
 foreach my $module (@modules){
 	$enabled = 0;
 	foreach my $key (%$result){
 		chomp($module);
-		if($module eq $result->{$key}->{'module_name'}){
-			print qq(<label for="$key" class="module_label">$result->{$key}->{'module_name'}</label><input type=checkbox name="$key" id="$key" class="module" checked><br/>);
-			$enabled = 1;
+		if(defined($result->{$key}->{'module_name'})){
+			if($module eq $result->{$key}->{'module_name'}){
+				print qq(<label for="$key" class="module_label">$result->{$key}->{'module_name'}</label><input type=checkbox name="$key" id="$key" class="module" checked><br/>);
+				$enabled = 1;
+			}
 		}
 	}
 	if($enabled == 0){

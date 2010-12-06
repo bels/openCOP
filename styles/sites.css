@@ -1,7 +1,80 @@
+#wrapper{
+	width: 1100px;
+	height: 645px;
+	min-width: 1100px;
+}
+
 #left_site{
 	float: left;
 }
 
 #right_site{
+	margin-left: 15px;
 	float: left;
+}
+
+#left_site h3{
+	width: 170px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#right_site h3{
+	width: 230px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+label{
+	margin-right: 10px;
+}
+
+a{
+	color: white;
+}
+
+.tooltip{
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+#wrapper div.style{
+	height: 150px;
+	width: 450px;
+	margin-left: 50px;
+	margin-top: 20px;
+	padding-top: 20px;
+	padding-left: 25px;
+	color: white;
+	background-color: #333;
+	background-image: url('../images/login_box_gradient.jpg');
+	background-repeat: repeat-x;
+	border: 3px ridge #333;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+}
+
+#behind_popup{
+	display:none;
+	position:fixed;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	background:#000000;
+	border:1px solid #cecece;
+	z-index:1;
+}
+
+#confirm_dialog{
+	display: none;
+	position:fixed;
+	height:530px;
+	width:408px;
+	background:#FFFFFF;
+	border:2px solid #cecece;
+	z-index:2;
+	padding:12px;
+	font-size:13px;
 }

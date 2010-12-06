@@ -49,6 +49,8 @@ if($authenticated == 1)
 				print "1";
 			}
 		} elsif($vars->{'action'} =~ m/del/){
+			warn $vars->{'type'};
+			warn $vars->{'value'};
 			my $id;
 			if($vars->{'type'} eq "template"){
 				$id = "id";
@@ -56,11 +58,13 @@ if($authenticated == 1)
 				$id = "id";
 			}
 			$query = "select $vars->{'type'} from $vars->{'type'} where $id = '$vars->{'value'}';";
+			warn $query;
 			$sth = $dbh->prepare($query) or die "Could not prepare query in $0";
 			$sth->execute;
 			my $result = $sth->fetchrow_hashref;
 			if ($result->{$vars->{'type'}}) {
-				$query = "delete from $vars->{'type'} $vars->{'type'} where $id = '$vars->{'value'}';";
+				$query = "delete from $vars->{'type'} where $id = '$vars->{'value'}';";
+			warn $query;
 				$sth = $dbh->prepare($query) or die "Could not prepare query in $0";
 				$sth->execute;
 				print "Content-type: text/html\n\n";

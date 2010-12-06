@@ -24,25 +24,19 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
+if($authenticated == 2)
 {
 	my $data = $q->Vars;
-	my $userid;
-	
-	my $user = CustomerFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-
-	my $alias = $session->get_name_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $userid = $user->get_user_info(alias => $alias);
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
 	my $data = $q->Vars;
-	my $id = $userid->{'id'};
 	
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $query;
 	my $closed; #used to toggle something in the template file
 	if($data->{'status'} eq "open")
 	{
-		$query = "select * from helpdesk where submitter = '$id' and status <> 6 and status <> 7";
+		$query = "select * from helpdesk where submitter = '$id' and status <> 6 and status <> 7 and active";
 		$closed = 0;
 	}
 	if($data->{'status'} eq "closed")
@@ -55,8 +49,8 @@ if($authenticated == 1)
 	$sth->execute;
 	my $results = $sth->fetchall_arrayref;
 	
-	my @styles = ("styles/layout.css", "styles/customer.css","styles/jquery.jscrollpane.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/customer.js","javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/jquery-ui-timepicker-addon.min.js","javascripts/jquery.livequery.js");
+	my @styles = ( "styles/customer.css","styles/jquery.jscrollpane.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/customer.js","javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery-ui-timepicker-addon.min.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 

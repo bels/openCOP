@@ -1,20 +1,32 @@
 	<div id="top">
+		<div id="table_title">
+			<span id="report_name">[% table_title %]</span>
+		</div>
 		<table id="res_table">
-			<thead>
-				<tr>
+			<thead id="table_head">
+				<tr id="table_head_row">
 				[% FOREACH column IN columns.keys %]
-					<th>[% column %]</th>
+					<th class="table_head_cell">[% column %]</th>
 				[% END %]
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="table_body">
 			[% FOREACH item IN sorted_hash %]
-				<tr>
+				<tr class="table_row" name="[% item %]">
 				[% FOREACH column IN columns.keys %]
-					<td>[% results.$item.$column %]</td>
+					<td class="table_cell">[% results.$item.$column %]</td>
 				[% END %]
 				</tr>
 			[% END %]
 			</tbody>
 		</table>
+	</div>
+	<div id="buttons">
+		<span id="export_as" name="export_as">Export as: </span>
+		<select id="export_select">
+			<option value=""></option>
+			<option value="csv">Comma Seperated Value file</option>
+		</select>
+		<span id="send_email">Send in email</span><input type="checkbox" name="email" id="email" title="Send in email">
+		<button id="export_button">Save</button>
 	</div>

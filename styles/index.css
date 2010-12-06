@@ -13,6 +13,7 @@
 	border: 3px ridge #333;
 	border-radius: 15px;
 	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 
 label{
@@ -59,5 +60,9 @@ input{
 	margin-top: 10px;
 	font-size: 1.1em;
 	text-align: center;
+	display: none;
+}
+
+#unsupported_warning{
 	display: none;
 }

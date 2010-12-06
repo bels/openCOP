@@ -1,0 +1,53 @@
+.short_label{
+	display: inline-block;
+	width: 90px;
+	text-align: right;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+
+#problem_details{
+	width: 890px;
+	margin-top: 15px;
+	margin-left: 15px;
+	border: 1px solid black;
+}
+
+#problem_details label{
+	margin-left: 35px;
+	margin-top: 5px;
+	display: inline-block;
+}
+
+#problem_details textarea{
+	margin-left: 35px;
+}
+
+#problem_details button{
+	margin-left: 35px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#author_div{
+	width: 890px;
+	border: 1px solid black;
+	margin-left: 15px;
+}
+
+#author_div label{
+	margin-bottom: 10px;
+	display: inline-block;
+}
+
+#wo_label{
+	margin-left: 15px;
+}
+
+.form_title{
+	width: 100%;
+	color: white;
+	background-color: #333;
+	height: 30px;
+	font-size: 1.2em;
+}

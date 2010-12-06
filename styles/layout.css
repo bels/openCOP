@@ -17,7 +17,7 @@ body{
 	float: left;
 	display: inline;
 	height: 60px;
-	width: 60px;
+	width: 83px;
 	margin-left: 15px;
 }
 
@@ -60,7 +60,7 @@ body{
      width: 920px;  
      background: #222;  
      font-size: 1.1em;  
-     background: url(topnav_bg.gif) repeat-x;  
+     background: repeat-x;  
  }  
  ul.topnav li {  
      float: left;  
@@ -76,7 +76,7 @@ body{
      float: left;  
  }  
  ul.topnav li a:hover{  
-     background: url(topnav_hover.gif) no-repeat center top;  
+     background: no-repeat center top;  
  }  
  ul.topnav li span { /*--Drop down trigger styles--*/  
      width: 17px;  
@@ -106,16 +106,20 @@ body{
  html ul.topnav li ul.subnav li a {  
      float: left;  
      width: 145px;  
-     background: #333 url(dropdown_linkbg.gif) no-repeat 10px center;  
+     background: #333 no-repeat 10px center;  
      padding-left: 20px;  
      font-size: .8em;
  }  
  html ul.topnav li ul.subnav li a:hover { /*--Hover effect for subnav links--*/  
-     background: #222 url(dropdown_linkbg.gif) no-repeat 10px center;  
+     background: #222 no-repeat 10px center;  
  }
  
  #drop_shadow{
 	width: 100%;
 	height: 10px;
 	background-image: url('../images/drop_shadow.png');
+}
+
+.lower{
+	z-index: -1;
 }

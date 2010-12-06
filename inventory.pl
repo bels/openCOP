@@ -7,6 +7,7 @@ use lib './libs';
 use CGI;
 use ReadConfig;
 use SessionFunctions;
+use UserFunctions;
 use DBI;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
@@ -21,12 +22,16 @@ my $authenticated = 0;
 
 if(%cookie)
 {
-	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},sid => $cookie{'sid'},session_key => $cookie{'session_key'});
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
 if($authenticated == 1)
 {
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
 	my $query;
+
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $sth;
 	my $title;
@@ -34,8 +39,8 @@ if($authenticated == 1)
 	my $properties;
 	my $file;
 
-	my @styles = ("styles/layout.css","styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/jquery.js","javascripts/main.js","javascripts/jquery.hoverIntent.minified.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-1.8.5.custom.min.js","javascripts/ui.multiselect.js","javascripts/jquery.livequery.js");
+	my @styles = ("styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
+	my @javascripts = ("javascripts/main.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js");
 
 	my $mode = $q->param('mode');
 	if ($mode eq "add"){
@@ -46,8 +51,8 @@ if($authenticated == 1)
 	} elsif ($mode eq "current"){
 		$title = $config->{'company_name'} . " - Inventory Current";
 		$file = "inventory_current.tt";
-		push(@styles,"styles/inventory_current.css","styles/jquery.jscrollpane.css");
-		push(@javascripts,"javascripts/inventory_current.js","javascripts/jquery.tablesorter.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery.livequery.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js");
+		push(@styles,"styles/jquery.jscrollpane.css","styles/inventory_current.css");
+		push(@javascripts,"javascripts/jquery.tablesorter.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/inventory_current.js");
 	} elsif ($mode eq "configure"){
 		$title = $config->{'company_name'} . " - Inventory Configure.";
 		$file = "inventory_configure.tt";
@@ -56,10 +61,10 @@ if($authenticated == 1)
 	} else {
 		$title = $config->{'company_name'} . " - Inventory Index";
 		$file = "inventory_index.tt";
-		push(@styles,"styles/inventory_index.css");
-		push(@javascripts,"javascripts/inventory_index.js");
+	#	push(@styles,"styles/inventory_index.css");
+	#	push(@javascripts,"javascripts/inventory_index.js");
 	}
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, types => $types};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, types => $types, is_admin => $user->is_admin(id => $id)};
 
 	print "Content-type: text/html\n\n";
 

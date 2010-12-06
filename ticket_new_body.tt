@@ -1,53 +1,52 @@
 		<h2>[% company_name %] Helpdesk - Input a new ticket</h2>
 		<form id="newticket">
 			<div id="author_div">
-				<h3>General Information</h3>
+				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;General Information</div>
 				<label for="site" class="short_label">Site:</label>
 				<select name="site" size="1" tabindex="1" id="site">
 					<option></option>
-					[% FOREACH site IN site_list.keys %]
-					<option value="[% site %]">[% site_list.$site.name %]</option>
+					[% FOREACH site IN ssite %]
+					<option value="[% site_list.$site.id %]">[% site_list.$site.name %]</option>
 					[% END %]
 				</select>
 				<br />
-				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" tabindex=2><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
+				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" value="[% info.first _ ' ' _ info.last %]" tabindex=2><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
 				<label for="barcode" class="short_label">Barcode:</label><input type="text" name="barcode" id="barcode" tabindex=3><a href="tips.pl?102" class="tooltip" target="_tips">?</a>
 				<label for="serial" class="short_label">Serial:</label><input type="text" name="serial" id="serial" tabindex=4><a href="tips.pl?102" class="tooltip" target="_tips">?</a><br />
-				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" tabindex=5><a href="tips.pl?103" class="tooltip" target="_tips">?</a>
+				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" value="[% info.first _ ' ' _ info.last %]" tabindex=5><a href="tips.pl?103" class="tooltip" target="_tips">?</a>
 				<label for="phone" class="short_label">Phone:</label><input type="text" name="phone" id="phone" tabindex=6><a href="tips.pl?104" class="tooltip" target="_tips">?</a>
-				<label for="email" class="short_label">Email:</label><input type="text" name="email" id="email" tabindex=7><a href="tips.pl?105" class="tooltip" target="_tips">?</a><br />
+				<label for="email" class="short_label">Email:</label><input type="text" name="email" value="[% info.email %]" id="email" tabindex=7><a href="tips.pl?105" class="tooltip" target="_tips">?</a><br />
 				<label for="location" class="short_label">Location:</label><input type="text" name="location" id="location" tabindex=8><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
 				<br />
 				<label for="priority" class="short_label">Priority:</label>
 				<select name="priority" size="1" tabindex="9" id="priority">
-					<option></option>
-					[% FOREACH priority IN priority_list.keys %]
-					<option value="[% priority_list.$priority.severity %]">[% priority_list.$priority.description %]</option>
-					[% END %]
+				[% FOREACH i IN priority_list.keys %]
+					[% j = loop.count %]
+					<option value="[% j %]" [% IF j == 2 %]selected[% END %]>[% priority_list.$j.description %]</option>
+				[% END %]
 				</select>
 				<a href="tips.pl?107" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="10" id="section">
-					<option></option>
-					[% FOREACH section IN section_create_list.keys %]
-					<option value="[% section %]">[% section_create_list.$section.name %]</option>
+					[% FOREACH section IN ssection %]
+					<option value="[% section_create_list.$section.section_id %]">[% section_create_list.$section.name %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?108" class="tooltip" target="_tips">?</a>
 				<label for="tech" class="short_label">Tech:</label>
 				<select name="tech" size="1" tabindex="10" id="tech">
 					<option></option>
-					[% FOREACH tech IN tech_list.keys %]
-					<option value="[% tech %]">[% tech_list.$tech.alias %]</option>
+					[% FOREACH tech IN stech %]
+					<option value="[% tech_list.$tech.id %]">[% tech_list.$tech.alias %]</option>
 					[% END %]
 				</select>
 				<a href="tips.pl?111" class="tooltip" target="_tips">?</a>
 			</div>
 			<div id="problem_details">
-				<h3>Problem Details</h3>
+				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Problem Details</div>
 				<label for="problem">Problem:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
-				<textarea id="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
-				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?110" class="tooltip" target="_tips">?</a><br />
+				<textarea id="tech_problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
+				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?112" class="tooltip" target="_tips">?</a><br />
 				<textarea  id="troubleshoot" style="width: 690px;" cols="80" rows="5" name="troubleshoot" tabindex="12"></textarea> <br />
 				<button type="button" id="submit_button">Submit</button>
 			</div>

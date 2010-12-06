@@ -1,41 +1,44 @@
 #!/usr/bin/env perl
 
 use strict;
-use warnings;
-use YAML ();
+use lib './libs';
 use CGI;
+use ReadConfig;
+use SessionFunctions;
 use DBI;
 
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+
+$config->read_config;
+
+my $session = SessionFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 my $q = CGI->new();
+my %cookie = $q->cookie('session');
 
-my $config;
-if (-e "config.yml")
+my $authenticated = 0;
+
+if(%cookie)
 {
-	$config = YAML::LoadFile("config.yml");
-}
-else
-{
-	die "Config file (config.yml) does not exist or the permissions on it are not correct.\n";
+	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-my $sites = $config->{'sites'};
-my @new_sites = @$sites; #sometype of evaluating needs to be done here.  If the sites array is empty in the config file this breaks.
-push(@new_sites,$q->param('site_name'));
+if($authenticated == 1){
+	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+	my $site_level = $q->param('site_level');
+	my $query = "select * from site_level where id = ?";
+	my $sth = $dbh->prepare($query);
+	$sth->execute($site_level);
+	my $results = $sth->fetchrow_hashref;
 
-$config->{'sites'} = \@new_sites;
+	my $site_name = $q->param('site_name');
+	$query = "insert into site (level,name) values (?,?)";
+	$sth = $dbh->prepare($query);
+	$sth->execute($results->{'id'},$site_name);
+	
+	print $q->redirect(-URL=> "sites.pl?success=1");
+} elsif($authenticated == 2){
+        print $q->redirect(-URL => $config->{'index_page'})
+} else {
+	print $q->redirect(-URL => $config->{'index_page'});
+}
 
-YAML::DumpFile('config.yml', $config);
-
-my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-my $site_level = $q->param('site_level');
-my $query = "select * from site_level where type = '$site_level'";
-my $sth = $dbh->prepare($query);
-$sth->execute;
-my $results = $sth->fetchrow_hashref;
-
-my $site_name = $q->param('site_name');
-$query = "insert into site (level,name) values ('$results->{'id'}','$site_name')";
-$sth = $dbh->prepare($query);
-$sth->execute;
-
-print $q->redirect(-URL=> "sites.pl?success=1");

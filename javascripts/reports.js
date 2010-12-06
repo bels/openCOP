@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	$('.add_column').livequery(function(){
 		$(this).bind('click',function(){
+			resetLogout();
 			var temp = $(this).prev().children("select:last-child");
 			var id_num;
 			(temp.attr('id') ? id_num = temp.attr('id') : id_num = 99);
@@ -11,11 +12,13 @@ $(document).ready(function(){
 	});
 	$('.del_column').livequery(function(){
 		$('.del_column').bind('click',function(){
+			resetLogout();
 			$(this).prev().prev().children("select:last-child").remove();
 		});
 	});
 	$('.add_table').livequery(function(){
 		$(this).bind('click',function(){
+			resetLogout();
 			var table_num;
 			var temp = $(this).parent().find("select.table");
 			(temp.attr('id') ? table_num = temp.attr('id') : table_num = 299);
@@ -118,6 +121,7 @@ $(document).ready(function(){
 	});
 	$('.del_table').livequery(function(){
 		$(this).bind('click',function(){
+			resetLogout();
 			if($(this).parent().prev('div.join_div').length && !$(this).parent().next('div.join_div').length){
 				$(this).parent().prev('div.join_div').append("<button id=\"205\" class=\"add_table\">+</button>");
 			} else if(!$(this).parent().next('div.join_div').length){
@@ -199,6 +203,7 @@ $(document).ready(function(){
 	});
 	$('.add_where').livequery(function(){
 		$(this).bind('click',function(){
+			resetLogout();
 			$(this).remove();
 			$('.where_div').append("<span>Where</span>");
 			var where_select = "<div class=\"where\"><span class=\"fl\"> </span><select name=\"700\" class=\"all_columns\"></select><select name=\"800\" class=\"operator\"></select><input type=\"text\" name=\"900\" class=\"where_input\"><button id=\"207\" class=\"del_where\">-</button></div>";
@@ -208,6 +213,7 @@ $(document).ready(function(){
 	});
 	$('.del_where').livequery(function(){
 		$(this).bind('click',function(){
+			resetLogout();
 			var where_text = $(this).parent().prev('span');
 			if(where_text.length){
 				var next_where = $(this).parent().next('.where');
@@ -251,6 +257,7 @@ $(document).ready(function(){
 
 	$('.andor_select').livequery(function(){
 		$('.andor_select').change(function(){
+			resetLogout();
 			var ac = $(this).prev().children("select.all_columns");
 			var op = $(this).prev().children("select.operator");
 			var wi = $(this).prev().children("input.where_input");
@@ -318,7 +325,7 @@ $(document).ready(function(){
 				alert("Error");
 			}
 		});
-		$('#from_div select.table').change(function(){
+		$(this).change(function(){
 
 		var all_columns_select = $(this);
 		$('div select.table').each(function(){
@@ -430,7 +437,8 @@ $(document).ready(function(){
 				alert("Error");
 			}
 		});
-		$('.join_div select.table').change(function(){
+		$(this).change(function(){
+			resetLogout();
 			populate_select_columns();
 			var mode = "first_join";
 			var table = $(this).val();
@@ -506,6 +514,7 @@ $(document).ready(function(){
 		});
 	});
 	$('.add_other').change(function(){
+		resetLogout();
 		var mode;
 		if($('.add_other').val() == "order by"){
 			var mode = "second_join";
@@ -564,7 +573,8 @@ $(document).ready(function(){
 		}
 	});
 	$('#submit_div button').bind('click',function(){
-	//	alert($.toJSON($('#select_div select.column').serializeObject()));
+		alert($.toJSON($('#select_div select.column').serializeObject()));
+		resetLogout();
 		var mode = $(this).attr('id');
 		var h = {};
 		h['select_columns'] = $('#select_div select.column').serializeObject();
@@ -572,13 +582,21 @@ $(document).ready(function(){
 		h['joins'] = $('select.join_column').serializeObject();
 		h['where'] = $('.where').children().serializeObject();
 		h['other'] = $('#fake_form').children().serializeObject();
+		var report_name = $('input#as').val();
 		$.ajax({
 			type: 'POST',
 			url: 'build_sql.pl',
-			data: {mode: mode, data: $.toJSON(h)},
+			data: {mode: mode, data: $.toJSON(h), report_name: report_name},
 			success: function(data){
-				document.write(data);
-				document.close();
+				var error = data.substr(0,1);
+				if(error == "1"){
+					var str = data.replace(/^[\d\s]/,'');
+					location.reload(true);
+				} else if(error == "2"){
+					var str = data.replace(/^[\d\s]/,'');
+					document.write(str);
+					document.close();
+				}
 			},
 			error: function(){
 				alert("Error");

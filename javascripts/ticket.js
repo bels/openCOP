@@ -13,6 +13,7 @@ $(document).ready(function(){
 
 	if($('.ticket_lookup').length){
 		$('.section_header_div').bind('click',function(){
+			resetLogout();
 			$(this).next(".ticket_lookup").toggle();
 			var C = $(this).next(".ticket_lookup");
 			var section = C.attr("id");
@@ -39,11 +40,13 @@ $(document).ready(function(){
 			pane.reinitialise();
 		});
 		$('.ticket_summary').livequery(function(){
-			$('.ticket_summary').tablesorter();
+			$(this).tablesorter();
 		});
+		$('.toggle_link:not(:first)').children().toggle();
 	};
 
 	$("#submit_button").click(function(){
+		resetLogout();
 		validateTicket();		
 		if($("#newticket").valid())
 		{
@@ -73,8 +76,17 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	$('.lookup_row').live("mouseover mouseout",function(event){
+		if(event.type == 'mouseover'){	
+			$(this).addClass('selected');
+		} else {
+			$(this).removeClass('selected');
+		}
+	});
 	
 	$(".lookup_row").live("click",function(){
+		resetLogout();
 		var ticket_number = $(this).children(".row_ticket_number").text();
 		var url = "ticket_details.pl?ticket_number=" + ticket_number;
 		var details_pane = $("#ticket_details").jScrollPane({
@@ -87,7 +99,8 @@ $(document).ready(function(){
 		$("#ticket_details").css("display","block");
 	});
 	$("#customer_submit_button").click(function(){
-		validateTicket();		
+		resetLogout();
+		validateTicket();
 		if($("#newticket").valid())
 		{
 			$.blockUI({message: "Submitting"});
@@ -138,4 +151,38 @@ $(document).ready(function(){
 			}
 		});
 	}
+	
+	$(".ticket_section_toggle").click(function(){
+		resetLogout();
+		$(this).prev('a').children('.toggle_img').toggle();
+	});
+	
+	$(".toggle_link").click(function(){
+		resetLogout();
+		$(this).children().toggle();
+	});
+	
+	$("#search_box").click(function(){
+		$(this).val("");
+	});
+	
+	$("#search_button").click(function(e){
+		e.preventDefault();
+		$(".ticket_lookup").each(function(){
+			var C = $(this);
+			var section = C.attr("id");
+			var pane = C.jScrollPane({
+				showArrows: true,
+				maintainPosition: false
+			}).data('jsp');
+			var search_criteria = $("#search_box").val();
+			var url = "lookup_ticket.pl?section=" + section + "&search=" + escape(search_criteria);
+			pane.getContentPane().load(url,function(data){
+				pane.reinitialise();
+			});
+			$('.ticket_summary').livequery(function(){
+				$(this).tablesorter();
+			});
+		});
+	});
 });

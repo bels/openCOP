@@ -30,6 +30,6 @@
 			</form>
 		</div>
 		<div id="submit_div">
-			<button id="run">Run once</button><button id="save">Save query</button>
+			<button id="run">Run once</button><button id="save">Save query</button><span id="as_text" name="as_text">as </span><input type="text" id="as" name="as">
 		</div>
 	</div>

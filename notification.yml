@@ -10,3 +10,4 @@ ticket_close: Your ticket has been closed by our technicians.  If this is a mist
 notify_tech: A ticket has been assigned to you.
 company_name: Test Company
 new_user: Happy welcome message which Justin will write.
+send_attachment: Your file is attached.

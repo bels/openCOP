@@ -1,0 +1,37 @@
+<div id="wo_name_div">
+	<label for="wo_name_input">Name this work order</label><input type="text" id="wo_name_input" name="wo_name_input">
+</div>
+<div id="wo_tabs">
+	<ul>
+		<li id="tab1" class="tab"><a href="#content1">Step 1</a></li>
+		<li id="new_tab" class="tab"><a href="#new">New Step</a></li>
+	</ul>
+	<div id="content1" class="content">
+		<h2>[% company_name %] Helpdesk - Create a new work order template</h2>
+		<form class="newwo">
+			<div class="author_div">
+				<h3>General Information</h3>
+				<label for="requires" class="short_label">Requires:</label>
+				<select name="requires" size="1" tabindex="9" class="requires">
+					<option></option>
+				</select>
+				<a href="tips.pl?309" class="tooltip" target="_tips">?</a>
+				<label for="section" class="short_label">Section:</label>
+				<select name="section" size="1" tabindex="11" class="section">
+					[% FOREACH section IN scl.sort %]
+					<option value="[% section_create_list.$section.section_id %]">[% section_create_list.$section.name %]</option>
+					[% END %]
+				</select>
+				<a href="tips.pl?109" class="tooltip" target="_tips">?</a>
+			</div>
+			<div class="problem_details">
+				<h3>Problem Details</h3>
+				<label for="problem">Work Requested:</label><a href="tips.pl?310" class="tooltip" target="_tips">?</a><br />
+				<textarea class="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
+				<button type="button" class="create_button">Create Work Order</button>
+			</div>
+		</form>
+	</div>
+	<div id="new">
+	</div>
+</div>

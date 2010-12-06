@@ -1,0 +1,5 @@
+User_Alias	WWW = www
+Runas_Alias	OPENCOP = opencop
+Cmnd_Alias	CRONTAB = /usr/bin/crontab
+WWW	ALL = (OPENCOP) NOPASSWD: CRONTAB, NOPASSWD: /usr/local/www/openCOP/
+

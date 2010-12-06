@@ -26,12 +26,12 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $site_name = uri_unescape($q->param('delete_site_name'));
+	my $vars = $q->Vars;
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "update site set deleted = 1 where name = '$site_name'";
+	my $query = "update site set deleted = true where id = ?";
 	my $sth = $dbh->prepare($query);
-	$sth->execute;
+	$sth->execute($vars->{'delete_site_name'});
 
 	print $q->redirect(-URL=> "sites.pl?delete_site_success=1");
 }

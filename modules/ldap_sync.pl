@@ -37,12 +37,27 @@ my $query = "select count(*) from users where alias = ?";
 my $sth = $dbh->prepare($query);
 foreach my $entry ($result->entries)
 {
-	my $cn = $entry->get_value('cn');
-	$sth->execute($cn);
+	if(defined($config->{'directory_type'})){
+		if($config->{'directory_type'} =~ m/AD/i)
+		{
+			my $sam = $entry->get_value('sAMAccountName'); #this more than likely is the same as the login name for Active Directory because of legacy stuff
+			$sth->execute($sam);
+		} elsif($config->{'directory_type') =~ m/eDirectory/i){
+			my $cn = $entry->get_value('cn'); #eDirectory looks to use cn as the login name
+			$sth->execute($cn);
+		} else {
+			my $login = $entry->get_value($config->{'directory_login_attribute'}); #this should be for other ldap directory servers.  Hopefully those admins know what attribute is used for logins
+			$sth->execute($login);
+		}
+	} else {
+		#die gracefully
+		warn "Config is screwed.  Missing ldap information";
+	}
+		
 	my $result = $sth->fetchrow_hashref;
 	if($result->{'count'} == 0)
 	{
-		my $query = "select count(*) from customers where alias = ?";
+		my $query = "select count(*) from users where alias = ?";
 		my $sth = $dbh->prepare($query);
 		$sth->execute($cn);
 		my $result = $sth->fetchrow_hashref;
@@ -53,7 +68,7 @@ foreach my $entry ($result->entries)
 			my $email;
 			if(defined($entry->get_value('mail'))){$email = $entry->get_value('mail');} #where AD stores the email address
 			if(defined($entry->get_value('email'))){$email = $entry->get_value('email');} #where openLDAP stores the email address
-			my $query = "insert into customers (first,last,email,alias) values ('$first','$last','$email','$cn')";
+			my $query = "insert into users (first,last,email,alias) values ('$first','$last','$email','$cn')";
 			my $sth = $dbh->prepare($query);
 			$sth->execute;
 		}
@@ -61,38 +76,43 @@ foreach my $entry ($result->entries)
 }
 
 sub enable{
+	my @temp = split('\/',$0);
+	my $thisfile = pop(@temp);
+	chomp($thisfile);
+
 	my $os = qx(uname);
 	chomp($os);
-	my $file = "opencop_crontab";
-	my $crontab = qx(crontab -l);
+
+	my $file = "/tmp/opencop/opencop_crontab";
 	my $path = qx(pwd);
 	chomp($path);
 	my $complete_path = $path . "/modules/ldap_sync.pl\n";
-	open FILE, ">$file";
-	print FILE $crontab ."* 23 * * * /usr/bin/env perl $complete_path";
+
+	open NEWCRON, ">>/tmp/opencop/" . $thisfile . "_schedule";
+	print NEWCRON "* 23 * * * /usr/bin/env perl $complete_path";
+	close NEWCRON;
+
+	open FILE, ">>$file";
+	print FILE "add:/tmp/opencop/" . $thisfile  . "_schedule\n";
 	close(FILE);
-	qx(crontab $file);
-	qx(rm $file);
+
+	my $rmfile = "/tmp/opencop/" . $thisfile . "_schedule";
+	qx(chmod 777 $file);
+	qx(chmod 777 $rmfile);
 	exit;
 }
 
 sub disable{
-	my $crontab = qx(crontab -l);
-	chomp($crontab);
-	my @crontabs = split("\n",$crontab);
-	my $file = "opencop_crontab";
-	open FILE, ">$file";
-	foreach (@crontabs){
-		if($_ =~ m/ldap_sync.pl/)
-		{
-		}
-		else
-		{
-			print FILE "$_\n";
-		}
-	}
+	my @temp = split('\/',$0);
+	my $thisfile = pop(@temp);
+	chomp($thisfile);
+
+	my $file = "/tmp/opencop/opencop_crontab";
+	open FILE, ">>$file";
+	print FILE "remove:" . $thisfile . "\n";
 	close(FILE);
-	qx(crontab $file);
-	qx(rm $file);
+
+	qx(chmod 777 $file);
+
 	exit;
 }
