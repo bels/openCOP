@@ -39,7 +39,7 @@ if($action eq 'enable'){
 	my $query = "insert into enabled_modules (module_name,filename) values(?,?)";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($module_name,$filename);
-	
+
 	qx(./modules/$filename enable);
 }
 

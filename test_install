@@ -82,7 +82,7 @@ if [ $OSVER == "FreeBSD" ]; then
 	echo -en "done\nSetting up postgres ... "
 	su - pgsql -c "cd $INSTALL_DIR/sql && ./setup_postgresql.sh" || die "Could not execute setup_postgresql.sh"
 	echo -en "done\nCreating service account ... "
-	echo "opencop" | pw useradd -q -n opencop -g www -s bash -d /home/opencop -c 'openCOP service account' -h 0
+	echo "opencop" | pw useradd opencop -q -n opencop -g www -s csh -m -d /home/opencop -c 'openCOP service account' -h 0
 	if [ $? == 0 ]; then
 		echo "Created user opencop."
 	else

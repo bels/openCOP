@@ -64,20 +64,20 @@ sub enable{
 	my $os = qx(uname);
 	chomp($os);
 	my $file = "opencop_crontab";
-	my $crontab = qx(crontab -l);
+	my $crontab = qx(sudo -u opencop crontab -l);
 	my $path = qx(pwd);
 	chomp($path);
 	my $complete_path = $path . "/modules/ldap_sync.pl\n";
 	open FILE, ">$file";
 	print FILE $crontab ."* 23 * * * /usr/bin/env perl $complete_path";
 	close(FILE);
-	qx(crontab $file);
+	qx(sudo -u opencop crontab $file);
 	qx(rm $file);
 	exit;
 }
 
 sub disable{
-	my $crontab = qx(crontab -l);
+	my $crontab = qx(sudo crontab -u opencop -l);
 	chomp($crontab);
 	my @crontabs = split("\n",$crontab);
 	my $file = "opencop_crontab";
@@ -92,7 +92,7 @@ sub disable{
 		}
 	}
 	close(FILE);
-	qx(crontab $file);
+	qx(sudo crontab -u opencop $file);
 	qx(rm $file);
 	exit;
 }
