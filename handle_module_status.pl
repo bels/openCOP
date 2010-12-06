@@ -41,6 +41,7 @@ if($action eq 'enable'){
 	$sth->execute($module_name,$filename);
 
 	qx(./modules/$filename enable);
+	print "Content-type: text/html\n\n";
 }
 
 if($action eq 'disable')
@@ -56,4 +57,5 @@ if($action eq 'disable')
 	$sth->execute();
 	
 	qx(./modules/$filename disable);
+	print "Content-type: text/html\n\n";
 }

@@ -61,38 +61,44 @@ foreach my $entry ($result->entries)
 }
 
 sub enable{
+	my @temp = split('\/',$0);
+	my $thisfile = pop(@temp);
+	chomp($thisfile);
+
 	my $os = qx(uname);
 	chomp($os);
-	my $file = "opencop_crontab";
-	my $crontab = qx(sudo -u opencop crontab -l);
+
+	my $file = "/tmp/opencop/opencop_crontab";
 	my $path = qx(pwd);
 	chomp($path);
 	my $complete_path = $path . "/modules/ldap_sync.pl\n";
-	open FILE, ">$file";
-	print FILE $crontab ."* 23 * * * /usr/bin/env perl $complete_path";
+
+	open NEWCRON, ">>/tmp/opencop/" . $thisfile . "_schedule";
+	print NEWCRON "* 23 * * * /usr/bin/env perl $complete_path";
+	close NEWCRON;
+
+	open FILE, ">>$file";
+	print FILE "add:/tmp/opencop/" . $thisfile  . "_schedule\n";
 	close(FILE);
-	qx(sudo -u opencop crontab $file);
-	qx(rm $file);
+
+	my $rmfile = "/tmp/opencop/" . $thisfile . "_schedule";
+	qx(chmod 777 $file);
+	qx(chmod 777 $rmfile);
+
 	exit;
 }
 
 sub disable{
-	my $crontab = qx(sudo crontab -u opencop -l);
-	chomp($crontab);
-	my @crontabs = split("\n",$crontab);
-	my $file = "opencop_crontab";
-	open FILE, ">$file";
-	foreach (@crontabs){
-		if($_ =~ m/ldap_sync.pl/)
-		{
-		}
-		else
-		{
-			print FILE "$_\n";
-		}
-	}
+	my @temp = split('\/',$0);
+	my $thisfile = pop(@temp);
+	chomp($thisfile);
+
+	my $file = "/tmp/opencop/opencop_crontab";
+	open FILE, ">>$file";
+	print FILE "remove:" . $thisfile . "\n";
 	close(FILE);
-	qx(sudo crontab -u opencop $file);
-	qx(rm $file);
+
+	qx(chmod 777 $file);
+
 	exit;
 }
