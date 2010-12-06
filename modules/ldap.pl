@@ -36,10 +36,29 @@ my $result = $l->search(base => $config->{'base_dn'}, scope => "sub", filter => 
 my $dn;
 foreach my $entry ($result->entries)
 {
-	my $cn = $entry->get_value('cn');
-	if($cn eq $alias)
-	{
-		$dn = $entry->dn();
+	if(defined($config->{'directory_type'})){
+		if($config->{'directory_type'} =~ m/AD/i)
+		{
+			my $sam = $entry->get_value('sAMAccountName'); #this more than likely is the same as the login name for Active Directory because of legacy stuff
+			if($sam eq $alias)
+			{
+				$dn = $entry->dn();
+			}
+		} elsif($config->{'directory_type') =~ m/eDirectory/i){
+			my $cn = $entry->get_value('cn'); #eDirectory looks to use cn as the login name
+			if($cn eq $alias)
+			{
+				$dn = $entry->dn();
+			}
+		} else {
+			my $login = $entry->get_value($config->{'directory_login_attribute'}); #this should be for other ldap directory servers.  Hopefully those admins know what attribute is used for logins
+			if($login eq $alias)
+			{
+				$dn = $entry->dn();
+			}
+		}
+	} else {
+		warn "Config is screwed.  Missing ldap information";
 	}
 }
 

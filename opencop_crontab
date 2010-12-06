@@ -1,0 +1,1 @@
+* 23 * * * /usr/bin/env perl /usr/local/www/helpdesk/modules/ldap_sync.pl
