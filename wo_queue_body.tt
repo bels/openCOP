@@ -10,3 +10,7 @@
 			<div id="right">
 			</div>
 		</div>
+		<div id="ticket_details">
+		</div>
+		<div id="behind_popup">
+		</div>

@@ -34,7 +34,8 @@ if($authenticated == 1)
 	if($access->{'error'}){
 		warn "Access denied to section " .  $data->{'section'} . " for user " . $data->{'updater'};
 	}
-	print $q->redirect(-URL=>"ticket.pl?mode=lookup");
+	my $previous = $q->referer();
+	print $q->redirect(-URL=> $previous);
 }	
 else
 {
