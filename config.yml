@@ -16,6 +16,8 @@ display_free_date: 1
 display_free_time: 1
 display_location: 1
 display_serial: 1
+directory_type: AD
+directory_login_attribute: sAMAccountName
 index_page: index.pl
 ldap_port: 389
 ldap_server: daphne
