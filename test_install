@@ -25,7 +25,7 @@ declare -A REQHASH=(		# Define a list of required ports
 	["p5-JSON"]="p5-JSON"
 	["p5-DBD-Excel"]="p5-DBD-Excel"
 	["p5-SQL-Statement"]="p5-SQL-Statement"
-	["sudo"]="sudo"
+	["Net::LDAP"]="p5-perl-ldap"
 )
 
 function die() {
