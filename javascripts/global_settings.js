@@ -17,5 +17,4 @@ $(document).ready(function(){
 
 function handle_modules(module_name,todo){
 	$.get("handle_module_status.pl",{name: module_name,action: todo});
-alert("");
 }

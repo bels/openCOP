@@ -39,9 +39,11 @@ foreach my $module (@modules){
 	$enabled = 0;
 	foreach my $key (%$result){
 		chomp($module);
-		if($module eq $result->{$key}->{'module_name'}){
-			print qq(<label for="$key" class="module_label">$result->{$key}->{'module_name'}</label><input type=checkbox name="$key" id="$key" class="module" checked><br/>);
-			$enabled = 1;
+		if(defined($result->{$key}->{'module_name'})){
+			if($module eq $result->{$key}->{'module_name'}){
+				print qq(<label for="$key" class="module_label">$result->{$key}->{'module_name'}</label><input type=checkbox name="$key" id="$key" class="module" checked><br/>);
+				$enabled = 1;
+			}
 		}
 	}
 	if($enabled == 0){

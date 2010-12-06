@@ -40,7 +40,9 @@ if($action eq 'enable'){
 	my $sth = $dbh->prepare($query);
 	$sth->execute($module_name,$filename);
 
+	warn "./modules/$filename enable\n";
 	qx(./modules/$filename enable);
+	print "Content-type: text/html\n\n";
 }
 
 if($action eq 'disable')
@@ -55,5 +57,7 @@ if($action eq 'disable')
 	$sth = $dbh->prepare($query);
 	$sth->execute();
 	
+	warn "./modules/$filename disable\n";
 	qx(./modules/$filename disable);
+	print "Content-type: text/html\n\n";
 }
