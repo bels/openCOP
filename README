@@ -36,6 +36,7 @@ to include MySQL in the future.
    - Run the database setup script (sql/setup_postgresql.sh)
    - Copy the entire openCOP directory into your web root
    - Remove the doc and sql directories from webroot/openCOP
+   - Modify the config file and replace all of the %%MACRO%% with appropriate values
    - Add (This assumes that your webroot is /usr/local/www.  Replace that with your webroot)
 	<Directory "/usr/local/www/openCOP/"> 
 	    Options ExecCGI
