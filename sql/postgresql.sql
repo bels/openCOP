@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS notes;
 CREATE TABLE notes(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), note TEXT, performed TIMESTAMP DEFAULT current_timestamp);
 
 DROP TABLE IF EXISTS auth;
-CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id VARCHAR(20),customer BOOLEAN DEFAULT true);
+CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id INTEGER references users(id) ,customer BOOLEAN DEFAULT true);
 
 DROP TABLE IF EXISTS reports;
 CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
@@ -502,6 +502,30 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TYPE agents_working_holder as (id INTEGER, alias VARCHAR(255), logged_in INTERVAL);
+
+CREATE OR REPLACE FUNCTION agents_working() RETURNS SETOF agents_working_holder AS $$
+DECLARE
+	r agents_working_holder%rowtype;
+BEGIN
+	FOR r IN
+		select
+			id,
+			alias,
+			(current_timestamp - auth.created) as logged_in
+		from
+			users
+		join
+			auth
+			on
+				users.id = auth.user_id
+		where not customer
+	LOOP
+		RETURN NEXT r;
+	END LOOP;
+	return;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Permissions and stuff
 DROP USER helpdesk;

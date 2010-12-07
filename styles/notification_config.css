@@ -1,0 +1,21 @@
+label{
+	display: inline-block;
+	width: 550px;
+	text-align: right;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+
+textarea{
+	margin-left: 35px;
+	vertical-align: text-top;
+}
+
+input{
+	margin-left: 35px;
+	vertical-align: text-top;
+}
+
+#update_div{
+	text-align: center;
+}
