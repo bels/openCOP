@@ -17,6 +17,7 @@ th{
 td{
 	width: 150px;
 	height: 30px;
+	font-size: .8em;
 }
 
 .header_row{
@@ -56,6 +57,7 @@ td{
 }
 
 #ticket_details{
+	font-size: .8em;
 	position:fixed;
 	background:#FFFFFF;
 	z-index:2;

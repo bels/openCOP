@@ -104,6 +104,7 @@ td{
 }
 
 #ticket_details{
+	font-size: .8em;
 	position:fixed;
 	background:#FFFFFF;
 	z-index:2;
