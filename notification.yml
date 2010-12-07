@@ -1,14 +1,13 @@
----
-company_name: ANGQ
-email_password: bigtyme1asdf
-email_password2: bigtyme1asdf
-email_user: notification
-from: notification@lfmcorp.com
-mail_server: mail.lfmcorp.com
-new_user: Happy welcome message which Justin will write.
-notify_tech: A ticket has been assigned to you.
-send_attachment: Your file is attached.
-sending_server: mail.lfmcorp.com
-ticket_close: Your ticket has been closed by our technicians.  If this is a mistake please contact us to have it reopened.  If your ticket was resolved please take our satisfaction survey.
-ticket_create: We have received your ticket and a technician will respond to you shortly.  You can check on the status of your ticket in the helpdesk portal.
-ticket_update: Your ticket has been updated.  If you would like to check the current status of your ticket please log into the helpdesk portal.
+mail_server: %%MAIL_SERVER%%
+# this is used to set what server the mail shows it is coming from.  It should be set to the host name of where the helpdesk system lives.  It may be the same as the mail server.  If it is do not set this to localhost but instead the FQDN of the server
+sending_server: %%SMTP_SERVER%%
+email_user: %%SENDING_EMAIL_USER%%
+email_password: %%SENDING_EMAIL_PASSWORD%%
+from: %%SENDING_DISPLAY_ADDRESS%%
+ticket_create: %%TICKET_CREATE_BODY%%
+ticket_update: %%TICKET_UPDATE_BODY%%
+ticket_close: %%TICKET_CLOSE_BODY%%
+notify_tech: %%TECH_NOTIFY_BODY%%
+company_name: %%COMPANY_NAME%%
+new_user: %%NEW_USER_BODY%%
+send_attachment: %%FILE_ATTACH_BODY%%

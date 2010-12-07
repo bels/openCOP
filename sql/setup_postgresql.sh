@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DATABASE="ccboehd"
+DATABASE=$1
 sql=postgresql.sql
 
 echo "This script makes some assumptions.  Let me get them out of the way right now"

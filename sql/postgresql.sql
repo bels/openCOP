@@ -194,7 +194,7 @@ INSERT INTO property(property) values('bandwidth');
 INSERT INTO property(property) values('application_version');
 
 -- Adding admin user
-INSERT INTO users(alias,email,password,first, last) values('admin','admin@localhost',MD5('admin'),'admin','admin');
+INSERT INTO users(alias,email,password,first, last) values('%%ADMIN_USER%%','%%ADMIN_EMAIL%%',MD5('%%ADMIN_PASSWORD'),'%%ADMIN_FIRST%%','%%ADMIN_LAST%%');
 -- Adding default Helpdesk section.
 INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address'); -- Need to add the ability to change section's email addresses...
 -- Adding priorities
@@ -528,8 +528,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Permissions and stuff
-DROP USER helpdesk;
-CREATE USER helpdesk WITH PASSWORD 'helpdesk';
+DROP USER %%DB_USER%%;
+CREATE USER %%DB_USER%% WITH PASSWORD '%%DB_PASSWORD%%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
 GRANT SELECT, UPDATE ON status_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site_level TO helpdesk;
