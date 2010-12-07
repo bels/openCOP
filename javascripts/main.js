@@ -104,10 +104,12 @@ $(document).ready(function(){
 	if(tabs){
 		$("#tabs").tabs();
 	}
+	$('table').livequery(function(){
+		$(this).tablesorter();
+	});
 });
 
 function logout(){
-	$.cookie("session", null, { path: '/' });
 	location.href = 'logout.pl';
 }
 

@@ -395,23 +395,28 @@ sub lookup{
 	if ($access->{'complete'}) {
 		$query = "
 			select
-				helpdesk.ticket as ticket,section.name as name,status.status as status, priority.description as priority, helpdesk.contact as contact
+				helpdesk.ticket as ticket,
+				helpdesk.priority as pid,
+				section.name as name,
+				status.status as status,
+				priority.description as priority,
+				helpdesk.contact as contact
 			from
 				helpdesk
-				join
-					section on section.id = helpdesk.section
-				left outer join
-					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
-				left outer join
-					notes on notes.ticket_id = helpdesk.ticket
-				join
-					users on users.id = helpdesk.technician
-				left outer join
-					site on site.id = helpdesk.site
-				join
-					priority on priority.severity = helpdesk.priority
-				join
-					status on status.id = helpdesk.status
+			join
+				section on section.id = helpdesk.section
+			left outer join
+				troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
+			left outer join
+				notes on notes.ticket_id = helpdesk.ticket
+			join
+				users on users.id = helpdesk.technician
+			left outer join
+				site on site.id = helpdesk.site
+			join
+				priority on priority.severity = helpdesk.priority
+			join
+				status on status.id = helpdesk.status
 			where
 				helpdesk.status not in ('7')
 			and

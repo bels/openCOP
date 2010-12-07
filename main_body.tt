@@ -1,10 +1,9 @@
 		<div id="tabs">
 			<ul>
 				<li><a href="server_health.pl">Server Status</a></li>
-				<li><a href="#current_critical">Current Critical Tickets</a></li>
+				<li><a href="current_critical.pl">Current Critical Tickets</a></li>
 				<li><a href="agents_working.pl">Working Technicians</a></li>
 				<li><a href="#closure_info">Closure Info</a></li>
 			</ul>
-			<div id="current_critical" class="content"><p>This box will have a list of the current open critical items.  It will be loaded through ajax on a timer.</p></div>
 			<div id="closure_info" class="content"><p>This box will have closure information and possibly customer survey results.  I think it should have a tabbing system that allows the user to switch between Ticket Closure, Work Order Closure, Last 10 Customer Surveys</p></div>
 		</div>

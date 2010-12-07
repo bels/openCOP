@@ -1,0 +1,122 @@
+.lookup_row.selected{
+	background-color: #757575;
+	cursor: pointer;
+}
+
+table{
+	width: 100%;
+	border-collapse:collapse;
+}
+
+th{
+	width: 150px;
+	height: 30px;
+	border-bottom: 1px solid black;
+}
+
+td{
+	width: 150px;
+	height: 30px;
+}
+
+.header_row{
+	width: 100%;
+	color: white;
+	background-color: #333;
+	height: 30px;
+	font-size: .8em;
+}
+
+.row_ticket_number{
+	border-right: 1px solid black;
+}
+
+.row_ticket_status{
+	border-right: 1px solid black;
+}
+
+.row_ticket_priority{
+	border-right: 1px solid black;
+}
+
+.row_ticket_contact{
+	border-right: 1px solid black;
+}
+
+.error{
+	color: red;
+	font-size: .7em;
+}
+
+.section_header_div{
+	margin-left: 50px;
+	text-align: justify;
+	font-weight: bold;
+	font-size: .7em;
+}
+
+#ticket_details{
+	position:fixed;
+	background:#FFFFFF;
+	z-index:2;
+	padding:12px;
+	display: none;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	width: 90%;
+	height: 550px;
+	overflow: auto;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid black;
+}
+
+#update_form label{
+	display: inline-block;
+	width: 160px;
+	text-align: right;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+
+#update_form input{
+	width: 170px;
+	margin-right: 5px;
+}
+
+#update_form span{
+	width: 170px;
+	margin-right: 5px;
+}
+
+#past_troubleshoot{
+	white-space: pre-wrap;
+	margin-left: 160px;
+}
+
+#problem{
+	white-space: pre-wrap;
+	margin-left: 160px;
+}
+
+#past_notes{
+	white-space: pre-wrap;
+	margin-left: 160px;
+}
+
+#behind_popup{
+	display:none;
+	position:fixed;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	background:#000000;
+	border:1px solid #cecece;
+	z-index:1;
+}
+
+.disabled{
+	background-color: #3e3e3e;
+	cursor: arrow;
+}

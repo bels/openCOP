@@ -2,14 +2,12 @@
 
 use strict;
 use warnings;
-
 use CGI;
 use DBI;
 use lib './libs';
 use ReadConfig;
 use SessionFunctions;
 use UserFunctions;
-use Data::Dumper;
 
 my $q = CGI->new();
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
@@ -33,6 +31,10 @@ if($authenticated == 1){
 	my $result = $sth->fetchall_hashref('id');
 	print "Content-type: text/html\n\n";
 	print qq(
+		<link rel="stylesheet" href="styles/agents_working.css" type="text/css" media="screen">
+		<script type="text/javascript" src="javascripts/jquery.tablesorter.js"></script>
+		<script type="text/javascript" src="javascripts/agents_working.js"></script>
+
 		<table id="agents_working_table">
 			<thead>
 				<tr class="header_row">
