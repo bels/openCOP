@@ -1,0 +1,5 @@
+[% INCLUDE header.tt %]
+[% INCLUDE layout_top.tt %]
+[% INCLUDE menu.tt %]
+[% INCLUDE time_tracking_body.tt %]
+[% INCLUDE footer.tt %]

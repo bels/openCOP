@@ -12,6 +12,7 @@ use ReadConfig;
 use DBI;
 use Notification;
 use UserFunctions;
+use ReportFunctions;
 
 require Exporter;
 
@@ -149,7 +150,8 @@ sub render{
 	my @s_site = sort({lc($a) cmp lc($b)} keys %$site_list);
 
 	# Get the list of technicians
-	$query = "select id,alias from users where active;";
+	$query = "select id,alias from users where active = true and id not in (select alias_id from alias_aclgroup where aclgroup_id = (select id from aclgroup where name = 'customers'));";
+#	$query = "select id,alias from users where active;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $tech_list = $sth->fetchall_hashref('alias');
@@ -163,8 +165,11 @@ sub render{
 	my @styles = ("styles/jquery.jscrollpane.css","styles/ticket.css");
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
 
+	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $reports = $report->view(id => $args{'id'});
+
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info, is_admin => $args{'is_admin'}, list => \@list};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info, is_admin => $args{'is_admin'}, list => \@list, reports => $reports};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();

@@ -11,6 +11,7 @@ use UserFunctions;
 use Data::Dumper;
 use Template;
 use YAML;
+use ReportFunctions;
 
 my $q = CGI->new();
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
@@ -29,6 +30,8 @@ if(%cookie){
 if($authenticated == 1){
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $reports = $report->view(id => $id);
 
 	my %fnotification = (
 		'mail_server'		=>	"Mail Server",
@@ -51,7 +54,7 @@ if($authenticated == 1){
 	my $meta_description = "";
 	my $file = "notification_config.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, is_admin => $user->is_admin(id => $id), notify => $notification, fnotify => \%fnotification};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, is_admin => $user->is_admin(id => $id), notify => $notification, fnotify => \%fnotification}, reports => $reports;
 	
 	print "Content-type: text/html\n\n";
 

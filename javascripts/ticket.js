@@ -152,15 +152,11 @@ $(document).ready(function(){
 		});
 	}
 	
-	$(".ticket_section_toggle").click(function(){
+	$(".section_header_div").click(function(){
 		resetLogout();
-		$(this).prev('a').children('.toggle_img').toggle();
+		$(this).children('a').children('.toggle_img').toggle();
 	});
 	
-	$(".toggle_link").click(function(){
-		resetLogout();
-		$(this).children().toggle();
-	});
 	
 	$("#search_box").click(function(){
 		$(this).val("");

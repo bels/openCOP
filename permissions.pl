@@ -9,7 +9,7 @@ use URI::Escape;
 use Template;
 use SessionFunctions;
 use UserFunctions;
-
+use ReportFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 my $q = CGI->new();
@@ -30,6 +30,8 @@ if($authenticated == 1)
 {
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $reports = $report->view(id => $id);
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $sth;
@@ -37,7 +39,7 @@ if($authenticated == 1)
 	my $i;
 	my @pid;
 
-	$query = "select * from aclgroup;";
+	$query = "select * from aclgroup where name != 'admins';";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $gid_list = $sth->fetchall_hashref('name');
@@ -63,7 +65,7 @@ if($authenticated == 1)
 	shift(@pid);
 	my @sid = sort({lc($a) cmp lc($b)} @pid);
 
-	$query = "select * from section_aclgroup;";
+	$query = "select * from section_aclgroup where aclgroup_id != (select id from aclgroup where aclgroup.name = 'admins');";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $gsp = $sth->fetchall_hashref('id');
@@ -77,7 +79,7 @@ if($authenticated == 1)
 
 	my $file = "permissions.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, groups => $gid, sections => $sid, gsp => $gsp, gid_list => \@gid, sid_list => \@sid, groups_names => $gid_list, sections_names => $sid_list, is_admin => $user->is_admin(id => $id)};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, groups => $gid, sections => $sid, gsp => $gsp, gid_list => \@gid, sid_list => \@sid, groups_names => $gid_list, sections_names => $sid_list, is_admin => $user->is_admin(id => $id), reports => $reports};
 		
 	print "Content-type: text/html\n\n";
 

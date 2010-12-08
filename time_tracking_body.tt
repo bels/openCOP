@@ -1,0 +1,8 @@
+	<div id="top">
+		<select id="user_select">
+			<option></option>
+		[% FOREACH user IN uid %]
+			<option value="[% users.$user.id %]">[% users.$user.alias %]</option>
+		[% END %]
+		</select>
+	</div>

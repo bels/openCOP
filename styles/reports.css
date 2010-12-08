@@ -1,5 +1,29 @@
-#query_builder div{
+div.header{
+	height: 25px;
+	background-color: #333;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+
+div#query_builder{
 	min-width: 200px;
+	margin: 30px;
+	width: 90%;
+	height: auto;
+	min-height: 172px;
+	border: 1px black solid;
+	overflow: auto;
+}
+
+div#query_permissions{
+	min-width: 200px;
+	margin: 30px;
+	_width: 90%;
+	width: 537px;
+	height: auto;
+	min-height: 300px;
+	border: 1px black solid;
 }
 
 #query_builder select{
@@ -25,12 +49,6 @@ span.label{
 button{
 	float:left;
 	margin-left: 4px;
-}
-
-#query_builder{
-	width: 100%;
-	height: 100%;
-	min-height: 600px;
 }
 
 #select_div{
@@ -93,4 +111,10 @@ span.fl{
 	float: left;
 	width: 100%;
 	height: 25px;
+}
+
+#associate_rp{
+	width: 40%;
+	min-width: 460px;
+	min-height: 300px;
 }
