@@ -1,13 +1,1 @@
-#!/bin/sh
-
-# PROVIDE: opencop_scheduler
-# REQUIRE: FILESYSTEMS DAEMON LOGIN
-
-. /etc/rc.subr
-
-name="opencop_scheduler"
-rcvar='set_rcvar'
-command="/usr/local/bin/${name}"
-
-load_rc_config $name
-run_rc_command "$1"
+@reboot /usr/local/bin/opencop_scheduler.pl

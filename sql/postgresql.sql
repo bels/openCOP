@@ -194,7 +194,7 @@ INSERT INTO property(property) values('bandwidth');
 INSERT INTO property(property) values('application_version');
 
 -- Adding admin user
-INSERT INTO users(alias,email,password,first, last) values('%%ADMIN_USER%%','%%ADMIN_EMAIL%%',MD5('%%ADMIN_PASSWORD'),'%%ADMIN_FIRST%%','%%ADMIN_LAST%%');
+INSERT INTO users(alias,email,password,first, last) values('%%ADMIN_USER%%','%%ADMIN_EMAIL%%',MD5('%%ADMIN_PASSWORD%%'),'%%ADMIN_FIRST%%','%%ADMIN_LAST%%');
 -- Adding default Helpdesk section.
 INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address'); -- Need to add the ability to change section's email addresses...
 -- Adding priorities
