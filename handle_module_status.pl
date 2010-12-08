@@ -11,7 +11,7 @@ my $q = CGI->new();
 my $module = $q->param('name');
 my $action = $q->param('action');
 
-my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 $config->read_config;
 
 if($action eq 'enable'){

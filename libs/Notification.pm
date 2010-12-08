@@ -40,7 +40,7 @@ sub new{
 	
 	my $self = bless({},$package);
 		
-	$self->{'config'} = ReadConfig->new(config_type =>'YAML',config_file => "notification.yml");
+	$self->{'config'} = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/notification.yml");
 
 	$self->{'config'}->read_config;
 	
@@ -55,7 +55,7 @@ sub by_email{
 	
 	return 1;
 	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
-	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in notification.yml
+	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};
 	my $company_name = $self->{'config'}->{'company_name'};
 	
@@ -91,7 +91,7 @@ sub send_attachment{
 	my %args = @_;
 	
 	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
-	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in notification.yml
+	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};
 	my $company_name = $self->{'config'}->{'company_name'};
 	my $boundary = 'frontier';
@@ -137,7 +137,7 @@ sub new_user{
 
 	return 1;
 	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
-	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in notification.yml
+	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};
 	my $company_name = $self->{'config'}->{'company_name'};
 	

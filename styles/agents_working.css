@@ -1,0 +1,23 @@
+table{
+	width: 100%;
+	border-collapse:collapse;
+}
+
+th{
+	width: 150px;
+	height: 30px;
+	border-bottom: 1px solid black;
+}
+
+td{
+	width: 150px;
+	height: 30px;
+}
+
+.header_row{
+	width: 100%;
+	color: white;
+	background-color: #333;
+	height: 30px;
+	font-size: .8em;
+}

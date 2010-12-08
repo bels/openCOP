@@ -1,35 +1,6 @@
-#left{
-	float: left;
-	height: 600px;
-	width: 19%;
-	min-width: 175px;
-}
-
-#right_holder{
-	float: left;
-	height: 575px;
-	width: 75%;
-	padding-top: 25px;
-	padding-left: 25px;
-}
-
-#right{
-	float: left;
-	height: 100%;
-	overflow: auto;
-	width: 100%;
-}
-
-.wo_link{
-	text-decoration: none;
-	font-size: .9em;
-	font-weight: bold;
-	color: white;
-	min-width: 150px;
-	height: 25px;
-	padding-top: 5px;
-	display: inline-block;
-	text-align: center;
+.lookup_row.selected{
+	background-color: #757575;
+	cursor: pointer;
 }
 
 table{
@@ -46,6 +17,7 @@ th{
 td{
 	width: 150px;
 	height: 30px;
+	font-size: .8em;
 }
 
 .header_row{
@@ -53,7 +25,7 @@ td{
 	color: white;
 	background-color: #333;
 	height: 30px;
-	font-size: 1em;
+	font-size: .8em;
 }
 
 .row_ticket_number{
@@ -64,43 +36,24 @@ td{
 	border-right: 1px solid black;
 }
 
-.row_assigned_technician{
+.row_ticket_priority{
 	border-right: 1px solid black;
 }
 
-.row_step_number{
+.row_ticket_contact{
 	border-right: 1px solid black;
 }
 
-.row_step_section{
-	border-right: 1px solid black;
+.error{
+	color: red;
+	font-size: .7em;
 }
 
-.lookup_row.selected{
-	background-color: #757575;
-	cursor: pointer;
-}
-
-#wo{
-	background-color: #333;
-	border-radius: 15px;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-	width: 150px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-}
-
-#wo a{
-	color: white;
-	text-decoration: none;
-}
-
-.selected{
-	background-color: #777;
+.section_header_div{
+	margin-left: 50px;
+	text-align: justify;
+	font-weight: bold;
+	font-size: .7em;
 }
 
 #ticket_details{
@@ -111,6 +64,7 @@ td{
 	padding:12px;
 	display: none;
 	margin-top: 15px;
+	margin-bottom: 15px;
 	width: 90%;
 	height: 550px;
 	overflow: auto;

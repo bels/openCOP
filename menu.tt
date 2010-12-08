@@ -8,8 +8,8 @@
 				[% IF is_admin %]
 						<li><a href="work_order_new.pl">New Work Order</a></li>
 						<li><a href="wo_queue.pl">Work Order Queue</a></li>
-					</ul>
 				[% END %]
+					</ul>
 				</li>
 			[% IF is_admin %]
 				<li><a href=#>Reports</a>
@@ -44,6 +44,7 @@
 						<li><a href="global_settings.pl">Global Settings</a></li>
 						<li><a href="groups.pl">Groups</a></li>
 						<li><a href="permissions.pl">Permissions</a></li>
+						<li><a href="notification_config.pl">Notification Configuration</a></li>
 					[% END %]
 						<li><a href="password.pl">Change Password</a></li>
 						<li><a href="logout.pl">Logout</a></li>

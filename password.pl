@@ -21,7 +21,7 @@ my $customer;
 my $type = uri_unescape($q->param('type'));
 if(defined($type)){chomp $type};
 
-my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
 $config->read_config;
 

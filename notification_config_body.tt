@@ -1,0 +1,18 @@
+	<div id="notify_div">
+		<div id="update_div">
+			<button id="update">Save changes</button>
+		</div>
+		<form id="notify_form">
+		[% FOREACH i IN fnotify.sort %]
+			<label for="[% i %]">[% fnotify.$i %]</label>
+			[% IF i == "email_password" %]
+			<input class="pwd" type="password" name="[% i %]" id="[% i %]" rows="1" cols="32" value="[% notify.$i %]"><br>
+			<label for="[% i %]2">Confirm Password</label>
+			<input class="pwd" type="password" name="[% i %]2" id="[% i %]2" rows="1" cols="32" value="[% notify.$i %]">
+			[% ELSE %]
+			<textarea name="[% i %]" id="[% i %]" rows="1" cols="32">[% notify.$i %]</textarea>
+			[% END %]
+			<br>
+		[% END %]
+		</form>
+	</div>

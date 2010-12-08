@@ -1,1 +1,1 @@
-	<div id="logo_div"><img src="[% logo %]" id="logo"><!-- i'd like to make this a variable so if they don't have a logo it won't show up --><span id="company_name">[% company_name %] Ticketing System</span></div>
+	<div id="logo_div"><img src="[% logo %]" id="logo"><!-- i'd like to make this a variable so if they don't have a logo it won't show up --><span id="company_name_span">[% company_name %] Ticketing System</span></div>
