@@ -12,7 +12,7 @@ use YAML;
 use JSON;
 
 my $q = CGI->new();
-my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
 $config->read_config;
 
@@ -36,7 +36,7 @@ if($authenticated == 1){
 		$notification->{$_->{'name'}} = $_->{'value'};
 	}
 	
-	YAML::DumpFile("notification.yml",$notification);
+	YAML::DumpFile("/usr/local/etc/opencop/notification.yml",$notification);
 	print "Content-type: text/html\n\n";
 }
 else{

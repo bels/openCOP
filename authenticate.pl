@@ -15,7 +15,7 @@ my $password = uri_unescape($q->param('password')); #getting the password from t
 chomp($alias);
 chomp($password);
 
-my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
 $config->read_config;
 

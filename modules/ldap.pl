@@ -18,7 +18,7 @@ use YAML;
 
 
 
-my $config = ReadConfig->new(config_type =>'YAML',config_file => "./config.yml");
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 $config->read_config;
 
 my $q = CGI->new(); #create CGI
@@ -77,32 +77,32 @@ else
 
 sub enable{
 	my $config;
-	if (-e "./config.yml")
+	if (-e "/usr/local/etc/opencop/config.yml")
 	{
-		$config = YAML::LoadFile("./config.yml");
+		$config = YAML::LoadFile("/usr/local/etc/opencop/config.yml");
 	}
 	else
 	{
-		die "Config file (config.yml) does not exist or the permissions on it are not correct.\n";
+		die "Config file (/usr/local/etc/opencop/config.yml) does not exist or the permissions on it are not correct.\n";
 	}
 	
 	$config->{'backend'} = 'ldap';
-	YAML::DumpFile('./config.yml', $config);
+	YAML::DumpFile('/usr/local/etc/opencop/config.yml', $config);
 	exit;
 }
 
 sub disable{
 	my $config;
-	if (-e "./config.yml")
+	if (-e "/usr/local/etc/opencop/config.yml")
 	{
-		$config = YAML::LoadFile("./config.yml");
+		$config = YAML::LoadFile("/usr/local/etc/opencop/config.yml");
 	}
 	else
 	{
-		die "Config file (config.yml) does not exist or the permissions on it are not correct.\n";
+		die "Config file (/usr/local/etc/opencop/config.yml) does not exist or the permissions on it are not correct.\n";
 	}
 	
 	$config->{'backend'} = 'database';
-	YAML::DumpFile('./config.yml', $config);
+	YAML::DumpFile('/usr/local/etc/opencop/config.yml', $config);
 	exit;
 }

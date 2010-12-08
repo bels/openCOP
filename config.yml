@@ -4,7 +4,7 @@ backend: database
 base_dn: %%BASE_DN%%
 company_domain: %%COMPANY_DOMAIN%%
 company_name: %%COMPANY_NAME%%
-config_file: config.yml
+config_file: /usr/local/etc/opencop/config.yml
 config_type: YAML
 db_name: %%DB_NAME%%
 db_password: %%DB_USER_PASSWORD%%

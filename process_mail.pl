@@ -24,7 +24,7 @@ my $sender = "";
 my $subject = "";
 my $body = "";
 
-my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 $config->read_config; #I am doing this because we have to call submit on the ticket object directly instead of letting ticket.pl handle it.  This means that we have to pass in the database information
 
 my $ticket = Ticket->new(mode => "new");

@@ -13,7 +13,7 @@ use Template;
 use YAML;
 
 my $q = CGI->new();
-my $config = ReadConfig->new(config_type =>'YAML',config_file => "config.yml");
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
 $config->read_config;
 
@@ -44,7 +44,7 @@ if($authenticated == 1){
 		'new_user'		=>	"Message sent to a new user on creation",
 		'send_attachment'	=>	"Message to display when emailing a report",
 	);
-	my $notification = YAML::LoadFile("notification.yml");
+	my $notification = YAML::LoadFile("/usr/local/etc/opencop/notification.yml");
 	my @styles = ("styles/main.css","styles/notification_config.css");
 	my @javascripts = ("javascripts/jquery.json-2.2.js","javascripts/jquery.validate.js","javascripts/main.js","javascripts/notification_config.js");
 	my $meta_keywords = "";
