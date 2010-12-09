@@ -8,6 +8,7 @@ use ReadConfig;
 use SessionFunctions;
 use UserFunctions;
 use ReportFunctions;
+use POSIX 'strftime';
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -41,14 +42,22 @@ if($authenticated == 1){
 		push(@pid,$uid->{$_}->{'alias'});
 	}
 	my @uid = sort(@pid);
+	my $date = strftime( '%m/%d/%Y', localtime);
 
-	my @styles = ("styles/main.css","styles/time_tracking.css");
-	my @javascripts = ("javascripts/main.js","javascripts/time_tracking.js");
+	my @styles = (
+		"styles/main.css",
+		"styles/time_tracking.css",
+	);
+	my @javascripts = (
+		"javascripts/jquery.tablesorter.js",
+		"javascripts/main.js",
+		"javascripts/time_tracking.js",
+	);
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $file = "time_tracking.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, is_admin => $user->is_admin(id => $id), reports => $reports, uid => \@uid, users => $uid};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, is_admin => $user->is_admin(id => $id), reports => $reports, uid => \@uid, users => $uid, date => $date};
 
 	print "Content-type: text/html\n\n";
 

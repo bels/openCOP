@@ -1,2 +1,36 @@
-#top{
+table{
+	width: 100%;
+	border-collapse:collapse;
+	border: 1px solid black;
+	table-layout: fixed;
+}
+
+th{
+	height: 20px;
+	border-bottom: 1px solid black;
+}
+
+td{
+	height: 20px;
+}
+
+.header_row{
+	width: 100%;
+	color: white;
+	background-color: #333;
+	height: 20px;
+	font-size: .8em;
+}
+
+.body_cell{
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	font-size: .8em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+#tech_output{
+	margin-top: 4px;
 }

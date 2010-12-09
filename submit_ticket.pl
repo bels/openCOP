@@ -32,7 +32,7 @@ if($authenticated)
 	$data->{'submitter'} = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 	$data->{'notes'} = "";
 
-	if(defined($data->{'tech'})){
+	if(defined($data->{'tech'}) && $data->{'tech'}){
 		my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 		my $info = $user->get_user_info(user_id => $data->{'tech'});
 		$data->{'tech_email'} = $info->{'email'};
