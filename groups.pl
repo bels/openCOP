@@ -59,6 +59,18 @@ if($authenticated == 1)
 	shift(@pid);
 	my @gid = sort(@pid);
 
+	$query = "select * from aclgroup;";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+
+	my $gmid = $sth->fetchall_hashref('name');
+	my @pmid = [];
+	foreach(keys %$gmid){
+		push(@pmid,$gmid->{$_}->{'name'});
+	}
+	shift(@pmid);
+	my @gmid = sort(@pmid);
+
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my @styles = ("styles/ui.multiselect.css","styles/groups.css");
@@ -66,7 +78,7 @@ if($authenticated == 1)
 
 	my $file = "groups.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, users => \@uid, groups => \@gid, uid => $uid, gid => $gid, is_admin => $user->is_admin(id => $id), reports => $reports};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, users => \@uid, groups => \@gid, uid => $uid, gid => $gid, is_admin => $user->is_admin(id => $id), reports => $reports, gmid => $gmid, groupsm => \@gmid};
 		
 	print "Content-type: text/html\n\n";
 
