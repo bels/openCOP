@@ -29,8 +29,8 @@
 			<span id="select_group_header">Group</span>
 			<select id="select_group_select">
 			<option></option>
-			[% FOREACH id IN groups.sort %]
-				<option value="[% gid.$id.id %]">[% gid.$id.name %]</option>
+			[% FOREACH id IN groupsm.sort %]
+				<option value="[% gmid.$id.id %]">[% gmid.$id.name %]</option>
 			[% END %]
 			</select>
 			<button id="submit_a_gu" mode="a_gu" class="associate">Add to group</button>

@@ -10,7 +10,7 @@ use Template;
 use SessionFunctions;
 use UserFunctions;
 use DBI;
-
+use ReportFunctions;
 
 #get the referrer so we know if we should display a internal page or a customer page.
 my $q = CGI->new;
@@ -39,6 +39,9 @@ if($authenticated == 1)
 
 	$file = "customer_edit.tt";
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $reports = $report->view(id => $id);
+
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
 	my $query = "select * from users
 		where id in (
@@ -55,7 +58,7 @@ if($authenticated == 1)
 	my @javascripts = ("javascripts/jquery.validate.js","javascripts/main.js","javascripts/customer_edit.js");
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, customers => $customers, password_success => $params->{'password_success'}, email_success => $params->{'email_success'}, is_admin => $user->is_admin(id => $id)};
+	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, customers => $customers, password_success => $params->{'password_success'}, email_success => $params->{'email_success'}, is_admin => $user->is_admin(id => $id), reports => $reports};
 		
 	print "Content-type: text/html\n\n";
 

@@ -49,6 +49,12 @@ $(document).ready(function(){
 		resetLogout();
 		$(this).find("ul.subnav").slideDown('fast').show();
 	}
+
+	$('.report_link').bind('click',function(){
+		var id = $(this).attr('id');
+		var name = $(this).text();
+		location.href='display_report.pl?id=' + id + '&name=' + name;
+	});
 	
 	function hideMenu(){
 		resetLogout();

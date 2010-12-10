@@ -573,7 +573,6 @@ $(document).ready(function(){
 		}
 	});
 	$('#submit_div button').bind('click',function(){
-		alert($.toJSON($('#select_div select.column').serializeObject()));
 		resetLogout();
 		var mode = $(this).attr('id');
 		var h = {};
@@ -582,16 +581,29 @@ $(document).ready(function(){
 		h['joins'] = $('select.join_column').serializeObject();
 		h['where'] = $('.where').children().serializeObject();
 		h['other'] = $('#fake_form').children().serializeObject();
+		var rg_select_string = "";
+		var rg_unselect_string = "";
+		h['groups'] = [];
+		$('#query_permissions ul.selected').children().each(function(e){
+			if($(this).attr("title") !== ""){
+				var ar = {'selected': $(this).attr("value")};
+				h['groups'].push(ar);
+			}
+		});
 		var report_name = $('input#as').val();
+		alert($.toJSON(h));
 		$.ajax({
 			type: 'POST',
 			url: 'build_sql.pl',
 			data: {mode: mode, data: $.toJSON(h), report_name: report_name},
 			success: function(data){
 				var error = data.substr(0,1);
-				if(error == "1"){
+				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
 					location.reload(true);
+				} else if(error == "1"){
+					var str = data.replace(/^[\d\s]/,'');
+					alert("Duplicate entry detected. Please choose another name.");
 				} else if(error == "2"){
 					var str = data.replace(/^[\d\s]/,'');
 					document.write(str);
@@ -603,24 +615,18 @@ $(document).ready(function(){
 			}
 		});
 	});
-
-
+	$('.multiselect').livequery(function(){
+		var $this = $(this);
+		$.get('report_addon.pl', function(data){
+			$this.append(data).multiselect();
+			$('.ui-multiselect').show();
+		});
+	});
+	
 });
 
 $.fn.serializeObject = function(){
-	var o = {};
 	var a = this.serializeArray();
-	$.each(a, function() {
-		if (o[this.name]) {
-			if (!o[this.name].push) {
-				o[this.name] = [o[this.name]];
-			}
-			o[this.name].push(this.value || '');
-		} else {
-			o[this.name] = this.value || '';
-		}
-	});
-//	return o;
 	return a;
 };
 

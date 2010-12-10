@@ -48,7 +48,7 @@ CREATE TABLE helpdesk (
 	problem TEXT,
 	priority INT DEFAULT '2',
 	serial VARCHAR(255),
-	tech VARCHAR(255),
+	updater INTEGER DEFAULT null,
 	contact_email VARCHAR(255),
 	technician INTEGER DEFAULT '1',
 	submitter INTEGER,
@@ -69,7 +69,17 @@ DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id INTEGER references users(id) ,customer BOOLEAN DEFAULT true);
 
 DROP TABLE IF EXISTS reports;
-CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, aclgroup INTEGER DEFAULT null, owner INTEGER DEFAULT '1');
+CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, owner INTEGER DEFAULT '1');
+
+DROP TABLE IF EXISTS reports_aclgroup;
+CREATE TABLE reports_aclgroup (
+	id BIGSERIAL PRIMARY KEY,
+	report_id INTEGER references reports(id) ON DELETE CASCADE,
+	aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE DEFAULT null,
+	aclread BOOLEAN DEFAULT false,
+	aclupdate BOOLEAN DEFAULT false,
+	acldelete BOOLEAN DEFAULT false
+);
 
 DROP TABLE IF EXISTS wo;
 CREATE TABLE wo(id BIGSERIAL PRIMARY KEY, active BOOLEAN DEFAULT true);
@@ -102,7 +112,8 @@ CREATE TABLE audit (
 	closed_by VARCHAR(255) DEFAULT NULL,
 	completed_by VARCHAR(255) DEFAULT NULL,
 	closed_date TIMESTAMP,
-	completed_date TIMESTAMP
+	completed_date TIMESTAMP,
+	time_worked INTERVAL
 );
 
 DROP TABLE IF EXISTS template CASCADE;
@@ -222,6 +233,113 @@ INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'admins'),1,'t','t','t','t');
 
+DROP TYPE view_reports_holder;
+CREATE TYPE view_reports_holder as (id INTEGER, name VARCHAR(255), report VARCHAR(255), owner INTEGER);
+
+CREATE OR REPLACE FUNCTION view_reports(alias_val INTEGER) RETURNS SETOF view_reports_holder AS $$
+DECLARE
+	r view_reports_holder%rowtype;
+BEGIN
+	FOR r IN
+		select
+			distinct(reports.id),
+			reports.name,
+			reports.report,
+			reports.owner
+		from
+			reports
+		join
+			reports_aclgroup
+			on
+				reports_aclgroup.report_id = reports.id
+		where (
+				aclgroup_id
+				in (
+					select
+						aclgroup.id
+					from
+						aclgroup
+					join
+						alias_aclgroup
+						on
+							alias_aclgroup.aclgroup_id = aclgroup.id
+					where
+						alias_aclgroup.alias_id = alias_val
+				)
+		) and (
+				select
+		                        bool_or(reports_aclgroup.aclread) as read
+		                from
+                       			reports_aclgroup
+		                where (
+                       			(
+		                                aclgroup_id
+                       			        in (
+		                                        select
+                       			                        aclgroup.id
+		                                        from
+                       			                        aclgroup
+		                                        join
+                       			                        alias_aclgroup
+		                                                on
+                       			                                alias_aclgroup.aclgroup_id = aclgroup.id
+		                                        where
+                       			                        alias_aclgroup.alias_id = alias_val
+		                                )
+                       			)
+		                )
+		) or (
+				reports.owner = alias_val
+		)
+	LOOP
+		RETURN NEXT r;
+	END LOOP;
+	return;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_admin_permission() RETURNS TRIGGER AS $$
+BEGIN
+	IF TG_RELNAME = 'section' THEN
+		INSERT INTO section_aclgroup(aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values((select id from aclgroup where name = 'admins'),NEW.id,'t','t','t','t');
+	END IF;
+	IF TG_RELNAME = 'reports' THEN
+		INSERT INTO reports_aclgroup(aclgroup_id,report_id,aclread,aclupdate,acldelete) values((select id from aclgroup where name = 'admins'),NEW.id,'t','t','t');
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER insert_admin_permission ON section;
+CREATE TRIGGER insert_admin_permission AFTER INSERT ON section
+	FOR EACH ROW EXECUTE PROCEDURE insert_admin_permission();
+
+DROP TRIGGER insert_admin_permission ON reports;
+CREATE TRIGGER insert_admin_permission AFTER INSERT ON reports
+	FOR EACH ROW EXECUTE PROCEDURE insert_admin_permission();
+
+CREATE OR REPLACE FUNCTION insert_reports_aclgroup(report_val INTEGER,aclgroup_val INTEGER) RETURNS INTEGER AS $$
+DECLARE
+	last_id INTEGER;
+BEGIN
+	INSERT INTO reports_aclgroup(report_id,aclgroup_id,aclread) values(report_val,aclgroup_val,true);
+	SELECT INTO last_id currval('reports_aclgroup_id_seq');
+
+	RETURN last_id;	
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_reports(report_val VARCHAR(255), name_val VARCHAR(255), owner_val INTEGER) RETURNS INTEGER AS $$
+DECLARE
+	last_id INTEGER;
+BEGIN
+	INSERT INTO reports (report,name,owner) values(report_val,name_val,owner_val);
+	SELECT INTO last_id currval('reports_id_seq');
+
+	RETURN last_id;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION insert_object(active_val BOOLEAN) RETURNS INTEGER AS $$
 DECLARE
 	last_id INTEGER;
@@ -282,14 +400,148 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insert_ticket(site_val INTEGER, status_val INTEGER, barcode_val VARCHAR(255), location_val TEXT, author_val TEXT, contact_val VARCHAR(255), contact_phone_val VARCHAR(255), troubleshot_val TEXT, section_val INTEGER, problem_val TEXT, priority_val INTEGER, serial_val VARCHAR(255), contact_email_val VARCHAR(255), tech_val INTEGER, notes_val TEXT, submitter_val INTEGER, free_date_val DATE, free_time_val TIME) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insert_audit_row() RETURNS TRIGGER AS $$
+DECLARE
+	last_audit INTEGER;
+	time_worked_val TIMESTAMP;
+BEGIN
+	IF TG_OP = 'INSERT' THEN
+		INSERT INTO audit (
+			status,
+			site,
+			location,
+			contact,
+			section,
+			priority,
+			contact_email,
+			technician,
+			notes,
+			updater,
+			ticket
+		) values (
+			new.status,
+			new.site,
+			new.location,
+			new.contact,
+			new.section,
+			new.priority,
+			new.contact_email,
+			new.technician,
+			new.notes,
+			new.submitter,
+			new.ticket
+		);
+	ELSIF TG_OP = 'UPDATE' THEN
+		INSERT INTO audit (
+			status,
+			site,
+			location,
+			contact,
+			section,
+			priority,
+			contact_email,
+			technician,
+			notes,
+			updater,
+			ticket
+		) values (
+			new.status,
+			new.site,
+			new.location,
+			new.contact,
+			new.section,
+			new.priority,
+			new.contact_email,
+			new.technician,
+			new.notes,
+			new.updater,
+			new.ticket
+		);
+		IF old.status = '2' THEN
+			select into last_audit currval ('audit_record_seq');
+			select into time_worked_val updated from audit where ticket = new.ticket and status = '2' order by record desc;
+			update audit set time_worked = (current_timestamp - time_worked_val) where record = last_audit;
+		END IF;
+
+		IF new.status = '6' THEN
+			select into last_audit currval ('audit_record_seq');
+			update audit set closed_by = new.closed_by, closed_date = current_timestamp where record = last_audit;
+		END IF;
+
+		IF new.status = '7' THEN
+			select into last_audit currval ('audit_record_seq');
+			update audit set completed_by = new.completed_by, completed_date = current_timestamp where record = last_audit;
+		END IF;
+	END IF;
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER insert_audit_row ON helpdesk;
+CREATE TRIGGER insert_audit_row AFTER INSERT OR UPDATE ON helpdesk
+	FOR EACH ROW EXECUTE PROCEDURE insert_audit_row();
+
+CREATE OR REPLACE FUNCTION insert_ticket(
+	site_val INTEGER,
+	status_val INTEGER,
+	barcode_val VARCHAR(255),
+	location_val TEXT,
+	author_val TEXT,
+	contact_val VARCHAR(255),
+	contact_phone_val VARCHAR(255),
+	troubleshot_val TEXT,
+	section_val INTEGER,
+	problem_val TEXT,
+	priority_val INTEGER,
+	serial_val VARCHAR(255),
+	contact_email_val VARCHAR(255),
+	tech_val INTEGER,
+	notes_val TEXT,
+	submitter_val INTEGER,
+	free_date_val DATE,
+	free_time_val TIME
+) RETURNS INTEGER AS $$
 DECLARE
 	last_id INTEGER;
 BEGIN
-	INSERT INTO helpdesk (status, barcode, site, location, author, contact, contact_phone, section, problem, priority, serial, contact_email, technician, notes, submitter, free_date, free_time) values (status_val, barcode_val, site_val, location_val, author_val, contact_val, contact_phone_val, section_val, problem_val, priority_val, serial_val, contact_email_val,tech_val,notes_val,submitter_val,free_date_val,free_time_val);
+	INSERT INTO helpdesk (
+		status,
+		barcode,
+		site,
+		location,
+		author,
+		contact,
+		contact_phone,
+		section,
+		problem,
+		priority,
+		serial,
+		contact_email,
+		technician,
+		notes,
+		submitter,
+		free_date,
+		free_time
+	) values (
+		status_val,
+		barcode_val,
+		site_val,
+		location_val,
+		author_val,
+		contact_val,
+		contact_phone_val,
+		section_val,
+		problem_val,
+		priority_val,
+		serial_val,
+		contact_email_val,
+		tech_val,
+		notes_val,
+		submitter_val,
+		free_date_val,
+		free_time_val
+	);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
-
-	INSERT INTO audit (status, site, location, contact, section, priority, contact_email, technician, notes, updater, ticket) values (status_val, site_val, location_val, contact_val, section_val, priority_val, contact_email_val, tech_val, notes_val, submitter_val, last_id);
 
 	IF troubleshot_val NOT LIKE '' THEN
 		insert into troubleshooting (ticket_id,troubleshooting) values(last_id,troubleshot_val);
@@ -313,10 +565,7 @@ CREATE OR REPLACE FUNCTION update_ticket(
 	contact_email_val VARCHAR(255),
 	notes_val TEXT,
 	status_val INTEGER,
-	tech_val INTEGER,
-	updater_val INTEGER,
-	closed_by_val INTEGER,
-	completed_by_val INTEGER
+	updater_val INTEGER
 ) RETURNS INTEGER AS $$
 DECLARE
 	priority_val INTEGER;
@@ -325,58 +574,46 @@ DECLARE
 	last_id INTEGER;
 	closed_by_text VARCHAR(255);
 	completed_by_text VARCHAR(255);
-	last_audit INTEGER;
 BEGIN
 	--Step 1. Translate priority, site, status, section into values from the other tables
 	SELECT INTO site_val id FROM site WHERE name = site_text;
 	
 	-- Step 2. Update all the columns
-	update helpdesk set updated = current_timestamp where ticket = ticket_number;
-	update helpdesk set contact = contact_val where ticket = ticket_number;
-	update helpdesk set contact_phone = contact_phone_val where ticket = ticket_number;
-	update helpdesk set site = site_val where ticket = ticket_number;
-	update helpdesk set location = location_val where ticket = ticket_number;
-	update helpdesk set status = status_val where ticket = ticket_number;
-	update helpdesk set closed_by = '' where ticket = ticket_number;
-	update helpdesk set completed_by = '' where ticket = ticket_number;
+	select into closed_by_text alias from users where id = updater_val;
+	select into completed_by_text alias from users where id = updater_val;
 
-	INSERT INTO audit (
-		status,
-		site,
-		location,
-		contact,
-		section,
-		priority,
-		contact_email,
-		technician,
-		notes,
-		updater,
-		ticket
-	) values (
-		status_val,
-		site_val,
-		location_val,
-		contact_val,
-		section_val,
-		priority_val,
-		contact_email_val,
-		tech_val,
-		notes_val,
-		updater_val,
-		ticket_number
-	);
-
-	select into last_audit last_value from audit_record_seq;
-	IF closed_by_val IS NOT NULL THEN
-		select into closed_by_text alias from users where id = closed_by_val;
-		update helpdesk set closed_by = closed_by_text where ticket = ticket_number;
-		update audit set closed_by = closed_by_text, closed_date = current_timestamp where record = last_audit;
-	END IF;
-
-	IF completed_by_val IS NOT NULL THEN
-		select into completed_by_text alias from users where id = completed_by_val;
-		update helpdesk set completed_by = completed_by_text where ticket = ticket_number;
-		update audit set completed_by = completed_by_text, completed_date = current_timestamp where record = last_audit;
+	IF status_val = '6' THEN
+		update helpdesk set
+			updated = current_timestamp,
+			contact = contact_val,
+			contact_phone = contact_phone_val,
+			site = site_val,
+			location = location_val,
+			status = status_val,
+			closed_by = closed_by_text,
+			updater = updater_val
+		where ticket = ticket_number;
+	ELSIF status_val = '7' THEN
+		update helpdesk set
+			updated = current_timestamp,
+			contact = contact_val,
+			contact_phone = contact_phone_val,
+			site = site_val,
+			location = location_val,
+			status = status_val,
+			completed_by = completed_by_text,
+			updater = updater_val
+		where ticket = ticket_number;
+	ELSE
+		update helpdesk set
+			updated = current_timestamp,
+			contact = contact_val,
+			contact_phone = contact_phone_val,
+			site = site_val,
+			location = location_val,
+			status = status_val,
+			updater = updater_val
+		where ticket = ticket_number;
 	END IF;
 
 	IF troubleshot_val NOT LIKE '' THEN
@@ -386,8 +623,6 @@ BEGIN
 	IF notes_val NOT LIKE '' THEN
 		insert into notes (ticket_id,note) values(ticket_number,notes_val);
 	END IF;
-	-- select into last_id last_value from helpdesk_ticket_seq;
-	-- last_id := 1; --this doesn't do anything and should be replaced with something related to this operation.  I am placing this here because I don't know how to make a stored procedure yet without a return val
 	RETURN ticket_number;
 END;
 $$ LANGUAGE plpgsql;
@@ -502,6 +737,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TYPE agents_working_holder;
 CREATE TYPE agents_working_holder as (id INTEGER, alias VARCHAR(255), logged_in INTERVAL);
 
 CREATE OR REPLACE FUNCTION agents_working() RETURNS SETOF agents_working_holder AS $$
@@ -520,6 +756,169 @@ BEGIN
 			on
 				users.id = auth.user_id
 		where not customer
+	LOOP
+		RETURN NEXT r;
+	END LOOP;
+	return;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_report(report_val INTEGER) RETURNS VARCHAR(255) AS $$
+DECLARE
+	report_out VARCHAR(255);
+BEGIN
+	select into report_out (select report from reports where id = report_val);
+	return report_out;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TYPE audit_tickets_by_tech_holder CASCADE;
+CREATE TYPE audit_tickets_by_tech_holder as (
+	record INTEGER,
+	time_worked TEXT,
+	updated TEXT,
+	contact VARCHAR(255),
+	notes TEXT,
+	contact_email VARCHAR(255),
+	ticket INTEGER,
+	closed_by VARCHAR(255),
+	completed_by VARCHAR(255),
+	closed_date TIMESTAMP,
+	completed_date TIMESTAMP,
+	location TEXT,
+	priority VARCHAR(255),
+	site VARCHAR(255),
+	technician VARCHAR(255),
+	updater VARCHAR(255),
+	section VARCHAR(255),
+	status VARCHAR(255),
+	problem TEXT
+);
+
+CREATE OR REPLACE FUNCTION audit_tickets_by_tech(user_val INTEGER,ticket_val INTEGER, sd_val TIMESTAMP, ed_val TIMESTAMP) RETURNS SETOF audit_tickets_by_tech_holder AS $$
+DECLARE
+	r audit_tickets_by_tech_holder%rowtype;
+BEGIN
+	FOR r IN
+		select
+			record,
+			regexp_replace(cast(time_worked as text),'.[0123456789]+$','') as time_worked,
+			to_char(audit.updated,'YYYY-MM-DD HH24:MI:SS') as updated,
+			audit.contact,
+			audit.notes,
+			audit.contact_email,
+			audit.ticket,
+			audit.closed_by,
+			audit.completed_by,
+			audit.closed_date,
+			audit.completed_date,
+			audit.location,
+			priority.description as priority,
+			site.name as site,
+			users.alias as technician,
+			users.alias as updater,
+			section.name as section,
+			status.status as status,
+			helpdesk.problem as problem
+		from
+			audit
+		join
+			helpdesk
+			on
+				helpdesk.ticket = audit.ticket
+		join
+			priority
+			on
+				priority.id = audit.priority
+		join
+			site
+			on
+				site.id = audit.site
+		join
+			section
+			on
+				section.id = audit.section
+		join
+			status
+			on
+				status.id = audit.status
+		join
+			users
+			on
+				users.id = audit.technician
+			or
+				users.id = audit.updater
+		where (
+				audit.technician = user_val
+			or
+				audit.updater = user_val
+		) and
+			audit.ticket  = ticket_val
+		and
+			audit.updated between sd_val and ed_val
+		
+	LOOP
+		RETURN NEXT r;
+	END LOOP;
+	return;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION audit_tickets_by_ticket(ticket_val INTEGER) RETURNS SETOF audit_tickets_by_ticket_holder AS $$
+DECLARE
+	r audit_tickets_by_ticket_holder%rowtype;
+BEGIN
+	FOR r IN
+		select
+			record,
+			regexp_replace(cast(time_worked as text),'.[0123456789]+$','') as time_worked,
+			to_char(audit.updated,'YYYY-MM-DD HH24:MI:SS') as updated,
+			audit.contact,
+			audit.notes,
+			audit.contact_email,
+			audit.ticket,
+			audit.closed_by,
+			audit.completed_by,
+			audit.closed_date,
+			audit.completed_date,
+			audit.location,
+			priority.description as priority,
+			site.name as site,
+			users.alias as technician,
+			users.alias as updater,
+			section.name as section,
+			status.status as status,
+			helpdesk.problem as problem
+		from
+			audit
+		join
+			helpdesk
+			on
+				helpdesk.ticket = audit.ticket
+		join
+			priority
+			on
+				priority.id = audit.priority
+		join
+			site
+			on
+				site.id = audit.site
+		join
+			section
+			on
+				section.id = audit.section
+		join
+			status
+			on
+				status.id = audit.status
+		join
+			users
+			on
+				users.id = audit.technician
+			or
+				users.id = audit.updater
+		where
+			audit.ticket  = ticket_val
 	LOOP
 		RETURN NEXT r;
 	END LOOP;
@@ -577,6 +976,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON enabled_modules TO helpdesk;
 GRANT SELECT, UPDATE ON enabled_modules_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON reports TO helpdesk;
 GRANT SELECT, UPDATE ON reports_id_seq TO helpdesk;
+GRANT SELECT, INSERT, UPDATE, DELETE ON reports_aclgroup TO helpdesk;
+GRANT SELECT, UPDATE ON reports_aclgroup_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON wo TO helpdesk;
 GRANT SELECT, UPDATE ON wo_id_seq TO helpdesk;
 GRANT SELECT, INSERT, UPDATE, DELETE ON wo_name TO helpdesk;

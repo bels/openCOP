@@ -1,13 +1,12 @@
 #!/usr/bin/perl
 
-
 use 5.008009;
-package ReadConfig;
+package ReportFunctions;
 
 use strict;
 use warnings;
 
-use YAML ();
+use DBI;
 
 require Exporter;
 
@@ -17,7 +16,7 @@ our @ISA = qw(Exporter);
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 
-# This allows declaration	use ReadConfig ':all';
+# This allows declaration	use ReportFunctions ':all';
 # If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
@@ -30,7 +29,7 @@ our @EXPORT = qw(
 	
 );
 
-our $VERSION = '0.011';
+our $VERSION = '0.01';
 
 
 # Preloaded methods go here.
@@ -41,60 +40,43 @@ sub new{
 	
 	my $self = bless({},$package);
 
-	$self->{'config_type'} = $args{'config_type'};
-	$self->{'config_file'} = $args{'config_file'};
+	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'});
 
 	return $self;
 }
 
-sub read_config{
+sub view{
 	my $self = shift;
+	my %args = @_;
 
-	my $type = uc($self->{'config_type'});
-	my %config_types = (
-		'YAML' => read_yaml($self)
-	);
+	my $query = "select * from view_reports(?);";
+	my @params = ($args{'id'});
+
+	my $sth = $self->{'dbh'}->prepare($query) or return undef;
+	$sth->execute(@params);
+	my $result = $sth->fetchall_hashref('name');
+	return $result;
 }
 
-sub read_yaml{
-	my $self = shift;
-
-	if (-e $self->{'config_file'})
-	{
-		my $config = YAML::LoadFile($self->{'config_file'});
-	#	my %config_data = %{$config};
-		foreach (keys %$config)
-		{
-			$self->{$_} = $config->{$_};
-		}
-	}
-	else
-	{
-		die "Tried to read in a YAML config file and the location given is not correct";
-	}
-}
 1;
 __END__
 # Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
-ReadConfig - generic configuration reader
+ReportFunctions - TODO
 
 =head1 SYNOPSIS
 
-  use ReadConfig;
+  use ReportFunctions;
 
 =head1 DESCRIPTION
 
-ReadConfig reads different config files that map to hashes well.  For example
-it reads YAML config files and takes the ATTRIB: VALUE pair and turns them into
-parameters for the object created when calling ReadConfig->new() inside of your
-PERL script
+TODO
 
 =head2 VERSIONING
 
-.1 reads yaml config files
+.1 displays reports in opencop
 =head2 EXPORT
 
 None by default.
@@ -114,7 +96,7 @@ If you have a web site set up for your module, mention it here.
 
 =head1 AUTHOR
 
-bels, <lt>bels@lfmcorp.com<gt>
+markyys, <lt>jesusthefrog@gmail.com<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

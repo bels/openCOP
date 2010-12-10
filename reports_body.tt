@@ -1,19 +1,20 @@
 	<div id="query_builder">
+		<div id="query_builder_header" class="header">Query Builder</div>
 		<div id="select_div">
-					<span class="label">Select</span>
-					<div>
-						<select id="100" name="100" class="column"></select>
-					</div>
-					<button id="200" class="add_column">+</button>
-					<button id="201" class="del_column">-</button>
+			<span class="label">Select</span>
+			<div>
+				<select id="100" name="100" class="column"></select>
+			</div>
+			<button id="200" class="add_column">+</button>
+			<button id="201" class="del_column">-</button>
 		</div>
 		<div id="from_div">
-					<span class="label">From</span>
-					<div>
-						<select id="300" name="300" class="table">
-						</select>
-					</div>
-					<button id="202" class="add_table">+</button>
+			<span class="label">From</span>
+			<div>
+				<select id="300" name="300" class="table">
+				</select>
+			</div>
+			<button id="202" class="add_table">+</button>
 		</div>
 		<div id="join_div_parent">
 		</div>
@@ -32,4 +33,10 @@
 		<div id="submit_div">
 			<button id="run">Run once</button><button id="save">Save query</button><span id="as_text" name="as_text">as </span><input type="text" id="as" name="as">
 		</div>
+	</div>
+	<div id="query_permissions">
+		<div id="query_permissions_header" class="header">Assign group access</div>
+		<select id="associate_rp" class="multiselect" multiple="multiple" name="rp_select_array[]">
+
+		</select>
 	</div>

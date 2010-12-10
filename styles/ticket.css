@@ -142,6 +142,7 @@ td{
 	text-align: justify;
 	font-weight: bold;
 	font-size: .9em;
+	cursor: pointer;
 }
 
 #past_troubleshoot{
@@ -157,10 +158,6 @@ td{
 #past_notes{
 	white-space: pre-wrap;
 	margin-left: 160px;
-}
-
-.ticket_section_toggle{
-	cursor: pointer;
 }
 
 .form_title{

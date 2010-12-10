@@ -9,7 +9,9 @@ use ReadConfig;
 use SessionFunctions;
 use UserFunctions;
 use DBI;
+use ReportFunctions;
 use JSON;
+use Data::Dumper;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -28,6 +30,12 @@ if(%cookie)
 
 if($authenticated == 1)
 {
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
+	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $reports = $report->view(id => $id);
+
 	my $vars = $q->Vars;
 	my $name = $vars->{'report_name'};
 
@@ -87,16 +95,30 @@ if($authenticated == 1)
 		}
 	}
 	$query .= ";";
-	warn $query;
 
 	if($vars->{'mode'} eq "save"){
 		print "Content-type: text/html\n\n";
-		my $aclgroup;
-		my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-		my $insert = "insert into reports (report,name,aclgroup,owner) values(?,?,?,?);";
-		my $sth = $dbh->prepare($insert);
-		$sth->execute($query,$name,$aclgroup,$id);
-		print "1";
+		my $check = "select count(*) from reports where name = ?;";
+		my $sth = $dbh->prepare($check);
+		$sth->execute($name);
+		my $result = $sth->fetchrow_hashref;
+		unless($result->{'count'}){ # No reports already saved with that name.
+			my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+			my $insert = "select insert_reports(?,?,?);";
+			$sth = $dbh->prepare($insert);
+			$sth->execute($query,$name,$id);
+			my $report = $sth->fetchrow_hashref;
+			if(defined(@{$object->{'groups'}}[0])){
+				$insert = "insert into reports_aclgroup (report_id,aclgroup_id,aclread) values(?,?,?);";
+				$sth = $dbh->prepare($insert);
+				foreach(@{$object->{'groups'}}){
+					$sth->execute($report->{'insert_reports'},$_->{'selected'},"true");
+				}
+			}
+			print "0";
+		} else { # Duplicate detected.
+			print "1";
+		}
 	} elsif($vars->{'mode'} eq "run"){
 		print "Content-type: text/html\n\n";
 		print "2";
@@ -121,11 +143,14 @@ if($authenticated == 1)
 			}
 		}
 
+		warn Dumper $columns;
+		warn Dumper $results;
+
 		my @styles = ("styles/jquery.jscrollpane.css","styles/display_report.css");
 		my @javascripts = ("javascripts/main.js","javascripts/jquery.download.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/main.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/display_report.js");
 		my $title = $config->{'company_name'} . " - Custom Report";
 		my $file = "display_report.tt";
-		my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, sorted_hash => \@sorted_hash, results => $results, columns => $columns, table_title => $name};
+		my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, sorted_hash => \@sorted_hash, results => $results, columns => $columns, table_title => $name, reports => $reports, is_admin => $user->is_admin(id => $id)};
 
 		my $template = Template->new();
 		$template->process($file,$vars) || die $template->error();

@@ -11,13 +11,16 @@
 				[% END %]
 					</ul>
 				</li>
-			[% IF is_admin %]
 				<li><a href=#>Reports</a>
 					<ul class="subnav">
+					[% FOREACH i IN reports.sort %]
+						<li><a href="#" id="[% reports.$i.id %]" class="report_link">[% i %]</a></li>
+					[% END %]
+					[% IF is_admin %]
 						<li><a href="reports.pl">Query Builder</a></li>
+					[% END %]
 					</ul>
 				</li>
-			[% END %]
 				<li><a href=#>Inventory</a>
 					<ul class="subnav">
 						<li><a href="inventory.pl?mode=add">Add</a></li>
@@ -44,6 +47,7 @@
 						<li><a href="modules.pl">Modules</a></li>
 						<li><a href="groups.pl">Groups</a></li>
 						<li><a href="permissions.pl">Permissions</a></li>
+						<li><a href="time_tracking.pl">Time Tracking</a></li>
 					[% END %]
 						<li><a href="password.pl">Change Password</a></li>
 						<li><a href="logout.pl">Logout</a></li>
