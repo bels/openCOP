@@ -40,11 +40,10 @@
 					[% IF is_admin %]
 						<li><a href="work_orders.pl">Work Orders</a></li>
 						<li><a href="user_admin.pl">User Admin</a></li>
-						<li><a href="sites.pl">Companies/Sites</a></li>
-						<li><a href="global_settings.pl">Global Settings</a></li>
+						<li><a href="settings.pl">Global Settings</a></li>
+						<li><a href="modules.pl">Modules</a></li>
 						<li><a href="groups.pl">Groups</a></li>
 						<li><a href="permissions.pl">Permissions</a></li>
-						<li><a href="notification_config.pl">Notification Configuration</a></li>
 					[% END %]
 						<li><a href="password.pl">Change Password</a></li>
 						<li><a href="logout.pl">Logout</a></li>

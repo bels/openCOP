@@ -19,17 +19,6 @@ $(document).ready(function(){
 	} else {
 		wo_tabs = 0;
 	}
-	if($('.jspContainer').length){
-		jspC = 1;
-	} else {
-		jspC = 0;
-	}
-	$('.jspContainer').livequery(function(){
-		jspC = 1;
-	});
-	$('.multiselect').livequery(function(){
-		multiselect = 1;
-	});
 
 	$.ajaxSetup({
 		cache: false
@@ -58,51 +47,15 @@ $(document).ready(function(){
 	
 	function showMenu(){
 		resetLogout();
-		if(tabs){
-			$("#tabs").addClass("lower");
-		}
-		if(wo_tabs){
-			$("#wo_tabs").addClass("lower");
-		}
-		if(jspC){
-			$(".jspContainer").addClass("lower");
-		}
-		if(multiselect){
-			$("#associate_user_group_div").addClass("lower");
-			$("#a_ug_append_div").addClass("lower");
-			$(".ui-multiselect").addClass("lower");
-			$(".selected").addClass("lower");
-			$(".available").addClass("lower");
-		}
-		if(inventory_current){
-
-			$(".jspContainer").addClass("lower");
-		}
 		$(this).find("ul.subnav").slideDown('fast').show();
 	}
 	
 	function hideMenu(){
 		resetLogout();
-		$(this).find("ul.subnav").slideUp('fast',function(){
-			if(tickets){
-				$(".jspContainer").removeClass("lower");
-			}
-			if(multiselect){
-				$("#associate_user_group_div").removeClass("lower");
-				$("#a_ug_append_div").removeClass("lower");
-				$(".ui-multiselect").removeClass("lower");
-				$(".selected").removeClass("lower");
-				$(".available").removeClass("lower");
-			}
-			if(inventory_current){
-				$(".jspContainer").removeClass("lower");
-			}
-			$("#tabs").removeClass("lower");
-			$("#wo_tabs").removeClass("lower");
-		});
+		$(this).find("ul.subnav").slideUp('fast');
 	}
 	if(tabs){
-		$("#tabs").tabs();
+		$("#tabs").tabs().scrollabletab();
 	}
 	$('table').livequery(function(){
 		$(this).tablesorter();

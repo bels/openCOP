@@ -44,3 +44,26 @@
 #new_tab a{
 	cursor: pointer;
 }
+
+#wo_name_div{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#wo_name_div label{
+	width: 240px;
+	display: inline-block;
+	font-weight: bold;
+	font-size: 1.1em;
+	margin-left: 10px;
+}
+
+h4{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.create_button{
+	margin-top: 5px;
+	cursor: pointer;
+}

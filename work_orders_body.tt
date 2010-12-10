@@ -7,10 +7,10 @@
 		<li id="new_tab" class="tab"><a href="#new">New Step</a></li>
 	</ul>
 	<div id="content1" class="content">
-		<h2>[% company_name %] Helpdesk - Create a new work order template</h2>
+		<h3>[% company_name %] Helpdesk - Create a new work order template</h3>
 		<form class="newwo">
 			<div class="author_div">
-				<h3>General Information</h3>
+				<h4>General Information</h4>
 				<label for="requires" class="short_label">Requires:</label>
 				<select name="requires" size="1" tabindex="9" class="requires">
 					<option></option>
@@ -25,10 +25,10 @@
 				<a href="tips.pl?109" class="tooltip" target="_tips">?</a>
 			</div>
 			<div class="problem_details">
-				<h3>Problem Details</h3>
+				<h4>Problem Details</h4>
 				<label for="problem">Work Requested:</label><a href="tips.pl?310" class="tooltip" target="_tips">?</a><br />
 				<textarea class="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
-				<button type="button" class="create_button">Create Work Order</button>
+				<img src="images/create_work_order.png" border=0 class="create_button">
 			</div>
 		</form>
 	</div>

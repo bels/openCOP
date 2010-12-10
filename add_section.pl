@@ -34,7 +34,7 @@ if($authenticated == 1)
 	my $sth = $dbh->prepare($query);
 	$sth->execute($section_name,$section_email);
 	
-	print $q->redirect(-URL=> "global_settings.pl?success=1");
+	print $q->redirect(-URL=> "settings.pl?success=1");
 } elsif($authenticated == 2){
 	print $q->redirect(-URL => $config->{'index_page'})
 }

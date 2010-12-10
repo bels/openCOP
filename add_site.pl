@@ -35,7 +35,7 @@ if($authenticated == 1){
 	$sth = $dbh->prepare($query);
 	$sth->execute($results->{'id'},$site_name);
 	
-	print $q->redirect(-URL=> "sites.pl?success=1");
+	print $q->redirect(-URL=> "settings.pl?success=1");
 } elsif($authenticated == 2){
         print $q->redirect(-URL => $config->{'index_page'})
 } else {

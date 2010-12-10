@@ -3,7 +3,7 @@
 	width: 375px;
 	margin-left: 35px;
 	margin-top: 20px;
-	padding-top: 20px;
+	padding-top: 15px;
 	padding-left: 25px;
 	color: white;
 	background-color: #333;
@@ -21,7 +21,7 @@
 	width: 475px;
 	margin-left: 35px;
 	margin-top: 20px;
-	padding-top: 20px;
+	padding-top: 15px;
 	padding-left: 25px;
 	color: white;
 	background-color: #333;
@@ -38,6 +38,8 @@ h3{
 	width: 325px;
 	margin-right: auto;
 	margin-left: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
 	text-align: center;
 }
 
@@ -49,7 +51,28 @@ label{
 
 #submit_button{
 	display: block;
-	width: 75px;
+	margin-top: 5px;
+	width: 80px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+input{
+	vertical-align: top;
+}
+
+select{
+	vertical-align: top;
+}
+
+#select_user_div img{
+	vertical-align: top;
+}
+
+#select_user_header{
+	width: 55px;
+}
+
+#submit_a_ug{
+	cursor: pointer;
 }

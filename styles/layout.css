@@ -53,65 +53,75 @@ body{
 }
 
  ul.topnav {  
-     list-style: none;  
-     padding: 0 20px;  
-     margin: 0;  
-     float: left;  
-     width: 920px;  
-     background: #222;  
-     font-size: 1.1em;  
-     background: repeat-x;  
+    list-style: none;  
+    padding: 0 20px;  
+    margin: 0;  
+    float: left;  
+    width: 920px;  
+    background: #222;  
+    font-size: 1.1em;  
+    background: repeat-x;  
+	z-index: 10000;
  }  
  ul.topnav li {  
-     float: left;  
-     margin: 0;  
-     padding: 0 15px 0 0;  
-     position: relative; /*--Declare X and Y axis base for sub navigation--*/  
+    float: left;  
+    margin: 0;  
+    padding: 0 15px 0 0;  
+    position: relative; /*--Declare X and Y axis base for sub navigation--*/  
+	z-index: 10000;
  }  
  ul.topnav li a{  
-     padding: 10px 5px;  
-     color: #000;  
-     display: block;  
-     text-decoration: none;  
-     float: left;  
+    padding: 10px 5px;  
+    color: #000;  
+    display: block;  
+    text-decoration: none;  
+    float: left;  
+	z-index: 10000;
  }  
  ul.topnav li a:hover{  
-     background: no-repeat center top;  
+    background: no-repeat center top;  
+	z-index: 10000;
  }  
  ul.topnav li span { /*--Drop down trigger styles--*/  
-     width: 17px;  
-     height: 35px;  
-     float: left;  
-     background: url(../images/subnav_btn.gif) no-repeat center top;  
+    width: 17px;  
+    height: 35px;  
+    float: left;  
+    background: url(../images/subnav_btn.gif) no-repeat center top;  
+	z-index: 10000;
  }  
- ul.topnav li span.subhover {background-position: center bottombottom; cursor: pointer;} /*--Hover effect for trigger--*/  
+ ul.topnav li span.subhover {background-position: center bottombottom; cursor: pointer;z-index: 10000;} /*--Hover effect for trigger--*/  
  ul.topnav li ul.subnav {  
-     list-style: none;  
-     position: absolute; /*--Important - Keeps subnav from affecting main navigation flow--*/  
-     left: 0; top: 35px;  
-     background: #333;  
-     margin: 0; padding: 0;  
-     display: none;  
-     float: left;  
-     width: 170px;  
-     border: 1px solid #111;  
+	list-style: none;  
+	position: absolute; /*--Important - Keeps subnav from affecting main navigation flow--*/  
+	left: 0; top: 35px;  
+    background-color: rgba(51,51,51,0.7);
+	margin: 0; padding: 0;  
+    display: none;  
+    float: left;  
+    width: 170px;  
+    border: 1px solid #111;  
+	z-index: 10000;
  }  
  ul.topnav li ul.subnav li{  
-     margin: 0; padding: 0;  
-     border-top: 1px solid #252525; /*--Create bevel effect--*/  
-     border-bottom: 1px solid #444; /*--Create bevel effect--*/  
-     clear: both;  
-     width: 170px;  
+    margin: 0; padding: 0;  
+    border-top: 1px solid #252525; /*--Create bevel effect--*/  
+    border-bottom: 1px solid #444; /*--Create bevel effect--*/  
+    clear: both;  
+    width: 170px;  
+	z-index: 10000;
  }  
  html ul.topnav li ul.subnav li a {  
-     float: left;  
-     width: 145px;  
-     background: #333 no-repeat 10px center;  
-     padding-left: 20px;  
-     font-size: .8em;
+    float: left;  
+    width: 145px;  
+    background: no-repeat 10px center;
+	background-color: rgba(51,51,51,0.7);
+	padding-left: 20px;  
+    font-size: .8em;
+	z-index: 10000;
  }  
  html ul.topnav li ul.subnav li a:hover { /*--Hover effect for subnav links--*/  
      background: #222 no-repeat 10px center;  
+	 z-index: 10000;
  }
  
  #drop_shadow{
@@ -120,6 +130,23 @@ body{
 	background-image: url('../images/drop_shadow.png');
 }
 
-.lower{
-	z-index: -1;
+label{
+	margin-bottom: 5px;
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=2);
+	white-space: nowrap;
+	font-size: .95em;
+	display: block;
+}
+
+.styled_form_element{
+	padding: 3px;
+	border: 1px solid #E2E3E5;
+	outline: 0;
+	box-shadow: rgba(0,0,0,0.1) 0px 0px 8px;
+	-moz-box-shadow: rgba(0,0,0,0.1) 0px 0px 8px;
+	-webkit-box-shadow: rgba(0,0,0,0.1) 0px 0px 8px;
+	background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #E2E3E5), to(#FFFFFF));  
+	background: -moz-linear-gradient(top, #FFFFFF, #E2E3E5 1px, #FFFFFF 25px);
+	margin-bottom: 5px;
 }

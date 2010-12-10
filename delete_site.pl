@@ -33,7 +33,7 @@ if($authenticated == 1)
 	my $sth = $dbh->prepare($query);
 	$sth->execute($vars->{'delete_site_name'});
 
-	print $q->redirect(-URL=> "sites.pl?delete_site_success=1");
+	print $q->redirect(-URL=> "settings.pl?delete_site_success=1");
 }
 else
 {

@@ -1,0 +1,134 @@
+		<div id="tabs">
+			<ul>
+				<li><a href="#add_site_div">Add Site</a></li>
+				<li><a href="#delete_site_div">Delete Site</a></li>
+				<li><a href="#add_site_level_div">Add Site Level</a></li>
+				<li><a href="#delete_site_level_div">Delete Site Level</a></li>
+				<li><a href="#add_company_div">Add Company</a></li>
+				<li><a href="#add_section_div">Add Section</a></li>
+				<li><a href="#associate_site_company_div">Associate</a></li>
+				<li><a href="#notify_div">Notification Settings</a></li>
+			</ul>
+			<div id="add_site_div" class="style">
+				[% IF success == 1 %]
+					<span class="success">The site was created successfully.</span>
+				[% END %]
+				<form action="add_site.pl" method="POST">
+					<label for="site_name" class="add_site_label">Site Name:</label><input type="text" name="site_name" id="site_name" class="styled_form_element"><a href="tips.pl?304" class="tooltip">?</a>
+					<label for="site_level" class="add_site_label">Site Level:</label>
+					<select name="site_level" size="1" tabindex="1" id="site_level" class="styled_form_element">
+						[% FOREACH site_level IN site_level_list %]
+						<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
+						[% END %]
+					</select>
+					<a href="tips.pl?305" class="tooltip">?</a><br />
+					<input type="image" src="images/add.png" alt="Add" class="submit_button" id="add_site_submit_button">
+				</form>
+			</div>
+			<div id="add_site_level_div" class="style">
+				[% IF level_success == 1 %]
+					<span class="success">The site level was created successfully.</span>
+				[% END %]
+				<form action="add_site_level.pl" method="POST">
+					<label for="site_level_name">Site Level Name:</label><input type="text" name="site_level_name" id="site_level_name" class="styled_form_element"><a href="tips.pl?306" class="tooltip">?</a><br />
+					<input type="image" src="images/add.png"  alt="Add" id="level_submit_button">
+				</form>
+			</div>
+			<div id="delete_site_div" class="style">
+				[% IF delete_site_success == 1 %]
+					<span class="success">The site was deleted successfully.</span>
+				[% END %]
+				<form action="delete_site.pl" method="POST">
+					<label for="delete_site_name">Site Name:</label>
+					<select name="delete_site_name" id="delete_site_name" class="styled_form_element">
+					[% FOREACH site IN sites_list %]
+						<option value="[% sites.$site.id %]">[% sites.$site.name %]</option>
+					[% END %]
+					</select>
+					<br />
+					<input type="image" src="images/delete.png" alt="Delete" id="delete_submit_button">
+				</form>
+			</div>
+			<div id="delete_site_level_div" class="style">
+				[% IF delete_site_level_success == 1 %]
+					<span class="success">The site level was deleted successfully.</span>
+				[% END %]
+				<form id="delete_site_level_form">
+					<label for="delete_site_level_name">Site Level Name:</label>
+					<select name="delete_site_level_name" id="delete_site_level_name" class="styled_form_element">
+					[% FOREACH site_level IN site_level_list %]
+						<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
+					[% END %]
+					</select>
+				</form>
+				<img src="images/delete.png" id="delete_site_level_submit_button" border=0>
+			</div>
+			<div id="add_company_div" class="style">
+				[% IF company_success == 1 %]
+					<span class="success">The company was created successfully.</span>
+				[% END %]
+				<form action="add_company.pl" method="POST">
+					<label for="company_name_input">Company Name:</label><input type="text" name="company_name_input" id="company_name_input" class="styled_form_element"><a href="tips.pl?308" class="tooltip">?</a>
+					<input type="image" src="images/add.png"  alt="Add" id="company_submit_button">
+				</form>
+			</div>
+			<div id="associate_site_company_div" class="style">
+				[% IF associate_success == 1 %]
+					<span class="success">The company and site were successfully associated.</span>
+				[% END %]
+				<form action="associate_company_site.pl" method="POST">
+					<label for="associate_company_name">Company:</label>
+					<select name="associate_company_name" id="associate_company_name" class="styled_form_element">
+						[% FOREACH company IN company_list %]
+						<option value="[% companies.$company.id %]">[% companies.$company.name %]</option>
+						[% END %]
+					</select>
+					<label for="associate_site_name">Site:</label>
+					<select name="associate_site_name" id="associate_site_name" class="styled_form_element">
+						[% FOREACH site IN sites_list %]
+						<option value="[% sites.$site.id %]">[% sites.$site.name %]</option>
+						[% END %]
+					</select>
+					<input type="image" src="images/add.png"  alt="Associate" id="associate_submit_button">
+				</form>
+			</div>
+			<div id="add_section_div">
+				[% IF duplicate == 1 %]
+					<span class="error">This section name is already in use.  Please choose another.</span><br/><br/>
+				[% END %]
+				[% IF success == 1 %]
+					<span class="success">The section was created successfully.</span><br/><br/>
+				[% END %]
+				<form action="add_section.pl" method="POST">
+					<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name" class="styled_form_element"><a href="tips.pl?301" class="tooltip">?</a><br />
+					<label for="section_email">Section Email:</label><input type="text" name="section_email" id="section_email" class="styled_form_element"><a href="tips.pl?302" class="tooltip">?</a><br />
+					<input type="submit" value="Add" id="submit_button">
+				</form>
+			</div>
+			<div id="notify_div">
+				<div id="update_div">
+					<button id="update">Save changes</button>
+				</div>
+				<form id="notify_form">
+				[% FOREACH i IN fnotify.sort %]
+					<label for="[% i %]">[% fnotify.$i %]</label>
+					[% IF i == "email_password" %]
+					<input class="pwd styled_form_element" type="password" name="[% i %]" id="[% i %]" rows="1" cols="32" value="[% notify.$i %]"><br>
+					<label for="[% i %]2">Confirm Password</label>
+					<input class="pwd styled_form_element" type="password" name="[% i %]2" id="[% i %]2" rows="1" cols="32" value="[% notify.$i %]">
+					[% ELSE %]
+					<textarea name="[% i %]" id="[% i %]" rows="1" cols="32" class="styled_form_element">[% notify.$i %]</textarea>
+					[% END %]
+					<br>
+				[% END %]
+				</form>
+			</div>
+		</div>
+		<div id="confirm_dialog">
+			<h3>Warning</h3>
+			<div id="confirm_middle">
+			</div>
+			<button id="proceed">Okay</button><button id="cancel">Cancel</button>
+		</div>
+		<div id="behind_popup">
+		</div>

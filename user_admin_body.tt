@@ -20,21 +20,21 @@
 					<option value="[% gid.$group.id %]">[% gid.$group.name %]</option>
 					[% END %]
 				</select>
-				<input type="submit" id="submit_button" value="Add User">
+				<input type="image" src="images/add_user.png" id="submit_button" alt="Add User">
 			</form>
 		</div>
 		
 		<div id="user_to_group" class="associate_div">
 			<h3>Modify Group Memberships</h3>
 			<div id="select_user_div" class="select_div">
-				<label id="select_user_header">User</label>
+				<label for="select_user_select" id="select_user_header">User</label>
 				<select id="select_user_select">
 					<option value="" selected="selected"></option>
 				[% FOREACH id IN users.sort %]
 					<option value="[% uid.$id.id %]">[% uid.$id.alias %]</option>
 				[% END %]
 				</select>
-				<button id="submit_a_ug" mode="a_ug" class="associate">Add</button>
+				<img id="submit_a_ug" src="images/add.png" mode="a_ug" class="associate" border=0>
 			</div>
 			<div id="associate_user_group_div">
 				<div id="onload_append_div" class="onload_append">

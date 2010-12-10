@@ -167,7 +167,8 @@ td{
 	width: 100%;
 	color: white;
 	background-color: #333;
-	height: 30px;
+	background: url('../images/title_bg.jpg');
+	height: 20px;
 	font-size: .8em;
 }
 
@@ -178,4 +179,14 @@ td{
 
 #search_form input{
 	margin-left: 10px;
+}
+
+h4{
+	margin-left: 10px;
+	margin-bottom: 5px;
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=3);
+	white-space: nowrap;
+	font-size: 1em;
+	display: block;
 }

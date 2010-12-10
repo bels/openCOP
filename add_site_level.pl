@@ -32,7 +32,7 @@ if($authenticated == 1){
 	my $sth = $dbh->prepare($query);
 	$sth->execute($site_level);
 	
-	print $q->redirect(-URL=> "sites.pl?level_success=1");
+	print $q->redirect(-URL=> "settings.pl?level_success=1");
 } elsif($authenticated == 2){
         print $q->redirect(-URL => $config->{'index_page'})
 } else {

@@ -1,0 +1,55 @@
+a{
+	color: white;
+}
+
+.tooltip{
+	margin-left: 3px;
+	margin-right: 3px;
+	color: white;
+}
+
+#behind_popup{
+	display:none;
+	position:fixed;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	background:#000000;
+	border:1px solid #cecece;
+	z-index:1;
+}
+
+#confirm_dialog{
+	display: none;
+	position:fixed;
+	height:530px;
+	width:408px;
+	background:#FFFFFF;
+	border:2px solid #cecece;
+	z-index:2;
+	padding:12px;
+	font-size:13px;
+}
+
+textarea{
+	margin-left: 35px;
+	vertical-align: text-top;
+}
+
+#site_name{
+	width: 300px;
+}
+
+#delete_site_level_submit_button{
+	cursor: pointer;
+}
+
+.success{
+	margin-bottom: 5px;
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=3);
+	white-space: nowrap;
+	font-size: .9em;
+	display: block;
+}
