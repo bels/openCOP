@@ -35,7 +35,7 @@ if($authenticated == 1){
 		<script type="text/javascript" src="javascripts/jquery.tablesorter.js"></script>
 		<script type="text/javascript" src="javascripts/agents_working.js"></script>
 
-		<table id="agents_working_table">
+		<table id="agents_working_table" class="sort">
 			<thead>
 				<tr class="header_row">
 					<th class="header_cell">These technicians are online</th>

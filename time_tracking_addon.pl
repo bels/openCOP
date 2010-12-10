@@ -64,7 +64,7 @@ if($authenticated == 1){
 	
 		print "Content-type: text/html\n\n";
 		print qq(
-			<table id="time_tracking_table">
+			<table id="time_tracking_table" class="sort">
 				<thead>
 					<tr class="header_row">
 						<th class="header_cell">Ticket #</th>
@@ -149,7 +149,7 @@ if($authenticated == 1){
 
 		print "Content-type: text/html\n\n";
 		print qq(
-			<table id="time_tracking_table">
+			<table id="time_tracking_table" class="sort">
 				<thead>
 					<tr class="header_row">
 						<th class="header_cell">Ticket #</th>

@@ -63,7 +63,7 @@ $(document).ready(function(){
 	if(tabs){
 		$("#tabs").tabs().scrollabletab();
 	}
-	$('table').livequery(function(){
+	$('table.sort').livequery(function(){
 		$(this).tablesorter();
 	});
 });

@@ -214,9 +214,14 @@ sub submit{
 		$data->{'free_date'} = "now";
 	}
 
-	if($data->{'free_time'}){
+	if($data->{'start_time'}){
 	} else {
-		$data->{'free_time'} = "now";
+		$data->{'start_time'} = "now";
+	}
+
+	if($data->{'end_time'}){
+	} else {
+		$data->{'end_time'} = "now";
 	}
 
 	if($data->{'tech'}){
@@ -272,6 +277,7 @@ sub submit{
 					?,
 					?,
 					?,
+					?,
 					?
 				);
 		";
@@ -294,7 +300,8 @@ sub submit{
 			$data->{'notes'},
 			$data->{'submitter'},
 			$data->{'free_date'},
-			$data->{'free_time'}
+			$data->{'start_time'},
+			$data->{'end_time'}
 		) or die $sth->errstr; #this will return the id of the insert record if we ever find a use for it
 		my $id = $sth->fetchrow_hashref;
 		my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});

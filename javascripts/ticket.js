@@ -1,15 +1,13 @@
 $(document).ready(function(){
-
 	if($('#free_date').length){
 		$('#free_date').datepicker();
-		$('#free_time').timepicker({
+		$('.free_time').timepicker({
 			hourGrid: 4,
 			minuteGrid: 10,
 			ampm: true,
 			timeFormat: 'hh:mm TT'
 		});
 	}
-
 
 	if($('.ticket_lookup').length){
 		$('.section_header_div').bind('click',function(){

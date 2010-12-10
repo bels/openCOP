@@ -53,7 +53,8 @@ CREATE TABLE helpdesk (
 	technician INTEGER DEFAULT '1',
 	submitter INTEGER,
 	free_date DATE,
-	free_time TIME,
+	start_time TIME,
+	end_time TIME,
 	closed_by VARCHAR(255) DEFAULT null,
 	completed_by VARCHAR(255) DEFAULT null,
 	active BOOLEAN DEFAULT true
@@ -499,7 +500,8 @@ CREATE OR REPLACE FUNCTION insert_ticket(
 	notes_val TEXT,
 	submitter_val INTEGER,
 	free_date_val DATE,
-	free_time_val TIME
+	start_time_val TIME,
+	end_time_val TIME
 ) RETURNS INTEGER AS $$
 DECLARE
 	last_id INTEGER;
@@ -521,7 +523,8 @@ BEGIN
 		notes,
 		submitter,
 		free_date,
-		free_time
+		start_time,
+		end_time
 	) values (
 		status_val,
 		barcode_val,
@@ -539,7 +542,8 @@ BEGIN
 		notes_val,
 		submitter_val,
 		free_date_val,
-		free_time_val
+		start_time_val,
+		end_time_val
 	);
 	SELECT INTO last_id currval('helpdesk_ticket_seq');
 

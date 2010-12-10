@@ -66,7 +66,7 @@ if($authenticated == 1) {
 		my $cpid = $vars->{'cpid'};
 
 		print qq(
-			<table id="object_summary_header">
+			<table id="object_summary_header" class="sort">
 				<thead>
 					<tr id="object_summary_header_row" class="header_row">
 						<th id="object_id" class="header_row_item">ID</th>
@@ -112,7 +112,7 @@ if($authenticated == 1) {
 	} elsif ($vars->{'mode'} eq "by_type"){
 		my $tid = $vars->{'tid'};
 		print qq(
-		<table id="object_summary_header">
+		<table id="object_summary_header" class="sort">
 			<thead>
 				<tr id="object_summary_header_row" class="header_row">
 					<th id="object_id" class="header_row_item">ID</th>
@@ -321,7 +321,7 @@ if($authenticated == 1) {
 		my $cpid = $vars->{'cpid'};
 
 		print qq(
-		<table id="object_summary_header">
+		<table id="object_summary_header" class="sort">
 			<thead>
 				<tr id="object_summary_header_row" class="header_row">
 					<th id="object_id" class="header_row_item">ID</th>

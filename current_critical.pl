@@ -120,7 +120,7 @@ if($authenticated == 1){
 			<script type="text/javascript" src="javascripts/jquery.tablesorter.js"></script>
 			<script type="text/javascript" src="javascripts/current_critical.js"></script>
 
-			<table class="ticket_summary">
+			<table class="ticket_summary sort">
 				<thead>
 					<tr class="header_row">
 						<th class="ticket_number header_row_item">Ticket Number</th>

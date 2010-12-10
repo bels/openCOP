@@ -115,7 +115,7 @@ if($authenticated == 1)
 		@hash_order = sort({$a <=> $b } @hash_order);
 	
 		print qq(
-			<table class="ticket_summary">
+			<table class="ticket_summary sort">
 				<thead>
 					<tr class="header_row">
 						<th class="ticket_number header_row_item">Ticket Number</th>

@@ -5,25 +5,15 @@ $(document).ready(function(){
 
 	var logoutTimer = window.setTimeout('logout()', '3600000');
 
-	$("#free_date").live('focus', function(){
-		resetLogout();
-		if($(this).attr("readonly") === true){
-		} else {
-			$("#free_date").datepicker();
-		}
-	});
-	$("#free_time").live('focus', function(){
-		resetLogout();
-		if($(this).attr("readonly") === true){
-		} else {
-			$('#free_time').timepicker({
-				hourGrid: 4,
-				minuteGrid: 10,
-				ampm: true,
-				timeFormat: 'hh:mm TT'
-			});
-		}
-	});
+	if($('#free_date').length){
+		$('#free_date').datepicker();
+		$('.free_time').timepicker({
+			hourGrid: 4,
+			minuteGrid: 10,
+			ampm: true,
+			timeFormat: 'hh:mm TT'
+		});
+	}
 
 	$(".ticket_link").click(function(){
 		resetLogout();

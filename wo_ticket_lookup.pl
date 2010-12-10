@@ -32,7 +32,7 @@ if($authenticated == 1)
 	$sth->execute($wo_number);
 	my $wo = $sth->fetchall_hashref('id');
 	print qq(
-		<table class="wo_summary">
+		<table class="wo_summary sort">
 			<thead>
 				<tr class="header_row">
 					<th class="ticket_number header_row_item">Ticket Number</th>
