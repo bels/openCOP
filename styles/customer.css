@@ -262,3 +262,31 @@ h4{
 	padding-left: 15px;
 	padding: 5px;
 }
+
+#attach{
+	cursor: pointer;
+}
+
+.dialog{
+	display: none;
+	text-align: left;
+	border:2px solid #333;
+	width: 400px;
+	height: 30%;
+}
+
+#details{
+	margin: auto;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+}
+
+.close {
+	position: relative;
+	left: 20px;
+	bottom: 0px;
+	cursor: pointer;
+	height: 20px;
+	width: 50px;
+}

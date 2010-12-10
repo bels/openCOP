@@ -1,4 +1,33 @@
 $(document).ready(function(){
+	var triggers = $('#attach').overlay({
+		mask: {
+			loadSpeed: 200,
+			opacity: 0.6,
+		}
+	});
+
+	$('.add_file').live('click',function(e){
+		e.preventDefault();
+		var $this = $(this);
+		var last_num = parseInt($(this).prevAll('input').attr('num'));
+		last_num++;
+		var $new_file = $(this).parent().append('<input type="file" name="file'+last_num+'" id="file'+last_num+'" num="'+last_num+'"><button class="del_file">-</button>');
+		$new_file.append($this);
+		$(this).parent().children('button.close').appendTo($new_file);
+	});
+
+	$('.del_file').live('click',function(e){
+		e.preventDefault();
+		$(this).prev('input').remove();
+		$(this).prev('br').remove();
+		$(this).remove();
+	});
+
+	$('.close').bind('click',function(e){
+		e.preventDefault();
+		
+	});
+
 	if($('#free_date').length){
 		$('#free_date').datepicker();
 		$('.free_time').timepicker({

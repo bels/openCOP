@@ -28,7 +28,14 @@ if(%cookie)
 
 if($authenticated == 2){
 	my @styles = ("styles/smoothness/jquery-ui-1.8.5.custom.css","styles/customer.css");
-	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery-ui-timepicker-addon.min.js","javascripts/main.js","javascripts/ticket.js");
+	my @javascripts = (
+		"javascripts/jquery.tools.min.js",
+		"javascripts/jquery.validate.js",
+		"javascripts/jquery.blockui.js",
+		"javascripts/jquery-ui-timepicker-addon.min.js",
+		"javascripts/main.js",
+		"javascripts/ticket.js",
+	);
 	my $meta_keywords = "";
 	my $meta_description = "";
 
