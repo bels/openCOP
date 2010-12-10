@@ -1,13 +1,14 @@
 		<div id="tabs">
 			<ul>
-				<li><a href="#add_site_div">Add Site</a></li>
-				<li><a href="#delete_site_div">Delete Site</a></li>
-				<li><a href="#add_site_level_div">Add Site Level</a></li>
-				<li><a href="#delete_site_level_div">Delete Site Level</a></li>
-				<li><a href="#add_company_div">Add Company</a></li>
-				<li><a href="#add_section_div">Add Section</a></li>
-				<li><a href="#associate_site_company_div">Associate</a></li>
-				<li><a href="#notify_div">Notification Settings</a></li>
+				<li><a href="#add_site_div" title="Add sites and specify their site level.">Add Site</a></li>
+				<li><a href="#delete_site_div" title="Remove a site.">Delete Site</a></li>
+				<li><a href="#add_site_level_div" title="Add a site level.  Site levels are used to create finer grained reports.">Add Site Level</a></li>
+				<li><a href="#delete_site_level_div" title="Remove a site level">Delete Site Level</a></li>
+				<li><a href="#add_company_div" title="Add a company.  Companies have sites">Add Company</a></li>
+				<li><a href="#add_section_div" title="Add a section.  Sections could be considered queues">Add Section</a></li>
+				<li><a href="#associate_site_company_div" title="Associate a company with sites">Associate</a></li>
+				<li><a href="#notify_div" title="Setup the Helpdesk notification settings">Notification Settings</a></li>
+				<li><a href="#modules" title="Enable/Disable additional functionality">Modules</a></li>
 			</ul>
 			<div id="add_site_div" class="style">
 				[% IF success == 1 %]
@@ -61,14 +62,14 @@
 					[% END %]
 					</select>
 				</form>
-				<img src="images/delete.png" id="delete_site_level_submit_button" border=0>
+				<img src="images/delete.png" id="delete_site_level_submit_button" class="image_button" border=0>
 			</div>
 			<div id="add_company_div" class="style">
 				[% IF company_success == 1 %]
 					<span class="success">The company was created successfully.</span>
 				[% END %]
 				<form action="add_company.pl" method="POST">
-					<label for="company_name_input">Company Name:</label><input type="text" name="company_name_input" id="company_name_input" class="styled_form_element"><a href="tips.pl?308" class="tooltip">?</a>
+					<label for="company_name_input">Company Name:</label><input type="text" name="company_name_input" id="company_name_input" class="styled_form_element"><a href="tips.pl?308" class="tooltip">?</a><br />
 					<input type="image" src="images/add.png"  alt="Add" id="company_submit_button">
 				</form>
 			</div>
@@ -89,6 +90,7 @@
 						<option value="[% sites.$site.id %]">[% sites.$site.name %]</option>
 						[% END %]
 					</select>
+					<br />
 					<input type="image" src="images/add.png"  alt="Associate" id="associate_submit_button">
 				</form>
 			</div>
@@ -102,12 +104,12 @@
 				<form action="add_section.pl" method="POST">
 					<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name" class="styled_form_element"><a href="tips.pl?301" class="tooltip">?</a><br />
 					<label for="section_email">Section Email:</label><input type="text" name="section_email" id="section_email" class="styled_form_element"><a href="tips.pl?302" class="tooltip">?</a><br />
-					<input type="submit" value="Add" id="submit_button">
+					<input type="image" src="images/add.png" alt="Add" id="submit_button">
 				</form>
 			</div>
 			<div id="notify_div">
 				<div id="update_div">
-					<button id="update">Save changes</button>
+					<img src="images/save_changes.png" class="image_button" id="update" border=0 alt="Save Changes">
 				</div>
 				<form id="notify_form">
 				[% FOREACH i IN fnotify.sort %]
@@ -122,6 +124,8 @@
 					<br>
 				[% END %]
 				</form>
+			</div>
+			<div id="modules">
 			</div>
 		</div>
 		<div id="confirm_dialog">

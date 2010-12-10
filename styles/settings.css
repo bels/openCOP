@@ -34,15 +34,23 @@ a{
 
 textarea{
 	margin-left: 35px;
-	vertical-align: text-top;
+	font-size: .9em;
+}
+
+input{
+	font-size: .9em !important; /*this is to override the jquery css on these widgets with a size that fits the page better */
+}
+
+select{
+	font-size: .9em !important;
+}
+
+.pwd{
+	margin-left: 35px;
 }
 
 #site_name{
 	width: 300px;
-}
-
-#delete_site_level_submit_button{
-	cursor: pointer;
 }
 
 .success{
@@ -52,4 +60,21 @@ textarea{
 	white-space: nowrap;
 	font-size: .9em;
 	display: block;
+}
+
+#update_div{
+	width: 116px;
+	margin-left: 135px;
+}
+
+.module_label{
+	display: inline-block;
+	width: 200px;
+}
+
+.styled_text{
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=2);
+	white-space: nowrap;
+	font-size: .95em;
 }

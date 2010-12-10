@@ -32,7 +32,7 @@ my $result = $sth->fetchall_hashref('id');
 ########################
 
 print "Content-type: text/html\n\n";
-print "<h4>Enable/disable addtional modules</h4>";
+print qq(<label class="module_label"></label><span class="styled_text">Enabled</span><br />);
 #### creating list of enabled and disabled modules
 my $enabled;
 foreach my $module (@modules){

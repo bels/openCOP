@@ -44,7 +44,6 @@
 						<li><a href="work_orders.pl">Work Orders</a></li>
 						<li><a href="user_admin.pl">User Admin</a></li>
 						<li><a href="settings.pl">Global Settings</a></li>
-						<li><a href="modules.pl">Modules</a></li>
 						<li><a href="groups.pl">Groups</a></li>
 						<li><a href="permissions.pl">Permissions</a></li>
 						<li><a href="time_tracking.pl">Time Tracking</a></li>
