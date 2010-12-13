@@ -44,10 +44,8 @@
 	margin-left: 15px;
 }
 
-.form_title{
-	width: 100%;
-	color: white;
-	background-color: #333;
-	height: 30px;
-	font-size: 1.2em;
+h2{
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=2);
+	white-space: nowrap;
 }

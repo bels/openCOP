@@ -34,3 +34,11 @@ td{
 #tech_output{
 	margin-top: 4px;
 }
+
+input{
+	font-size: .9em !important; /*this is to override the jquery css on these widgets with a size that fits the page better */
+}
+
+select{
+	font-size: .9em !important;
+}

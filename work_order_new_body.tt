@@ -3,29 +3,29 @@
 			<div id="author_div">
 				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;General Information</div>
 				<label for="wo" id="wo_label">Choose a work order template:</label>
-				<select name="wo" size="1" id="wo">
+				<select name="wo" size="1" id="wo"  class="styled_form_element">
 				[% FOREACH wo IN swo %]
 					<option value="[% wo_list.$wo.id %]">[% wo_list.$wo.name %]</option>
 				[% END %]
 				</select>
 				<br>
 				<label for="site" class="short_label">Site:</label>
-				<select name="site" size="1" tabindex="1" id="site">
+				<select name="site" size="1" tabindex="1" id="site"  class="styled_form_element">
 					<option></option>
 					[% FOREACH site IN ssite %]
 					<option value="[% site_list.$site.id %]">[% site_list.$site.name %]</option>
 					[% END %]
 				</select>
 				<br />
-				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" value="[% info.first _ ' ' _ info.last %]" tabindex=2><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
-				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" value="[% info.first _ ' ' _ info.last %]" tabindex=5><a href="tips.pl?104" class="tooltip" target="_tips">?</a>
-				<label for="phone" class="short_label">Phone:</label><input type="text" name="phone" id="phone" tabindex=6><a href="tips.pl?105" class="tooltip" target="_tips">?</a>
+				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" value="[% info.first _ ' ' _ info.last %]" tabindex=2 class="styled_form_element"><a href="tips.pl?101" class="tooltip" target="_tips">?</a>
+				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" value="[% info.first _ ' ' _ info.last %]" tabindex=5 class="styled_form_element"><a href="tips.pl?104" class="tooltip" target="_tips">?</a>
+				<label for="phone" class="short_label">Phone:</label><input type="text" name="phone" id="phone" tabindex=6 class="styled_form_element"><a href="tips.pl?105" class="tooltip" target="_tips">?</a>
 				<br />
-				<label for="email" class="short_label">Email:</label><input type="text" name="email" id="email" value="[% info.email %]" tabindex=7><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
-				<label for="location" class="short_label">Location:</label><input type="text" name="location" id="location" tabindex=8><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
+				<label for="email" class="short_label">Email:</label><input type="text" name="email" id="email" value="[% info.email %]" tabindex=7 class="styled_form_element"><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
+				<label for="location" class="short_label">Location:</label><input type="text" name="location" id="location" tabindex=8 class="styled_form_element"><a href="tips.pl?106" class="tooltip" target="_tips">?</a>
 				<br />
 				<label for="priority" class="short_label">Priority:</label>
-				<select name="priority" size="1" tabindex="9" id="priority">
+				<select name="priority" size="1" tabindex="9" id="priority" class="styled_form_element">
 				[% FOREACH i IN priority_list.keys %]
 					[% j = loop.count %]
 					<option value="[% j %]" [% IF j == 2 %]selected[% END %]>[% priority_list.$j.description %]</option>
@@ -36,7 +36,7 @@
 			<div id="problem_details">
 				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Additional Information</div>
 				<label for="notes">Notes:</label><a href="tips.pl?115" class="tooltip" target="_tips">?</a><br />
-				<textarea id="notes" style="width: 690px;" cols="80" rows="5" name="notes" tabindex="10"></textarea><br />
+				<textarea id="notes" style="width: 690px;" cols="80" rows="5" name="notes" tabindex="10" class="styled_form_element"></textarea><br />
 				<button type="button" id="submit_button">Submit</button>
 			</div>
 		</form>
