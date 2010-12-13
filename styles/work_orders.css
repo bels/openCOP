@@ -59,11 +59,26 @@
 }
 
 h4{
-	margin-bottom: 10px;
 	margin-top: 10px;
+	margin-bottom: 10px;
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=2);
+	white-space: nowrap;
 }
+
+
+h3{
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=2);
+	white-space: nowrap;
+}
+
 
 .create_button{
 	margin-top: 5px;
 	cursor: pointer;
+}
+
+.problem_details label{
+	display: inline-block;
 }

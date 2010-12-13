@@ -17,14 +17,14 @@
 			<tbody id="permissions_body">
 				<tr id="add_permission">
 					<td>
-						<select id="select_group" class="new_permission">
+						<select id="select_group" class="new_permission styled_form_element">
 						[% FOREACH id IN gid_list.sort %]
 							<option value="[% groups_names.$id.id %]">[% groups_names.$id.name %]</option>
 						[% END %]
 						</select>
 					</td>
 					<td>
-						<select id="select_section" class="new_permission">
+						<select id="select_section" class="new_permission styled_form_element">
 						[% FOREACH id IN sid_list.sort %]
 							<option value="[% sections_names.$id.id %]">[% sections_names.$id.name %]</option>
 						[% END %]
@@ -34,7 +34,7 @@
 					<td><input type="checkbox" name="create" id="create" class="new_permission" title="Create"></td>
 					<td><input type="checkbox" name="update" id="update" class="new_permission" title="Update"></td>
 					<td><input type="checkbox" name="complete" id="complete" class="new_permission" title="Complete"></td>
-					<td><button id="submit_a_gs" mode="a_gs" class="associate">Add</button></td>
+					<td><image src="images/add.png" alt="Add" id="submit_a_gs" mode="a_gs" class="associate image_button"></td>
 				</tr>
 				[% zebra = "even" %]
 				[% FOREACH id IN gsp.sort %]
@@ -52,8 +52,8 @@
 					<td><input  type="checkbox" name="create" id="create" [% IF gsp.$id.aclcreate == 1 %] checked="checked" [% END %] class="new_permission" title="Create"></td>
 					<td><input  type="checkbox" name="update" id="update" [% IF gsp.$id.aclupdate == 1 %] checked="checked" [% END %] class="new_permission" title="Update"></td>
 					<td><input  type="checkbox" name="complete" id="complete" [% IF gsp.$id.aclcomplete == 1 %] checked="checked" [% END %] class="new_permission" title="Complete"></td>
-					<td><button id="[% id %]" class="update_button">Save</button></td>
-					<td><button id="[% id %]" class="delete_button">Delete</button></td>
+					<td><image src="images/save.png" id="[% id %]" class="update_button image_button" alt="Save"></td>
+					<td><image src="images/delete.png" id="[% id %]" class="delete_button image_button" alt="Delete"></td>
 				</tr>
 				[% END %]
 			</tbody>

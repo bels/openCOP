@@ -1,5 +1,5 @@
 <div id="wo_name_div">
-	<label for="wo_name_input">Name this work order</label><input type="text" id="wo_name_input" name="wo_name_input">
+	<label for="wo_name_input">Name this work order</label><input type="text" id="wo_name_input" name="wo_name_input" class="styled_form_element">
 </div>
 <div id="wo_tabs">
 	<ul>
@@ -12,12 +12,12 @@
 			<div class="author_div">
 				<h4>General Information</h4>
 				<label for="requires" class="short_label">Requires:</label>
-				<select name="requires" size="1" tabindex="9" class="requires">
+				<select name="requires" size="1" tabindex="9" class="requires styled_form_element">
 					<option></option>
 				</select>
 				<a href="tips.pl?309" class="tooltip" target="_tips">?</a>
 				<label for="section" class="short_label">Section:</label>
-				<select name="section" size="1" tabindex="11" class="section">
+				<select name="section" size="1" tabindex="11" class="section styled_form_element">
 					[% FOREACH section IN scl.sort %]
 					<option value="[% section_create_list.$section.section_id %]">[% section_create_list.$section.name %]</option>
 					[% END %]
@@ -27,7 +27,7 @@
 			<div class="problem_details">
 				<h4>Problem Details</h4>
 				<label for="problem">Work Requested:</label><a href="tips.pl?310" class="tooltip" target="_tips">?</a><br />
-				<textarea class="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
+				<textarea class="problem styled_form_element" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
 				<img src="images/create_work_order.png" border=0 class="create_button">
 			</div>
 		</form>
