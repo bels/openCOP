@@ -51,11 +51,11 @@ sub upload_attachment{
 	my $errors;
 
 	my $safe_filename_characters = "a-zA-Z0-9_.-";
-	my $upload_dir = $args{'upload_dir'} . "/" . $args{'ticket'};
+	my $upload_dir = $args{'upload_dir'} . "/" . $args{'ticket'} . "/";
 	my $filename = $args{'filename'};
 
 	unless(-d $upload_dir){
-	        mkdir($upload_dir,0775) or return $errors->{'mkdir'} = "Could not create $upload_dir. Does www have write access to it's parent directory?";
+	        mkdir($upload_dir,0775) or $errors->{'mkdir'} = "Could not create $upload_dir. Does www have write access to its parent directory?" && return $errors;
 	}
 
 	my ( $name, $path, $extension ) = fileparse ( $filename, '\..*' );
@@ -66,11 +66,12 @@ sub upload_attachment{
 	if ( $filename =~ /^([$safe_filename_characters]+)$/ ){
 		$filename = $1;
 	} else {
-		return $errors->{'filename'} = "Filename contains invalid characters";
+		$errors->{'filename'} = "Filename contains invalid characters";
+		return $errors;
 	}
 	my $upload_filehandle = $args{'attachment'};
 
-	open ( UPLOADFILE, ">$upload_dir" . "$filename" ) or return $errors->{'upload'} = "$!";
+	open ( UPLOADFILE, ">$upload_dir" . "$filename" ) or $errors->{'upload'} = "$!" && return $errors;
 
 	binmode UPLOADFILE;
 
@@ -79,7 +80,8 @@ sub upload_attachment{
 	}
 
 	close UPLOADFILE;
-	return $errors->{'success'} = 1;
+	$errors->{'success'} = "1";
+	return $errors;
 }
 
 1;
