@@ -27,27 +27,29 @@ if(%cookie){
 if($authenticated){
 	$CGI::POST_MAX = $config->{'max_size'} * 1024;
 	my $vars = $q->Vars;
-#	warn $q->param('attach_input');
-#	warn $q->param('file1');
+	my $ticket;
 
-	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select last_value from helpdesk_ticket_seq;";
-	my $sth = $dbh->prepare($query);
-
-
+	print "Content-type: text/html\n\n";
+	if($vars->{'mode'} eq "new"){
+		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+		my $query = "select last_value from helpdesk_ticket_seq;";
+		my $sth = $dbh->prepare($query);
+		$sth->execute;
+		$ticket = $sth->fetchrow_hashref;
+	} elsif($vars->{'mode'} eq "update"){
+		$ticket->{'last_value'} = $vars->{'utkid'};
+	}
 
 	foreach(keys %$vars){
-		$sth->execute;
-		my $ticket = $sth->fetchrow_hashref;
-		warn $config->{'upload_file_dir'};
-		warn $ticket->{'last_value'};
-		my $upload = FileFunctions->upload_attachment(attachment => $q->upload($_), filename => $q->param($_), max_size => $config->{'maximun_upload_file_size'}, upload_dir => $config->{'upload_file_dir'}, ticket => $ticket->{'last_value'});
-		if($upload->{'success'}){
-			print "Content-type: text/html\n\n";
-		} else {
-			print "Content-type: text/html\n\n";
-			foreach(keys %$upload){
-				warn $upload->{$_};
+		if($_ =~ m/^file\d+/){
+			my $upload = FileFunctions->upload_attachment(attachment => $q->upload($_), filename => $q->param($_), max_size => $config->{'maximun_upload_file_size'}, upload_dir => $config->{'upload_file_dir'}, ticket => $ticket->{'last_value'});
+			if($upload->{'success'}){
+				print $q->redirect(-URL => $q->referer());
+			} else {
+				foreach(keys %$upload){
+					warn $upload->{$_};
+					print $q->redirect(-URL => $q->referer());
+				}
 			}
 		}
 	}

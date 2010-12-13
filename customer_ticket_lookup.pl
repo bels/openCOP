@@ -56,12 +56,14 @@ if($authenticated == 2)
 	if($oc eq "open"){
 		print qq(
 				<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" value="$results->{'free_date'}" title="Click to edit"><br>
-				<label for="free_time" class="short_label">Time Free:</label><input type="time" name="free_time" id="free_time" value="$results->{'free_time'}" title="Click to edit"><br>
+				<label for="start_time" class="short_label">From:</label><input type="time" name="start_time" id="start_time" class="free_time styled_form_element" value="$results->{'start_time'}"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
+				<label for="end_time" class="short_label">To:</label><input type="time" name="end_time" id="end_time" class="free_time styled_form_element" value="$results->{'end_time'}"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
 		);
 	} elsif ($oc eq "closed"){
 		print qq(
 				<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" value="$results->{'free_date'}" readonly="readonly"><br>
-				<label for="free_time" class="short_label">Time Free:</label><input type="time" name="free_time" id="free_time" value="$results->{'free_time'}" readonly="readonly"><br>
+				<label for="start_time" class="short_label">From:</label><input type="time" name="start_time" id="start_time" class="free_time styled_form_element" value="$results->{'start_time'}" readonly="readonly"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
+				<label for="end_time" class="short_label">To:</label><input type="time" name="end_time" id="end_time" class="free_time styled_form_element" value="$results->{'end_time'}" readonly="readonly"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
 		);
 	} else {
 		print qq(You should never see this);
@@ -70,8 +72,10 @@ if($authenticated == 2)
 				<label for="new_note">Update your ticket</label><br>
 				<textarea id="new_note" name="new_note" cols="80" rows="5"></textarea><br>
 				<button type="button" id="update_ticket_button">Update</button><br>
+				<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
 			</form>
 	);
+#	print qq(<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>);
 	print qq(<h4>Previous Notes</h4>);
 	my $zebra = "even";
 	foreach my $note (@$notes)

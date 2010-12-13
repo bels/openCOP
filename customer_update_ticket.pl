@@ -40,12 +40,12 @@ if($authenticated == 2)
 	my $query = "insert into notes (ticket_id, note) values(?,?)";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($tkid,$new_note);
-	my $query = "update helpdesk set free_date = ?, free_time = ? where ticket = ?";
+	my $query = "update helpdesk set free_date = ?, start_time = ?, end_time = ? where ticket = ?";
 	my $sth = $dbh->prepare($query);
-	$sth->execute($vars->{'free_date'},$vars->{'free_time'},$tkid);
-	$query = "insert into audit (notes,updater,ticket) values(?,?,?)";
-	my $sth = $dbh->prepare($query);
-	$sth->execute($new_note,$updater,$tkid);
+	$sth->execute($vars->{'free_date'},$vars->{'start_time'},$vars->{'end_time'},$tkid);
+#	$query = "insert into audit (notes,updater,ticket) values(?,?,?)";
+#	my $sth = $dbh->prepare($query);
+#	$sth->execute($new_note,$updater,$tkid);
 	
 	print "Content-type: text/html\n\n";
 }	

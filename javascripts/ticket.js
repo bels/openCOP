@@ -1,8 +1,15 @@
 $(document).ready(function(){
+	$('#attach_form').submit(function(e){
+		e.preventDefault();
+		$(this).ajaxSubmit({
+			iframe: true
+		});
+	});
+
 	var triggers = $('#attach').overlay({
 		mask: {
 			loadSpeed: 200,
-			opacity: 0.6,
+			opacity: 0.6
 		}
 	});
 
@@ -23,9 +30,19 @@ $(document).ready(function(){
 		$(this).remove();
 	});
 
-	$('.close').bind('click',function(e){
+	$('.close').live('click',function(e){
 		e.preventDefault();
-		
+		var files = "";
+		$('#attach_form input[type="file"]').each(function(){
+			files += $(this).val() + "<br>";
+		});
+		$('#attach_div').html('<div rel="#multiAttach" id="attach"><label>Attach a File</label><img title="Attach A File" src="images/attach.png"></div>' + files);
+		var triggers = $('#attach').overlay({
+			mask: {
+				loadSpeed: 200,
+				opacity: 0.6
+			}
+		});
 	});
 
 	if($('#free_date').length){
@@ -126,13 +143,6 @@ $(document).ready(function(){
 		$("#ticket_details").css("display","block");
 	});
 
-	$('attach_form').submit(function(e){
-		e.preventDefault();
-		$(this).ajaxSubmit({
-			iframe: true
-		});
-	});
-
 	$("#customer_submit_button").click(function(){
 		resetLogout();
 		validateTicket();
@@ -150,8 +160,8 @@ $(document).ready(function(){
 					var error = data.substr(0,1);
 					if(error == "0"){
 						var str = data.replace(/^[\d\s]/,'');
-						$('#attach_form').submit();
 						alert("Added the ticket");
+						$('#attach_form').submit();
 						window.location = "ticket.pl?mode=new";
 					} else {
 						var str = data.replace(/^[\d\s]/,'');
