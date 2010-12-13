@@ -41,14 +41,14 @@
 					</select>
 					<a href="tips.pl?109" class="tooltip" target="_tips">?</a>
 				</div>
-				<div id="attach" rel="#multiAttach">Attach a file</div>
+				
 				<div id="problem_details">
 					<h4>Problem Details</h4>
 					<label for="problem" id="problem_label">Problem and Troubleshooting Tried:</label><a href="tips.pl?111" class="tooltip" target="_tips">?</a>
-					<br />
-					<textarea id="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="14" class="styled_form_element"></textarea><br />
-					<button type="button" id="customer_submit_button">Submit</button>
+					<textarea id="problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="14" class="styled_form_element"></textarea>
+					<img src="images/submit.png" alt="Submit" class="image_button" id="customer_submit_button">
 				</div>
+				<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
 			</form>
 		</div>
 		<div id="multiAttach" class="dialog">

@@ -11,7 +11,7 @@
 			<form id="login_form" action="authenticate.pl" method="POST">
 				<label for="username">Username:</label><input type="text" id="username" name="username"><br />
 				<label for="password">Password:</label><input type="password" id="password" name="password"><br />
-				<input type="submit" id="submit_button" value="Login">
+				<input type="image" src="images/login.png" class="image_button" id="submit_button" alt="Login">
 			</form>
 			[% IF errorcode == 1 %]
 			<div id="login_error_message_div">

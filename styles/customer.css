@@ -204,6 +204,7 @@ h4{
 #customer_submit_button{
 	margin-top: 10px;
 	margin-bottom: 10px;
+	display: inline-block;
 }
 
 #ticket_group{
@@ -287,4 +288,25 @@ h4{
 	cursor: pointer;
 	height: 20px;
 	width: 50px;
+}
+
+#problem_details{
+	width: 720px;
+	display: inline-block;
+	float: left;
+}
+
+#attach_div{
+	width: 230px;
+	height: 250px;
+	display: inline-block;
+	vertical-align: top;
+	padding-top: 10px;
+	padding-left: 5px;
+}
+
+#attach_div label{
+	margin: 0px;
+	margin-right: 5px;
+	cursor: pointer;
 }
