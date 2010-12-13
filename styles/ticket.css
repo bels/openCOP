@@ -178,3 +178,32 @@ h4{
 	font-size: 1em;
 	display: block;
 }
+
+#submit_button{
+	margin-left: 35px;
+}
+
+.dialog{
+	display: none;
+	text-align: left;
+	border:2px solid #333;
+	width: 400px;
+	height: 30%;
+}
+
+#attach_div{
+	width: 200px;
+	height: 75px;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+#attach_div label{
+	margin: 0px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+#attach{
+	cursor: pointer;
+}
