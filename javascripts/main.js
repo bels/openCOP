@@ -66,6 +66,14 @@ $(document).ready(function(){
 	$('table.sort').livequery(function(){
 		$(this).tablesorter();
 	});
+	
+	$('.styled_form_element').focusin(function(){
+		$(this).addClass('focus');
+	});
+	
+	$('.styled_form_element').focusout(function(){
+		$(this).removeClass('focus');
+	});
 });
 
 function logout(){

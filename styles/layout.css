@@ -158,3 +158,16 @@ option{
 .image_button{
 	cursor: pointer;
 }
+
+.form_title{
+	width: 100%;
+	color: white;
+	background-color: #333;
+	background: url('../images/title_bg.jpg');
+	height: 20px;
+	font-size: .8em;
+}
+
+.focus{
+	border: 1px solid #8ac0e6;
+}

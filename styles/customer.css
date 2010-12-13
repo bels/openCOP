@@ -188,6 +188,12 @@ h3{
 	margin-left: 25px;
 }
 
+h4{
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=2);
+	white-space: nowrap;
+}
+
 #ticket_div{
 	width: 1000px;
 	margin-left: 15px;
@@ -198,14 +204,6 @@ h3{
 #customer_submit_button{
 	margin-top: 10px;
 	margin-bottom: 10px;
-}
-
-#form_title{
-	width: 100%;
-	color: white;
-	background-color: #333;
-	height: 30px;
-	font-size: 1.2em;
 }
 
 #ticket_group{
