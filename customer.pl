@@ -33,6 +33,7 @@ if($authenticated == 2){
 		"javascripts/jquery.validate.js",
 		"javascripts/jquery.blockui.js",
 		"javascripts/jquery-ui-timepicker-addon.min.js",
+		"javascripts/jquery.form.js",
 		"javascripts/main.js",
 		"javascripts/ticket.js",
 	);

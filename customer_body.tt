@@ -53,11 +53,11 @@
 		</div>
 		<div id="multiAttach" class="dialog">
 			<div id="details">
-				<form id="attach_form">
+				<form id="attach_form" enctype="multipart/form-data" method="post" action="upload_file.pl">
 					<input type="file" name="file1" id="file1" num="1">
 					<button class="add_file">+</button>
 					<br>
-					<button id="close_attach" class="close">Done</button>
+					<input type="submit" id="close_attach" class="close" value="Done">
 				</form>
 			</div>
 		</div>

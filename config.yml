@@ -25,9 +25,11 @@ ldap_service_account: %%LDAP_SERVICE_ACCOUNT%%
 ldap_service_password: %%LDAP_SERVICE_PASSWORD%%
 logo_image: images/logo.png
 mail_server: %%MAIL_SERVER%%
+maximum_upload_file_size: %%MAXIMUM_UPLOAD_FILE_SIZE%%
 support_email: %%SUPPORT_EMAIL_ADDRESS%%
 support_phone_number: %%SUPPORT_PHONE_NUMBER%%
 ticket_mail_account: %%TICKET_MAIL_ACCOUNT%%
 ticket_mail_password: %%TICKET_MAIL_PASSWORD%%
+upload_file_dir: %%UPLOAD_FILE_DIR%%
 users_table: users
 version: 1.0
