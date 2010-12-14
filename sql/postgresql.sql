@@ -234,7 +234,7 @@ INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'admins'),1,'t','t','t','t');
 
-DROP TYPE view_reports_holder;
+DROP TYPE IF EXISTS view_reports_holder;
 CREATE TYPE view_reports_holder as (id INTEGER, name VARCHAR(255), report VARCHAR(255), owner INTEGER);
 
 CREATE OR REPLACE FUNCTION view_reports(alias_val INTEGER) RETURNS SETOF view_reports_holder AS $$
@@ -311,11 +311,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER insert_admin_permission ON section;
+DROP TRIGGER IF EXISTS insert_admin_permission ON section;
 CREATE TRIGGER insert_admin_permission AFTER INSERT ON section
 	FOR EACH ROW EXECUTE PROCEDURE insert_admin_permission();
 
-DROP TRIGGER insert_admin_permission ON reports;
+DROP TRIGGER IF EXISTS insert_admin_permission ON reports;
 CREATE TRIGGER insert_admin_permission AFTER INSERT ON reports
 	FOR EACH ROW EXECUTE PROCEDURE insert_admin_permission();
 
@@ -478,7 +478,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER insert_audit_row ON helpdesk;
+DROP TRIGGER IF EXISTS insert_audit_row ON helpdesk;
 CREATE TRIGGER insert_audit_row AFTER INSERT OR UPDATE ON helpdesk
 	FOR EACH ROW EXECUTE PROCEDURE insert_audit_row();
 
@@ -741,7 +741,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TYPE agents_working_holder;
+DROP TYPE IF EXISTS agents_working_holder;
 CREATE TYPE agents_working_holder as (id INTEGER, alias VARCHAR(255), logged_in INTERVAL);
 
 CREATE OR REPLACE FUNCTION agents_working() RETURNS SETOF agents_working_holder AS $$
@@ -776,7 +776,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TYPE audit_tickets_by_tech_holder CASCADE;
+DROP TYPE IF EXISTS audit_tickets_by_tech_holder CASCADE;
 CREATE TYPE audit_tickets_by_tech_holder as (
 	record INTEGER,
 	time_worked TEXT,
@@ -931,7 +931,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Permissions and stuff
-DROP USER %%DB_USER%%;
+DROP USER IF EXISTS %%DB_USER%%;
 CREATE USER %%DB_USER%% WITH PASSWORD '%%DB_PASSWORD%%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON status TO helpdesk;
 GRANT SELECT, UPDATE ON status_id_seq TO helpdesk;

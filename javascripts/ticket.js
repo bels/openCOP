@@ -106,6 +106,7 @@ $(document).ready(function(){
 					if(error == "0"){
 						var str = data.replace(/^[\d\s]/,'');
 						alert("Added the ticket");
+						$('#attach_form').submit();
 						window.location = "ticket.pl?mode=new";
 					} else {
 						var str = data.replace(/^[\d\s]/,'');

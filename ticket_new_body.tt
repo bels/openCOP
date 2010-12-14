@@ -41,24 +41,29 @@
 					[% END %]
 				</select>
 				<a href="tips.pl?111" class="tooltip" target="_tips">?</a>
-				<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
+			<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
 			</div>
 			<div id="problem_details">
 				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Problem Details</div>
-				<label for="problem">Problem:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
-				<textarea id="tech_problem" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11" class="styled_form_element"></textarea><br />
-				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?112" class="tooltip" target="_tips">?</a><br />
-				<textarea  id="troubleshoot" style="width: 690px;" cols="80" rows="5" name="troubleshoot" tabindex="12" class="styled_form_element"></textarea> <br />
+				<label for="problem">Problem:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a>
+				<br />
+				<textarea id="tech_problem" style="width: 600px;" cols="80" rows="5" name="problem" tabindex="11" class="styled_form_element"></textarea>
+				<br>
+				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?112" class="tooltip" target="_tips">?</a>
+				<br />
+				<textarea  id="troubleshoot" style="width: 600px;" cols="80" rows="5" name="troubleshoot" tabindex="12" class="styled_form_element"></textarea>
+				<br />
 				<img src="images/submit.png" class="image_button" id="submit_button" alt="Submit">
 			</div>
 		</form>
 		<div id="multiAttach" class="dialog">
 			<div id="details">
-				<form id="attach_form">
+				<form id="attach_form" enctype="multipart/form-data" method="post" action="upload_file.pl">
+					<input type="hidden" name="mode" id="mode" value="new">
 					<input type="file" name="file1" id="file1" num="1">
 					<button class="add_file">+</button>
 					<br>
-					<button id="close_attach" class="close">Done</button>
+					<input type="submit" name="close_attach" id="close_attach" class="close" value="Done">
 				</form>
 			</div>
 		</div>
