@@ -12,14 +12,7 @@
 	padding-top: 25px;
 	padding-left: 25px;
 }
-/*
-#right{
-	float: left;
-	height: 100%;
-	overflow: auto;
-	width: 100%;
-}
-*/
+
 .wo_link{
 	text-decoration: none;
 	font-size: .9em;
@@ -54,30 +47,6 @@
 	background-color: #777;
 }
 
-#ticket_details{
-	font-size: .8em;
-	position:fixed;
-	background:#FFFFFF;
-	z-index:20000;
-	padding:12px;
-	display: none;
-	margin-top: 15px;
-	width: 90%;
-	height: 550px;
-	overflow: auto;
-	margin-left: auto;
-	margin-right: auto;
-	border: 1px solid black;
-}
-
-#update_form label{
-	display: inline-block;
-	width: 160px;
-	text-align: right;
-	margin-right: 5px;
-	margin-top: 5px;
-}
-
 #update_form input{
 	width: 170px;
 	margin-right: 5px;
@@ -86,36 +55,6 @@
 #update_form span{
 	width: 170px;
 	margin-right: 5px;
-}
-
-#past_troubleshoot{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
-
-#problem{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
-
-#troubleshoot{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
-
-#troubleshooting{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
-
-#past_notes{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
-
-#notes{
-	white-space: pre-wrap;
-	margin-left: 160px;
 }
 
 #behind_popup{
@@ -144,29 +83,3 @@
 .attached_file{
 	text-decoration: none;
 }
-
-#attach_div{
-	width: 270px;
-	height: 320px;
-	margin-left: 5px;
-	margin-top: 5px;
-	float: left;
-}
-
-#update_form #attach_div{
-	float: left;
-	display: inline-block;
-}
-
-#attach_div label{
-	margin: 0px;
-	margin-right: 5px;
-	cursor: pointer;
-}
-
-#problem_div{
-	display: inline-block;
-	float: left;
-	width: 900px;
-}
-

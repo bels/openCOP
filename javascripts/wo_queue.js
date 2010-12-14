@@ -4,7 +4,6 @@ $(document).ready(function(){
 		var wo = $(this).attr("id");
 		var url = "wo_ticket_lookup.pl?wo=" + wo;
 		$('.wo_link.selected').removeClass('selected');
-		$('#right_holder').html('<table id="right"></table><div class="pager" id="pager"></div>');
 		$(this).addClass('selected');
 			$('#right').jqGrid({
 				url: url,
@@ -88,16 +87,6 @@ $(document).ready(function(){
 			'height': windowHeight
 		});
 	});
-	$('#problem_div').livequery(function(){
-		$(this).append('<button id="cancel">Cancel</button>')
-	});
-	$('#cancel').live('click',function(e){
-		e.preventDefault();
-		resetLogout();
-		$('#ticket_details').fadeOut();
-		$('#behind_popup').fadeOut('slow');
-	});
-
 });
 
 function doNothing(){

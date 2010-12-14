@@ -74,6 +74,13 @@ $(document).ready(function(){
 	$('.styled_form_element').focusout(function(){
 		$(this).removeClass('focus');
 	});
+	
+	$('#cancel').live('click',function(e){
+		e.preventDefault();
+		resetLogout();
+		$('#ticket_details').fadeOut('fast');
+		$('#behind_popup').fadeOut('fast');
+	});
 });
 
 function logout(){

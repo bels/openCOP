@@ -243,13 +243,6 @@ $(document).ready(function(){
 		});
 	});
 
-	$('#cancel').live('click',function(e){
-		e.preventDefault();
-		resetLogout();
-		$('#ticket_details').fadeOut('fast');
-		$('#behind_popup').fadeOut('fast');
-	});
-
 	$('.ticket_lookup').each(function(){
 		var section_id = $(this).attr('section');
 		var new_val = $('td#' + section_id + '_center span#sp_' + section_id).text();
@@ -258,9 +251,4 @@ $(document).ready(function(){
 		//	$('div#gbox_' + $(this).attr('id')).hide();
 		}
 	});
-	$('#problem_div').livequery(function(){
-		$(this).append('<button id="cancel">Cancel</button>')
-	});
-
-
 });
