@@ -83,6 +83,7 @@ if($authenticated == 1)
 			<input type="hidden" name="tech" value="1">
 			<input type="hidden" name="section" value="$section_list->{$results->{'section'}}->{'id'}">
 			<input type="hidden" name="ticket_number" value="$results->{'ticket'}">
+		<div id="head_div">
 			<label for="priority">Priority:</label><span id="priority" name="priority">$priority_list->{$results->{'priority'}}->{'description'}</span>
 		);
 	print qq(
@@ -125,10 +126,13 @@ if($authenticated == 1)
 	print substr($results->{'updated'},0,16);
 	print qq(
 		</span>
-		<br>
+	</div>
+	);
+	print qq(
+	<div id="problem_div">
 		<label for="problem">Problem:</label><div id="problem" name="problem">$results->{'problem'}</div><br>
 		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting"></textarea><br>
-		<label for="past_troubleshoot">Past Troubleshooting:</label><div id="past_troubleshoot" name="past_troubleshoot"><br>
+		<label for="past_troubleshoot">Past Troubleshooting:</label><div id="past_troubleshoot" name="past_troubleshoot">
 	);
 	
 	my @hash_order = keys %$troubleshooting;
@@ -158,7 +162,25 @@ if($authenticated == 1)
 		print $notes->{$t}->{'note'} . "<br />";
 	}
 	print qq(</div><br />
-		<input type="submit" value="Update">
+			<input type="submit" value="Update">
+		</div>
+		<div id="attached_div">
+			<div id="attached">
+				<label>Attached Files</label>
+	);
+	my $dir = $config->{'upload_file_dir'} . $results->{'ticket'};
+	warn $dir;
+	opendir(DIR, $dir);
+	LINE: while(my $FILE = readdir(DIR)){
+		next LINE if($FILE =~ /^\.\.?/);
+		unless(-d "$FILE"){
+			print qq(<li class="attached_file"><a href="$dir/$FILE">$FILE</a></li>);
+		}
+	}
+	closedir(DIR);
+	print qq(
+			</div>
+		</div>
 	);
 	
 }	

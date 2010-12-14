@@ -1,12 +1,11 @@
-	<form action="#" id="search_form"><label for="search_box">Search</label><input type="text" name="search_box" id="search_box" value="Search For Tickets"><button id="search_button">Search</button></form>
+	<div id="search_div">
+		<form action="#" id="search_form"><label for="search_box">Search</label><input type="text" name="search_box" id="search_box" value="Search For Tickets"><button id="search_button">Search</button></form>
+	</div>
 	[% FOREACH id IN list %]
-		<div id="section_[% section_list.$id.section_id %]" class="section_header_div">
-			<a href="#" class="toggle_link"><img src="images/toggle.png" style="display:none" border=0 class="toggle_img"><img src="images/toggled.png" border=0 class="toggle_img"></a><span class="ticket_section_toggle">[% section_list.$id.name %]</span>
-		</div>
-		<div class="ticket_lookup" id="[% section_list.$id.section_id %]">
-		</div>
-		<table id="test1"></table>
-		<div id="pager"></div>
+		<table id="section_[% section_list.$id.section_id %]" section="[% section_list.$id.section_id %]" caption_text="[% section_list.$id.name %]" class="ticket_lookup"></table>
+		<div class="pager" id="[% section_list.$id.section_id %]"></div>
 	[% END %]
 		<div id="ticket_details">
+		</div>
+		<div id="behind_popup">
 		</div>

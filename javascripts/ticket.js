@@ -55,49 +55,6 @@ $(document).ready(function(){
 		});
 	}
 
-	if($('.ticket_lookup').length){
-		$('.section_header_div').bind('click',function(){
-			resetLogout();
-			$(this).next(".ticket_lookup").toggle();
-			var C = $(this).next(".ticket_lookup");
-			var section = C.attr("id");
-			var pane = C.jScrollPane({
-				showArrows: true,
-				maintainPosition: false
-			}).data('jsp');
-			var url = "lookup_ticket.pl?section=" + section;
-			pane.getContentPane().load(url,function(data){
-				pane.reinitialise();
-			});
-			$('.ticket_summary').livequery(function(){
-				$('.ticket_summary').tablesorter();
-			});
-		});
-	
-		var section = $('.ticket_lookup').first().attr("id");
-		var pane = $('.ticket_lookup').first().show().jScrollPane({
-			showArrows: true,
-			maintainPosition: false
-		}).data('jsp');
-		var url = "lookup_ticket.pl?section=" + section;
-		pane.getContentPane().load(url,function(data){
-			pane.reinitialise();
-		});
-		$('.ticket_summary').livequery(function(){
-			$(this).tablesorter();
-		});
-		$('.toggle_link:not(:first)').children().toggle();
-	};
-	
-	var url = "lookup_ticket.pl?section=pseudo";
-	$.ajax({
-		type: 'GET',
-		url: url,
-		success: function(data){
-			$("#section_pseudo").append(data);
-		}
-	});
-
 	$("#submit_button").click(function(){
 		resetLogout();
 		validateTicket();		
@@ -115,6 +72,7 @@ $(document).ready(function(){
 					if(error == "0"){
 						var str = data.replace(/^[\d\s]/,'');
 						alert("Added the ticket");
+						$('#attach_form').submit();
 						window.location = "ticket.pl?mode=new";
 					} else {
 						var str = data.replace(/^[\d\s]/,'');
@@ -138,19 +96,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(".lookup_row").live("click",function(){
-		resetLogout();
-		var ticket_number = $(this).children(".row_ticket_number").text();
-		var url = "ticket_details.pl?ticket_number=" + ticket_number;
-		var details_pane = $("#ticket_details").jScrollPane({
-				showArrows:true,
-				maintainPosition: false
-		}).data('jsp');
-		details_pane.getContentPane().load(url,function(data){
-			details_pane.reinitialise();			
-		});
-		$("#ticket_details").css("display","block");
-	});
+//	$(".lookup_row").live("click",function(){
 
 	$("#customer_submit_button").click(function(){
 		resetLogout();
@@ -243,26 +189,78 @@ $(document).ready(function(){
 			});
 		});
 	});
-	
-	var url = "lookup_ticket.pl?section=pseudo";
-	$("#test1").jqGrid({
-		url: url,
-		datatype: 'xml',
-		mtype: 'GET',
-		colNames: ['Ticket Number','Ticket Status','Ticket Priority','Ticket Contact','Section'],
-		colModel: [
-			{name: 'ticket', index: 'ticket', width: 100, sortable: true},
-			{name: 'status', index: 'status', width: 100, sortable: true},
-			{name: 'priority', index: 'priority', width: 100, sortable: true},
-			{name: 'contact', index: 'contact', width: 125, sortable: true},
-			{name: 'name', index: 'name', width: 100, sortable: true}
-		],
-		pager: "#pager",
-		rowNum: 10,
-		rowList: [10,20,30],
-		sortname: 'ticket',
-		sortorder: 'desc',
-		viewrecords: true,
-		caption: 'Tickets assigned to you'
+
+	$('.ticket_lookup').each(function(){
+		var section_id = $(this).attr('section');
+		var caption_text = $(this).attr('caption_text');
+		var url = "lookup_ticket.pl?section=" + section_id;
+		$(this).jqGrid({
+			url: url,
+			datatype: 'xml',
+			mtype: 'GET',
+			colNames: ['Ticket Number','Ticket Status','Ticket Priority','Ticket Contact','Problem','Section'],
+			colModel: [
+				{name: 'ticket', index: 'ticket', width: 100, sortable: true},
+				{name: 'status', index: 'status', width: 100, sortable: true},
+				{name: 'priority', index: 'priority', width: 100, sortable: true},
+				{name: 'contact', index: 'contact', width: 125, sortable: true},
+				{name: 'problem', index: 'problem', width: 200, sortable: true},
+				{name: 'name', index: 'name', width: 100, sortable: true}
+			],
+			pager: "#" + section_id,
+			rowNum: 10,
+			rowList: [10,20,30],
+			sortname: 'ticket',
+			sortorder: 'asc',
+			viewrecords: true,
+			altRows: true,
+			gridview: true,
+			ignoreCase: true,
+			multiKey: 'ctrlKey',
+			multiselect: true,
+			multiboxonly: true,
+			toolbar: [true,'top'],
+			caption: caption_text,
+			ondblClickRow: function(rowid){
+				resetLogout();
+				var ticket_number = rowid;
+				var url = "ticket_details.pl?ticket_number=" + ticket_number;
+				$('#behind_popup').css({'opacity':'0.7'}).fadeIn('slow');
+				$('#ticket_details').load(url).fadeIn('slow');
+				var windowWidth = document.documentElement.clientWidth;
+				var windowHeight = document.documentElement.clientHeight;
+				var popupHeight = $('#ticket_details').height();
+				var popupWidth = $('#ticket_details').width();
+				$('#ticket_details').css({
+					'position': 'absolute',
+					'top': windowHeight/2-popupHeight/2,
+					'left': windowWidth/2-popupWidth/2
+				});
+				$('#behind_popup').css({
+					'height': windowHeight
+				});
+			}
+		});
 	});
+
+	$('#cancel').live('click',function(e){
+		e.preventDefault();
+		resetLogout();
+		$('#ticket_details').fadeOut('fast');
+		$('#behind_popup').fadeOut('fast');
+	});
+
+	$('.ticket_lookup').each(function(){
+		var section_id = $(this).attr('section');
+		var new_val = $('td#' + section_id + '_center span#sp_' + section_id).text();
+		if( new_val == ""){
+		//	alert(new_val);
+		//	$('div#gbox_' + $(this).attr('id')).hide();
+		}
+	});
+	$('#problem_div').livequery(function(){
+		$(this).append('<button id="cancel">Cancel</button>')
+	});
+
+
 });

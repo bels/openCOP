@@ -354,6 +354,9 @@ sub lookup{
 		chop($where);
 		$where .= ") ";
 	}
+	push(@placeholders,$args{'order_by'});
+	push(@placeholders,$args{'offset'});
+	push(@placeholders,$args{'limit'});
 	if($args{'customer'}){
 		$query = "
 			select
@@ -414,6 +417,7 @@ sub lookup{
 				section.name as name,
 				status.status as status,
 				priority.description as priority,
+				helpdesk.problem as problem,
 				helpdesk.contact as contact
 			from
 				helpdesk
@@ -442,8 +446,9 @@ sub lookup{
 			$query .= $where;
 		}
 		$query .= "
-			order by
-				ticket
+			order by ? $args{'order'}
+			offset ?
+			limit ?
 		";
 		#Currently 7 is the ticket status Completed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);
@@ -455,7 +460,12 @@ sub lookup{
 	} elsif($access->{'read'}){
 		$query = "
 			select
-				helpdesk.ticket as ticket,section.name as name,status.status as status, priority.description as priority, helpdesk.contact as contact
+				helpdesk.ticket as ticket,
+				section.name as name,
+				status.status as status,
+				priority.description as priority,
+				helpdesk.problem as problem,
+				helpdesk.contact as contact
 			from
 				helpdesk
 				join
@@ -484,7 +494,9 @@ sub lookup{
 		}
 		$query .= "
 			order by
-				ticket
+				? $args{'order'}
+			offset ?
+			limit ?
 		";
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$sth = $dbh->prepare($query);

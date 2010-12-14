@@ -10,6 +10,12 @@
 	margin-top: 5px;
 }
 
+#problem_div{
+	display: inline-block;
+	float: left;
+	width: 900px;
+}
+
 #problem_details{
 	width: 890px;
 	height: 350px;
@@ -22,6 +28,7 @@
 	margin-left: 35px;
 	margin-top: 5px;
 	display: inline-block;
+	vertical-align: top;
 }
 
 #problem_details textarea{
@@ -46,62 +53,23 @@
 	display: inline-block;
 }
 
-.ticket_lookup{
+#ticket_details{
+	display: none;
 	margin-top: 15px;
 	width: 90%;
-	height: 200px;
+	height: 550px;
+	overflow: auto;
 	margin-left: auto;
 	margin-right: auto;
-	overflow: auto;
 	border: 1px solid black;
 }
 
-.lookup_row.selected{
-	background-color: #757575;
-	cursor: pointer;
-}
-
-table{
-	width: 100%;
-	border-collapse:collapse;
-}
-
-th{
-	width: 150px;
-	height: 30px;
-	border-bottom: 1px solid black;
-}
-
-td{
-	width: 150px;
-	height: 30px;
-}
-
-.header_row{
-	width: 100%;
-	color: white;
-	background-color: #333;
-	height: 30px;
-	font-size: .8em;
-}
-
-.row_ticket_number{
-	border-right: 1px solid black;
-}
-
-.row_ticket_status{
-	border-right: 1px solid black;
-}
-
-.row_ticket_priority{
-	border-right: 1px solid black;
-}
-
-.row_ticket_contact{
-	border-right: 1px solid black;
-}
-
 #ticket_details{
+	font-size: .8em;
+	position:fixed;
+	background:#FFFFFF;
+	z-index:20000;
+	padding:12px;
 	display: none;
 	margin-top: 15px;
 	width: 90%;
@@ -135,19 +103,17 @@ td{
 	font-size: .7em;
 }
 
-.ticket_lookup{
-	display: none;
-}
-
-.section_header_div{
-	margin-left: 50px;
-	text-align: justify;
-	font-weight: bold;
-	font-size: .9em;
-	cursor: pointer;
-}
-
 #past_troubleshoot{
+	white-space: pre-wrap;
+	margin-left: 160px;
+}
+
+#troubleshoot{
+	white-space: pre-wrap;
+	margin-left: 160px;
+}
+
+#troubleshooting{
 	white-space: pre-wrap;
 	margin-left: 160px;
 }
@@ -162,9 +128,20 @@ td{
 	margin-left: 160px;
 }
 
+#notes{
+	white-space: pre-wrap;
+	margin-left: 160px;
+}
+
 #search_form{
-	float: right;
 	margin-right: 20px;
+	width: 250px;
+	float: right;
+}
+
+#search_div{
+	height: 70px;
+	width: 100%;
 }
 
 #search_form input{
@@ -201,6 +178,11 @@ h4{
 	float: left;
 }
 
+#update_form #attach_div{
+	float: left;
+	display: inline-block;
+}
+
 #attach_div label{
 	margin: 0px;
 	margin-right: 5px;
@@ -211,8 +193,46 @@ h4{
 	cursor: pointer;
 }
 
+#details{
+	margin: auto;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+}
+
+.close {
+	position: relative;
+	left: 20px;
+	bottom: 0px;
+	cursor: pointer;
+	height: 20px;
+	width: 50px;
+}
+
+.attached_file{
+	text-decoration: none;
+}
+
 #problem_wrapper{
 	display: inline-block;
 	float: left;
 	width: 600px;
+}
+
+.ui-jqgrid{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;	
+}
+
+#behind_popup{
+	display:none;
+	position:fixed;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	background:#000000;
+	border:1px solid #cecece;
+	z-index:19999;
 }
