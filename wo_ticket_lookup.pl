@@ -6,6 +6,7 @@ use CGI;
 use ReadConfig;
 use Template;
 use SessionFunctions;
+use POSIX 'ceil';
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -24,72 +25,100 @@ if(%cookie)
 
 if($authenticated == 1)
 {
-	my $vars = $q->Vars;
-	my $wo_number = $vars->{'wo'};
+	my $data = $q->Vars;
+	my $wo_number = $data->{'wo'};
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'})  or die "Database connection failed in $0";
-	my $query = "select * from wo_ticket where wo_id = ?";
+
+	my $page = $data->{'page'};
+	if(!$page){$page=1};
+	my $limit = $data->{'rows'};
+	if(!$limit){$limit=10};
+	my $sidx = $data->{'sidx'};
+	if(!$sidx){$sidx = 1};
+	my $sord = $data->{'sord'};
+
+	my $query = "select count(*) from wo_ticket where wo_id = ?";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($wo_number);
+	my $count = $sth->fetchrow_hashref;
+	$count = $count->{'count'};
+	my $total_pages;
+	if( $count > 0 && $limit > 0) {
+		$total_pages = ceil($count/$limit); 
+	} else { 
+		$total_pages = 0;
+	} 
+	if($page > $total_pages){
+		$page=$total_pages;
+	}
+	my $start = $limit * $page - $limit;
+	if($start<0){$start=0};
+
+	my $query = "select * from wo_ticket where wo_id = ? order by ? $sord offset ? limit ?";
+	my $sth = $dbh->prepare($query);
+	$sth->execute($wo_number,$sidx,$start,$limit);
 	my $wo = $sth->fetchall_hashref('id');
-	print qq(
-		<table class="wo_summary sort">
-			<thead>
-				<tr class="header_row">
-					<th class="ticket_number header_row_item">Ticket Number</th>
-					<th class="step_number header_row_item">Step Number</th>
-					<th class="assigned_tech header_row_item">Assigned Technician</th>
-					<th class="ticket_status header_row_item">Ticket Status</th>
-					<th class="ticket_section header_row_item">Section</th>
-				</tr>
-			</thead>
-			<tbody>
-	);
 
 	$query = "
-		select
-			helpdesk.ticket,
-			helpdesk.active,
-			users.alias as technician,
-			status.status as status,
-			section.name as section
-			
-		from
-			helpdesk
-		join
-			status on status.id = helpdesk.status
-		join
-			section on section.id = helpdesk.section
-		join
-			users on users.id = helpdesk.technician
-		where
-			ticket = ?
-		;
+			select
+				helpdesk.ticket as ticket,
+				helpdesk.active as active,
+				section.name as name,
+				users.alias as technician,
+				status.status as status,
+				priority.description as priority,
+				helpdesk.problem as problem
+			from
+				helpdesk
+				join
+					section on section.id = helpdesk.section
+				left outer join
+					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
+				left outer join
+					notes on notes.ticket_id = helpdesk.ticket
+				join
+					users on users.id = helpdesk.technician
+				left outer join
+					site on site.id = helpdesk.site
+				join
+					priority on priority.severity = helpdesk.priority
+				join
+					status on status.id = helpdesk.status
+			where
+				helpdesk.ticket = ?
 	";
 	$sth = $dbh->prepare($query);
-	foreach(keys %$wo){
-		$sth->execute($wo->{$_}->{'ticket_id'});
-		my $ticket = $sth->fetchrow_hashref;
-		print qq(
-			<tr class="lookup_row
-		);
-		warn $ticket->{'active'};
-		unless($ticket->{'active'}){
-			print qq( disabled);
-		}
-		print qq(">
-				<td class="row_ticket_number">$wo->{$_}->{'ticket_id'}</td>
-				<td class="row_step_number">$wo->{$_}->{'step'}</td>
-				<td class="row_assigned_tech">$ticket->{'technician'}</td>
-				<td class="row_ticket_status">$ticket->{'status'}</td>
-				<td class="row_ticket_section">$ticket->{'section'}</td>
-			</tr>
-		);
-	}
-	print qq(
-		</tbody>
-		</table>
-	);
 
+		print "Content-type: text/xml;charset=utf-8\n\n";
+
+		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
+		$xml .= "<rows>";
+		$xml .= "<page>$page</page>";
+		$xml .= "<total>$total_pages</total>";
+		$xml .= "<records>$count</records>";
+		my @ordered;
+		if($sord eq "asc"){
+			@ordered = sort { $a <=> $b } keys %$wo;
+		} else {
+			@ordered = sort { $b <=> $a } keys %$wo;
+		}
+		foreach my $row (@ordered)
+		{
+			$sth->execute($wo->{$row}->{'ticket_id'});
+			my $ticket = $sth->fetchrow_hashref;
+			$xml .= "<row id='" . $wo->{$row}->{'ticket_id'}. "'>";
+			$xml .= "<cell>" . $wo->{$row}->{'step'}	. "</cell>";
+			$xml .= "<cell>" . $wo->{$row}->{'ticket_id'}	. "</cell>";
+			$xml .= "<cell>" . $ticket->{'status'}		. "</cell>";
+			$xml .= "<cell>" . $ticket->{'priority'}	. "</cell>";
+			$xml .= "<cell>" . $ticket->{'technician'}	. "</cell>";
+			$xml .= "<cell>" . $ticket->{'problem'}		. "</cell>";
+			$xml .= "<cell>" . $ticket->{'name'}		. "</cell>";
+			$xml .= "</row>";
+		}
+		
+		$xml .= "</rows>";
+		print $xml;
 }
 else
 {

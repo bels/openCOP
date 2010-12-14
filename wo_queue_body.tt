@@ -7,8 +7,8 @@
 			</div>
 		</div>
 		<div id="right_holder">
-			<div id="right">
-			</div>
+			<table id="right"></table>
+			<div class="pager" id="pager"></div>
 		</div>
 		<div id="ticket_details">
 		</div>
