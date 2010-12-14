@@ -18,6 +18,7 @@
 
 #problem_details{
 	width: 890px;
+	height: 350px;
 	margin-top: 15px;
 	margin-left: 15px;
 	border: 1px solid black;
@@ -32,6 +33,7 @@
 
 #problem_details textarea{
 	margin-left: 35px;
+	width: 490px;
 }
 
 #problem_details button{
@@ -214,10 +216,11 @@ h4{
 }
 
 #attach_div{
-	width: 200px;
-	height: 75px;
+	width: 270px;
+	height: 320px;
 	margin-left: 5px;
 	margin-top: 5px;
+	float: left;
 }
 
 #update_form #attach_div{
@@ -253,4 +256,10 @@ h4{
 
 .attached_file{
 	text-decoration: none;
+}
+
+#problem_wrapper{
+	display: inline-block;
+	float: left;
+	width: 600px;
 }

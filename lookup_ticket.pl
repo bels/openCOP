@@ -7,6 +7,7 @@ use CGI;
 use SessionFunctions;
 use UserFunctions;
 use URI::Escape;
+use POSIX qw(ceil);
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -60,8 +61,6 @@ if($authenticated == 1)
 	
 	my $section = {};
 
-	print "Content-type: text/html\n\n";
-
 	$query = "select id,name from section;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
@@ -114,35 +113,73 @@ if($authenticated == 1)
 		
 		@hash_order = sort({$a <=> $b } @hash_order);
 	
-		print qq(
-			<table class="ticket_summary sort">
-				<thead>
-					<tr class="header_row">
-						<th class="ticket_number header_row_item">Ticket Number</th>
-						<th class="ticket_status header_row_item">Ticket Status</th>
-						<th class="ticket_priority header_row_item">Ticket Priority</th>
-						<th class="ticket_contact header_row_item">Ticket Contact</th>
-						<th class="ticket_section header_row_item">Section</th>
-					</tr>
-				</thead>
-				<tbody>
-		);
-		foreach my $element (@hash_order){
+		#print qq(
+		#	<table class="ticket_summary sort" id="test1">
+		#		<thead>
+		#			<tr class="header_row">
+		#				<th class="ticket_number header_row_item">Ticket Number</th>
+		#				<th class="ticket_status header_row_item">Ticket Status</th>
+		#				<th class="ticket_priority header_row_item">Ticket Priority</th>
+		#				<th class="ticket_contact header_row_item">Ticket Contact</th>
+		#				<th class="ticket_section header_row_item">Section</th>
+		#			</tr>
+		#		</thead>
+		#		<tbody>
+		#);
+		#foreach my $element (@hash_order){
 		#this needs to vastly improve.  this displays the html inside of the ticket box.
-			print qq(
-					<tr class="lookup_row">
-						<td class="row_ticket_number">$section->{$data->{'section'}}->{$element}->{'ticket'}</td>
-						<td class="row_ticket_status">$section->{$data->{'section'}}->{$element}->{'status'}</td>
-						<td class="row_ticket_priority">$section->{$data->{'section'}}->{$element}->{'priority'}</td>
-						<td class="row_ticket_contact">$section->{$data->{'section'}}->{$element}->{'contact'}</td>
-						<td class="row_ticket_section">$section->{$data->{'section'}}->{$element}->{'name'}</td>
-					</tr>
-			);
+		#	print qq(
+		#			<tr class="lookup_row">
+		#				<td class="row_ticket_number">$section->{$data->{'section'}}->{$element}->{'ticket'}</td>
+		#				<td class="row_ticket_status">$section->{$data->{'section'}}->{$element}->{'status'}</td>
+		#				<td class="row_ticket_priority">$section->{$data->{'section'}}->{$element}->{'priority'}</td>
+		#				<td class="row_ticket_contact">$section->{$data->{'section'}}->{$element}->{'contact'}</td>
+		#				<td class="row_ticket_section">$section->{$data->{'section'}}->{$element}->{'name'}</td>
+		#			</tr>
+		#	);
+		#}
+		#print qq(
+		#	</tbody>
+		#	</table>
+		#);
+
+		#print "Content-type: text/html\n\n";
+		print "Content-type: text/xml;charset=utf-8\n\n";
+		my $page = $data->{'page'};
+		my $limit = $data->{'rows'};
+		my $sidx = $data->{'sidx'};
+		my $sord = $data->{'sord'};
+		my $count = keys %{$section->{$data->{'section'}}};
+		my $total_pages;
+		if( $count > 0 && $limit > 0) {
+			$total_pages = ceil($count/$limit); 
+		} else { 
+		      $total_pages = 0; 
+		} 
+		
+		if($page > $total_pages){
+			$page=$total_pages;
 		}
-		print qq(
-			</tbody>
-			</table>
-		);
+		warn $page;
+		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
+		$xml .= "<rows>";
+		$xml .= "<page>$page</page>";
+		$xml .= "<total>$total_pages</total>";
+		$xml .= "<records>$count</records>";
+		
+		foreach my $row (keys %{$section->{$data->{'section'}}})
+		{
+			$xml .= "<row id='" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "'>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'status'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'priority'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'contact'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'name'} . "</cell>";
+			$xml .= "</row>";
+		}
+		
+		$xml .= "</rows>";
+		print $xml;
 	}
 }	
 else

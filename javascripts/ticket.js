@@ -20,7 +20,7 @@ $(document).ready(function(){
 		last_num++;
 		var $new_file = $(this).parent().append('<input type="file" name="file'+last_num+'" id="file'+last_num+'" num="'+last_num+'"><button class="del_file">-</button>');
 		$new_file.append($this);
-		$(this).parent().children('input.close').appendTo($new_file);
+		$(this).parent().children('button.close').appendTo($new_file);
 	});
 
 	$('.del_file').live('click',function(e){
@@ -88,6 +88,15 @@ $(document).ready(function(){
 		});
 		$('.toggle_link:not(:first)').children().toggle();
 	};
+	
+	var url = "lookup_ticket.pl?section=pseudo";
+	$.ajax({
+		type: 'GET',
+		url: url,
+		success: function(data){
+			$("#section_pseudo").append(data);
+		}
+	});
 
 	$("#submit_button").click(function(){
 		resetLogout();
@@ -152,7 +161,6 @@ $(document).ready(function(){
 			$.blockUI({message: "Submitting"});
 			var url = "submit_ticket.pl?type=customer";
 			var the_data = $("#newticket").serialize();
-			var files;
 			$.ajax({
 				type: 'POST',
 				url: url,
@@ -235,5 +243,27 @@ $(document).ready(function(){
 				$(this).tablesorter();
 			});
 		});
+	});
+	
+	var url = "lookup_ticket.pl?section=pseudo";
+	$("#test1").jqGrid({
+		url: url,
+		datatype: 'xml',
+		mtype: 'GET',
+		colNames: ['Ticket Number','Ticket Status','Ticket Priority','Ticket Contact','Section'],
+		colModel: [
+			{name: 'ticket', index: 'ticket', width: 100, sortable: true},
+			{name: 'status', index: 'status', width: 100, sortable: true},
+			{name: 'priority', index: 'priority', width: 100, sortable: true},
+			{name: 'contact', index: 'contact', width: 125, sortable: true},
+			{name: 'name', index: 'name', width: 100, sortable: true}
+		],
+		pager: "#pager",
+		rowNum: 10,
+		rowList: [10,20,30],
+		sortname: 'ticket',
+		sortorder: 'desc',
+		viewrecords: true,
+		caption: 'Tickets assigned to you'
 	});
 });
