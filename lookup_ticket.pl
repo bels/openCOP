@@ -7,7 +7,7 @@ use CGI;
 use SessionFunctions;
 use UserFunctions;
 use URI::Escape;
-use JSON;
+use POSIX qw(ceil);
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -60,8 +60,6 @@ if($authenticated == 1)
 	}
 	
 	my $section = {};
-
-	#print "Content-type: text/html\n\n";
 
 	$query = "select id,name from section;";
 	$sth = $dbh->prepare($query);
@@ -144,10 +142,44 @@ if($authenticated == 1)
 		#	</tbody>
 		#	</table>
 		#);
+
+		#print "Content-type: text/html\n\n";
+		print "Content-type: text/xml;charset=utf-8\n\n";
+		my $page = $data->{'page'};
+		my $limit = $data->{'rows'};
+		my $sidx = $data->{'sidx'};
+		my $sord = $data->{'sord'};
+		my $count = keys %{$section->{$data->{'section'}}};
+		my $total_pages;
+		if( $count > 0 && $limit > 0) {
+			$total_pages = ceil($count/$limit); 
+		} else { 
+		      $total_pages = 0; 
+		} 
 		
-		print "Content-type: application/json\n\n";
-		my $json = encode_json $section->{$data->{'section'}}->{'3'};
-		print $json;
+		if($page > $total_pages){
+			$page=$total_pages;
+		}
+		warn $page;
+		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
+		$xml .= "<rows>";
+		$xml .= "<page>$page</page>";
+		$xml .= "<total>$total_pages</total>";
+		$xml .= "<records>$count</records>";
+		
+		foreach my $row (keys %{$section->{$data->{'section'}}})
+		{
+			$xml .= "<row id='" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "'>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'status'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'priority'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'contact'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'name'} . "</cell>";
+			$xml .= "</row>";
+		}
+		
+		$xml .= "</rows>";
+		print $xml;
 	}
 }	
 else

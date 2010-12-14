@@ -245,7 +245,7 @@ $(document).ready(function(){
 	});
 	
 	var url = "lookup_ticket.pl?section=pseudo";
-	$("#test").jqGrid({
+	$("#test1").jqGrid({
 		url: url,
 		datatype: 'xml',
 		mtype: 'GET',
