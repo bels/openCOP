@@ -44,18 +44,6 @@
 			</div>
 			<div id="problem_details">
 				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Problem Details</div>
-				<label for="problem">Problem:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a>
-				<br />
-				<textarea id="tech_problem" style="width: 600px;" cols="80" rows="5" name="problem" tabindex="11" class="styled_form_element"></textarea>
-				<br>
-				<label for="troubleshoot">Troubleshooting Tried:</label><a href="tips.pl?112" class="tooltip" target="_tips">?</a>
-				<br />
-				<textarea  id="troubleshoot" style="width: 600px;" cols="80" rows="5" name="troubleshoot" tabindex="12" class="styled_form_element"></textarea>
-				<br />
-				<img src="images/submit.png" class="image_button" id="submit_button" alt="Submit">
-			</div>
-			<div id="problem_details">
-				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Problem Details</div>
 				<div id="problem_wrapper">
 					<label for="problem">Problem:</label><a href="tips.pl?109" class="tooltip" target="_tips">?</a><br />
 					<textarea id="tech_problem" cols="80" rows="5" name="problem" tabindex="11" class="styled_form_element"></textarea><br />

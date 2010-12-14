@@ -77,14 +77,15 @@ if($authenticated == 1)
 
 	$results->{'free_time'} = substr($results->{'free_time'},0,8);
 
-	print qq(<h2>Ticket Details</h2>);
+	print qq(<div id="details_wrapper"><div class="form_title">Ticket Details</div>);
 	print qq(
 		<form action="update_ticket.pl" method="POST" id="update_form">
 			<input type="hidden" name="tech" value="1">
 			<input type="hidden" name="section" value="$section_list->{$results->{'section'}}->{'id'}">
 			<input type="hidden" name="ticket_number" value="$results->{'ticket'}">
-		<div id="head_div">
+			<label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span>
 			<label for="priority">Priority:</label><span id="priority" name="priority">$priority_list->{$results->{'priority'}}->{'description'}</span>
+			<label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span>
 		);
 	print qq(
 		<br>
@@ -102,9 +103,6 @@ if($authenticated == 1)
 
 	print qq(</select>);
 	print qq(
-		<br>
-		<label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span>
-		<label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span>
 		<br>
 		<label for="contact">Contact:</label><input type="text" id="contact" name="contact" value="$results->{'contact'}" class="styled_form_element">
 		<label for="contact_phone">Contact Phone:</label><input type="text" id="contact_phone" name="contact_phone" value="$results->{'contact_phone'}" class="styled_form_element">
@@ -126,10 +124,14 @@ if($authenticated == 1)
 	print substr($results->{'updated'},0,16);
 	print qq(
 		</span>
+		</div>
 	</div>
 	);
 	print qq(
-	<div id="problem_div">
+	<div id="problem_wrapper">
+		<div class="form_title">Problem Details</div>
+		<div id="problem_div">
+		
 		<label for="problem">Problem:</label><div id="problem" name="problem">$results->{'problem'}</div><br>
 		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting" class="styled_form_element"></textarea><br>
 		<label for="past_troubleshoot">Past Troubleshooting:</label><div id="past_troubleshoot" name="past_troubleshoot">
@@ -162,7 +164,8 @@ if($authenticated == 1)
 		print $notes->{$t}->{'note'} . "<br />";
 	}
 	print qq(</div><br />
-			<input type="image" src="images/update.png" alt="Update">
+			<input type="image" src="images/update.png" id="update_button" alt="Update">
+			<img src="images/cancel.png" alt="Cancel" class="image_button" id="cancel">
 		</div>
 		<div id="attached_div">
 			<div id="attached">

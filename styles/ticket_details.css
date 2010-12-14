@@ -1,0 +1,78 @@
+#update_button{
+	width: 75px !important;
+	height: 25px;
+}
+
+#details_wrapper{
+	border: 1px solid black;
+    margin-left: 15px;
+    width: 890px;
+	height: 230px;
+}
+
+#problem_wrapper{
+	border: 1px solid black;
+    margin-left: 15px;
+	margin-top: 5px;
+    width: 890px;
+	height: 595px;
+}
+
+#update_form label{
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+
+#ticket_details{
+	font-size: .8em;
+	position:fixed;
+	background:#FFFFFF;
+	z-index:20000;
+	padding:12px;
+	padding-left: 0px;
+	padding-right: 0px;
+	display: none;
+	margin-top: 15px;
+	width: 940px;
+	height: 550px;
+	overflow: auto;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid black;
+}
+
+#problem_wrapper #problem_div{
+	width: 610px;
+	margin-left: 15px;
+	float: left;
+}
+
+#problem_div textarea{
+	white-space: pre-wrap;
+}
+
+#attached_div{
+	width: 250px;
+	height: 320px;
+	margin-left: 5px;
+	margin-top: 5px;
+	float: left;
+}
+
+#ticket_details .form_title{
+	font-size: .9em;
+}
+
+#attach_div label{
+	margin: 0px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+#update_form #attach_div{
+	float: left;
+	display: inline-block;
+}

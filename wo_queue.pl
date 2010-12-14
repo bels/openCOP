@@ -40,6 +40,7 @@ if($authenticated == 1)
 	my @styles = (
 		"styles/ui.jqgrid.css",
 		"styles/wo_queue.css",
+		"styles/ticket_details.css"
 	);
 	my @javascripts = (
 		"javascripts/grid.locale-en.js",
