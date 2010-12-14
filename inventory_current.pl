@@ -185,7 +185,7 @@ if($authenticated == 1) {
 			my $results = $sth->fetchall_hashref('name');
 	
 			$data = qq(<label for="company_select">Choose a company</label>
-				<select id="company_select" class="type_select">
+				<select id="company_select" class="type_select styled_form_element">
 					<option value="" selected="selected"></option>
 			);
 			my $i;
@@ -273,7 +273,7 @@ if($authenticated == 1) {
 		my $pid = $sth->fetchall_hashref('property');
 
 		$data = qq(<label for="by_property">Select criteria to display by</label>
-			<select id="by_property">
+			<select id="by_property" class="styled_form_element">
 				<option value="" selected="selected"></option>
 		);
 		my $i;

@@ -4,32 +4,32 @@
 			<div id="add_tp_div" class="tp_div">
 				<form id="add_tp_form">
 					<label for="add_tp_select" class="add">Add </label>
-					<select id="add_tp_select" class="add tp_select">
+					<select id="add_tp_select" class="add tp_select styled_form_element">
 						<option value="template" selected="selected">Template</option>
 						<option value="property">Property</option>
 					</select>
-					<input id="add_tp" type="text" class="add">
+					<input id="add_tp" type="text" class="add styled_form_element">
 				</form>
-				<button id="submit_add_button" mode="add_tp" class="submit_button">Submit</button>
+				<img src="images/submit.png" id="submit_add_button" mode="add_tp" class="submit_button image_button" alt="Submit">
 			</div>
 			<div id="del_tp_div" class="tp_div">
 				<form id="del_tp_form">
 					<label for="del_tp_select" class="del">Remove </label>
-					<select id="del_tp_select" class="del tp_select">
+					<select id="del_tp_select" class="del tp_select styled_form_element">
 						<option value="template" selected="selected">Template</option>
 						<option value="property">Property</option>
 					</select>
 					<div id="t_tp_append_div">
 					</div>
 				</form>
-				<button id="submit_del_button" mode="del_tp" class="submit_button">Submit</button>
+				<img src="images/submit.png" id="submit_del_button" mode="del_tp" class="submit_button image_button" alt="Submit">
 			</div>
 			<div id="errorspace">
 			</div>
 		</div>
 		<div id="configure_bottom" class="bottom">
 			<span id="configure_bottom_header_text" class="header_text">Associate properties with types</span>
-			<button id="submit_a_tp" mode="a_tp">Associate</button>
+			<img src="images/associate.png" id="submit_a_tp" mode="a_tp" class="image_button" alt="Associate">
 			<div id="onload_append_div" class="onload_append">
 			</div>
 			<div id="a_tp_append_div">

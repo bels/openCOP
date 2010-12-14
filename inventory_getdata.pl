@@ -47,7 +47,7 @@ if($authenticated == 1)
 		my @used_properties;
 
 		$data .= qq(
-			<select id="associate_tp" class="multiselect" multiple="multiple" name="tp_select_array[]">
+			<select id="associate_tp" class="multiselect styled_form_element" multiple="multiple" name="tp_select_array[]">
 		);
 
 		if(defined($used_properties)){
@@ -134,7 +134,7 @@ if($authenticated == 1)
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('template');
 		$data = qq(
-				<select id="type_select" class="type_select">
+				<select id="type_select" class="type_select styled_form_element">
 					<option value="" selected="selected"></option>
 		);
 
@@ -176,8 +176,9 @@ if($authenticated == 1)
 					<div id="add_top_header" class="header_text">
 					<span id="add_top_header_text">Create new objects</span>
 				</div>
+				<div class="select_div">
 					<label for="object_type_select" class="add type_select">Create </label>
-					<select id="object_type_select">
+					<select id="object_type_select" class="styled_form_element">
 						<option value="" selected="selected"></option>
 		);
 
@@ -192,12 +193,12 @@ if($authenticated == 1)
 		}
 
 
-		$data .= qq(	</select>);
+		$data .= qq(	</select></div>);
 
 		$data .= qq(	
 				<div id="company_select_div" class="select_div">
 					<label for="object_company_select" class="add company_select">Company</label>
-					<select id="object_company_select" class="company_select">
+					<select id="object_company_select" class="company_select styled_form_element">
 						<option value="" selected="selected"></option>
 		);
 		@pid = [];
@@ -214,9 +215,9 @@ if($authenticated == 1)
 		);
 
 		$data .= qq(
-				<div id="object_name_input_div">
+				<div id="object_name_input_div" class="select_div">
 					<label for="object_name" class="add">Name </label>
-					<input npid="$special_case->{'name'}->{'id'}" id="object_name" type="text">
+					<input npid="$special_case->{'name'}->{'id'}" class="styled_form_element" id="object_name" type="text">
 				</div>
 		);
 
@@ -224,7 +225,7 @@ if($authenticated == 1)
 				
 				<div id="property_select_div" class="select_div">
 				<label for="object_property_select" class="add property_select">Add new property </label>
-				<select id="object_property_select" class="property_select">
+				<select id="object_property_select" class="property_select styled_form_element">
 					<option value="" selected="selected"></option>
 		);
 		@pid = [];
@@ -238,12 +239,12 @@ if($authenticated == 1)
 			}
 		}
 		$data .= qq(	</select>
-				<button id="submit_add_property_button" class="submit_button left_add_object">Add Property</button>
+				<img src="images/add_property.png" id="submit_add_property_button" class="submit_button left_add_object image_button" alt="Add Property">
 				</div>
 		);
 
 		$data .= qq(
-					<button id="submit_create_object_button" class="submit_button left_add_object">Create Inventory Object</button>
+					<img src="images/create_inventory_object.png" id="submit_create_object_button" class="submit_button left_add_object image_button" alt="Create Inventory Object">
 					</div>
 				</form>
 		);
@@ -255,7 +256,7 @@ if($authenticated == 1)
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('template');
 		$data = qq(
-				<select id="del_tp" class="type_select">
+				<select id="del_tp" class="type_select styled_form_element">
 					<option value="" selected="selected"></option>
 		);
 
@@ -305,7 +306,7 @@ if($authenticated == 1)
 		foreach my $key (@hash_order){
 			$i++;
 			$data .= qq(
-				<br><label class="object_form_label object_form">$results->{$key}->{'property'}</label>	<input id="$results->{$key}->{'property_id'}" class="object_form_input object_form required">
+				<br><label class="object_form_label object_form">$results->{$key}->{'property'}</label>	<input id="$results->{$key}->{'property_id'}" class="object_form_input object_form required styled_form_element">
 			);
 			$i--;
 			$data .= qq(
@@ -322,7 +323,7 @@ if($authenticated == 1)
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchrow_hashref;
-		$data = qq(<br><label class="object_form_label object_form">$results->{'property'}</label><input id="$results->{'id'}" class="object_form_input object_form required"><button class="object_form object_remove_property_button">Remove</button>);
+		$data = qq(<br><label class="object_form_label object_form">$results->{'property'}</label><input id="$results->{'id'}" class="object_form_input object_form required styled_form_element"><button class="object_form object_remove_property_button">Remove</button>);
 		print "Content-type: text/html\n\n";
 		print $data;
 		

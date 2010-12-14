@@ -16,7 +16,8 @@
 }
 
 #object_type_append_div{
-	min-width: 200px;
+	min-width: 455px;
+	width: 455px;
 	padding: 10px;
 	color: white;
 	background-color: #333;
@@ -92,4 +93,27 @@ _#right_add_object_div{
 label.error{
 	float: right;
 	color: red;
+}
+
+input{
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+select{
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+#submit_add_property_button{
+	vertical-align: middle;
+	margin-top: 0px !important;
+}
+
+.select_div{
+	margin-bottom: 5px;
+}
+
+label{
+	margin-bottom: 0px;
 }

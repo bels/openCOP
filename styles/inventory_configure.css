@@ -35,9 +35,12 @@
 }
 
 .tp_div{
-	_border: 1px red solid;
-	width: 470px;
+	width: 500px;
 	height: 30px;
+}
+
+#add_tp_div{
+	margin-bottom: 10px;
 }
 
 .submit_tp_div{
