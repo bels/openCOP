@@ -11,3 +11,14 @@
 			<div id="right">
 			</div>
 		</div>
+		<div id="multiAttach" class="dialog">
+			<div id="details">
+				<form id="attach_form" enctype="multipart/form-data" method="post" action="upload_file.pl">
+					<input type="hidden" name="mode" id="mode" value="update">
+					<input type="file" name="file1" id="file1" num="1">
+					<button class="add_file">+</button>
+					<br>
+					<input type="submit" id="close_attach" class="close" value="Done">
+				</form>
+			</div>
+		</div>

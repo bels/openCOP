@@ -50,7 +50,14 @@ if($authenticated == 2)
 	my $results = $sth->fetchall_arrayref;
 	
 	my @styles = ( "styles/customer.css","styles/jquery.jscrollpane.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/customer.js","javascripts/jquery.validate.js","javascripts/jquery.jscrollpane.min.js","javascripts/jquery-ui-timepicker-addon.min.js");
+	my @javascripts = (
+		"javascripts/jquery.tools.min.js",
+		"javascripts/jquery.form.js",
+		"javascripts/jquery.validate.js",
+		"javascripts/jquery.jscrollpane.min.js",
+		"javascripts/jquery-ui-timepicker-addon.min.js",
+		"javascripts/customer.js",
+	);
 	my $meta_keywords = "";
 	my $meta_description = "";
 
