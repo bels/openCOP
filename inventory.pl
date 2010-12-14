@@ -54,8 +54,17 @@ if($authenticated == 1)
 	} elsif ($mode eq "current"){
 		$title = $config->{'company_name'} . " - Inventory Current";
 		$file = "inventory_current.tt";
-		push(@styles,"styles/jquery.jscrollpane.css","styles/inventory_current.css");
-		push(@javascripts,"javascripts/jquery.tablesorter.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/inventory_current.js");
+		push(@styles,
+			"styles/ui.jqgrid.css",
+			"styles/inventory_current.css",
+		);
+		push(@javascripts,
+			"javascripts/grid.locale-en.js",
+			"javascripts/jquery.jqGrid.min.js",
+			"javascripts/jquery.mousewheel.js",
+			"javascripts/mwheelIntent.js",
+			"javascripts/inventory_current.js",
+		);
 	} elsif ($mode eq "configure"){
 		$title = $config->{'company_name'} . " - Inventory Configure.";
 		$file = "inventory_configure.tt";

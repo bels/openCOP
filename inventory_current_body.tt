@@ -14,5 +14,6 @@
 		</div>
 		<div id="object_details" class="details">
 		</div>
-
+	</div>
+	<div id="behind_popup">
 	</div>
