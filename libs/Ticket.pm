@@ -162,8 +162,8 @@ sub render{
 
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
-	my @styles = ("styles/jquery.jscrollpane.css","styles/ticket.css");
-	my @javascripts = ("javascripts/jquery.tools.min.js","javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
+	my @styles = ("styles/jquery.jscrollpane.css","styles/ui.jqgrid.css","styles/ticket.css");
+	my @javascripts = ("javascripts/jquery.tools.min.js","javascripts/grid.locale-en.js","javascripts/jquery.jqGrid.min.js","javascripts/jquery.validate.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/ticket.js");
 
 	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $reports = $report->view(id => $args{'id'});

@@ -7,6 +7,7 @@ use CGI;
 use SessionFunctions;
 use UserFunctions;
 use URI::Escape;
+use JSON;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -60,7 +61,7 @@ if($authenticated == 1)
 	
 	my $section = {};
 
-	print "Content-type: text/html\n\n";
+	#print "Content-type: text/html\n\n";
 
 	$query = "select id,name from section;";
 	$sth = $dbh->prepare($query);
@@ -114,35 +115,39 @@ if($authenticated == 1)
 		
 		@hash_order = sort({$a <=> $b } @hash_order);
 	
-		print qq(
-			<table class="ticket_summary sort">
-				<thead>
-					<tr class="header_row">
-						<th class="ticket_number header_row_item">Ticket Number</th>
-						<th class="ticket_status header_row_item">Ticket Status</th>
-						<th class="ticket_priority header_row_item">Ticket Priority</th>
-						<th class="ticket_contact header_row_item">Ticket Contact</th>
-						<th class="ticket_section header_row_item">Section</th>
-					</tr>
-				</thead>
-				<tbody>
-		);
-		foreach my $element (@hash_order){
+		#print qq(
+		#	<table class="ticket_summary sort" id="test1">
+		#		<thead>
+		#			<tr class="header_row">
+		#				<th class="ticket_number header_row_item">Ticket Number</th>
+		#				<th class="ticket_status header_row_item">Ticket Status</th>
+		#				<th class="ticket_priority header_row_item">Ticket Priority</th>
+		#				<th class="ticket_contact header_row_item">Ticket Contact</th>
+		#				<th class="ticket_section header_row_item">Section</th>
+		#			</tr>
+		#		</thead>
+		#		<tbody>
+		#);
+		#foreach my $element (@hash_order){
 		#this needs to vastly improve.  this displays the html inside of the ticket box.
-			print qq(
-					<tr class="lookup_row">
-						<td class="row_ticket_number">$section->{$data->{'section'}}->{$element}->{'ticket'}</td>
-						<td class="row_ticket_status">$section->{$data->{'section'}}->{$element}->{'status'}</td>
-						<td class="row_ticket_priority">$section->{$data->{'section'}}->{$element}->{'priority'}</td>
-						<td class="row_ticket_contact">$section->{$data->{'section'}}->{$element}->{'contact'}</td>
-						<td class="row_ticket_section">$section->{$data->{'section'}}->{$element}->{'name'}</td>
-					</tr>
-			);
-		}
-		print qq(
-			</tbody>
-			</table>
-		);
+		#	print qq(
+		#			<tr class="lookup_row">
+		#				<td class="row_ticket_number">$section->{$data->{'section'}}->{$element}->{'ticket'}</td>
+		#				<td class="row_ticket_status">$section->{$data->{'section'}}->{$element}->{'status'}</td>
+		#				<td class="row_ticket_priority">$section->{$data->{'section'}}->{$element}->{'priority'}</td>
+		#				<td class="row_ticket_contact">$section->{$data->{'section'}}->{$element}->{'contact'}</td>
+		#				<td class="row_ticket_section">$section->{$data->{'section'}}->{$element}->{'name'}</td>
+		#			</tr>
+		#	);
+		#}
+		#print qq(
+		#	</tbody>
+		#	</table>
+		#);
+		
+		print "Content-type: application/json\n\n";
+		my $json = encode_json $section->{$data->{'section'}}->{'3'};
+		print $json;
 	}
 }	
 else

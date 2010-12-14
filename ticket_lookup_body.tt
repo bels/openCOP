@@ -5,6 +5,8 @@
 		</div>
 		<div class="ticket_lookup" id="[% section_list.$id.section_id %]">
 		</div>
+		<table id="test"></table>
+		<div id="pager"></div>
 	[% END %]
 		<div id="ticket_details">
 		</div>
