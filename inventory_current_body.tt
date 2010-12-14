@@ -8,8 +8,7 @@
 		<div id="current_top" class="top">
 			
 			<div id="object_lookup">
-				<table id="object_table">
-				</table>
+				<table id="object_table"></table>
 				<div id="pager"></div>
 			</div>
 		</div>

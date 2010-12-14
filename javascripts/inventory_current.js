@@ -59,7 +59,60 @@ function company_select(){
 	if($('#company_select').val() !== ""){
 		if($("#object_lookup").length)
 		{
+			resetLogout();
 			var cpid = $('#company_select').val();
+			var url = "inventory_current.pl?mode=by_company&cpid=" + cpid;
+			$('.wo_link.selected').removeClass('selected');
+			$('#object_lookup').html('<table id="object_table"></table><div id="pager"></div>');
+			$('#object_table').jqGrid({
+				url: url,
+				datatype: 'xml',
+				mtype: 'GET',
+				colNames: ['ID','Name','Type'],
+				colModel: [
+					{name: 'step', index: 'step', width: 100, sortable: true},
+					{name: 'ticket', index: 'ticket', width: 100, sortable: true},
+					{name: 'status', index: 'status', width: 100, sortable: true},
+					{name: 'priority', index: 'priority', width: 100, sortable: true},
+					{name: 'technician', index: 'technician', width: 125, sortable: true},
+					{name: 'problem', index: 'problem', width: 200, sortable: true},
+					{name: 'name', index: 'name', width: 100, sortable: true}
+				],
+				pager: "#pager",
+				rowNum: 10,
+				rowList: [10,20,30],
+				sortname: 'step',
+				sortorder: 'asc',
+				viewrecords: true,
+				altRows: true,
+				gridview: true,
+				ignoreCase: true,
+				multiKey: 'ctrlKey',
+				multiselect: true,
+				multiboxonly: true,
+				toolbar: [true,'top'],
+				ondblClickRow: function(rowid){
+					resetLogout();
+					var ticket_number = rowid;
+					var url = "ticket_details.pl?ticket_number=" + ticket_number;
+					$('#behind_popup').css({'opacity':'0.7'}).fadeIn('slow');
+					$('#ticket_details').load(url).fadeIn('slow');
+					var windowWidth = document.documentElement.clientWidth;
+					var windowHeight = document.documentElement.clientHeight;
+					var popupHeight = $('#ticket_details').height();
+					var popupWidth = $('#ticket_details').width();
+					$('#ticket_details').css({
+						'position': 'absolute',
+						'top': windowHeight/2-popupHeight/2,
+						'left': windowWidth/2-popupWidth/2
+					});
+					$('#behind_popup').css({
+						'height': windowHeight
+					});
+				}
+			});
+
+
 			var pane = $("#object_lookup").jScrollPane({
 				showArrows:true,
 				maintainPosition: false
