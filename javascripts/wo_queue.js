@@ -3,8 +3,8 @@ $(document).ready(function(){
 		resetLogout();
 		var wo = $(this).attr("id");
 		var url = "wo_ticket_lookup.pl?wo=" + wo;
-		$("#right").load(url);
 		$('.wo_link.selected').removeClass('selected');
+		$('#right_holder').html('<table id="right"></table><div class="pager" id="pager"></div>');
 		$(this).addClass('selected');
 			$('#right').jqGrid({
 				url: url,
