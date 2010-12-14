@@ -90,7 +90,7 @@ if($authenticated == 1)
 		<br>
 		<label for="section">Section:</label><span id="section" name="section">$section_list->{$results->{'section'}}->{'name'}</span>
 		<br>
-		<label for="status">Ticket Status:</label><select id="status" name="status">
+		<label for="status">Ticket Status:</label><select id="status" name="status"  class="styled_form_element">
 	);
 	my $i;
 	for ($i = 1; $i <= keys(%$status_list); $i++)
@@ -106,12 +106,12 @@ if($authenticated == 1)
 		<label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span>
 		<label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span>
 		<br>
-		<label for="contact">Contact:</label><input type="text" id="contact" name="contact" value="$results->{'contact'}">
-		<label for="contact_phone">Contact Phone:</label><input type="text" id="contact_phone" name="contact_phone" value="$results->{'contact_phone'}">
-		<label for="contact_email">Contact Email:</label><input type="text" id="contact_email" name="contact_email" value="$results->{'contact_email'}">
+		<label for="contact">Contact:</label><input type="text" id="contact" name="contact" value="$results->{'contact'}" class="styled_form_element">
+		<label for="contact_phone">Contact Phone:</label><input type="text" id="contact_phone" name="contact_phone" value="$results->{'contact_phone'}" class="styled_form_element">
+		<label for="contact_email">Contact Email:</label><input type="text" id="contact_email" name="contact_email" value="$results->{'contact_email'}" class="styled_form_element">
 		<br>
-		<label for="site">Site:</label><input type="text" id="site" name="site" value="$site">
-		<label for="location">Location:</label><input type="text" id="location" name="location" value="$results->{'location'}">
+		<label for="site">Site:</label><input type="text" id="site" name="site" value="$site" class="styled_form_element">
+		<label for="location">Location:</label><input type="text" id="location" name="location" value="$results->{'location'}" class="styled_form_element">
 		<br>
 		<label for="free">Free:</label><span id="free" name="free">$results->{'free_date'} 
 	);
@@ -131,7 +131,7 @@ if($authenticated == 1)
 	print qq(
 	<div id="problem_div">
 		<label for="problem">Problem:</label><div id="problem" name="problem">$results->{'problem'}</div><br>
-		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting"></textarea><br>
+		<label for="troubleshoot">Troubleshooting Tried:</label><textarea cols="80" rows="8" id="troubleshooting" name="troubleshooting" class="styled_form_element"></textarea><br>
 		<label for="past_troubleshoot">Past Troubleshooting:</label><div id="past_troubleshoot" name="past_troubleshoot">
 	);
 	
@@ -147,7 +147,7 @@ if($authenticated == 1)
 	}
 	
 	print qq(</div><br />
-		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes"></textarea><br/>
+		<label for="notes">Notes:</label><textarea rows="8" cols="80" id="notes" name="notes" class="styled_form_element"></textarea><br/>
 	);
 
 	print qq(<label for="past_notes">Past Notes:</label><div id="past_notes" name="past_notes">);
@@ -162,7 +162,7 @@ if($authenticated == 1)
 		print $notes->{$t}->{'note'} . "<br />";
 	}
 	print qq(</div><br />
-			<input type="submit" value="Update">
+			<input type="image" src="images/update.png" alt="Update">
 		</div>
 		<div id="attached_div">
 			<div id="attached">

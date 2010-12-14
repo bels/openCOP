@@ -38,12 +38,10 @@ if($authenticated == 1)
 	my $results = $sth->fetchall_arrayref;
 	
 	my @styles = (
-		"styles/smoothness/jquery-ui-1.8.5.custom.css",
 		"styles/ui.jqgrid.css",
 		"styles/wo_queue.css",
 	);
 	my @javascripts = (
-		"javascripts/jquery-ui-1.8.5.custom.min.js",
 		"javascripts/grid.locale-en.js",
 		"javascripts/jquery.jqGrid.min.js",
 		"javascripts/jquery.validate.js",
