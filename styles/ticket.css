@@ -115,7 +115,7 @@ h4{
 
 #attach_div{
 	width: 270px;
-	height: 320px;
+	height: 300px;
 	margin-left: 5px;
 	margin-top: 5px;
 	float: left;
@@ -177,5 +177,5 @@ h4{
 	left:0;
 	background:#000000;
 	border:1px solid #cecece;
-	z-index:19999;
+	z-index:8999;
 }
