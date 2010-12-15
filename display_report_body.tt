@@ -1,25 +1,66 @@
+<script type="text/javascript">
+$(document).ready(function(){
+		var a = [];
+		$('#hidden_data ul#columns li').each(function(){
+			a.push($(this).text());
+		});
+	//	$('#hidden_data div#
+		alert(a);
+		var url = 'run_query.pl';
+		$('#res_table').jqGrid({
+			url: url,
+			datatype: 'xml',
+			mtype: 'GET',
+			colNames: a,
+			colModel: [
+				{name: 'ticket', index: 'ticket', width: 100, sortable: true},
+				{name: 'status', index: 'status', width: 100, sortable: true},
+				{name: 'priority', index: 'priority', width: 100, sortable: true},
+				{name: 'contact', index: 'contact', width: 125, sortable: true},
+				{name: 'problem', index: 'problem', width: 200, sortable: true},
+				{name: 'name', index: 'name', width: 100, sortable: true}
+			],
+			pager: "#" + section_id,
+			rowNum: 10,
+			rowList: [10,20,30],
+			sortname: 'ticket',
+			sortorder: 'asc',
+			viewrecords: true,
+			altRows: true,
+			gridview: true,
+			ignoreCase: true,
+			multiKey: 'ctrlKey',
+			multiselect: true,
+			multiboxonly: true,
+			toolbar: [true,'top'],
+			caption: caption_text,
+			ondblClickRow: function(rowid){
+				resetLogout();
+				var ticket_number = rowid;
+				var url = "ticket_details.pl?ticket_number=" + ticket_number;
+				$('#behind_popup').css({'opacity':'0.7'}).fadeIn('slow');
+				$('#ticket_details').load(url).fadeIn('slow');
+				var windowWidth = document.documentElement.clientWidth;
+				var windowHeight = document.documentElement.clientHeight;
+				var popupHeight = $('#ticket_details').height();
+				var popupWidth = $('#ticket_details').width();
+				$('#ticket_details').css({
+					'position': 'absolute',
+					'top': windowHeight/2-popupHeight/2,
+					'left': windowWidth/2-popupWidth/2
+				});
+				$('#behind_popup').css({
+					'height': windowHeight
+				});
+			}
+		});
+});
+</script>
 	<div id="top">
-		<div id="table_title">
-			<span id="report_name">[% table_title %]</span>
-		</div>
 		<table id="res_table">
-			<thead id="table_head">
-				<tr id="table_head_row">
-				[% FOREACH column IN columns.keys %]
-					<th class="table_head_cell">[% column %]</th>
-				[% END %]
-				</tr>
-			</thead>
-			<tbody id="table_body">
-			[% FOREACH item IN sorted_hash %]
-				<tr class="table_row" name="[% item %]">
-				[% FOREACH column IN columns.keys %]
-					<td class="table_cell">[% results.$item.$column %]</td>
-				[% END %]
-				</tr>
-			[% END %]
-			</tbody>
 		</table>
+		<div id="pager">
+		</div>
 	</div>
 	<div id="buttons">
 		<span id="export_as" name="export_as">Export as: </span>
@@ -30,3 +71,13 @@
 		<span id="send_email">Send in email</span><input type="checkbox" name="email" id="email" title="Send in email">
 		<button id="export_button">Save</button>
 	</div>
+	<iframe style="visibility: hidden" id="hidden_data">
+		<ul id="columns">
+		[% FOREACH i IN columns.sort %]
+			<li id="[% i %]">[% i %]</li>
+		[% END %]
+		</ul>
+		<div id="data">
+			[% xml %]
+		</div>
+	</iframe>

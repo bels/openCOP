@@ -46,18 +46,28 @@ sub authenticate_user{
 	my $self = shift;
 	my %args = @_;
 	
-	my $password = md5_hex($args{'password'});
+	my $password;
+	my $result;
+	my $return;
+
+	if(defined($args{'password'}) && $args{'password'} ne ""){
+		$password = md5_hex($args{'password'});
+	} else {
+		return $return = {
+			'count'	=>	0
+		}
+	};
 	
 	my $query = "select count(*) from $args{'users_table'} where alias = ? and password = ?";
 	my $sth = $self->{'dbh'}->prepare($query) or die "Preparing the query for authenticate_user in $0";
 	$sth->execute($args{'alias'},$password) or die "Executing the query for authenticate_user in $0";
-	my $result = $sth->fetchrow_hashref or die "Fetching the results for authenticate_user in $0";
+	$result = $sth->fetchrow_hashref or return $return = {'count' => 0};
 	my $count = $result->{'count'};
 
 	$query = "select * from $args{'users_table'} where alias = ? and password = ? limit 1";
 	$sth = $self->{'dbh'}->prepare($query) or die "Preparing the query for authenticate_user in $0";
 	$sth->execute($args{'alias'},$password) or die "Executing the query for authenticate_user in $0";
-	$result = $sth->fetchrow_hashref or die "Fetching the results for authenticate_user in $0";
+	$result = $sth->fetchrow_hashref or return $return = {'count' => 0};
 	my $uid = $result->{'id'};
 
 	$query = "
@@ -83,7 +93,7 @@ sub authenticate_user{
 	} else {
 		$customer = 0;
 	}
-	my $return = {
+	$return = {
 		'count'		=>	$count,
 		'customer'	=>	$customer,
 		'id'		=>	$uid,

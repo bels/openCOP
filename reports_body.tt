@@ -1,27 +1,7 @@
 	<div id="query_builder">
 		<div id="query_builder_header" class="header">Query Builder</div>
-		<div id="select_div">
-			<label>Select</label><div><select id="100" name="100" class="column styled_form_element"></select></div>
-			<img src="images/plus.png" id="200" class="add_column image_button" alt="Plus Sign">
-			<img src="images/minus.png"  id="201" class="del_column image_button" alt="Minus Sign">
-		</div>
-		<div id="from_div">
-			<label>From</label><div><select id="300" name="300" class="table styled_form_element"></select></div>
-			<img src="images/plus.png" id="202" class="add_table image_button" alt="Plus Sign">
-		</div>
-		<div id="join_div_parent">
-		</div>
 		<div class="where_div">
 			<img src="images/add_where.png" id="204" class="add_where image_button" alt="Add Where">
-		</div>
-		<div class="other_div">
-			<select id="1000" name="1000" class="add_other styled_form_element">
-				<option value=""></option>
-				<option value="order by">order by</option>
-				<option value="limit">limit</option>
-			</select>
-			<form id="fake_form">
-			</form>
 		</div>
 		<div id="submit_div">
 			<img src="images/run_once.png" id="run" alt="Run once" class="image_button"><img src="images/save_query.png" class="image_button" id="save" alt="Save query"><span id="as_text" name="as_text">as </span><input type="text" id="as" name="as" class="styled_form_element">
