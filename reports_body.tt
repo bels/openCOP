@@ -1,20 +1,13 @@
 	<div id="query_builder">
 		<div id="query_builder_header" class="header">Query Builder</div>
 		<div id="select_div">
-			<span class="label">Select</span>
-			<div>
-				<select id="100" name="100" class="column"></select>
-			</div>
-			<button id="200" class="add_column">+</button>
-			<button id="201" class="del_column">-</button>
+			<label>Select</label><div><select id="100" name="100" class="column styled_form_element"></select></div>
+			<img src="images/plus.png" id="200" class="add_column image_button">
+			<img src="images/minus.png"  id="201" class="del_column image_button">
 		</div>
 		<div id="from_div">
-			<span class="label">From</span>
-			<div>
-				<select id="300" name="300" class="table">
-				</select>
-			</div>
-			<button id="202" class="add_table">+</button>
+			<label>From</label><div><select id="300" name="300" class="table styled_form_element"></select></div>
+			<img src="images/plus.png" id="202" class="add_table image_button">
 		</div>
 		<div id="join_div_parent">
 		</div>
