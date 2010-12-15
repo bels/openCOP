@@ -61,14 +61,14 @@ body{
     background: #222;  
     font-size: 1.1em;  
     background: repeat-x;  
-	z-index: 10000;
+	z-index: 7000;
  }  
  ul.topnav li {  
     float: left;  
     margin: 0;  
     padding: 0 15px 0 0;  
     position: relative; /*--Declare X and Y axis base for sub navigation--*/  
-	z-index: 10000;
+	z-index: 7000;
  }  
  ul.topnav li a{  
     padding: 10px 5px;  
@@ -76,20 +76,20 @@ body{
     display: block;  
     text-decoration: none;  
     float: left;  
-	z-index: 10000;
+	z-index: 7000;
  }  
  ul.topnav li a:hover{  
     background: no-repeat center top;  
-	z-index: 10000;
+	z-index: 7000;
  }  
  ul.topnav li span { /*--Drop down trigger styles--*/  
     width: 17px;  
     height: 35px;  
     float: left;  
     background: url(../images/subnav_btn.gif) no-repeat center top;  
-	z-index: 10000;
+	z-index: 7000;
  }  
- ul.topnav li span.subhover {background-position: center bottombottom; cursor: pointer;z-index: 10000;} /*--Hover effect for trigger--*/  
+ ul.topnav li span.subhover {background-position: center bottombottom; cursor: pointer;z-index: 7000;} /*--Hover effect for trigger--*/  
  ul.topnav li ul.subnav {  
 	list-style: none;  
 	position: absolute; /*--Important - Keeps subnav from affecting main navigation flow--*/  
@@ -100,7 +100,7 @@ body{
     float: left;  
     width: 170px;  
     border: 1px solid #111;  
-	z-index: 10000;
+	z-index: 7000;
  }  
  ul.topnav li ul.subnav li{  
     margin: 0; padding: 0;  
@@ -108,7 +108,7 @@ body{
     border-bottom: 1px solid #444; /*--Create bevel effect--*/  
     clear: both;  
     width: 170px;  
-	z-index: 10000;
+	z-index: 7000;
  }  
  html ul.topnav li ul.subnav li a {  
     float: left;  
@@ -117,11 +117,11 @@ body{
 	background-color: rgba(51,51,51,0.7);
 	padding-left: 20px;  
     font-size: .8em;
-	z-index: 10000;
+	z-index: 7000;
  }  
  html ul.topnav li ul.subnav li a:hover { /*--Hover effect for subnav links--*/  
      background: #222 no-repeat 10px center;  
-	 z-index: 10000;
+	 z-index: 7000;
  }
  
  #drop_shadow{

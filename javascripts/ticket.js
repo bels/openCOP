@@ -6,11 +6,13 @@ $(document).ready(function(){
 		});
 	});
 
-	var triggers = $('#attach').overlay({
-		mask: {
-			loadSpeed: 200,
-			opacity: 0.6
-		}
+	$('#attach').livequery(function(){
+		var triggers = $('#attach').overlay({
+			mask: {
+				loadSpeed: 200,
+				opacity: 0.6
+			}
+		});
 	});
 
 	$('.add_file').live('click',function(e){
@@ -55,6 +57,34 @@ $(document).ready(function(){
 		});
 	}
 
+	$('#update_button').live('click',function(){
+		$.blockUI({message: "Submitting"});
+		var the_data = $('#update_form').serialize();
+		var url = 'update_ticket.pl';
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: the_data,
+			success: function(data){
+				var error = data.substr(0,1);
+				if(error == "0"){
+					var str = data.replace(/^[\d\s]/,'');
+					alert("Added the ticket");
+					$('#attach_form').submit();
+					window.location = "ticket.pl?mode=lookup";
+				} else {
+					var str = data.replace(/^[\d\s]/,'');
+					alert(str);
+				}
+				$.unblockUI();
+			},
+			error: function(xml,text,error){
+				alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
+				$.unblockUI();
+			}
+		});
+	});
+
 	$("#submit_button").click(function(){
 		resetLogout();
 		validateTicket();		
@@ -96,8 +126,6 @@ $(document).ready(function(){
 		}
 	});
 	
-//	$(".lookup_row").live("click",function(){
-
 	$("#customer_submit_button").click(function(){
 		resetLogout();
 		validateTicket();

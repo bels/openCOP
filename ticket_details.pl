@@ -183,6 +183,7 @@ if($authenticated == 1)
 	closedir(DIR);
 	print qq(
 			</div>
+		<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
 		</div>
 	);
 	
