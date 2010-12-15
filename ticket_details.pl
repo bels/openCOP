@@ -77,9 +77,9 @@ if($authenticated == 1)
 
 	$results->{'free_time'} = substr($results->{'free_time'},0,8);
 
-	print qq(<div id="details_wrapper"><div class="form_title">Ticket Details</div>);
+	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><div id="details_wrapper"><div class="form_title">Ticket Details</div>);
 	print qq(
-		<form action="update_ticket.pl" method="POST" id="update_form">
+		
 			<input type="hidden" name="tech" value="1">
 			<input type="hidden" name="section" value="$section_list->{$results->{'section'}}->{'id'}">
 			<input type="hidden" name="ticket_number" value="$results->{'ticket'}">
@@ -124,7 +124,6 @@ if($authenticated == 1)
 	print substr($results->{'updated'},0,16);
 	print qq(
 		</span>
-		</div>
 	</div>
 	);
 	print qq(
@@ -183,8 +182,9 @@ if($authenticated == 1)
 	closedir(DIR);
 	print qq(
 			</div>
-		<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
+			<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
 		</div>
+		</form>
 	);
 	
 }	

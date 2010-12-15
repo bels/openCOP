@@ -15,10 +15,9 @@
     margin-left: 15px;
 	margin-top: 5px;
     width: 890px;
-	height: 595px;
 }
 
-#update_form label{
+#details_wrapper label{
 	display: inline-block;
 	width: 100px;
 	text-align: right;
@@ -44,10 +43,10 @@
 	border: 1px solid black;
 }
 
-#problem_wrapper #problem_div{
+#problem_div{
 	width: 610px;
 	margin-left: 15px;
-	float: left;
+	display: inline-block;
 }
 
 #problem_div textarea{
@@ -72,8 +71,12 @@
 	cursor: pointer;
 }
 
-#update_form #attach_div{
-	float: left;
+#attach_div{
 	display: inline-block;
+	width: 250px;
+	margin: 0px !important;
 }
 
+#attach label{
+	display: inline !important;
+}

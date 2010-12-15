@@ -6,7 +6,7 @@ $(document).ready(function(){
 			var id_num;
 			(temp.attr('id') ? id_num = temp.attr('id') : id_num = 99);
 			id_num++;
-			var column_select = "<select id=\"" + id_num + "\" name=\"" + id_num + "\" class=\"column\"></select>";
+			var column_select = "<select id=\"" + id_num + "\" name=\"" + id_num + "\" class=\"column styled_form_element\"></select>";
 			$(this).prev().append(column_select);
 		});
 	});
