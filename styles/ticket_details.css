@@ -15,6 +15,7 @@
     margin-left: 15px;
 	margin-top: 5px;
     width: 890px;
+	float: left;
 }
 
 #details_wrapper label{
@@ -47,10 +48,12 @@
 	width: 610px;
 	margin-left: 15px;
 	display: inline-block;
+	float: left;
 }
 
 #problem_div textarea{
 	white-space: pre-wrap;
+	width: 578px;
 }
 
 #attached_div{

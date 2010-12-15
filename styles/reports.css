@@ -11,7 +11,7 @@ div#query_builder{
 	margin: 30px;
 	width: 90%;
 	height: auto;
-	min-height: 172px;
+	min-height: 220px;
 	border: 1px black solid;
 	overflow: auto;
 }
@@ -40,15 +40,9 @@ select{
 	margin-bottom: 0px !important;
 }
 
-button{
-	float:left;
-	margin-left: 4px;
-}
-
 #select_div{
 	width: 100%;
 	height: 35px;
-	
 }
 
 #select_div div{
@@ -105,15 +99,18 @@ span.fl{
 }
 
 .other_div{
-	float: left;
 	width: 100%;
 	min-height: 25px;
 }
 
 #submit_div{
-	float: left;
 	width: 100%;
-	height: 25px;
+	height: 35px;
+	padding-top: 5px;
+}
+
+#submit_div img{
+	vertical-align: middle;
 }
 
 #associate_rp{
