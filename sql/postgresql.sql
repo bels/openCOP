@@ -234,6 +234,71 @@ INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'admins'),1,'t','t','t','t');
 
+CREATE OR REPLACE VIEW inventory AS
+select
+	object.id as object,
+	object.active,
+	value.value,
+	property.property
+from
+	object
+join
+	object_value on object.id = object_value.object_id
+join
+	value on object_value.value_id = value.id
+join
+	value_property on value.id = value_property.value_id
+join
+	property on value_property.property_id = property.id;
+
+DROP TYPE IF EXISTS inventory_holder;
+CREATE TYPE inventory_holder as (object INTEGER, property VARCHAR(255), value VARCHAR(255));
+
+CREATE OR REPLACE FUNCTION select_object(object_val INTEGER) RETURNS SETOF inventory_holder AS $$
+DECLARE
+	r inventory_holder%rowtype;
+BEGIN
+	FOR r IN
+	select
+		object,
+		property,
+		CASE WHEN
+			property = 'company'
+		THEN
+			(select name as company
+				from
+					company
+				join
+					inventory
+				on
+					cast(inventory.value as integer) = company.id where inventory.property = 'company'
+				and
+					object = object_val
+			)
+		WHEN
+			property = 'type'
+	        THEN
+	                (select template as type
+	                        from
+	                                template
+	                        join
+	                                inventory
+	                        on
+	                                cast(inventory.value as integer) = template.id where inventory.property = 'type'
+	                        and 
+	                                object = object_val
+			)
+		ELSE
+			value
+			END
+		from inventory where object = object_val
+	LOOP
+		RETURN NEXT r;
+	END LOOP;
+	return;
+END;
+$$ LANGUAGE plpgsql;
+
 DROP TYPE IF EXISTS view_reports_holder;
 CREATE TYPE view_reports_holder as (id INTEGER, name VARCHAR(255), report VARCHAR(255), owner INTEGER);
 
