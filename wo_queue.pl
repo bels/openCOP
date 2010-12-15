@@ -43,9 +43,11 @@ if($authenticated == 1)
 		"styles/ticket_details.css"
 	);
 	my @javascripts = (
+		"javascripts/jquery.tools.min.js",
 		"javascripts/grid.locale-en.js",
 		"javascripts/jquery.jqGrid.min.js",
 		"javascripts/jquery.validate.js",
+		"javascripts/jquery.form.js",
 		"javascripts/main.js",
 		"javascripts/wo_queue.js",
 	);

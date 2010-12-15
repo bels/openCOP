@@ -1,4 +1,72 @@
 $(document).ready(function(){
+	$("#update_button").live('click',function(e){
+		e.preventDefault();
+		resetLogout();
+			$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
+			var url = "update_ticket.pl";
+			var the_data = $("#update_form").serialize();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: the_data,
+				success: function(data){
+						$('#attach_form').submit();
+						window.location = "wo_queue.pl";
+				},
+				error: function(xml,text,error){
+					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
+				}
+			});
+	});
+
+	$('#attach_form').submit(function(e){
+		e.preventDefault();
+		$(this).ajaxSubmit({
+			iframe: true
+		});
+	});
+
+	$('#attach').livequery(function(){
+		var triggers = $('#attach').overlay({
+			mask: {
+				loadSpeed: 200,
+				opacity: 0.6
+			}
+		});
+	});
+
+	$('.add_file').live('click',function(e){
+		e.preventDefault();
+		var $this = $(this);
+		var last_num = parseInt($(this).prevAll('input').attr('num'));
+		last_num++;
+		var $new_file = $(this).parent().append('<input type="file" name="file'+last_num+'" id="file'+last_num+'" num="'+last_num+'"><button class="del_file">-</button>');
+		$new_file.append($this);
+		$(this).parent().children('button.close').appendTo($new_file);
+	});
+
+	$('.del_file').live('click',function(e){
+		e.preventDefault();
+		$(this).prev('input').remove();
+		$(this).prev('br').remove();
+		$(this).remove();
+	});
+
+	$('.close').live('click',function(e){
+		e.preventDefault();
+		var files = "";
+		$('#attach_form input[type="file"]').each(function(){
+			files += $(this).val() + "<br>";
+		});
+		$('#attach_div').html('<div rel="#multiAttach" id="attach"><label>Attach a File</label><img title="Attach A File" src="images/attach.png"></div>' + files);
+		var triggers = $('#attach').overlay({
+			mask: {
+				loadSpeed: 200,
+				opacity: 0.6
+			}
+		});
+	});
+
 	$(".wo_link").click(function(){
 		resetLogout();
 		var wo = $(this).attr("id");

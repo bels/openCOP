@@ -57,12 +57,32 @@ $(document).ready(function(){
 		});
 	}
 
+	$("#update_button").live('click',function(e){
+		e.preventDefault();
+		resetLogout();
+			var url = "update_ticket.pl";
+			var the_data = $("#update_form").serialize();
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: the_data,
+				success: function(data){
+						$('#attach_form').submit();
+						window.location = "ticket.pl?mode=lookup";
+				},
+				error: function(xml,text,error){
+					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
+				}
+			});
+	});
+
 	$("#submit_button").click(function(){
 		resetLogout();
 		validateTicket();		
 		if($("#newticket").valid())
 		{
 			$.blockUI({message: "Submitting"});
+			$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
 			var url = "submit_ticket.pl";
 			var the_data = $("#newticket").serialize();
 			$.ajax({

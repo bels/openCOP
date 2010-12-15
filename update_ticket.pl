@@ -33,9 +33,12 @@ if($authenticated == 1)
 	my $access = $ticket->update(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
 	if($access->{'error'}){
 		warn "Access denied to section " .  $data->{'section'} . " for user " . $data->{'updater'};
+		print "Content-type: text/html\n\n";
+	} else {
+	#	my $previous = $q->referer();
+	#	print $q->redirect(-URL=> $previous);
+		print "Content-type: text/html\n\n";
 	}
-	my $previous = $q->referer();
-	print $q->redirect(-URL=> $previous);
 }	
 else
 {
