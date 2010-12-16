@@ -25,8 +25,6 @@ if(%cookie){
 if($authenticated == 1){
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $reports = $report->view(id => $id);
 
 	my @styles = ("styles/main.css");
 	my @javascripts = ("javascripts/main.js");

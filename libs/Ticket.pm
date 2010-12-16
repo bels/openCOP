@@ -12,7 +12,6 @@ use ReadConfig;
 use DBI;
 use Notification;
 use UserFunctions;
-use ReportFunctions;
 
 require Exporter;
 
@@ -163,7 +162,6 @@ sub render{
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
 	
 	my @styles = (
-		"styles/jquery.jscrollpane.css",
 		"styles/ui.jqgrid.css",
 		"styles/ticket.css");
 	if($self->{'mode'} eq "lookup"){
@@ -179,7 +177,7 @@ sub render{
 		"javascripts/jquery.blockui.js",
 		"javascripts/jquery.form.js",
 		"javascripts/main.js",
-		"javascripts/ticket.js"
+		"javascripts/ticket.js",
 	);
 
 	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});

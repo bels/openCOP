@@ -1,61 +1,6 @@
-.lookup_row.selected{
-	background-color: #757575;
-	cursor: pointer;
+#top{
+	height: 500px;
 }
-
-table{
-	width: 100%;
-	border-collapse:collapse;
-}
-
-th{
-	width: 150px;
-	height: 30px;
-	border-bottom: 1px solid black;
-}
-
-td{
-	width: 150px;
-	height: 30px;
-	font-size: .8em;
-}
-
-.header_row{
-	width: 100%;
-	color: white;
-	background-color: #333;
-	height: 30px;
-	font-size: .8em;
-}
-
-.row_ticket_number{
-	border-right: 1px solid black;
-}
-
-.row_ticket_status{
-	border-right: 1px solid black;
-}
-
-.row_ticket_priority{
-	border-right: 1px solid black;
-}
-
-.row_ticket_contact{
-	border-right: 1px solid black;
-}
-
-.error{
-	color: red;
-	font-size: .7em;
-}
-
-.section_header_div{
-	margin-left: 50px;
-	text-align: justify;
-	font-weight: bold;
-	font-size: .7em;
-}
-
 #ticket_details{
 	font-size: .8em;
 	position:fixed;
@@ -66,7 +11,7 @@ td{
 	margin-top: 15px;
 	margin-bottom: 15px;
 	width: 90%;
-	height: 550px;
+	height: 90%;
 	overflow: auto;
 	margin-left: auto;
 	margin-right: auto;
@@ -118,7 +63,7 @@ td{
 	z-index:1;
 }
 
-.disabled{
-	background-color: #3e3e3e;
-	cursor: arrow;
+.ui-jqgrid{
+	margin-left: auto;
+	margin-right: auto;
 }
