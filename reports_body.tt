@@ -3,11 +3,11 @@
 		<div class="where_div">
 			<span>Where</span>
 			<div class="where">
-				<select name="700" class="all_columns"></select>
-				<select name="800" class="operator"></select>
-				<input type="text" name="900" class="where_input">
-				<button id="207" class="del_where">-</button></div>
-				<select class="andor_select">
+				<select name="700" class="all_columns styled_form_element"></select>
+				<select name="800" class="operator styled_form_element"></select>
+				<input type="text" name="900" class="where_input styled_form_element">
+				<image src="images/minus.png" id="207" class="del_where image_button" alt="Minus Sign"></div>
+				<select class="andor_select styled_form_element">
 					<option value="">Add and/or</option>
 					<option value="and">and</option>
 					<option value="or">or</option>

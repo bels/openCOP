@@ -29,7 +29,6 @@
 		<script type="text/javascript" src="[% javascript %]"></script>
 		[% END %]
 		<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
-		<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
 		<script type="text/javascript">
 		</script>
 	</head>

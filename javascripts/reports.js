@@ -206,7 +206,7 @@ $(document).ready(function(){
 			resetLogout();
 			$(this).remove();
 			$('.where_div').append("<span>Where</span>");
-			var where_select = "<div class=\"where\"><span class=\"fl\"> </span><select name=\"700\" class=\"all_columns\"></select><select name=\"800\" class=\"operator\"></select><input type=\"text\" name=\"900\" class=\"where_input\"><button id=\"207\" class=\"del_where\">-</button></div>";
+			var where_select = "<div class=\"where\"><span class=\"fl\"> </span><select name=\"700\" class=\"all_columns\"></select><select name=\"800\" class=\"operator\"></select><input type=\"text\" name=\"900\" class=\"where_input\"><img src=\"images/minus.png\" id=\"207\" class=\"del_where image_button\" alt=\"Minus Sign\"></div>";
 			var andor_select = "<select class=\"andor_select\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option></select>";
 			$('.where_div').append(where_select + andor_select);
 		});
@@ -271,7 +271,7 @@ $(document).ready(function(){
 			ao_num++;
 			$(this).remove();
 			var andor_val = $(this).val();
-			var where_select = "<div class=\"where\"><input type=\"hidden\" class=\"andor styled_form_element\" name=\"" + ao_num + "\" value=\"" + andor_val + "\"><span class=\"fl\">" + andor_val + "</span><select name=\"" + ac_num + "\" class=\"all_columns styled_form_element\"></select><select name=\"" + op_num + "\" class=\"operator styled_form_element\"></select><input type=\"text\" name=\"" + wi_num + "\" class=\"where_input styled_form_element\"><button id=\"207\" class=\"del_where\">-</button></div>";
+			var where_select = "<div class=\"where\"><input type=\"hidden\" class=\"andor styled_form_element\" name=\"" + ao_num + "\" value=\"" + andor_val + "\"><span class=\"fl\">" + andor_val + "</span><select name=\"" + ac_num + "\" class=\"all_columns styled_form_element\"></select><select name=\"" + op_num + "\" class=\"operator styled_form_element\"></select><input type=\"text\" name=\"" + wi_num + "\" class=\"where_input styled_form_element\"><img src=\"images/minus.png\" id=\"207\" class=\"del_where image_button\" alt=\"Remove\"></div>";
 			var andor_select = "<select class=\"andor_select styled_form_element\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option>";
 			$('.where_div').append(where_select + andor_select);
 		});
