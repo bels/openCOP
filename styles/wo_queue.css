@@ -84,14 +84,6 @@
 	text-decoration: none;
 }
 
-.dialog{
-	display: none;
-	text-align: left;
-	border:2px solid #333;
-	width: 400px;
-	height: 30%;
-}
-
 #attach_div{
 	width: 270px;
 	height: 300px;
@@ -113,20 +105,4 @@
 
 #attach{
 	cursor: pointer;
-}
-
-#details{
-	margin: auto;
-	width: 100%;
-	height: 100%;
-	background-color: #fff;
-}
-
-.close {
-	position: relative;
-	left: 20px;
-	bottom: 0px;
-	cursor: pointer;
-	height: 20px;
-	width: 50px;
 }

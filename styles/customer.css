@@ -266,30 +266,6 @@ h4{
 	cursor: pointer;
 }
 
-.dialog{
-	display: none;
-	text-align: left;
-	border:2px solid #333;
-	width: 400px;
-	height: 30%;
-}
-
-#details{
-	margin: auto;
-	width: 100%;
-	height: 100%;
-	background-color: #fff;
-}
-
-.close {
-	position: relative;
-	left: 20px;
-	bottom: 0px;
-	cursor: pointer;
-	height: 20px;
-	width: 50px;
-}
-
 #problem_details{
 	width: 720px;
 	display: inline-block;
@@ -314,4 +290,22 @@ h4{
 
 #add_notes_form{
 	height: 260px;
+}
+
+#details{
+	margin: auto;
+	width: 390px;
+	background-color: #fff;
+	padding: 5px;
+}
+
+.dialog{
+	display: none;
+	text-align: left;
+	border:2px solid #333;
+	width: 400px;
+}
+
+#close_attach{
+	float: right;
 }

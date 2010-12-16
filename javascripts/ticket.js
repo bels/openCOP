@@ -20,7 +20,7 @@ $(document).ready(function(){
 		var $this = $(this);
 		var last_num = parseInt($(this).prevAll('input').attr('num'));
 		last_num++;
-		var $new_file = $(this).parent().append('<input type="file" name="file'+last_num+'" id="file'+last_num+'" num="'+last_num+'"><button class="del_file">-</button>');
+		var $new_file = $(this).parent().append('<input type="file" name="file'+last_num+'" id="file'+last_num+'" num="'+last_num+'"><img src="images/minus.png" class="del_file image_button" alt="Remove">');
 		$new_file.append($this);
 		$(this).parent().children('button.close').appendTo($new_file);
 	});
