@@ -119,11 +119,12 @@ $(document).ready(function(){
 			}
 		});
 		var report_name = $('input#as').val();
+		var description = $('input#desc').val();
 		alert($.toJSON(h));
 		$.ajax({
 			type: 'POST',
 			url: 'build_sql.pl',
-			data: {mode: mode, data: $.toJSON(h), report_name: report_name},
+			data: {mode: mode, data: $.toJSON(h), report_name: report_name, description: description},
 			success: function(data){
 				var error = data.substr(0,1);
 				if(error == "0"){

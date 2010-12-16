@@ -103,13 +103,15 @@ if($authenticated == 1)
 		$sth->execute($name);
 		my $result = $sth->fetchrow_hashref;
 		unless($result->{'count'}){ # No reports already saved with that name.
+			my $description = $vars->{'description'};
 			my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-			my $insert = "select insert_reports(?,?,?);";
+			my $insert = "select insert_reports(?,?,?,?);";
 			$sth = $dbh->prepare($insert);
-			$sth->execute($store,$name,$id);
+			$sth->execute($store,$name,$id,$description);
 			my $report = $sth->fetchrow_hashref;
 			if(defined(@{$object->{'groups'}}[0])){
-				$insert = "insert into reports_aclgroup (report_id,aclgroup_id,aclread) values(?,?,?);";
+				$insert = "select insert_reports_aclgroup(report_id,aclgroup_id,aclread) values(?,?,?);";
+#				$insert = "insert into reports_aclgroup (report_id,aclgroup_id,aclread) values(?,?,?);";
 				$sth = $dbh->prepare($insert);
 				foreach(@{$object->{'groups'}}){
 					$sth->execute($report->{'insert_reports'},$_->{'selected'},"true");

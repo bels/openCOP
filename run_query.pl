@@ -80,7 +80,6 @@ if($authenticated == 1){
 					$columns->{$new_object->{$row}->{$_}->{'property'}} = $new_object->{$row}->{$_}->{'property'};
 				}
 			}
-			$count++;			
 		}
 		foreach my $row (@ordered){
 			$innerXML[$count] .= "<row id='" . $row . "'>";
@@ -114,6 +113,7 @@ if($authenticated == 1){
 				$innerXML[$count] .= "<cell>" . $value . "</cell>";
 			}
 			$innerXML[$count] .= "</row>";
+			$count++;			
 		}
 
 		my $total_pages;
@@ -127,7 +127,7 @@ if($authenticated == 1){
 		}
 		my $start = $limit * $page - $limit;
 		if($start<0){$start=0};
-
+		$limit = $start + $limit;
 		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
 		$xml .= "<rows>";
 		$xml .= "<page>$page</page>";

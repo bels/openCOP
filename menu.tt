@@ -13,9 +13,7 @@
 				</li>
 				<li><a href=#>Reports</a>
 					<ul class="subnav">
-					[% FOREACH i IN reports.sort %]
-						<li><a href="#" id="[% reports.$i.id %]" class="report_link">[% i %]</a></li>
-					[% END %]
+					<li><a href="list_reports.pl">Saved Reports</a></li>
 					[% IF is_admin %]
 						<li><a href="reports.pl">Query Builder</a></li>
 					[% END %]

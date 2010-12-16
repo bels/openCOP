@@ -70,7 +70,7 @@ DROP TABLE IF EXISTS auth;
 CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id INTEGER references users(id) ,customer BOOLEAN DEFAULT true);
 
 DROP TABLE IF EXISTS reports;
-CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, owner INTEGER DEFAULT '1');
+CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, owner INTEGER DEFAULT '1', description TEXT DEFAULT null);
 
 DROP TABLE IF EXISTS reports_aclgroup;
 CREATE TABLE reports_aclgroup (
@@ -368,8 +368,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TYPE IF EXISTS view_reports_holder;
-CREATE TYPE view_reports_holder as (id INTEGER, name VARCHAR(255), report VARCHAR(255), owner INTEGER);
+DROP TYPE IF EXISTS view_reports_holder CASCADE;
+CREATE TYPE view_reports_holder as (id INTEGER, name VARCHAR(255), report VARCHAR(255), owner INTEGER, description TEXT);
 
 CREATE OR REPLACE FUNCTION view_reports(alias_val INTEGER) RETURNS SETOF view_reports_holder AS $$
 DECLARE
@@ -380,7 +380,8 @@ BEGIN
 			distinct(reports.id),
 			reports.name,
 			reports.report,
-			reports.owner
+			reports.owner,
+			reports.description
 		from
 			reports
 		join
@@ -464,11 +465,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insert_reports(report_val VARCHAR(255), name_val VARCHAR(255), owner_val INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION insert_reports(report_val VARCHAR(255), name_val VARCHAR(255), owner_val INTEGER, description_val TEXT) RETURNS INTEGER AS $$
 DECLARE
 	last_id INTEGER;
 BEGIN
-	INSERT INTO reports (report,name,owner) values(report_val,name_val,owner_val);
+	INSERT INTO reports (report,name,owner,description) values(report_val,name_val,owner_val,description_val);
 	SELECT INTO last_id currval('reports_id_seq');
 
 	RETURN last_id;
@@ -875,7 +876,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TYPE IF EXISTS agents_working_holder;
+DROP TYPE IF EXISTS agents_working_holder CASCADE;
 CREATE TYPE agents_working_holder as (id INTEGER, alias VARCHAR(255), logged_in INTERVAL);
 
 CREATE OR REPLACE FUNCTION agents_working() RETURNS SETOF agents_working_holder AS $$

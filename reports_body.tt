@@ -14,7 +14,7 @@
 				</select>
 		</div>
 		<div id="submit_div">
-			<img src="images/run_once.png" id="run" alt="Run once" class="image_button"><img src="images/save_query.png" class="image_button" id="save" alt="Save query"><span id="as_text" name="as_text">as </span><input type="text" id="as" name="as" class="styled_form_element">
+			<img src="images/run_once.png" id="run" alt="Run once" class="image_button"><img src="images/save_query.png" class="image_button" id="save" alt="Save query"><span id="as_text" name="as_text">as </span><input type="text" id="as" name="as" class="styled_form_element"><input type="text" id="desc" class="styled_form_element">
 		</div>
 	</div>
 	<div id="query_permissions">

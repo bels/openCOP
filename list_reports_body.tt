@@ -1,0 +1,23 @@
+	<div id="top">
+		<table id="res_table">
+		[% FOREACH i IN reports.keys %]
+			<tr>
+				<td>[% reports.$i.id %]</td>
+				<td>[% reports.$i.name %]</td>
+				<td>[% reports.$i.report %]</td>
+				<td>[% reports.$i.description %]</td>
+			</tr>
+		[% END %]
+		</table>
+
+		<table id="hidden_table" style="visibility: hidden">
+		[% FOREACH i IN reports.keys %]
+			<tr>		
+				<td>[% reports.$i.id %]</td>
+				<td>[% reports.$i.name %]</td>
+				<td>[% reports.$i.report %]</td>
+				<td>[% reports.$i.description %]</td>
+			</tr>
+		[% END %]
+		</table>
+	</div>
