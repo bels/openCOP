@@ -33,18 +33,18 @@ if($authenticated == 1){
 
 		if(defined($vars->{'sd'}) && $vars->{'sd'} ne ""){
 			$sd = $vars->{'sd'} . " 00:00:00";
-			warn $sd;
+		#	warn $sd;
 		} else {
 			$sd = (strftime( '%m/%d/%Y', localtime) . " 00:00:00");
-			warn $sd;
+		#	warn $sd;
 		}
 	
 		if(defined($vars->{'ed'}) && $vars->{'ed'} ne ""){
 			$ed = $vars->{'ed'} . " 23:59:59";
-			warn $ed;
+		#	warn $ed;
 		} else {
 			$ed = (strftime( '%m/%d/%Y', localtime) . " 23:59:59");
-			warn $ed;
+		#	warn $ed;
 		}
 	
 		my $ticket = {};
@@ -54,9 +54,13 @@ if($authenticated == 1){
 		$sth->execute($id,$id,$sd,$ed);
 		my $results = $sth->fetchall_hashref('ticket');
 	
-		$query = "select * from audit_tickets_by_tech(?,?,?,?);";
+		$query = "select * from audit_tickets_by_tech(cast(? as integer),cast(? as integer),cast(? as timestamp),cast(? as timestamp));";
 		my $sth = $dbh->prepare($query);
 		foreach(keys %$results){
+			warn $id;
+			warn $_;
+			warn $sd;
+			warn $ed;
 			$sth->execute($id,$_,$sd,$ed) or die "$query";
 			$ticket->{$_} = $sth->fetchall_hashref('record');
 		}
