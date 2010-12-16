@@ -57,7 +57,6 @@ sub upload_attachment{
 	unless(-d $upload_dir){
 	        mkdir($upload_dir,0775) or $errors->{'mkdir'} = "Could not create $upload_dir. Does www have write access to its parent directory?" && return $errors;
 	}
-
 	my ( $name, $path, $extension ) = fileparse ( $filename, '\..*' );
 	$filename = $name . $extension;
 	$filename =~ tr/ /_/;
@@ -70,6 +69,7 @@ sub upload_attachment{
 		return $errors;
 	}
 	my $upload_filehandle = $args{'attachment'};
+	warn $upload_dir;
 
 	open ( UPLOADFILE, ">$upload_dir" . "$filename" ) or $errors->{'upload'} = "$!" && return $errors;
 

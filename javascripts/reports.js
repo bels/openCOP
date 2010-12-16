@@ -205,9 +205,9 @@ $(document).ready(function(){
 		$(this).bind('click',function(){
 			resetLogout();
 			$(this).remove();
-			$('.where_div').append("<label>Where</label>");
-			var where_select = "<div class=\"where\"><select name=\"700\" class=\"all_columns styled_form_element\"></select><select name=\"800\" class=\"operator styled_form_element\"></select><input type=\"text\" name=\"900\" class=\"where_input styled_form_element\"><img src=\"images/minus.png\" id=\"207\" class=\"del_where image_button\" alt=\"Minus Sign\"></div>";
-			var andor_select = "<select class=\"andor_select styled_form_element\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option></select>";
+			$('.where_div').append("<span>Where</span>");
+			var where_select = "<div class=\"where\"><span class=\"fl\"> </span><select name=\"700\" class=\"all_columns\"></select><select name=\"800\" class=\"operator\"></select><input type=\"text\" name=\"900\" class=\"where_input\"><button id=\"207\" class=\"del_where\">-</button></div>";
+			var andor_select = "<select class=\"andor_select\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option></select>";
 			$('.where_div').append(where_select + andor_select);
 		});
 	});
@@ -227,18 +227,14 @@ $(document).ready(function(){
 			$(this).parent().remove();
 		});
 	});
-	$('.all_columns').livequery(function(){
+
+	$('select.all_columns').livequery(function(){
 		var all_columns_select = $(this);
-		$('div select.table').each(function(){
 			var mode = "second_join";
-			var tablestring = "";
-			$('div select.table').each(function(){
-				tablestring += $(this).val() + ":";
-			});
 			$.ajax({
 				type: 'POST',
 				url: 'query_builder.pl',
-				data: {mode: mode, tablestring: tablestring},
+				data: {mode: mode},
 				success: function(data){
 					var error = data.substr(0,1);
 					if(error == "0"){
@@ -252,11 +248,9 @@ $(document).ready(function(){
 					alert("Error");
 				}
 			});
-		});
 	});
-
 	$('.andor_select').livequery(function(){
-		$('.andor_select').change(function(){
+		$(this).change(function(){
 			resetLogout();
 			var ac = $(this).prev().children("select.all_columns");
 			var op = $(this).prev().children("select.operator");
@@ -572,15 +566,11 @@ $(document).ready(function(){
 			}
 		}
 	});
-	$('#submit_div button').bind('click',function(){
+	$('#submit_div .image_button').bind('click',function(){
 		resetLogout();
 		var mode = $(this).attr('id');
 		var h = {};
-		h['select_columns'] = $('#select_div select.column').serializeObject();
-		h['tables'] = $('select.table').serializeObject();
-		h['joins'] = $('select.join_column').serializeObject();
 		h['where'] = $('.where').children().serializeObject();
-		h['other'] = $('#fake_form').children().serializeObject();
 		var rg_select_string = "";
 		var rg_unselect_string = "";
 		h['groups'] = [];
@@ -629,34 +619,3 @@ $.fn.serializeObject = function(){
 	var a = this.serializeArray();
 	return a;
 };
-
-
-function populate_select_columns(){
-		var all_columns_select = $(this);
-		$('div select.table').each(function(){
-			var mode = "select_column";
-			var tablestring = "";
-			$('div select.table').each(function(){
-				tablestring += $(this).val() + ":";
-			});
-			$.ajax({
-				type: 'POST',
-				url: 'query_builder.pl',
-				data: {mode: mode, tablestring: tablestring},
-				success: function(data){
-					var error = data.substr(0,1);
-					if(error == "0"){
-						var str = data.replace(/^[\d\s]/,'');
-						$('#select_div select.column').each(function(){
-							$(this).html(str);
-						});
-					} else if(error == "1"){
-						var str = data.replace(/^[\d\s]/,'');
-					}
-				},
-				error: function(){
-					alert("Error");
-				}
-			});
-		});
-}

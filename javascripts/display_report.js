@@ -1,11 +1,4 @@
 $(document).ready(function(){
-	var pane = $('#top').jScrollPane({
-		showArrows: true,
-		maintainPosition: false
-	}).data('jsp');
-	$('#res_table').livequery(function(){
-		$(this).tablesorter();
-	});
 	$('#email').bind('click',function(){
 		var eb = $('#export_button');
 		if(eb.text() == "Save"){
@@ -16,7 +9,6 @@ $(document).ready(function(){
 	});
 	$('#export_button').bind('click',function(){
 		resetLogout();
-	//	var h = {};
 		var h = [];
 		h[0] = [];
 		$('#table_head_row').each(function(){
