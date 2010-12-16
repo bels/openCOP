@@ -9,7 +9,6 @@ use URI::Escape;
 use Template;
 use SessionFunctions;
 use UserFunctions;
-use ReportFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 my $q = CGI->new();
@@ -30,8 +29,6 @@ if($authenticated == 1)
 {
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $reports = $report->view(id => $id);
 
 	my $i;
 	my @pid;
@@ -73,12 +70,37 @@ if($authenticated == 1)
 
 	my $meta_keywords = "";
 	my $meta_description = "";
-	my @styles = ("styles/ui.multiselect.css","styles/groups.css");
-	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js","javascripts/main.js","javascripts/groups.js");
+	my @styles = (
+		"styles/ui.multiselect.css",
+		"styles/groups.css"
+	);
+	my @javascripts = (
+		"javascripts/jquery.validate.js",
+		"javascripts/jquery.blockui.js",
+		"javascripts/ui.multiselect.js",
+		"javascripts/main.js",
+		"javascripts/groups.js"
+	);
 
 	my $file = "groups.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, users => \@uid, groups => \@gid, uid => $uid, gid => $gid, is_admin => $user->is_admin(id => $id), reports => $reports, gmid => $gmid, groupsm => \@gmid};
+	my $vars = {
+		'title' => $title,
+		'styles' => \@styles,
+		'javascripts' => \@javascripts,
+		'keywords' => $meta_keywords,
+		'description' => $meta_description,
+		'company_name' => $config->{'company_name'},
+		logo => $config->{'logo_image'},
+		users => \@uid,
+		groups => \@gid,
+		uid => $uid,
+		gid => $gid,
+		is_admin => $user->is_admin(id => $id),
+		gmid => $gmid,
+		groupsm => \@gmid,
+		backend => $config->{'backend'},
+	};
 		
 	print "Content-type: text/html\n\n";
 

@@ -9,7 +9,6 @@ use ReadConfig;
 use SessionFunctions;
 use UserFunctions;
 use DBI;
-use ReportFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -30,8 +29,6 @@ if($authenticated == 1)
 {
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $reports = $report->view(id => $id);
 
 	my $query;
 
@@ -42,8 +39,17 @@ if($authenticated == 1)
 	my $properties;
 	my $file;
 
-	my @styles = ("styles/inventory.css","styles/ui.multiselect.css","styles/smoothness/jquery-ui-1.8.5.custom.css");
-	my @javascripts = ("javascripts/main.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/ui.multiselect.js");
+	my @styles = (
+		"styles/inventory.css",
+		"styles/ui.multiselect.css",
+		"styles/smoothness/jquery-ui-1.8.5.custom.css"
+	);
+	my @javascripts = (
+		"javascripts/main.js",
+		"javascripts/jquery.validate.js",
+		"javascripts/jquery.blockui.js",
+		"javascripts/ui.multiselect.js"
+	);
 
 	my $mode = $q->param('mode');
 	if ($mode eq "add"){
@@ -74,7 +80,16 @@ if($authenticated == 1)
 		$title = $config->{'company_name'} . " - Inventory Index";
 		$file = "inventory_index.tt";
 	}
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, types => $types, is_admin => $user->is_admin(id => $id), reports => $reports};
+	my $vars = {
+		'title' => $title,
+		'styles' => \@styles,
+		'javascripts' => \@javascripts,
+		'company_name' => $config->{'company_name'},
+		logo => $config->{'logo_image'},
+		types => $types,
+		is_admin => $user->is_admin(id => $id),
+		backen => $config->{'backend'},
+	};
 
 	print "Content-type: text/html\n\n";
 

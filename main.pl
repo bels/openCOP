@@ -7,7 +7,6 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 use UserFunctions;
-use ReportFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -35,7 +34,17 @@ if($authenticated == 1){
 	my $meta_description = "";
 	my $file = "main.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, is_admin => $user->is_admin(id => $id), reports => $reports};
+	my $vars = {
+		'title' => $title,
+		'styles' => \@styles,
+		'javascripts' => \@javascripts,
+		'keywords' => $meta_keywords,
+		'description' => $meta_description,
+		'company_name' => $config->{'company_name'},
+		logo => $config->{'logo_image'},
+		is_admin => $user->is_admin(id => $id),
+		backend => $config->{'backend'},
+	};
 	
 	print "Content-type: text/html\n\n";
 

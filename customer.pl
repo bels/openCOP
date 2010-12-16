@@ -70,7 +70,28 @@ if($authenticated == 2){
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'keywords' => $meta_keywords,'description' => $meta_description, 'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'},site_list => $site_list, priority_list => $priority_list, section_list => $section_list, author => $submitter, customer_email => $email, display_author => $config->{'display_author'}, display_barcode => $config->{'display_barcode'}, display_serial => $config->{'display_serial'}, display_location => $config->{'display_location'}, display_free_date => $config->{'display_free_date'}, display_free_time => $config->{'display_free_time'}, site => $site};
+	my $vars = {
+		'title' => $title,
+		'styles' => \@styles,
+		'javascripts' => \@javascripts,
+		'keywords' => $meta_keywords,
+		'description' => $meta_description,
+		'company_name' => $config->{'company_name'},
+		logo => $config->{'logo_image'},
+		site_list => $site_list,
+		priority_list => $priority_list,
+		section_list => $section_list,
+		author => $submitter,
+		customer_email => $email,
+		display_author => $config->{'display_author'},
+		display_barcode => $config->{'display_barcode'},
+		display_serial => $config->{'display_serial'},
+		display_location => $config->{'display_location'},
+		display_free_date => $config->{'display_free_date'},
+		display_free_time => $config->{'display_free_time'},
+		site => $site,
+		backend => $config->{'backend'},
+	};
 	
 	print "Content-type: text/html\n\n";
 

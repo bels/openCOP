@@ -46,7 +46,9 @@
 						<li><a href="permissions.pl">Permissions</a></li>
 						<li><a href="time_tracking.pl">Time Tracking</a></li>
 					[% END %]
+					[% IF backend == "database" %]
 						<li><a href="password.pl">Change Password</a></li>
+					[% END %]
 						<li><a href="logout.pl">Logout</a></li>
 					</ul>
 				</li>

@@ -10,7 +10,6 @@ use ReadConfig;
 use SessionFunctions;
 use DBI;
 use UserFunctions;
-use ReportFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -29,8 +28,6 @@ if(%cookie)
 if($authenticated == 1){
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
-	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $reports = $report->view(id => $id);
 
 	my $sth;
 	my $query;
@@ -56,11 +53,33 @@ if($authenticated == 1){
 	my $info = $user->get_user_info(user_id => $id);
 
 	my @styles = ("styles/work_order_new.css");
-	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/work_order_new.js");
+	my @javascripts = (
+		"javascripts/jquery.validate.js",
+		"javascripts/jquery.blockui.js",
+		"javascripts/jquery.json-2.2.js",
+		"javascripts/jquery.mousewheel.js",
+		"javascripts/mwheelIntent.js",
+		"javascripts/main.js",
+		"javascripts/work_order_new.js"
+	);
 	my $title = $config->{'company_name'} . " - New Work Order";
 	my $file = "work_order_new.tt";
 
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, wo_list => $wo_list, ssite => \@s_site, swo => \@s_wo, info => $info, is_admin => $user->is_admin(id => $id), reports => $reports};
+	my $vars = {
+		'title' => $title,
+		'styles' => \@styles,
+		'javascripts' => \@javascripts,
+		 'company_name' => $config->{'company_name'},
+		logo => $config->{'logo_image'},
+		 site_list => $site_list,
+		 priority_list => $priority_list,
+		wo_list => $wo_list,
+		ssite => \@s_site,
+		swo => \@s_wo,
+		info => $info,
+		is_admin => $user->is_admin(id => $id),
+		backend => $config->{'backend'},
+	};
 
 	print "Content-type: text/html\n\n";
 
