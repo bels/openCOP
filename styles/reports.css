@@ -28,12 +28,12 @@ div#query_permissions{
 
 #query_builder select{
 	min-width: 200px;
-	margin-left: 4px;
+	margin-right: 4px;
 }
 
 label{
 	display: inline-block !important;
-	width: 80px;
+	width: 100px;
 }
 
 select{
@@ -41,7 +41,8 @@ select{
 }
 
 #select_div{
-	width: 100%;
+	width: 95%;
+	padding-left: 15px;
 	height: 35px;
 }
 
@@ -50,8 +51,13 @@ select{
 }
 
 #from_div{
-	width: 100%;
+	padding-left: 15px;
 	height: 35px;
+}
+
+.where_div{
+	padding-left: 15px;
+	min-height: 35px;
 }
 
 #from_div div{
@@ -60,53 +66,31 @@ select{
 
 #join_div_parent{
 	width: 100%;
-	min-height: 25px;
+	min-height: 30px;
 }
 
 .join_div{
-	width: 100%;
-	height: 25px;
-	text-align: center;
+	height: 30px;
+	padding-left: 15px;
 }
 
 .join_div_element{
-	float: left;
+	display: inline-block;
 }
 
 .where{
-	text-align: center;
 	width: 100%;
-	height: 25px;
-}
-
-select.operator{
-	float: left;
-}
-
-select.all_columns{
-	float: left;
-}
-
-input.where_input{
-	float: left;
-	margin-left: 4px;
-}
-
-span.fl{
-	float: left;
-	width: 50px;
-	white-space: pre-wrap;
 }
 
 .other_div{
-	width: 100%;
-	min-height: 25px;
+	min-height: 30px;
+	padding-left: 15px;
 }
 
 #submit_div{
-	width: 100%;
 	height: 35px;
 	padding-top: 5px;
+	padding-left: 15px;
 }
 
 #submit_div img{
@@ -122,4 +106,9 @@ span.fl{
 .ui-jqgrid{
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.fl{
+	width: 50px !important;
+	margin-right: 4px;
 }

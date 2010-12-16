@@ -102,7 +102,6 @@ h4{
 	text-align: left;
 	border:2px solid #333;
 	width: 400px;
-	height: 30%;
 }
 
 #attach_div{
@@ -130,18 +129,9 @@ h4{
 
 #details{
 	margin: auto;
-	width: 100%;
-	height: 100%;
+	width: 390px;
 	background-color: #fff;
-}
-
-.close {
-	position: relative;
-	left: 20px;
-	bottom: 0px;
-	cursor: pointer;
-	height: 20px;
-	width: 50px;
+	padding: 5px;
 }
 
 .attached_file{
@@ -170,4 +160,8 @@ h4{
 	background:#000000;
 	border:1px solid #cecece;
 	z-index:8999;
+}
+
+#close_attach{
+	float: right;
 }
