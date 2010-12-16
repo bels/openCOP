@@ -180,11 +180,26 @@ sub render{
 		"javascripts/ticket.js",
 	);
 
-	my $report = ReportFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	my $reports = $report->view(id => $args{'id'});
-
 	print "Content-type: text/html\n\n";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts, 'company_name' => $config->{'company_name'},logo => $config->{'logo_image'}, site_list => $site_list, priority_list => $priority_list, section_list => $section_list, tech_list => $tech_list, section_create_list => $section_create_list, stech => \@s_tech, ssite => \@s_site, ssection => \@s_section, info => $info, is_admin => $args{'is_admin'}, list => \@list, reports => $reports};
+	my $vars = {
+		'title' => $title,
+		'styles' => \@styles,
+		'javascripts' => \@javascripts,
+		'company_name' => $config->{'company_name'},
+		logo => $config->{'logo_image'},
+		site_list => $site_list,
+		priority_list => $priority_list,
+		section_list => $section_list,
+		tech_list => $tech_list,
+		section_create_list => $section_create_list,
+		stech => \@s_tech,
+		ssite => \@s_site,
+		ssection => \@s_section,
+		info => $info,
+		is_admin => $args{'is_admin'},
+		list => \@list,
+		backend => $config->{'backend'},
+	};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
