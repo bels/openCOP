@@ -35,7 +35,7 @@ $(document).ready(function(){
 			var fs_num;
 			(fs.attr('id') ? fs_num = fs.attr('id') : fs_num = 599);
 			fs_num++;
-			var table_select = "<div class=\"join_div\"><span class=\"fl\"> </span><div class=\"join_div_element\"><select class=\"join\" id=\"" + j_num + "\" name=\"" + j_num + "\"><option value=\"left join\" selected=\"selected\">Left Join</option><option value=\"right join\">Right join</option><option value=\"inner join\">Inner join</option><option value=\"outer join\">Outer join</option></select></div><div class=\"join_div_element\"><select id=\"" + table_num + "\" name=\"" + table_num + "\" class=\"table\"></select></div><span class=\"label\">on</span><div class=\"join_div_element\"><select id=\"" + fc_num + "\" name=\"" + fc_num + "\" class=\"first join_column\"></select></div><span class=\"label\">=</span><div class=\"join_div_element\"><select id=\"" + fs_num + "\" name=\"" + fs_num + "\" class=\"second join_column\"></select></div><button id=\"206\" class=\"del_table\">-</button><button id=\"205\" class=\"add_table\">+</button></div>";
+			var table_select = "<div class=\"join_div\"><div class=\"join_div_element\"><select class=\"join styled_form_element\" id=\"" + j_num + "\" name=\"" + j_num + "\"><option value=\"left join\" selected=\"selected\">Left Join</option><option value=\"right join\">Right join</option><option value=\"inner join\">Inner join</option><option value=\"outer join\">Outer join</option></select></div><div class=\"join_div_element\"><select id=\"" + table_num + "\" name=\"" + table_num + "\" class=\"table styled_form_element\"></select></div><span class=\"label\">on</span><div class=\"join_div_element\"><select id=\"" + fc_num + "\" name=\"" + fc_num + "\" class=\"first join_column styled_form_element\"></select></div><span class=\"label\">=</span><div class=\"join_div_element\"><select id=\"" + fs_num + "\" name=\"" + fs_num + "\" class=\"second join_column styled_form_element\"></select></div><img src=\"images/plus.png\" id=\"205\" class=\"add_table image_button\" alt=\"Plus Sign\"><img src=\"images/minus.png\" id=\"206\" class=\"del_table image_button\" alt=\"Minus Sign\"></div>";
 			if($(this).parent().next('#join_div_parent').length){
 				$(this).parent().next().append(table_select);
 			} else {
@@ -123,9 +123,9 @@ $(document).ready(function(){
 		$(this).bind('click',function(){
 			resetLogout();
 			if($(this).parent().prev('div.join_div').length && !$(this).parent().next('div.join_div').length){
-				$(this).parent().prev('div.join_div').append("<button id=\"205\" class=\"add_table\">+</button>");
+				$(this).parent().prev('div.join_div').append("<img src=\"images/plus.png\" id=\"205\" class=\"add_table image_button\" alt=\"Plus Sign\">");
 			} else if(!$(this).parent().next('div.join_div').length){
-				$('#from_div').append("<button id=\"205\" class=\"add_table\">+</button>");
+				$('#from_div').append("<img src=\"images/plus.png\" id=\"205\" class=\"add_table image_button\" alt=\"Plus Sign\">");
 			}
 			$(this).parent().remove();
 			var mode = "first_join";
@@ -205,21 +205,21 @@ $(document).ready(function(){
 		$(this).bind('click',function(){
 			resetLogout();
 			$(this).remove();
-			$('.where_div').append("<span>Where</span>");
-			var where_select = "<div class=\"where\"><span class=\"fl\"> </span><select name=\"700\" class=\"all_columns\"></select><select name=\"800\" class=\"operator\"></select><input type=\"text\" name=\"900\" class=\"where_input\"><button id=\"207\" class=\"del_where\">-</button></div>";
-			var andor_select = "<select class=\"andor_select\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option>";
+			$('.where_div').append("<label>Where</label>");
+			var where_select = "<div class=\"where\"><select name=\"700\" class=\"all_columns styled_form_element\"></select><select name=\"800\" class=\"operator styled_form_element\"></select><input type=\"text\" name=\"900\" class=\"where_input styled_form_element\"><img src=\"images/minus.png\" id=\"207\" class=\"del_where image_button\" alt=\"Minus Sign\"></div>";
+			var andor_select = "<select class=\"andor_select styled_form_element\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option></select>";
 			$('.where_div').append(where_select + andor_select);
 		});
 	});
 	$('.del_where').livequery(function(){
 		$(this).bind('click',function(){
 			resetLogout();
-			var where_text = $(this).parent().prev('span');
+			var where_text = $(this).parent().prev('label');
 			if(where_text.length){
 				var next_where = $(this).parent().next('.where');
 				if(next_where.length){
 				} else {
-					$(this).parent().parent().prepend("<button id=\"204\" class=\"add_where\">Add Where</button>");
+					$(this).parent().parent().prepend("<img src=\"images/add_where.png\" id=\"204\" class=\"add_where image_button\" alt=\"Add Where\">");
 					$(this).parent().parent().children('.andor_select').remove();
 					where_text.remove();
 				}
@@ -277,8 +277,8 @@ $(document).ready(function(){
 			ao_num++;
 			$(this).remove();
 			var andor_val = $(this).val();
-			var where_select = "<div class=\"where\"><input type=\"hidden\" class=\"andor\" name=\"" + ao_num + "\" value=\"" + andor_val + "\"><span class=\"fl\">" + andor_val + "</span><select name=\"" + ac_num + "\" class=\"all_columns\"></select><select name=\"" + op_num + "\" class=\"operator\"></select><input type=\"text\" name=\"" + wi_num + "\" class=\"where_input\"><button id=\"207\" class=\"del_where\">-</button></div>";
-			var andor_select = "<select class=\"andor_select\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option>";
+			var where_select = "<div class=\"where\"><input type=\"hidden\" class=\"andor styled_form_element\" name=\"" + ao_num + "\" value=\"" + andor_val + "\"><span class=\"fl\">" + andor_val + "</span><select name=\"" + ac_num + "\" class=\"all_columns styled_form_element\"></select><select name=\"" + op_num + "\" class=\"operator styled_form_element\"></select><input type=\"text\" name=\"" + wi_num + "\" class=\"where_input styled_form_element\"><button id=\"207\" class=\"del_where\">-</button></div>";
+			var andor_select = "<select class=\"andor_select styled_form_element\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option>";
 			$('.where_div').append(where_select + andor_select);
 		});
 	});
@@ -535,11 +535,11 @@ $(document).ready(function(){
 						var last_child = $('#fake_form').children(':last');
 						if(last_child.length){
 							last_child.remove();
-							$('#fake_form').append("<select class=\"order_select\" name=\"order by\">" + str + "</select>");
-							$('#fake_form').append("<select class=\"order_select\" name=\"ascdesc\"><option value=\"asc\">Ascending</option><option value=\"desc\">Descending</option></select>");
+							$('#fake_form').append("<select class=\"order_select styled_form_element\" name=\"order by\">" + str + "</select>");
+							$('#fake_form').append("<select class=\"order_select styled_form_element\" name=\"ascdesc\"><option value=\"asc\">Ascending</option><option value=\"desc\">Descending</option></select>");
 						} else {
-							$('#fake_form').append("<select class=\"order_select\" name=\"order by\">" + str + "</select>");
-							$('#fake_form').append("<select class=\"order_select\" name=\"ascdesc\"><option value=\"asc\">Ascending</option><option value=\"desc\">Descending</option></select>");
+							$('#fake_form').append("<select class=\"order_select styled_form_element\" name=\"order by\">" + str + "</select>");
+							$('#fake_form').append("<select class=\"order_select styled_form_element\" name=\"ascdesc\"><option value=\"asc\">Ascending</option><option value=\"desc\">Descending</option></select>");
 						}
 					} else if(error == "1"){
 						var str = data.replace(/^[\d\s]/,'');
@@ -556,9 +556,9 @@ $(document).ready(function(){
 				$('#fake_form').children().each(function(){
 					$(this).remove();
 				});
-				$('#fake_form').append("<input type=\"text\" class=\"limit\" id=\"limit\" name=\"limit\">");
+				$('#fake_form').append("<input type=\"text\" class=\"limit styled_form_element\" id=\"limit\" name=\"limit\">");
 			} else {
-				$('#fake_form').append("<input type=\"text\" class=\"limit\" id=\"limit\" name=\"limit\">");
+				$('#fake_form').append("<input type=\"text\" class=\"limit styled_form_element\" id=\"limit\" name=\"limit\">");
 			}
 		} else {
 			$(this).next().children().remove();
