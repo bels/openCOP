@@ -1,12 +1,9 @@
 	<div id="query_builder">
 		<div id="query_builder_header" class="header">Query Builder</div>
 		<div class="where_div">
-			<span>Where</span>
+			<label>Where</label>
 			<div class="where">
-				<select name="700" class="all_columns styled_form_element"></select>
-				<select name="800" class="operator styled_form_element"></select>
-				<input type="text" name="900" class="where_input styled_form_element">
-				<image src="images/minus.png" id="207" class="del_where image_button" alt="Minus Sign"></div>
+				<label class="fl"></label><select name="700" class="all_columns styled_form_element"></select><select name="800" class="operator styled_form_element"></select><input type="text" name="900" class="where_input styled_form_element"><image src="images/minus.png" id="207" class="del_where image_button" alt="Minus Sign"></div>
 				<select class="andor_select styled_form_element">
 					<option value="">Add and/or</option>
 					<option value="and">and</option>
@@ -14,7 +11,8 @@
 				</select>
 		</div>
 		<div id="submit_div">
-			<img src="images/run_once.png" id="run" alt="Run once" class="image_button"><img src="images/save_query.png" class="image_button" id="save" alt="Save query"><span id="as_text" name="as_text">as </span><input type="text" id="as" name="as" class="styled_form_element">
+			<label id="as_text" name="as_text">Report Title </label><input type="text" id="as" name="as" class="styled_form_element">
+			<img src="images/run_once.png" id="run" alt="Run once" class="image_button"><img src="images/save_query.png" class="image_button" id="save" alt="Save query">
 		</div>
 	</div>
 	<div id="query_permissions">

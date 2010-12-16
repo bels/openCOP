@@ -33,7 +33,7 @@ div#query_permissions{
 
 label{
 	display: inline-block !important;
-	width: 80px;
+	width: 100px;
 }
 
 select{
@@ -109,5 +109,6 @@ select{
 }
 
 .fl{
+	width: 50px !important;
 	margin-right: 4px;
 }
