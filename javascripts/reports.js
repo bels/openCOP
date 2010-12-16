@@ -5,7 +5,7 @@ $(document).ready(function(){
 			$(this).remove();
 			$('.where_div').append("<span>Where</span>");
 			var where_select = "<div class=\"where\"><span class=\"fl\"> </span><select name=\"700\" class=\"all_columns\"></select><select name=\"800\" class=\"operator\"></select><input type=\"text\" name=\"900\" class=\"where_input\"><button id=\"207\" class=\"del_where\">-</button></div>";
-			var andor_select = "<select class=\"andor_select\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option>";
+			var andor_select = "<select class=\"andor_select\"><option value=\"\">Add and/or</option><option value=\"and\">and</option><option value=\"or\">or</option></select>";
 			$('.where_div').append(where_select + andor_select);
 		});
 	});

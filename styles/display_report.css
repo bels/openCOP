@@ -10,36 +10,9 @@
 
 }
 
-#res_table{
-	table-layout: auto;
-	_margin-top: 15px;
-	_margin-left: 15px;
-	_margin-right: 15px;
-	_margin-bottom: 15px;
-	_border-collapse:collapse;
-}
-
-th{
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
-}
-
-td{
-	white-space: nowrap;
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
-}
-
-#table_title span{
-	display: block;
-}
-
-#table_title{
-	text-align: center;
-	width: 100%;
+.ui-jqgrid{
 	margin-left: auto;
 	margin-right: auto;
-	font-weight: bold;
-	font-size: 1.1em;
+	margin-top: 15px;	
 }
+

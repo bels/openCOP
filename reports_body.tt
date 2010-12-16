@@ -1,7 +1,17 @@
 	<div id="query_builder">
 		<div id="query_builder_header" class="header">Query Builder</div>
 		<div class="where_div">
-			<img src="images/add_where.png" id="204" class="add_where image_button" alt="Add Where">
+			<span>Where</span>
+			<div class="where">
+				<select name="700" class="all_columns"></select>
+				<select name="800" class="operator"></select>
+				<input type="text" name="900" class="where_input">
+				<button id="207" class="del_where">-</button></div>
+				<select class="andor_select">
+					<option value="">Add and/or</option>
+					<option value="and">and</option>
+					<option value="or">or</option>
+				</select>
 		</div>
 		<div id="submit_div">
 			<img src="images/run_once.png" id="run" alt="Run once" class="image_button"><img src="images/save_query.png" class="image_button" id="save" alt="Save query"><span id="as_text" name="as_text">as </span><input type="text" id="as" name="as" class="styled_form_element">

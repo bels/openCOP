@@ -58,7 +58,7 @@ if($authenticated == 1)
 		my $error = 0;
 		my $query;
 		my $column_data;
-		warn "Populating property select";
+	#	warn "Populating property select";
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 			$query = qq(
 				select property from inventory;
@@ -66,9 +66,9 @@ if($authenticated == 1)
 			my $sth = $dbh->prepare($query);
 			$sth->execute;
 			my $column = $sth->fetchall_hashref('property');
-			warn Dumper $column;
+		#	warn Dumper $column;
 			foreach (keys %$column){
-				warn $_;
+			#	warn $_;
 				$column_data .= qq(
 					<option value="$_">$_</option>
 				);

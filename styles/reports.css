@@ -118,3 +118,8 @@ span.fl{
 	min-width: 460px;
 	min-height: 300px;
 }
+
+.ui-jqgrid{
+	margin-left: auto;
+	margin-right: auto;
+}

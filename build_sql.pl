@@ -119,9 +119,9 @@ if($authenticated == 1)
 	} elsif($vars->{'mode'} eq "run"){
 		print "Content-type: text/html\n\n";
 		print "2";
-		warn $query;
-		my $columns = {};
-		warn Dumper $new_object;
+	#	warn $query;
+	#	warn Dumper $new_object;
+		my $columns;
 		my (@ordered, $count, @innerXML);
 		@ordered = sort { $a <=> $b } keys %$new_object;
 
@@ -129,6 +129,9 @@ if($authenticated == 1)
 				my $type;
 				my $name;
 			foreach (keys %{$new_object->{$row}}){
+				if(defined($new_object->{$row}->{$_}->{'value'}) && $new_object->{$row}->{$_}->{'value'} ne ""){
+					$columns->{$new_object->{$row}->{$_}->{'property'}} = $new_object->{$row}->{$_}->{'property'};
+				}
 				if ($new_object->{$row}->{$_}->{'property'} eq "type"){
 					$query = "select template,id from template where id = '$new_object->{$row}->{$_}->{'value'}';";
 					$sth = $dbh->prepare($query);
@@ -136,7 +139,7 @@ if($authenticated == 1)
 					my $tid = $sth->fetchrow_hashref;
 					$type = $tid->{'template'};				
 				}
-	
+
 				if ($new_object->{$row}->{$_}->{'property'} eq "name"){
 					$new_object->{$row}->{'name'} = $new_object->{$row}->{$_}->{'value'};
 				}
@@ -149,15 +152,15 @@ if($authenticated == 1)
 					$count++;
 		}
 
-		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
-		$xml .= "<rows>";
-		$xml .= "<page>$page</page>";
-		$xml .= "<total>$total_pages</total>";
-		$xml .= "<records>$count</records>";
-		for(my $i = $start; $i < $limit; $i++){
-			$xml .= $innerXML[$i];
-		}
-		$xml .= "</rows>";
+#		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
+#		$xml .= "<rows>";
+#		$xml .= "<page>$page</page>";
+#		$xml .= "<total>$total_pages</total>";
+#		$xml .= "<records>$count</records>";
+#		for(my $i = $start; $i < $limit; $i++){
+#			$xml .= $innerXML[$i];
+#		}
+#		$xml .= "</rows>";
 #		print "Content-type: text/xml;charset=utf-8\n\n";
 #		print $xml;
 
@@ -171,15 +174,43 @@ if($authenticated == 1)
 	#	warn Dumper $columns;
 	#	warn Dumper $results;
 
-		my @styles = ("styles/jquery.jscrollpane.css","styles/display_report.css");
-		my @javascripts = ("javascripts/main.js","javascripts/jquery.download.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/main.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/display_report.js");
+		my @styles = (
+			"styles/ui.jqgrid.css",
+			"styles/display_report.css"
+		);
+		my @javascripts = (
+			"javascripts/grid.locale-en.js",
+			"javascripts/jquery.jqGrid.min.js",
+			"javascripts/jquery.download.js",
+			"javascripts/jquery.validate.js",
+			"javascripts/jquery.blockui.js",
+			"javascripts/jquery.json-2.2.js",
+			"javascripts/jquery.mousewheel.js",
+			"javascripts/mwheelIntent.js",
+			"javascripts/main.js",
+		#	"javascripts/display_report.js"
+		);
 		my $title = $config->{'company_name'} . " - Custom Report";
 		my $file = "display_report.tt";
-		my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, sorted_hash => \@ordered, xml => $xml reports => $reports, is_admin => $user->is_admin(id => $id). columns => \@columns};
+		my $vars = {
+			'title' => $title,
+			'styles' => \@styles,
+			'javascripts' => \@javascripts,
+			'company_name' => $config->{'company_name'},
+			 logo => $config->{'logo_image'},
+			sorted_hash => \@ordered,
+			columns => $columns,
+			query => $store,
+			reports => $reports,
+			is_admin => $user->is_admin(id => $id),
+			report_name => $name,
+			prepare_array => \@prepare_array,
+		};
 
 		my $template = Template->new();
 		$template->process($file,$vars) || die $template->error();
 	} else {
+		print "Content-type: text/html\n\n";
 		warn "What? How did you even get here?";
 	}
 } elsif($authenticated == 2){

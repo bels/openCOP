@@ -1,29 +1,32 @@
 <script type="text/javascript">
-$(document).ready(function(){
+jQuery(function($){
+		var prepare_a = [];
 		var a = [];
+		var o = [];
 		$('#hidden_data ul#columns li').each(function(){
 			a.push($(this).text());
+			o.push({name: $(this).text(), index: $(this).text(), width: 100, sortable: true});
+		});
+		$('#hidden_data ul#prepare_array li').each(function(){
+			prepare_a.push($(this).text());
 		});
 	//	$('#hidden_data div#
-		alert(a);
+		alert($.toJSON(prepare_a));
+	//	alert(a);
+	//	alert(o);
 		var url = 'run_query.pl';
 		$('#res_table').jqGrid({
+			height: 380,
+		//	width: 870,
 			url: url,
 			datatype: 'xml',
 			mtype: 'GET',
 			colNames: a,
-			colModel: [
-				{name: 'ticket', index: 'ticket', width: 100, sortable: true},
-				{name: 'status', index: 'status', width: 100, sortable: true},
-				{name: 'priority', index: 'priority', width: 100, sortable: true},
-				{name: 'contact', index: 'contact', width: 125, sortable: true},
-				{name: 'problem', index: 'problem', width: 200, sortable: true},
-				{name: 'name', index: 'name', width: 100, sortable: true}
-			],
-			pager: "#" + section_id,
-			rowNum: 10,
-			rowList: [10,20,30],
-			sortname: 'ticket',
+			colModel: o,
+			pager: "#pager",
+			rowNum: 30,
+			rowList: [30,50,100],
+			sortname: a[0],
 			sortorder: 'asc',
 			viewrecords: true,
 			altRows: true,
@@ -33,7 +36,8 @@ $(document).ready(function(){
 			multiselect: true,
 			multiboxonly: true,
 			toolbar: [true,'top'],
-			caption: caption_text,
+			caption: '[% report_name %]',
+			postData: {query: '[% query %]', prepare_array: $.toJSON(prepare_a)},
 			ondblClickRow: function(rowid){
 				resetLogout();
 				var ticket_number = rowid;
@@ -71,13 +75,18 @@ $(document).ready(function(){
 		<span id="send_email">Send in email</span><input type="checkbox" name="email" id="email" title="Send in email">
 		<button id="export_button">Save</button>
 	</div>
-	<iframe style="visibility: hidden" id="hidden_data">
+	<div style="visibility: hidden" id="hidden_data">
 		<ul id="columns">
+			<li id="id">id</li>
 		[% FOREACH i IN columns.sort %]
 			<li id="[% i %]">[% i %]</li>
 		[% END %]
 		</ul>
+		<ul id="prepare_array">
+		[% FOREACH i IN prepare_array %]
+			<li id="[% i %]">[% i %]</li>
+		[% END %]
+		</ul>
 		<div id="data">
-			[% xml %]
 		</div>
-	</iframe>
+	</div>

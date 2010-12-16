@@ -118,8 +118,8 @@ if($authenticated == 1) {
 		} else { 
 			$total_pages = 0;
 		} 
-			if($page > $total_pages){
-		$page=$total_pages;
+		if($page > $total_pages){
+			$page=$total_pages;
 		}
 		my $start = $limit * $page - $limit;
 		if($start<0){$start=0};

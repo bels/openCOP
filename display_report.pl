@@ -61,8 +61,22 @@ if($authenticated == 1){
 	warn Dumper $results;
 
 	print "Content-type: text/html\n\n";
-	my @styles = ("styles/jquery.jscrollpane.css","styles/display_report.css");
-	my @javascripts = ("javascripts/jquery.download.js","javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/jquery.json-2.2.js","javascripts/jquery.mousewheel.js","javascripts/mwheelIntent.js","javascripts/jquery.jscrollpane.js","javascripts/jquery.tablesorter.js","javascripts/main.js","javascripts/display_report.js");
+	my @styles = (
+		"styles/ui.jqgrid.css",
+		"styles/display_report.css"
+	);
+	my @javascripts = (
+		"javascripts/grid.locale-en.js",
+		"javascripts/jquery.jqGrid.min.js",
+		"javascripts/jquery.download.js",
+		"javascripts/jquery.validate.js",
+		"javascripts/jquery.blockui.js",
+		"javascripts/jquery.json-2.2.js",
+		"javascripts/jquery.mousewheel.js",
+		"javascripts/mwheelIntent.js",
+		"javascripts/main.js",
+	#	"javascripts/display_report.js"
+	);
 	my $title = $config->{'company_name'} . " - $vars->{'name'}";
 	my $file = "display_report.tt";
 	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, results => $results, is_admin => $user->is_admin(id => $id), columns => $columns, table_title => $vars->{'name'}, reports => $reports, sorted_hash => \@sorted_hash};
