@@ -1,17 +1,12 @@
 <script type="text/javascript">
 jQuery(function($){
-		var prepare_a = [];
 		var a = [];
 		var o = [];
 		$('#hidden_data ul#columns li').each(function(){
 			a.push($(this).text());
 			o.push({name: $(this).text(), index: $(this).text(), width: 100, sortable: true});
 		});
-		$('#hidden_data ul#prepare_array li').each(function(){
-			prepare_a.push($(this).text());
-		});
 	//	$('#hidden_data div#
-		alert($.toJSON(prepare_a));
 	//	alert(a);
 	//	alert(o);
 		var url = 'run_query.pl';
@@ -37,7 +32,7 @@ jQuery(function($){
 			multiboxonly: true,
 			toolbar: [true,'top'],
 			caption: '[% report_name %]',
-			postData: {query: '[% query %]', prepare_array: $.toJSON(prepare_a)},
+			postData: {query: "[% query %]"},
 			ondblClickRow: function(rowid){
 				resetLogout();
 				var ticket_number = rowid;
@@ -79,11 +74,6 @@ jQuery(function($){
 		<ul id="columns">
 			<li id="id">id</li>
 		[% FOREACH i IN columns.sort %]
-			<li id="[% i %]">[% i %]</li>
-		[% END %]
-		</ul>
-		<ul id="prepare_array">
-		[% FOREACH i IN prepare_array %]
 			<li id="[% i %]">[% i %]</li>
 		[% END %]
 		</ul>

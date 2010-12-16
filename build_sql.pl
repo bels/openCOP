@@ -49,35 +49,38 @@ if($authenticated == 1)
 			if(@{$object->{'where'}}[0]->{'value'} eq "and" || @{$object->{'where'}}[0]->{'value'} eq "or"){
 				shift(@{$object->{'where'}});
 			}
-			$query .= "where (property = ? and value @{$object->{'where'}}[1]->{'value'} ?) ";
-			push(@prepare_array,@{$object->{'where'}}[0]->{'value'});
-			push(@columns,@{$object->{'where'}}[0]->{'value'});
 			if(@{$object->{'where'}}[1]->{'value'} eq "like"){
 				@{$object->{'where'}}[2]->{'value'} = "%" . @{$object->{'where'}}[2]->{'value'} . "%";
 			}
-			push(@prepare_array,@{$object->{'where'}}[2]->{'value'});
+			$query .= "where (property = '@{$object->{'where'}}[0]->{'value'}' and value @{$object->{'where'}}[1]->{'value'} '@{$object->{'where'}}[2]->{'value'}') ";
+		#	$query .= "where (property = ? and value @{$object->{'where'}}[1]->{'value'} ?) ";
+		#	push(@prepare_array,@{$object->{'where'}}[0]->{'value'});
+			push(@columns,@{$object->{'where'}}[0]->{'value'});
+		#	push(@prepare_array,@{$object->{'where'}}[2]->{'value'});
 			for(my $i = 0; $i <= 2; $i++){
 				shift(@{$object->{'where'}});
 			}
 			while(@{$object->{'where'}}){
-				$query .= " @{$object->{'where'}}[0]->{'value'} ( property = ? and value @{$object->{'where'}}[2]->{'value'} ?) ";
-				push(@prepare_array,@{$object->{'where'}}[1]->{'value'});
-				push(@columns,@{$object->{'where'}}[1]->{'value'});
 				if(@{$object->{'where'}}[2]->{'value'} eq "like"){
 					@{$object->{'where'}}[3]->{'value'} = "%" . @{$object->{'where'}}[3]->{'value'} . "%";
 				}
-				push(@prepare_array,@{$object->{'where'}}[3]->{'value'});
+				$query .= " @{$object->{'where'}}[0]->{'value'} ( property = '@{$object->{'where'}}[1]->{'value'}' and value @{$object->{'where'}}[2]->{'value'} '@{$object->{'where'}}[3]->{'value'}') ";
+			#	$query .= " @{$object->{'where'}}[0]->{'value'} ( property = ? and value @{$object->{'where'}}[2]->{'value'} ?) ";
+			#	push(@prepare_array,@{$object->{'where'}}[1]->{'value'});
+				push(@columns,@{$object->{'where'}}[1]->{'value'});
+			#	push(@prepare_array,@{$object->{'where'}}[3]->{'value'});
 				for(my $i = 0; $i <= 3; $i++){
 					shift(@{$object->{'where'}});
 				}
 			}
 		}
 
-	$query .= ";";
+#	$query .= ";";
 
 	my $store = $query;
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@prepare_array);
+#	$sth->execute(@prepare_array);
 	my $results = $sth->fetchall_hashref('object');
 	my $new_object = {};
 	foreach(keys %$results){
@@ -119,15 +122,13 @@ if($authenticated == 1)
 	} elsif($vars->{'mode'} eq "run"){
 		print "Content-type: text/html\n\n";
 		print "2";
-	#	warn $query;
-	#	warn Dumper $new_object;
 		my $columns;
 		my (@ordered, $count, @innerXML);
 		@ordered = sort { $a <=> $b } keys %$new_object;
 
 		foreach my $row (@ordered){
-				my $type;
-				my $name;
+			my $type;
+			my $name;
 			foreach (keys %{$new_object->{$row}}){
 				if(defined($new_object->{$row}->{$_}->{'value'}) && $new_object->{$row}->{$_}->{'value'} ne ""){
 					$columns->{$new_object->{$row}->{$_}->{'property'}} = $new_object->{$row}->{$_}->{'property'};
@@ -144,35 +145,13 @@ if($authenticated == 1)
 					$new_object->{$row}->{'name'} = $new_object->{$row}->{$_}->{'value'};
 				}
 			}
-					$innerXML[$count] .= "<row id='" . $row . "'>";
-					$innerXML[$count] .= "<cell>" . $row . "</cell>";
-					$innerXML[$count] .= "<cell>" . $new_object->{$row}->{'name'} . "</cell>";
-					$innerXML[$count] .= "<cell>" . $type . "</cell>";
-					$innerXML[$count] .= "</row>";
-					$count++;
+			$innerXML[$count] .= "<row id='" . $row . "'>";
+			$innerXML[$count] .= "<cell>" . $row . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_object->{$row}->{'name'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $type . "</cell>";
+			$innerXML[$count] .= "</row>";
+			$count++;
 		}
-
-#		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
-#		$xml .= "<rows>";
-#		$xml .= "<page>$page</page>";
-#		$xml .= "<total>$total_pages</total>";
-#		$xml .= "<records>$count</records>";
-#		for(my $i = $start; $i < $limit; $i++){
-#			$xml .= $innerXML[$i];
-#		}
-#		$xml .= "</rows>";
-#		print "Content-type: text/xml;charset=utf-8\n\n";
-#		print $xml;
-
-
-#		foreach my $key (keys %$results){
-#			foreach my $pkey (keys %{$results->{$key}}){
-#				$columns->{$pkey} = $pkey;
-#			}
-#		}
-
-	#	warn Dumper $columns;
-	#	warn Dumper $results;
 
 		my @styles = (
 			"styles/ui.jqgrid.css",
@@ -199,12 +178,11 @@ if($authenticated == 1)
 			'company_name' => $config->{'company_name'},
 			 logo => $config->{'logo_image'},
 			sorted_hash => \@ordered,
-			columns => $columns,
 			query => $store,
 			reports => $reports,
 			is_admin => $user->is_admin(id => $id),
+			columns => $columns,
 			report_name => $name,
-			prepare_array => \@prepare_array,
 		};
 
 		my $template = Template->new();

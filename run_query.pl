@@ -32,13 +32,9 @@ if($authenticated == 1){
 
 	my $query = $data->{'query'};
 
-	my $prepare_array = from_json $data->{'prepare_array'};
 	warn $query;
-#	foreach(@{$prepare_array}){
-#		warn $_;
-#	}
 	my $sth = $dbh->prepare($query);
-	$sth->execute(@{$prepare_array});
+	$sth->execute;
 	my $results = $sth->fetchall_hashref('object');
 	my $new_object = {};
 	foreach(keys %$results){
@@ -75,6 +71,7 @@ if($authenticated == 1){
 		my $columns;
 		foreach my $row (@ordered){
 			my $type;
+			my $company;
 			my $name;
 			my @o_again = sort{$new_object->{$row}->{$a}->{'property'} cmp $new_object->{$row}->{$b}->{'property'} } keys %{$new_object->{$row}};
 			foreach (@o_again){
@@ -82,23 +79,6 @@ if($authenticated == 1){
 				if(defined($new_object->{$row}->{$_}->{'value'}) && $new_object->{$row}->{$_}->{'value'} ne ""){
 					$columns->{$new_object->{$row}->{$_}->{'property'}} = $new_object->{$row}->{$_}->{'property'};
 				}
-				if ($new_object->{$row}->{$_}->{'property'} eq "type"){
-					if($new_object->{$row}->{$_}->{'value'} ne ""){
-						$query = "select template,id from template where id = '$new_object->{$row}->{$_}->{'value'}';";
-						$sth = $dbh->prepare($query);
-						$sth->execute;
-						my $tid = $sth->fetchrow_hashref;
-						$type = $tid->{'template'};				
-				#		$innerXML[$count] .= "<cell>" . $type . "</cell>";
-					}
-				} elsif ($new_object->{$row}->{$_}->{'property'} eq "name"){
-					if($new_object->{$row}->{$_}->{'value'} ne ""){
-				#		$new_object->{$row}->{'name'} = $new_object->{$row}->{$_}->{'value'};
-				#		$innerXML[$count] .= "<cell>" . $new_object->{$row}->{'name'} . "</cell>";
-					}
-				} else {
-				#	$innerXML[$count] .= "<cell>" . $new_object->{$row}->{$_}->{'value'} . "</cell>";
-				}				
 			}
 			$count++;			
 		}
@@ -116,6 +96,14 @@ if($authenticated == 1){
 								$sth->execute;
 								my $tid = $sth->fetchrow_hashref;
 								$value = $tid->{'template'};				
+							}
+						} elsif ($new_object->{$row}->{$_}->{'property'} eq "company"){
+							if($new_object->{$row}->{$_}->{'value'} ne ""){
+								$query = "select name,id from company where id = '$new_object->{$row}->{$_}->{'value'}';";
+								$sth = $dbh->prepare($query);
+								$sth->execute;
+								my $cpid = $sth->fetchrow_hashref;
+								$value = $cpid->{'name'};				
 							}
 						} else {
 								$value = $new_object->{$row}->{$_}->{'value'};

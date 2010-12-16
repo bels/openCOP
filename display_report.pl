@@ -49,16 +49,24 @@ if($authenticated == 1){
 	$sth->execute;
 	my $results = $sth->fetchall_hashref(1);
 
-	my $columns;
 	my @sorted_hash = sort {$a <=> $b} (keys %$results);
+	$query = "select * from inventory where object in ($result->{'get_report'})";
+	my $store = $query;
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $columns = $sth->fetchall_hashref('property');
 
-	foreach my $key (keys %$results){
-		foreach my $pkey (keys %{$results->{$key}}){
-			$columns->{$pkey} = $pkey;
-		}
+	$query = "select name from reports where id = ?";
+	$sth = $dbh->prepare($query);
+	$sth->execute(@prepare_array);
+	my $name = $sth->fetchrow_hashref;
+	my @columns;
+
+#	warn Dumper $columns;
+	foreach(sort keys %$columns){
+		push(@columns,$_);
+		warn $_;
 	}
-
-	warn Dumper $results;
 
 	print "Content-type: text/html\n\n";
 	my @styles = (
@@ -77,9 +85,22 @@ if($authenticated == 1){
 		"javascripts/main.js",
 	#	"javascripts/display_report.js"
 	);
+	#warn $store;
 	my $title = $config->{'company_name'} . " - $vars->{'name'}";
 	my $file = "display_report.tt";
-	my $vars = {'title' => $title,'styles' => \@styles,'javascripts' => \@javascripts,'company_name' => $config->{'company_name'}, logo => $config->{'logo_image'}, results => $results, is_admin => $user->is_admin(id => $id), columns => $columns, table_title => $vars->{'name'}, reports => $reports, sorted_hash => \@sorted_hash};
+	my $vars = {
+		'title' => $title,
+		'styles' => \@styles,
+		'javascripts' => \@javascripts,
+		'company_name' => $config->{'company_name'},
+		logo => $config->{'logo_image'},
+		results => $results,
+		is_admin => $user->is_admin(id => $id),
+		reports => $reports,
+		columns => \@columns,
+		report_name => $name,
+		query => $store,
+	};
 
 	my $template = Template->new();
 	$template->process($file,$vars) || die $template->error();
