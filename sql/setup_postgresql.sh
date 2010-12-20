@@ -2,7 +2,7 @@
 
 DATABASE=$1
 sql=postgresql.sql
-
+PATH=$PATH:/usr/bin:/bin:/usr/local/bin
 echo "This script makes some assumptions.  Let me get them out of the way right now"
 echo "1. You are running this as a user that has superuser privileges in the database"
 echo "2. That you have createdb installed and available in that user's PATH"
