@@ -75,6 +75,13 @@ $(document).ready(function(){
 		$('#ticket_details').fadeOut('fast');
 		$('#behind_popup').fadeOut('fast');
 	});
+	
+	$('.jqgrow').livequery(function(){
+		$(this).children('td[title="Normal"]').parent().addClass("normal_priority");
+		$(this).children('td[title="Low"]').parent().addClass("low_priority");
+		$(this).children('td[title="High"]').parent().addClass("high_priority");
+		$(this).children('td[title="Business Critical"]').parent().addClass("critical_priority");
+	});
 });
 
 function logout(){

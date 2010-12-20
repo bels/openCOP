@@ -171,3 +171,19 @@ option{
 .focus{
 	border: 1px solid #8ac0e6;
 }
+
+.normal_priority{
+	color: blue;
+}
+
+.low_priority{
+	color: green;
+}
+
+.high_priority{
+	color: #f05700;
+}
+
+.critical_priority{
+	color: red;
+}
