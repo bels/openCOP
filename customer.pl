@@ -58,7 +58,7 @@ if($authenticated == 2){
 	$sth->execute;
 	my $site_list = $sth->fetchall_hashref('id');
 
-	$query = "select * from section where name = 'Helpdesk';";
+	$query = "select * from section where name = 'Helpdesk' and not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('id');

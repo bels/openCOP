@@ -68,7 +68,7 @@ if($authenticated == 1){
 	$sth->execute;
 	my $troubleshooting = $sth->fetchall_hashref('id');
 
-	$query = "select * from section;";
+	$query = "select * from section where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('id');

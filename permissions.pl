@@ -51,7 +51,7 @@ if($authenticated == 1)
 	}
 	my @gid = sort({lc($a) cmp lc($b)}@pid);
 
-	$query = "select * from section;";
+	$query = "select * from section where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $sid_list = $sth->fetchall_hashref('name');

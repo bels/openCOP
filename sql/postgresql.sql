@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS status CASCADE;
 CREATE TABLE status (id SERIAL PRIMARY KEY, status VARCHAR(255));
 
 DROP TABLE IF EXISTS section CASCADE;
-CREATE TABLE section (id SERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, email VARCHAR(255));
+CREATE TABLE section (id SERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, email VARCHAR(255), deleted BOOLEAN DEFAULT false);
 
 DROP TABLE IF EXISTS priority CASCADE;
 CREATE TABLE priority (id SERIAL PRIMARY KEY, severity INTEGER, description varchar(255));
@@ -238,6 +238,20 @@ CREATE OR REPLACE FUNCTION delete_site(site_val INTEGER) RETURNS INTEGER AS $$
 BEGIN
 	UPDATE site SET deleted = true WHERE id = site_val;
 	RETURN site_val;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_section(section_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	UPDATE section SET deleted = true WHERE id = section_val;
+	RETURN section_val;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_company(company_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	UPDATE company SET deleted = true WHERE id = company_val;
+	RETURN company_val;
 END;
 $$ LANGUAGE plpgsql;
 

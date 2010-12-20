@@ -108,7 +108,7 @@ if($authenticated == 1){
 
 
 
-	$query = "select id,name from section;";
+	$query = "select id,name from section where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('id');

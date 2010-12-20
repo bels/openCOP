@@ -28,45 +28,47 @@ if($authenticated == 1)
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
+	sub sort_hash_list($){
+		my $hashref = shift;
+		my @list;
+		foreach(keys %$hashref){
+			push(@list,$_);
+		}
+		my @array = sort({lc($a) cmp lc($b)} @list);
+		return @array;
+	}
+
 	my $i;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query = "select id,type from site_level where not deleted";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $site_levels = $sth->fetchall_hashref('type');
+	my @site_levels = sort_hash_list($site_levels);
 
-	my @slid;
-	foreach(keys %$site_levels){
-		push(@slid,$_);
-	}
-	my @site_levels = sort({lc($a) cmp lc($b)} @slid);
-	
 	$query = "select id,name from site where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $sites = $sth->fetchall_hashref('name');
+	my @sites = sort_hash_list($sites);
 
-	my @sid;
-	foreach(keys %$sites){
-		push(@sid,$_);
-	}
-	my @sites = sort({lc($a) cmp lc($b)} @sid);
-	
-	$query = "select id,name from company";
+	$query = "select id,name from company where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $companies = $sth->fetchall_hashref('name');
+	my @companies = sort_hash_list($companies);
 
-	my @cid;
-	foreach(keys %$companies){
-		push(@cid,$_);
-	}
-	my @companies = sort({lc($a) cmp lc($b)} @cid);
-	
+	$query = "select id,name from section where not deleted";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $sections = $sth->fetchall_hashref('name');
+	my @sections = sort_hash_list($sections);
+
 	my $success = $q->param('success');
 	my $duplicate = $q->param('duplicate');
 	my $level_success = $q->param('level_success');
 	my $company_success = $q->param('company_success');
+	my $delete_company_success = $q->param('delete_company_success');
 	my $associate_success = $q->param('associate_success');
 	my $delete_site_success = $q->param('delete_site_success');
 	my $delete_site_level_success = $q->param('delete_site_level_success');
@@ -107,17 +109,19 @@ if($authenticated == 1)
 		company_success			=>	$company_success,
 		site_levels			=>	$site_levels,
 		sites				=>	$sites,
+		sections			=>	$sections,
 		companies			=>	$companies,
 		site_level_list			=>	\@site_levels,
 		sites_list			=>	\@sites,
+		section_list			=>	\@sections,
 		company_list			=>	\@companies,
 		associate_success		=>	$associate_success,
 		delete_site_success		=>	$delete_site_success,
 		delete_site_level_success	=>	$delete_site_level_success,
 		is_admin			=>	$user->is_admin(id => $id),
-		notify				 => $notification, 
-		fnotify				 => \%fnotification,
-		duplicate => $duplicate
+		notify				=>	$notification, 
+		fnotify				=>	\%fnotification,
+		duplicate			=>	$duplicate,
 	};
 	
 	print "Content-type: text/html\n\n";

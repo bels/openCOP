@@ -5,7 +5,9 @@
 				<li><a href="#add_site_level_div" title="Add a site level.  Site levels are used to create finer grained reports.">Add Site Level</a></li>
 				<li><a href="#delete_site_level_div" title="Remove a site level">Delete Site Level</a></li>
 				<li><a href="#add_company_div" title="Add a company.  Companies have sites">Add Company</a></li>
+				<li><a href="#delete_company_div" title="Remove a company.">Delete Company</a></li>
 				<li><a href="#add_section_div" title="Add a section.  Sections could be considered queues">Add Section</a></li>
+				<li><a href="#delete_section_div" title="Remove a section.">Delete Section</a></li>
 				<li><a href="#associate_site_company_div" title="Associate a company with sites">Associate</a></li>
 				<li><a href="#notify_div" title="Setup the Helpdesk notification settings">Notification Settings</a></li>
 				<li><a href="#modules" title="Enable/Disable additional functionality">Modules</a></li>
@@ -73,6 +75,20 @@
 					<input type="image" src="images/add.png"  alt="Add" id="company_submit_button">
 				</form>
 			</div>
+			<div id="delete_company_div" class="style">
+				[% IF delete_company_success == 1 %]
+					<span class="success">The company was deleted successfully.</span>
+				[% END %]
+				<form action="delete_company.pl" method="POST">
+					<label for="company_name_input">Company Name:</label>
+					<select name="delete_company_name" id="delete_company_name" class="styled_form_element">
+					[% FOREACH company IN company_list %]
+						<option value="[% companies.$company.id %]">[% companies.$company.name %]</option>
+					[% END %]
+					</select>
+					<input type="image" src="images/delete.png"  alt="Add" id="delete_company_submit_button">
+				</form>
+			</div>
 			<div id="associate_site_company_div" class="style">
 				[% IF associate_success == 1 %]
 					<span class="success">The company and site were successfully associated.</span>
@@ -105,6 +121,20 @@
 					<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name" class="styled_form_element"><a href="tips.pl?301" class="tooltip">?</a><br />
 					<label for="section_email">Section Email:</label><input type="text" name="section_email" id="section_email" class="styled_form_element"><a href="tips.pl?302" class="tooltip">?</a><br />
 					<input type="image" src="images/add.png" alt="Add" id="submit_button">
+				</form>
+			</div>
+			<div id="delete_section_div" class="style">
+				[% IF delete_section_success == 1 %]
+					<span class="success">The section was deleted successfully.</span>
+				[% END %]
+				<form action="delete_section.pl" method="POST">
+					<label for="section_name_input">Section Name:</label>
+					<select name="delete_section_name" id="delete_section_name" class="styled_form_element">
+					[% FOREACH section IN section_list %]
+						<option value="[% sections.$section.id %]">[% sections.$section.name %]</option>
+					[% END %]
+					</select>
+					<input type="image" src="images/delete.png"  alt="Add" id="delete_section_submit_button">
 				</form>
 			</div>
 			<div id="notify_div">
