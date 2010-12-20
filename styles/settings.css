@@ -17,7 +17,7 @@ a{
 	left:0;
 	background:#000000;
 	border:1px solid #cecece;
-	z-index:1;
+	z-index:7999;
 }
 
 #confirm_dialog{
@@ -27,7 +27,7 @@ a{
 	width:408px;
 	background:#FFFFFF;
 	border:2px solid #cecece;
-	z-index:2;
+	z-index:8000;
 	padding:12px;
 	font-size:13px;
 }

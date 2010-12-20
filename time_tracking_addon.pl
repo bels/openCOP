@@ -7,8 +7,9 @@ use CGI;
 use ReadConfig;
 use SessionFunctions;
 use Date::Calc;
-use POSIX 'strftime';
+use POSIX;
 use Data::Dumper;
+
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -27,24 +28,31 @@ if(%cookie){
 if($authenticated == 1){
 	my $vars = $q->Vars;
 	if($vars->{'mode'} eq "by_tech"){
+		my $data = $q->Vars;
+		my ($page, $total_pages, $count);
+
+		$page = $data->{'page'};
+		if(!$page){$page=1};
+		my $limit = $data->{'rows'};
+		if(!$limit){$limit=10};
+		my $sidx = $data->{'sidx'};
+		if(!$sidx){$sidx = 1};
+		my $sord = $data->{'sord'};
+
 		my $id = $vars->{'id'};
 		my $sd;
 		my $ed;	
 
 		if(defined($vars->{'sd'}) && $vars->{'sd'} ne ""){
 			$sd = $vars->{'sd'} . " 00:00:00";
-		#	warn $sd;
 		} else {
 			$sd = (strftime( '%m/%d/%Y', localtime) . " 00:00:00");
-		#	warn $sd;
 		}
 	
 		if(defined($vars->{'ed'}) && $vars->{'ed'} ne ""){
 			$ed = $vars->{'ed'} . " 23:59:59";
-		#	warn $ed;
 		} else {
 			$ed = (strftime( '%m/%d/%Y', localtime) . " 23:59:59");
-		#	warn $ed;
 		}
 	
 		my $ticket = {};
@@ -54,67 +62,57 @@ if($authenticated == 1){
 		$sth->execute($id,$id,$sd,$ed);
 		my $results = $sth->fetchall_hashref('ticket');
 	
-		$query = "select * from audit_tickets_by_tech(cast(? as integer),cast(? as integer),cast(? as timestamp),cast(? as timestamp));";
+		$query = "
+			select
+				record,
+				ticket,
+				time_worked,
+				updated,
+				contact,
+				priority,
+				technician,
+				section,
+				status,
+				problem
+			from
+				audit_tickets_by_tech(
+					cast(? as integer),
+					cast(? as integer),
+					cast(? as timestamp),
+					cast(? as timestamp)
+			)
+		";
 		my $sth = $dbh->prepare($query);
 		foreach(keys %$results){
-			warn $id;
-			warn $_;
-			warn $sd;
-			warn $ed;
 			$sth->execute($id,$_,$sd,$ed) or die "$query";
 			$ticket->{$_} = $sth->fetchall_hashref('record');
 		}
-		# warn Dumper $ticket;
-	
-		print "Content-type: text/html\n\n";
-		print qq(
-			<table id="time_tracking_table" class="sort">
-				<thead>
-					<tr class="header_row">
-						<th class="header_cell">Ticket #</th>
-						<th class="header_cell">Current Status</th>
-						<th class="header_cell">Last Updated</th>
-						<th class="header_cell">Time Worked</th>
-						<th class="header_cell">Problem</th>
-						<th class="header_cell">Notes</th>
-					</tr>
-				</thead>
-				<tbody>
-		);
+
+		my @ordered;
+		if($sord eq "asc"){
+			@ordered = sort { $a <=> $b } keys %$ticket;
+		} else {
+			@ordered = sort { $b <=> $a } keys %$ticket;
+		}
+
+		my @innerXML;
+		my $count = 0;
+
 		my $new_ticket = {};
-		foreach my $t (sort { $a <=> $b } keys %$ticket){
-			print qq(
-				<tr class="body_row">
-			);
+
+		foreach my $t(@ordered){
+			$innerXML[$count] .= "<row id='" . $t . "'>";
 			foreach my $r (sort { $a <=> $b } keys %{$ticket->{$t}}){
 				$new_ticket->{$t} = {
 					'priority'	=>	$ticket->{$t}->{$r}->{'priority'},
 					'problem'	=>	$ticket->{$t}->{$r}->{'problem'},
-					'technician'	=>	$ticket->{$t}->{$r}->{'technician'},
 					'status'	=>	$ticket->{$t}->{$r}->{'status'},
 					'contact'	=>	$ticket->{$t}->{$r}->{'contact'},
-					'closed_date'	=>	$ticket->{$t}->{$r}->{'closed_date'},
-					'closed_by'	=>	$ticket->{$t}->{$r}->{'closed_by'},
-					'completed_by'	=>	$ticket->{$t}->{$r}->{'completed_by'},
 					'updated'	=>	$ticket->{$t}->{$r}->{'updated'},
-					'location'	=>	$ticket->{$t}->{$r}->{'location'},
-					'completed_date'=>	$ticket->{$t}->{$r}->{'completed_data'},
-					'updater'	=>	$ticket->{$t}->{$r}->{'updater'},
-					'site'		=>	$ticket->{$t}->{$r}->{'site'},
-					'contact_email'	=>	$ticket->{$t}->{$r}->{'contact_email'},
+					'section'	=>	$ticket->{$t}->{$r}->{'section'},
 				};
 			}
 			foreach my $r (sort { $a <=> $b } keys %{$ticket->{$t}}){
-				if(defined($new_ticket->{$t}->{'notes'})){
-					if(defined($ticket->{$t}->{$r}->{'notes'}) && $ticket->{$t}->{$r}->{'notes'} ne ""){
-						$new_ticket->{$t}->{'notes'} .= ($ticket->{$t}->{$r}->{'notes'} . "\n");
-					}
-				} else {
-					if(defined($ticket->{$t}->{$r}->{'notes'}) && $ticket->{$t}->{$r}->{'notes'} ne ""){
-						$new_ticket->{$t}->{'notes'} .= ($ticket->{$t}->{$r}->{'notes'} . "\n");
-					}
-				}
-	
 				if(defined($new_ticket->{$t}->{'time_worked'}) && $new_ticket->{$t}->{'time_worked'} ne ""){
 					if(defined($ticket->{$t}->{$r}->{'time_worked'}) && $ticket->{$t}->{$r}->{'time_worked'} ne ""){
 						my @t = split(':',$new_ticket->{$t}->{'time_worked'});
@@ -131,47 +129,88 @@ if($authenticated == 1){
 					}
 				}
 			}
-	
-			print qq(
-					<td class="body_cell">$t</td>
-					<td class="body_cell">$new_ticket->{$t}->{'status'}</td>
-					<td class="body_cell">$new_ticket->{$t}->{'updated'}</td>
-					<td class="body_cell">$new_ticket->{$t}->{'time_worked'}</td>
-					<td class="body_cell">$new_ticket->{$t}->{'problem'}</td>
-					<td class="body_cell" id="notes">) . $new_ticket->{$t}->{'notes'} . qq(</td>
-				</tr>
-			);
+			$innerXML[$count] .= "<cell>" . $t . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'status'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'updated'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'time_worked'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'priority'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'contact'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'problem'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'section'} . "</cell>";
+			$innerXML[$count] .= "</row>";
+			$count++;
 		}
+		my $total_pages;
+		if( $count > 0 && $limit > 0) {
+			$total_pages = ceil($count/$limit);
+		} else { 
+			$total_pages = 0;
+		} 
+		if($page > $total_pages){
+			$page=$total_pages;
+		}
+
+		my $start = $limit * $page - $limit;
+		if($start<0){$start=0};
+		$limit = $start + $limit;
+
+		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
+		$xml .= "<rows>";
+		$xml .= "<page>$page</page>";
+		$xml .= "<total>$total_pages</total>";
+		$xml .= "<records>$count</records>";
+		for(my $i = $start; $i < $limit; $i++){
+			$xml .= $innerXML[$i];
+		}
+		$xml .= "</rows>";
+		print "Content-type: text/xml;charset=utf-8\n\n";
+		print $xml;
+	
 	} elsif($vars->{'mode'} eq "by_ticket"){
 		my $search = $vars->{'search'};
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+		my $data = $q->Vars;
+		my ($query, $sth, $page, $total_pages, $count);
 
-		my $query = "select * from audit_tickets_by_ticket(?);";
-		my $sth = $dbh->prepare($query);
+		$page = $data->{'page'};
+		if(!$page){$page=1};
+		my $limit = $data->{'rows'};
+		if(!$limit){$limit=10};
+		my $sidx = $data->{'sidx'};
+		if(!$sidx){$sidx = 1};
+		my $sord = $data->{'sord'};
+
+		$query = "
+			select
+				record,
+				ticket,
+				time_worked,
+				updated,
+				contact,
+				priority,
+				technician,
+				section,
+				status,
+				problem
+			from
+				audit_tickets_by_ticket(?)
+		";
+		$sth = $dbh->prepare($query) or die "Cannot prepare query";
 		$sth->execute($search) or die "$query";
 		my $ticket->{$search} = $sth->fetchall_hashref('record');
 
-		print "Content-type: text/html\n\n";
-		print qq(
-			<table id="time_tracking_table" class="sort">
-				<thead>
-					<tr class="header_row">
-						<th class="header_cell">Ticket #</th>
-						<th class="header_cell">Current Status</th>
-						<th class="header_cell">Last Updated</th>
-						<th class="header_cell">Time Worked</th>
-						<th class="header_cell">Problem</th>
-						<th class="header_cell">Notes</th>
-					</tr>
-				</thead>
-				<tbody>
-		);
+		my @ordered;
+		if($sord eq "asc"){
+			@ordered = sort { $a <=> $b } keys %$ticket;
+		} else {
+			@ordered = sort { $b <=> $a } keys %$ticket;
+		}
+		my @innerXML;
+		my $count = 0;
 
 		my $new_ticket = {};
-		foreach my $t (sort { $a <=> $b } keys %$ticket){
-			print qq(
-				<tr class="body_row">
-			);
+		foreach my $t(@ordered){
+			$innerXML[$count] .= "<row id='" . $t . "'>";
 			foreach my $r (sort { $a <=> $b } keys %{$ticket->{$t}}){
 				$new_ticket->{$t} = {
 					'priority'	=>	$ticket->{$t}->{$r}->{'priority'},
@@ -179,29 +218,12 @@ if($authenticated == 1){
 					'technician'	=>	$ticket->{$t}->{$r}->{'technician'},
 					'status'	=>	$ticket->{$t}->{$r}->{'status'},
 					'contact'	=>	$ticket->{$t}->{$r}->{'contact'},
-					'closed_date'	=>	$ticket->{$t}->{$r}->{'closed_date'},
-					'closed_by'	=>	$ticket->{$t}->{$r}->{'closed_by'},
-					'completed_by'	=>	$ticket->{$t}->{$r}->{'completed_by'},
 					'updated'	=>	$ticket->{$t}->{$r}->{'updated'},
-					'location'	=>	$ticket->{$t}->{$r}->{'location'},
-					'completed_date'=>	$ticket->{$t}->{$r}->{'completed_data'},
-					'updater'	=>	$ticket->{$t}->{$r}->{'updater'},
-					'site'		=>	$ticket->{$t}->{$r}->{'site'},
-					'contact_email'	=>	$ticket->{$t}->{$r}->{'contact_email'},
+					'section'	=>	$ticket->{$t}->{$r}->{'section'},
 				};
 			}
 			foreach my $r (sort { $a <=> $b } keys %{$ticket->{$t}}){
-				if(defined($new_ticket->{$t}->{'notes'})){
-					if(defined($ticket->{$t}->{$r}->{'notes'}) && $ticket->{$t}->{$r}->{'notes'} ne ""){
-						$new_ticket->{$t}->{'notes'} .= ($ticket->{$t}->{$r}->{'notes'} . "\n");
-					}
-				} else {
-					if(defined($ticket->{$t}->{$r}->{'notes'}) && $ticket->{$t}->{$r}->{'notes'} ne ""){
-						$new_ticket->{$t}->{'notes'} .= ($ticket->{$t}->{$r}->{'notes'} . "\n");
-					}
-				}
-	
-				if(defined($new_ticket->{$t}->{'time_worked'}) && $new_ticket->{$t}->{'time_worked'} ne ""){
+				if(defined($new_ticket->{$t}->{'time_worked'}) && $new_ticket->{$t}->{'time_worked'} ne "" && $new_ticket->{$t}->{'time_worked'} ne "undef"){
 					if(defined($ticket->{$t}->{$r}->{'time_worked'}) && $ticket->{$t}->{$r}->{'time_worked'} ne ""){
 						my @t = split(':',$new_ticket->{$t}->{'time_worked'});
 						my @t2 = split(':',$ticket->{$t}->{$r}->{'time_worked'});
@@ -212,22 +234,48 @@ if($authenticated == 1){
 						$new_ticket->{$t}->{'time_worked'} = join(':',@t3);
 					}
 				} else {
-					if(defined($ticket->{$t}->{$r}->{'time_worked'}) && $ticket->{$t}->{$r}->{'time_worked'} ne ""){
+					if(defined($ticket->{$t}->{$r}->{'time_worked'}) && $ticket->{$t}->{$r}->{'time_worked'} ne "" && $new_ticket->{$t}->{'time_worked'} ne "undef"){
 						$new_ticket->{$t}->{'time_worked'} = $ticket->{$t}->{$r}->{'time_worked'};
 					}
 				}
 			}
 	
-			print qq(
-					<td class="body_cell">$t</td>
-					<td class="body_cell">$new_ticket->{$t}->{'status'}</td>
-					<td class="body_cell">$new_ticket->{$t}->{'updated'}</td>
-					<td class="body_cell">$new_ticket->{$t}->{'time_worked'}</td>
-					<td class="body_cell">$new_ticket->{$t}->{'problem'}</td>
-					<td class="body_cell" id="notes">) . $new_ticket->{$t}->{'notes'} . qq(</td>
-				</tr>
-			);
+			$innerXML[$count] .= "<cell>" . $t . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'status'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'updated'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'time_worked'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'priority'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'contact'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'problem'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'section'} . "</cell>";
+			$innerXML[$count] .= "</row>";
+			$count++;
 		}
+		my $total_pages;
+		if( $count > 0 && $limit > 0) {
+			$total_pages = ceil($count/$limit);
+		} else { 
+			$total_pages = 0;
+		} 
+		if($page > $total_pages){
+			$page=$total_pages;
+		}
+
+		my $start = $limit * $page - $limit;
+		if($start<0){$start=0};
+		$limit = $start + $limit;
+
+		my $xml = "<?xml version='1.0' encoding='utf-8'?>";
+		$xml .= "<rows>";
+		$xml .= "<page>$page</page>";
+		$xml .= "<total>$total_pages</total>";
+		$xml .= "<records>$count</records>";
+		for(my $i = $start; $i < $limit; $i++){
+			$xml .= $innerXML[$i];
+		}
+		$xml .= "</rows>";
+		print "Content-type: text/xml;charset=utf-8\n\n";
+		print $xml;
 	}
 
 } else {

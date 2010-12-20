@@ -32,7 +32,6 @@ if($authenticated == 1){
 
 	my $query = $data->{'query'};
 
-	warn $query;
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $results = $sth->fetchall_hashref('object');
@@ -50,7 +49,6 @@ if($authenticated == 1){
 		}
 	}
 
-#	warn Dumper $new_object;
 		my $page = $data->{'page'};
 		if(!$page){$page=1};
 		my $limit = $data->{'rows'};

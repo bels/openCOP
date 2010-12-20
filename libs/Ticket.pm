@@ -163,7 +163,8 @@ sub render{
 	
 	my @styles = (
 		"styles/ui.jqgrid.css",
-		"styles/ticket.css");
+		"styles/ticket.css",
+	);
 	if($self->{'mode'} eq "lookup"){
 		push(@styles,"styles/ticket_details.css");
 	}
@@ -646,9 +647,18 @@ sub update{
 		$access = $sth->fetchrow_hashref;
 	}
 	if($access->{'access'}){
-		my $query = "
+		my $query;
+		my $sth;
+		unless(defined($data->{'priority'}) && $data->{'priority'} ne ""){
+			$query = "select priority from helpdesk where ticket = ?";
+			$sth = $dbh->prepare($query);
+			$sth->execute($data->{'ticket_number'});
+			$data->{'priority'} = $sth->fetchrow_hashref;
+		}
+		$query = "
 			select
 				update_ticket(
+					?,
 					?,
 					?,
 					?,
@@ -661,7 +671,7 @@ sub update{
 					?
 				);
 		";
-		my $sth = $dbh->prepare($query);
+		$sth = $dbh->prepare($query);
 		$sth->execute(
 			$data->{'ticket_number'},
 			$data->{'site'},
@@ -672,6 +682,7 @@ sub update{
 			$data->{'contact_email'},
 			$data->{'notes'},
 			$data->{'status'},
+			$data->{'priority'},
 			$data->{'updater'}
 		);
 		#this will return the id of the insert record if we ever find a use for it

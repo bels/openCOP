@@ -11,14 +11,13 @@ $(document).ready(function(){
 		resetLogout();
 		var h = [];
 		h[0] = [];
-		$('#table_head_row').each(function(){
+		$('table.ui-jqgrid-htable tr').each(function(){
 			var i = h[0];
-			i.push(undefined);
-			$(this).children('th.table_head_cell').each(function(){
-				i.push($(this).text());
+			$(this).children('th').each(function(){
+				i.push($(this).children('div').text());
 			});
 		});
-		$('.table_row').each(function(){
+		$('#res_table tr.ui-widget-content').each(function(){
 			h[this.rowIndex] = [h[this.rowIndex]];
 			var j = h[this.rowIndex];
 			$(this).children('td').each(function(){
@@ -28,7 +27,7 @@ $(document).ready(function(){
 		var table = $.toJSON(h);
 		var mode = $('#export_select').val();
 		var email = $('#email').attr('checked');
-		var name = $('#report_name').text();
+		var name = $('#gview_res_table span.ui-jqgrid-title').text();
 		if(email === true){
 			$.ajax({
 				type: 'POST',

@@ -1,55 +1,6 @@
 #top{
 	height: 500px;
 }
-#ticket_details{
-	font-size: .8em;
-	position:fixed;
-	background:#FFFFFF;
-	z-index:2;
-	padding:12px;
-	display: none;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	width: 90%;
-	height: 90%;
-	overflow: auto;
-	margin-left: auto;
-	margin-right: auto;
-	border: 1px solid black;
-}
-
-#update_form label{
-	display: inline-block;
-	width: 160px;
-	text-align: right;
-	margin-right: 5px;
-	margin-top: 5px;
-}
-
-#update_form input{
-	width: 170px;
-	margin-right: 5px;
-}
-
-#update_form span{
-	width: 170px;
-	margin-right: 5px;
-}
-
-#past_troubleshoot{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
-
-#problem{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
-
-#past_notes{
-	white-space: pre-wrap;
-	margin-left: 160px;
-}
 
 #behind_popup{
 	display:none;

@@ -57,9 +57,6 @@ $(document).ready(function(){
 	if(tabs){
 		$("#tabs").tabs().scrollabletab();
 	}
-	$('table.sort').livequery(function(){
-		$(this).tablesorter();
-	});
 	
 	$('.styled_form_element').focusin(function(){
 		$(this).addClass('focus');

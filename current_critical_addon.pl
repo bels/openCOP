@@ -53,6 +53,7 @@ if($authenticated == 1){
 		select
 			count(*)
 		from
+			helpdesk
 		where (
 			(
 				helpdesk.status not in ('6','7')
@@ -84,6 +85,8 @@ if($authenticated == 1){
 				)
 			)
 		)
+			order by ? $sord
+			offset ? limit ?;
 	";
 	push(@placeholders,$sidx,$start,$limit);
 

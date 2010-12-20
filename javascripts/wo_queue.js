@@ -2,7 +2,6 @@ $(document).ready(function(){
 	$("#update_button").live('click',function(e){
 		e.preventDefault();
 		resetLogout();
-			$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
 			var url = "update_ticket.pl";
 			var the_data = $("#update_form").serialize();
 			$.ajax({
@@ -10,7 +9,10 @@ $(document).ready(function(){
 				url: url,
 				data: the_data,
 				success: function(data){
-						$('#attach_form').submit();
+						if($('#attach_form input[type="file"]').val() !== ""){
+							$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
+							$('#attach_form').submit();
+						}
 						window.location = "wo_queue.pl";
 				},
 				error: function(xml,text,error){

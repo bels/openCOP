@@ -67,7 +67,10 @@ $(document).ready(function(){
 				url: url,
 				data: the_data,
 				success: function(data){
-						$('#attach_form').submit();
+						if($('#attach_form input[type="file"]').val() !== ""){
+							$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
+							$('#attach_form').submit();
+						}
 						window.location = "ticket.pl?mode=lookup";
 				},
 				error: function(xml,text,error){
@@ -82,7 +85,6 @@ $(document).ready(function(){
 		if($("#newticket").valid())
 		{
 			$.blockUI({message: "Submitting"});
-			$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
 			var url = "submit_ticket.pl";
 			var the_data = $("#newticket").serialize();
 			$.ajax({
@@ -94,7 +96,10 @@ $(document).ready(function(){
 					if(error == "0"){
 						var str = data.replace(/^[\d\s]/,'');
 						alert("Added the ticket");
-						$('#attach_form').submit();
+						if($('#attach_form input[type="file"]').val() !== ""){
+							$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
+							$('#attach_form').submit();
+						}
 						window.location = "ticket.pl?mode=new";
 					} else {
 						var str = data.replace(/^[\d\s]/,'');
@@ -266,9 +271,5 @@ $(document).ready(function(){
 	$('.ticket_lookup').each(function(){
 		var section_id = $(this).attr('section');
 		var new_val = $('td#' + section_id + '_center span#sp_' + section_id).text();
-		if( new_val == ""){
-		//	alert(new_val);
-		//	$('div#gbox_' + $(this).attr('id')).hide();
-		}
 	});
 });

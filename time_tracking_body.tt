@@ -4,24 +4,43 @@
 			<li><a href="#by_ticket">By Ticket</a></li>
 		</ul>
 		<div id="by_tech">
-			<select id="user_select"  class="styled_form_element">
+			<select class="search" id="user_select"  class="styled_form_element">
 				<option></option>
 			[% FOREACH user IN uid %]
 				<option value="[% users.$user.id %]">[% users.$user.alias %]</option>
 			[% END %]
 			</select>
-			<label for="start_date">From: </label><input type="date" name="start_date" id="start_date" value="[% date %]"  class="styled_form_element">
-			<label for="end_date"> To: </label><input type="date" name="end_date" id="end_date" value="[% date %]" class="styled_form_element">
+			<label for="start_date">From: </label><input class="search" type="date" name="start_date" id="start_date" value="[% date %]"  class="styled_form_element">
+			<label for="end_date"> To: </label><input class="search" type="date" name="end_date" id="end_date" value="[% date %]" class="styled_form_element">
 			<br />
 			<image src="images/display.png" class="image_button" id="display" alt="Display">
-			<div id="tech_output">
+			<table id="tech_output">
+			</table>
+			<div id="tech_pager">
 			</div>
 		</div>
 		<div id="by_ticket">
-			<input type="text" id="ticket_search"  class="styled_form_element">
+			<input class="search" type="text" id="ticket_search"  class="styled_form_element">
 			<br />
 			<image src="images/display.png" class="image_button" id="display" alt="Display">
-			<div id="ticket_output">
+			<table id="ticket_output">
+			</table>
+			<div id="ticket_pager">
 			</div>
 		</div>
 	</div>
+		<div id="ticket_details">
+		</div>
+		<div id="behind_popup">
+		</div>
+		<div id="multiAttach" class="dialog">
+			<div id="details">
+				<form id="attach_form" enctype="multipart/form-data" method="post" action="upload_file.pl">
+					<center><label>Attach a file</label></center>
+					<input class="search" type="hidden" name="mode" id="mode" value="update">
+					<input type="file" name="file1" id="file1" num="1">
+					<img src="images/plus.png" class="add_file image_button" alt="Add">
+					<input class="search close" type="image" src="images/submit.png" name="close_attach" id="close_attach" class="close" alt="Done">
+				</form>
+			</div>
+		</div>

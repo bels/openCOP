@@ -29,7 +29,7 @@ if($authenticated){
 	my $vars = $q->Vars;
 	my $ticket;
 
-	warn "Attaching file";
+#	warn "Attaching file";
 	print "Content-type: text/html\n\n";
 	if($vars->{'mode'} eq "new"){
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
@@ -48,7 +48,7 @@ if($authenticated){
 				print $q->redirect(-URL => $q->referer());
 			} else {
 				foreach(keys %$upload){
-					warn $upload->{$_};
+				#	warn $upload->{$_};
 					print $q->redirect(-URL => $q->referer());
 				}
 			}

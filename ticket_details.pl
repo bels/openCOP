@@ -6,6 +6,7 @@ use Ticket;
 use CGI;
 use DBI;
 use SessionFunctions;
+use UserFunctions;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -24,8 +25,10 @@ if(%cookie)
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
-{
+if($authenticated == 1){
+	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
+	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
+
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 	my $query;
 	my $sth;
@@ -84,17 +87,31 @@ if($authenticated == 1)
 			<input type="hidden" name="section" value="$section_list->{$results->{'section'}}->{'id'}">
 			<input type="hidden" name="ticket_number" value="$results->{'ticket'}">
 			<label for="ticket_number">Ticket Number:</label><span id="ticket_number" name="ticket_number">$results->{'ticket'}</span>
-			<label for="priority">Priority:</label><span id="priority" name="priority">$priority_list->{$results->{'priority'}}->{'description'}</span>
-			<label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span>
+			<label for="priority">Priority:</label>
+	);
+	if($user->is_admin(id => $id)){
+		print qq(
+			<select id="priority" name="priority">
 		);
+		for (my $i = 1; $i <= keys(%$priority_list); $i++){
+			print qq(<option value="$i");
+			if($results->{'priority'} == $i){ print " selected"};
+			print qq(>$priority_list->{$i}->{'description'}</option>);
+		}
+		print qq(</select>);
+	} else {
+		print qq(<span id="priority" name="priority">$priority_list->{$results->{'priority'}}->{'description'}</span>);
+	}
+	print qq(
+			<label for="author">Author:</label><span id="author" name="author">$results->{'author'}</span>
+	);
 	print qq(
 		<br>
 		<label for="section">Section:</label><span id="section" name="section">$section_list->{$results->{'section'}}->{'name'}</span>
 		<br>
 		<label for="status">Ticket Status:</label><select id="status" name="status"  class="styled_form_element">
 	);
-	my $i;
-	for ($i = 1; $i <= keys(%$status_list); $i++)
+	for (my $i = 1; $i <= keys(%$status_list); $i++)
 	{
 		print qq(<option value=$i);
 		if($results->{'status'} == $i){ print " selected"};

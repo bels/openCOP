@@ -2,10 +2,9 @@ jQuery(function($){
 		$('#res_table').jqGrid({
 			height: 200,
 			datatype: 'local',
-			colNames: ['Name','Report','Description'],
+			colNames: ['Name','Description'],
 			colModel: [
 				{name: 'name', index: 'name', width: 150, sortable: true},
-				{name: 'report', index: 'report', width: 500, sortable: true},
 				{name: 'description', index: 'description', width: 500, sortable: true},
 			],
 			sortname: 'name',
@@ -20,8 +19,6 @@ jQuery(function($){
 			toolbar: [true,'top'],
 			caption: 'Reports',
 			ondblClickRow: function(rowid){
-				/* Run the report and display using display_report.pl. Basically:
-				*/
 				var id = rowid;
 				location.href = "display_report.pl?id=" + id;
 				resetLogout();
