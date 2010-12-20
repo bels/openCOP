@@ -8,6 +8,7 @@
 			</select>
 		</div>
 
+	[% IF backend == 'database' %]
 		<div id="password_div" class="change_div">
 			<span id="password_title" class="change_title">Change password</span>
 			<form action="edit_customer.pl" method="POST" id="password_form" class="change_form">
@@ -18,6 +19,7 @@
 				<input type="submit" value="Change Password" id="submit_button" class="change_submit">
 			</form>
 		</div>
+	[% END %]
 
 		<div id="email_div" class="change_div">
 			<span id="email_title" class="change_title">Change email address</span>
