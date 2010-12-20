@@ -106,14 +106,16 @@
 		e.preventDefault();
 		resetLogout();
 			var url = "update_ticket.pl";
-			$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
 			var the_data = $("#update_form").serialize();
 			$.ajax({
 				type: 'POST',
 				url: url,
 				data: the_data,
 				success: function(data){
-						$('#attach_form').submit();
+						if($('#attach_form input[type="file"]').val() !== ""){
+							$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
+							$('#attach_form').submit();
+						}
 						$('#ticket_details').fadeOut();
 						$('#behind_popup').fadeOut('slow');
 				},

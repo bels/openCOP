@@ -704,10 +704,10 @@ CREATE OR REPLACE FUNCTION update_ticket(
 	contact_email_val VARCHAR(255),
 	notes_val TEXT,
 	status_val INTEGER,
+	priority_val INTEGER,
 	updater_val INTEGER
 ) RETURNS INTEGER AS $$
 DECLARE
-	priority_val INTEGER;
 	site_val INTEGER;
 	section_val INTEGER;
 	last_id INTEGER;
@@ -729,6 +729,7 @@ BEGIN
 			site = site_val,
 			location = location_val,
 			status = status_val,
+			priority = priority_val,
 			closed_by = closed_by_text,
 			updater = updater_val
 		where ticket = ticket_number;
@@ -740,6 +741,7 @@ BEGIN
 			site = site_val,
 			location = location_val,
 			status = status_val,
+			priority = priority_val,
 			completed_by = completed_by_text,
 			updater = updater_val
 		where ticket = ticket_number;
@@ -751,6 +753,7 @@ BEGIN
 			site = site_val,
 			location = location_val,
 			status = status_val,
+			priority = priority_val,
 			updater = updater_val
 		where ticket = ticket_number;
 	END IF;

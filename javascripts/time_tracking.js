@@ -60,8 +60,10 @@ $(document).ready(function(){
 				url: url,
 				data: the_data,
 				success: function(data){
-						$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
-						$('#attach_form').submit();
+						if($('#attach_form input[type="file"]').val() !== ""){
+							$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
+							$('#attach_form').submit();
+						}
 						location.href = "time_tracking.pl";
 				},
 				error: function(xml,text,error){
