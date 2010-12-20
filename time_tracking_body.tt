@@ -37,7 +37,7 @@
 			<div id="details">
 				<form id="attach_form" enctype="multipart/form-data" method="post" action="upload_file.pl">
 					<center><label>Attach a file</label></center>
-					<input class="search" type="hidden" name="mode" id="mode" value="new">
+					<input class="search" type="hidden" name="mode" id="mode" value="update">
 					<input type="file" name="file1" id="file1" num="1">
 					<img src="images/plus.png" class="add_file image_button" alt="Add">
 					<input class="search close" type="image" src="images/submit.png" name="close_attach" id="close_attach" class="close" alt="Done">

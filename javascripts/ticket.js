@@ -67,6 +67,7 @@ $(document).ready(function(){
 				url: url,
 				data: the_data,
 				success: function(data){
+						$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
 						$('#attach_form').submit();
 						window.location = "ticket.pl?mode=lookup";
 				},

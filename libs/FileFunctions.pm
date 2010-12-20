@@ -69,8 +69,14 @@ sub upload_attachment{
 		return $errors;
 	}
 	my $upload_filehandle = $args{'attachment'};
-	warn $upload_dir;
 
+	if( -e $upload_dir . "$filename"){
+		my @filearray = split('\.',$filename);
+		my $i = $#filearray;
+		$i--;
+		$filearray[$i] = $filearray[$i] . " - " . localtime();
+		$filename = join('.',@filearray);
+	}
 	open ( UPLOADFILE, ">$upload_dir" . "$filename" ) or $errors->{'upload'} = "$!" && return $errors;
 
 	binmode UPLOADFILE;

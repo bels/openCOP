@@ -60,8 +60,9 @@ $(document).ready(function(){
 				url: url,
 				data: the_data,
 				success: function(data){
+						$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
 						$('#attach_form').submit();
-						window.location = "time_tracking.pl";
+						location.href = "time_tracking.pl";
 				},
 				error: function(xml,text,error){
 					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
