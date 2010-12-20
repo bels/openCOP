@@ -163,7 +163,8 @@ sub render{
 	
 	my @styles = (
 		"styles/ui.jqgrid.css",
-		"styles/ticket.css");
+		"styles/ticket.css",
+	);
 	if($self->{'mode'} eq "lookup"){
 		push(@styles,"styles/ticket_details.css");
 	}

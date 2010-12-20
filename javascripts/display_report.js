@@ -1,4 +1,5 @@
 $(document).ready(function(){
+/*
 	$('#email').bind('click',function(){
 		var eb = $('#export_button');
 		if(eb.text() == "Save"){
@@ -46,4 +47,5 @@ $(document).ready(function(){
 			$.download('save_report.pl',data,'post',function(){});
 		}
 	});
+*/
 });

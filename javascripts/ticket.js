@@ -266,9 +266,5 @@ $(document).ready(function(){
 	$('.ticket_lookup').each(function(){
 		var section_id = $(this).attr('section');
 		var new_val = $('td#' + section_id + '_center span#sp_' + section_id).text();
-		if( new_val == ""){
-		//	alert(new_val);
-		//	$('div#gbox_' + $(this).attr('id')).hide();
-		}
 	});
 });

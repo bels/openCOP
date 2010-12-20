@@ -84,6 +84,8 @@ if($authenticated == 1){
 				)
 			)
 		)
+			order by ? $sord
+			offset ? limit ?;
 	";
 	push(@placeholders,$sidx,$start,$limit);
 

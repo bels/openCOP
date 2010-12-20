@@ -42,11 +42,16 @@ if($authenticated == 1){
 	my $date = strftime( '%m/%d/%Y', localtime);
 
 	my @styles = (
+		"styles/ui.jqgrid.css",
 		"styles/main.css",
 		"styles/time_tracking.css",
+		"styles/ticket_details.css",
 	);
 	my @javascripts = (
-		"javascripts/jquery.tablesorter.js",
+		"javascripts/grid.locale-en.js",
+		"javascripts/jquery.tools.min.js",
+		"javascripts/jquery.form.js",
+		"javascripts/jquery.jqGrid.min.js",
 		"javascripts/main.js",
 		"javascripts/time_tracking.js",
 	);

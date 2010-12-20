@@ -25,8 +25,11 @@ if($authenticated == 1){
 	my @styles = (
 		"styles/ui.jqgrid.css",
 		"styles/current_critical.css",
+		"styles/ticket_details.css",
 	);
 	my @javascripts = (
+		"javascripts/jquery.tools.min.js",
+		"javascripts/jquery.form.js",
 		"javascripts/grid.locale-en.js",
 		"javascripts/jquery.jqGrid.min.js",
 		"javascripts/current_critical.js",
@@ -53,7 +56,17 @@ if($authenticated == 1){
 			</div>
 			<div id="behind_popup">
 			</div>
-		</div>
+			<div id="multiAttach" class="dialog">
+				<div id="details">
+					<form id="attach_form" enctype="multipart/form-data" method="post" action="upload_file.pl">
+						<center><label>Attach a file</label></center>
+						<input type="hidden" name="mode" id="mode" value="update">
+						<input type="file" name="file1" id="file1" num="1">
+						<img src="images/plus.png" class="add_file image_button" alt="Add">
+						<input type="image" src="images/submit.png" name="close_attach" id="close_attach" class="close" alt="Done">
+					</form>
+				</div>
+			</div>
 	);
 } else{
 	print $q->redirect(-URL => $config->{'index_page'});
