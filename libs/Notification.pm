@@ -53,7 +53,6 @@ sub by_email{
 	my $self = shift;
 	my %args = @_;
 	
-	return 1;
 	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
 	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};
@@ -135,7 +134,6 @@ sub new_user{
 	my $self = shift;
 	my %args = @_;
 
-	return 1;
 	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
 	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};

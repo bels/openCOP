@@ -29,11 +29,7 @@ if(%cookie)
 if($authenticated == 1)
 {
 	my $vars = $q->Vars;
-	foreach(keys %$vars){
-		warn $_;
-	}
 	$vars->{'table'} =~ s/'/"/g;
-	warn $vars->{'table'};
 	my $object = from_json($vars->{'table'});
 	my $mode = $vars->{'mode'};
 	my $name = $vars->{'report_name'};

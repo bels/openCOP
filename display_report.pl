@@ -83,7 +83,7 @@ if($authenticated == 1){
 		"javascripts/jquery.mousewheel.js",
 		"javascripts/mwheelIntent.js",
 		"javascripts/main.js",
-	#	"javascripts/display_report.js"
+		"javascripts/display_report.js"
 	);
 	#warn $store;
 	my $title = $config->{'company_name'} . " - $vars->{'name'}";
