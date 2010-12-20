@@ -53,6 +53,7 @@ if($authenticated == 1){
 		select
 			count(*)
 		from
+			helpdesk
 		where (
 			(
 				helpdesk.status not in ('6','7')

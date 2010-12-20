@@ -1,7 +1,7 @@
 -- This will remove any data in the database.  I would not recommend using this to recreate tables that got "messed up".  This file should only be used to do an initial creation of the database or to wipe everything and start over.
 
 DROP TABLE IF EXISTS site_level CASCADE;
-CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE);
+CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE, deleted BOOLEAN DEFAULT false);
 
 DROP TABLE IF EXISTS company CASCADE;
 CREATE TABLE company (id SERIAL PRIMARY KEY, name VARCHAR(255), hidden BOOLEAN DEFAULT FALSE);
@@ -233,6 +233,21 @@ INSERT INTO alias_aclgroup(alias_id,aclgroup_id) values('1','2');
 -- Default permissions
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'customers'),1,'t','t','t','f');
 INSERT INTO section_aclgroup (aclgroup_id,section_id,aclread,aclcreate,aclupdate,aclcomplete) values ((select id from aclgroup where name = 'admins'),1,'t','t','t','t');
+
+CREATE OR REPLACE FUNCTION delete_site(site_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	UPDATE site SET deleted = true WHERE id = site_val;
+	RETURN site_val;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_site_level(site_level_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	UPDATE site_level SET deleted = true WHERE id = site_level_val;
+	UPDATE site SET deleted = true WHERE id IN (SELECT id FROM site WHERE level = site_level_val);
+	RETURN site_level_val;
+END;
+$$ LANGUAGE plpgsql;
 
 DROP TYPE IF EXISTS column_names_holder CASCADE;
 CREATE TYPE column_names_holder as (column_name VARCHAR(255));

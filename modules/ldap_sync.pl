@@ -35,15 +35,15 @@ my $result = $l->search(base => $config->{'base_dn'}, scope => "sub", filter => 
 my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 my $query = "select count(*) from users where alias = ?";
 my $sth = $dbh->prepare($query);
-foreach my $entry ($result->entries)
-{
+foreach my $entry ($result->entries){
+	my $cn;
 	if(defined($config->{'directory_type'})){
 		if($config->{'directory_type'} =~ m/AD/i)
 		{
 			my $sam = $entry->get_value('sAMAccountName'); #this more than likely is the same as the login name for Active Directory because of legacy stuff
 			$sth->execute($sam);
-		} elsif($config->{'directory_type') =~ m/eDirectory/i){
-			my $cn = $entry->get_value('cn'); #eDirectory looks to use cn as the login name
+		} elsif($config->{'directory_type'} =~ m/eDirectory/i){
+			$cn = $entry->get_value('cn'); #eDirectory looks to use cn as the login name
 			$sth->execute($cn);
 		} else {
 			my $login = $entry->get_value($config->{'directory_login_attribute'}); #this should be for other ldap directory servers.  Hopefully those admins know what attribute is used for logins

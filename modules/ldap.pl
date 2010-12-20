@@ -44,7 +44,7 @@ foreach my $entry ($result->entries)
 			{
 				$dn = $entry->dn();
 			}
-		} elsif($config->{'directory_type') =~ m/eDirectory/i){
+		} elsif($config->{'directory_type'} =~ m/eDirectory/i){
 			my $cn = $entry->get_value('cn'); #eDirectory looks to use cn as the login name
 			if($cn eq $alias)
 			{

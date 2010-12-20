@@ -29,7 +29,7 @@ if($authenticated == 1)
 	my $vars = $q->Vars;
 
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "update site set deleted = true where id = ?";
+	my $query = "select delete_site(?)";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($vars->{'delete_site_name'});
 

@@ -30,7 +30,7 @@ if($authenticated == 1)
 
 	my $i;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-	my $query = "select id,type from site_level";
+	my $query = "select id,type from site_level where not deleted";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $site_levels = $sth->fetchall_hashref('type');

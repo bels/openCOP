@@ -4,6 +4,10 @@ $(document).ready(function(){
 		$('#behind_popup').fadeOut('slow');
 	});
 
+	$('#proceed').bind('click',function(){
+		delete_site_level();
+	});
+
 //	$('.tooltip').css('color','white'); //this is to counter act the class color that is being inherited from the jquery tabs
 	$('#delete_site_level_submit_button').bind('click',function(){
 		var site = $('#delete_site_level_name').val();
@@ -82,12 +86,12 @@ $(document).ready(function(){
 		var module_name = $(this).attr('name');
 		if($(this).is(':checked')){
 			handle_modules(module_name,'enable');
-			location.href="global_settings.pl";
+			location.href="settings.pl";
 		}
 		else
 		{
 			handle_modules(module_name,'disable');
-			location.href="global_settings.pl";
+			location.href="settings.pl";
 		}
 	});
 });
