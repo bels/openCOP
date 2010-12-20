@@ -68,17 +68,6 @@
 	font-size: .7em;
 }
 
-#search_form{
-	margin-right: 20px;
-	width: 250px;
-	float: right;
-}
-
-#search_div{
-	height: 70px;
-	width: 100%;
-}
-
 #search_form input{
 	margin-left: 10px;
 }
