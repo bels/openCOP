@@ -1,6 +1,3 @@
-	<div id="search_div">
-		<form action="#" id="search_form"><label for="search_box">Search</label><input type="text" name="search_box" id="search_box" value="Search For Tickets"><button id="search_button">Search</button></form>
-	</div>
 	[% FOREACH id IN list %]
 		<table id="section_[% section_list.$id.section_id %]" section="[% section_list.$id.section_id %]" caption_text="[% section_list.$id.name %]" class="ticket_lookup"></table>
 		<div class="pager" id="[% section_list.$id.section_id %]"></div>
