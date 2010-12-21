@@ -160,7 +160,7 @@ if($authenticated == 1)
 		$sth->execute;
 		my $properties = $sth->fetchall_hashref('property');
 
-		$query = "select * from company where hidden = false;";
+		$query = "select * from company where not deleted;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $companies= $sth->fetchall_hashref('name');

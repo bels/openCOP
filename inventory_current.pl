@@ -266,7 +266,7 @@ if($authenticated == 1) {
 			);
 		} elsif ($vars->{'property'} eq "company"){
 		print "Content-type: text/html\n\n";
-			$query = "select id,name from company;";
+			$query = "select id,name from company where not deleted";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			my $results = $sth->fetchall_hashref('name');
