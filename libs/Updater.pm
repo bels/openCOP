@@ -44,7 +44,6 @@ sub new{
 	my $self = bless({},$package);
 
 	$self->{'opencop_dir'} = qx(pwd);
-	warn $self->{'opencop_dir'};
 	$self->{'working_dir'} = "/tmp/opencop_update";
 	if(! -d $self->{'working_dir'}){
 		qx(mkdir $self->{'working_dir'});
@@ -91,27 +90,20 @@ sub get_package{
 		qx(rm $package_path);
 		qx(curl $package_url -o $package_path);
 		$error = check_md5($md5_path,$self->{'working_dir'},$tar);
-		warn $error;
 		$i++;
 		unless($error){
 			$i = 0;
 		}
 	}
-	warn $error;
-	warn $i;	
 	if($i){
 		return my $result = {error => 1, message => "Failed to verify checksum of $package_url"};
 	}
-	warn $package_path;
 	return my $result = {error => 0, message => "Update downloaded to $package_path", package_path => $package_path};
 }
 
 
 sub check_md5{
 	my ($md5,$wd,$tar) = @_;
-#	$wd =~ s/\//\\\//g;
-	warn $tar;
-	warn $wd;
 	qx(sed -i 's=$tar=$wd/$tar=' $md5);
 	qx(md5sum -c $md5);
 	return $?;
@@ -121,8 +113,8 @@ sub backup_config{
 	my $self = shift;
 	my %args = @_;
 	my $date = strftime('%Y-%m-%d-%H-%M-%S', localtime);
-	my $dirs = "styles/ images/ javascripts/";
-	qx(tar cjf "/tmp/opencop_config_backup_$date.tar.bz2" $dirs);
+	my $dirs = "styles/ images/ javascripts/ *.yml /usr/local/etc/opencop/";
+	qx(tar cPjf "/tmp/opencop_config_backup_$date.tar.bz2" $dirs);
 	return $?;
 }
 
@@ -137,7 +129,6 @@ sub destroy{
 sub merge_changes{
 	my $self = shift;
 	my %args = @_;
-	warn @_;
 	
 	qx(tar --mode 770 -xjf $args{'package_path'} -C $self->{'opencop_dir'});
 	return $?;
