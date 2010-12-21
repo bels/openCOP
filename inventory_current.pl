@@ -335,11 +335,11 @@ if($authenticated == 1) {
 		print "Content-type: text/html\n\n";
 
 		print qq(<h2>Item Details</h2>);
-		print qq(<button id="update_object_button" object="$object_id">Save</button>);
-		print qq(<button id="disable_object_button" object="$object_id">Disable</button>);
-		print qq(<button id="delete_object_button" object="$object_id">Delete</button>);
-		print qq(<button id="cancel" object="$object_id">Cancel</button>);
-		print qq(<button class="add_property">Add Property</button>);
+		print qq(<img src="images/save.png" class="image_button" id="update_object_button" object="$object_id" alt="Save">);
+		print qq(<img src="images/add_property.png" class="add_property image_button" alt="Add Property">);
+		print qq(<img src="images/disable.png" class="image_button" id="disable_object_button" object="$object_id" alt="Disable">);
+		print qq(<img src="images/delete.png" class="image_button" id="delete_object_button" object="$object_id" alt="Delete">);
+		print qq(<img src="images/cancel.png" class="image_button" id="cancel" object="$object_id" alt="Cancel">);
 		print qq(<form id="update_object_form">);
 
 		foreach my $element (keys %$new_object){
@@ -359,7 +359,7 @@ if($authenticated == 1) {
 						$type = $tid->{'template'};
 						print qq(
 							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}->{'property'} . qq(_input">$new_object->{$element}->{$ppid[$i]}->{'property'}</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}->{'value'}" value="$type" readonly="readonly"><br>
+							<input class="object_detail styled_form_element" type="text" id="$new_object->{$element}->{$ppid[$i]}->{'value'}" value="$type" readonly="readonly"><br>
 						);
 					} elsif ($new_object->{$element}->{$ppid[$i]}->{'property'} eq "company"){
 						$query = "select name,id from company where id = '$new_object->{$element}->{$ppid[$i]}->{'value'}';";
@@ -369,15 +369,15 @@ if($authenticated == 1) {
 						$company = $cpid->{'name'};
 						print qq(
 							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}->{'property'} . qq(_input">$new_object->{$element}->{$ppid[$i]}->{'property'}</label>
-							<input class="object_detail" type="text" id="$new_object->{$element}->{$ppid[$i]}->{'value'}" value="$company" readonly="readonly"><br>
+							<input class="object_detail styled_form_element" type="text" id="$new_object->{$element}->{$ppid[$i]}->{'value'}" value="$company" readonly="readonly"><br>
 						);
 					} elsif ($ppid[$i] eq "id"){
 					}
 					else {
 						print qq(
 							<label class="object_detail" for=") . $new_object->{$element}->{$ppid[$i]}->{'property'} . qq(_input">$new_object->{$element}->{$ppid[$i]}->{'property'}</label>
-							<input class="object_detail" type="text" id="$ppid[$i]" value="$new_object->{$element}->{$ppid[$i]}->{'value'}">
-							<button class="del_property">-</button><br>
+							<input class="object_detail styled_form_element" type="text" id="$ppid[$i]" value="$new_object->{$element}->{$ppid[$i]}->{'value'}">
+							<img src="images/minus.png" class="del_property image_button" alt="Remove"><br>
 						);
 					}
 				}
