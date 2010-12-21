@@ -72,16 +72,6 @@ CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT curren
 DROP TABLE IF EXISTS reports;
 CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, owner INTEGER DEFAULT '1', description TEXT DEFAULT null);
 
-DROP TABLE IF EXISTS reports_aclgroup;
-CREATE TABLE reports_aclgroup (
-	id BIGSERIAL PRIMARY KEY,
-	report_id INTEGER references reports(id) ON DELETE CASCADE,
-	aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE DEFAULT null,
-	aclread BOOLEAN DEFAULT false,
-	aclupdate BOOLEAN DEFAULT false,
-	acldelete BOOLEAN DEFAULT false
-);
-
 DROP TABLE IF EXISTS wo;
 CREATE TABLE wo(id BIGSERIAL PRIMARY KEY, active BOOLEAN DEFAULT true);
 
@@ -143,6 +133,16 @@ CREATE TABLE object_value (id BIGSERIAL PRIMARY KEY, object_id INTEGER reference
 
 DROP TABLE IF EXISTS aclgroup;
 CREATE TABLE aclgroup (id BIGSERIAL PRIMARY KEY, name VARCHAR(255), UNIQUE (name));
+
+DROP TABLE IF EXISTS reports_aclgroup;
+CREATE TABLE reports_aclgroup (
+	id BIGSERIAL PRIMARY KEY,
+	report_id INTEGER references reports(id) ON DELETE CASCADE,
+	aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE DEFAULT null,
+	aclread BOOLEAN DEFAULT false,
+	aclupdate BOOLEAN DEFAULT false,
+	acldelete BOOLEAN DEFAULT false
+);
 
 DROP TABLE IF EXISTS alias_aclgroup;
 CREATE TABLE alias_aclgroup (id BIGSERIAL PRIMARY KEY, alias_id INTEGER references users(id) ON DELETE CASCADE, aclgroup_id INTEGER references aclgroup(id) ON DELETE CASCADE);
@@ -318,6 +318,12 @@ join
 join
 	property on value_property.property_id = property.id;
 
+DROP TYPE IF EXISTS inventory_temp_holder CASCADE;
+CREATE TYPE inventory_temp_holder as (object INTEGER, property VARCHAR(255), value VARCHAR(255));
+
+DROP TYPE IF EXISTS inventory_holder CASCADE;
+CREATE TYPE inventory_holder as (id INTEGER, object INTEGER, property VARCHAR(255), value VARCHAR(255));
+
 CREATE OR REPLACE FUNCTION select_object() RETURNS SETOF inventory_temp_holder AS $$
 DECLARE
 	r inventory_temp_holder%rowtype;
@@ -377,12 +383,6 @@ select
 	*
 from
 	select_object();
-
-DROP TYPE IF EXISTS inventory_temp_holder CASCADE;
-CREATE TYPE inventory_temp_holder as (object INTEGER, property VARCHAR(255), value VARCHAR(255));
-
-DROP TYPE IF EXISTS inventory_holder CASCADE;
-CREATE TYPE inventory_holder as (id INTEGER, object INTEGER, property VARCHAR(255), value VARCHAR(255));
 
 CREATE OR REPLACE FUNCTION objects(o INTEGER) RETURNS SETOF inventory_holder AS $$
 DECLARE
@@ -946,6 +946,29 @@ $$ LANGUAGE plpgsql;
 
 DROP TYPE IF EXISTS audit_tickets_by_tech_holder CASCADE;
 CREATE TYPE audit_tickets_by_tech_holder as (
+	record INTEGER,
+	time_worked TEXT,
+	updated TEXT,
+	contact VARCHAR(255),
+	notes TEXT,
+	contact_email VARCHAR(255),
+	ticket INTEGER,
+	closed_by VARCHAR(255),
+	completed_by VARCHAR(255),
+	closed_date TIMESTAMP,
+	completed_date TIMESTAMP,
+	location TEXT,
+	priority VARCHAR(255),
+	site VARCHAR(255),
+	technician VARCHAR(255),
+	updater VARCHAR(255),
+	section VARCHAR(255),
+	status VARCHAR(255),
+	problem TEXT
+);
+
+DROP TYPE IF EXISTS audit_tickets_by_ticket_holder CASCADE;
+CREATE TYPE audit_tickets_by_ticket_holder as (
 	record INTEGER,
 	time_worked TEXT,
 	updated TEXT,
