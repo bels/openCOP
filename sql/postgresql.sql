@@ -340,21 +340,6 @@ BEGIN
 			inventory_temp.object,
 			inventory_temp.property,
 			CASE WHEN
-				inventory_temp.property = 'company'
-			THEN
-				(select company.name as company
-					from
-						company
-					join
-						inventory_temp
-					on
-						cast(inventory_temp.value as integer) = company.id
-					where
-						inventory_temp.property = 'company'
-					and
-						object = i
-				)
-			WHEN
 				inventory_temp.property = 'type'
 		        THEN
 		                (select template.template as template
@@ -364,10 +349,28 @@ BEGIN
 		                                inventory_temp
 		                        on
 	        	                        cast(inventory_temp.value as integer) = template.id
-						where
+						where (
 							inventory_temp.property = 'type'
 						and
 							object = i
+						)
+				)
+			WHEN
+				inventory_temp.property = 'company'
+			THEN
+				(select company.name as company
+					from
+						company
+					join
+						inventory_temp
+					on 
+						cast((select value from inventory_temp where property = 'company' and object = i) as integer) = company.id
+						where (
+							inventory_temp.property = 'company'
+						and
+							object = i
+						)
+					
 				)
 			ELSE
 				inventory_temp.value
