@@ -62,7 +62,7 @@ select{
 	padding:12px;
 	display: none;
 	margin-top: 15px;
-	width: 90%;
+	width: 470px;
 	height: 550px;
 	overflow: auto;
 	margin-left: auto;
@@ -124,3 +124,14 @@ h2{
 	margin-right: auto;
 }
 
+#object_details .image_button{
+	margin-right: 10px;
+}
+
+#object_details h2{
+	margin-bottom: 5px;
+	text-shadow: #333 1px 1px 1px;
+	filter: Blur(Direction=135,Strength=2);
+	white-space: nowrap;
+	display: block;
+}
