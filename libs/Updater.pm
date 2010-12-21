@@ -7,6 +7,7 @@ use strict;
 use warnings;
 use lib './libs';
 use ReadConfig;
+use POSIX 'strftime';
 
 require Exporter;
 
@@ -43,8 +44,11 @@ sub new{
 	my $self = bless({},$package);
 
 	$self->{'opencop_dir'} = qx(pwd);
+	warn $self->{'opencop_dir'};
 	$self->{'working_dir'} = "/tmp/opencop_update";
-	qx(mkdir $self->{'working_dir'}) or die "Could not create $self->{'working_dir'}. No write permission to temp?";
+	if(! -d $self->{'working_dir'}){
+		qx(mkdir $self->{'working_dir'});
+	}
 
 	return $self;
 }
@@ -58,7 +62,6 @@ sub check_version{
 	my @line = <VERSION>;
 	my $version = $line[0];
 	close VERSION or die "Could not close $self->{'working_dir'}/opencop_latest";
-	qx(rm $self->{'working_dir'}/opencop_latest) or die "Could not remove $self->{'working_dir'}/opencop_latest";
 	chomp($version);
 	if($version <= $config->{'version'}){
 		return my $result = {error => 0, message => "Already at latest version", version => $version};
@@ -72,6 +75,7 @@ sub check_version{
 sub get_package{
 	my $self = shift;
 	my %args = @_;
+
 	my $md5_url = "$config->{'update_url'}/opencop_$args{'version'}.md5";
 	my $md5_path = "$self->{'working_dir'}/opencop_$args{'version'}.md5";
 	my $package_url = "$config->{'update_url'}/opencop_$args{'version'}.tar.bz2";
@@ -80,29 +84,35 @@ sub get_package{
 	qx(curl $md5_url -o $md5_path);
 
 	qx(curl $package_url -o $package_path);
-	my $error = check_md5($md5_path,$self->{'working_dir'});
+	my $tar = "opencop_$args{'version'}.tar.bz2";
+	my $error = check_md5($md5_path,$self->{'working_dir'},$tar);
 	my $i = 0;
 	while($error && $i<5){
 		qx(rm $package_path);
 		qx(curl $package_url -o $package_path);
-		$error = check_md5($md5_path,$self->{'working_dir'});
+		$error = check_md5($md5_path,$self->{'working_dir'},$tar);
+		warn $error;
 		$i++;
 		unless($error){
 			$i = 0;
 		}
 	}
-
+	warn $error;
+	warn $i;	
 	if($i){
 		return my $result = {error => 1, message => "Failed to verify checksum of $package_url"};
 	}
-
+	warn $package_path;
 	return my $result = {error => 0, message => "Update downloaded to $package_path", package_path => $package_path};
 }
 
 
 sub check_md5{
-	my ($md5,$wd) = @_;
-	qx(cd $wd);
+	my ($md5,$wd,$tar) = @_;
+#	$wd =~ s/\//\\\//g;
+	warn $tar;
+	warn $wd;
+	qx(sed -i 's=$tar=$wd/$tar=' $md5);
 	qx(md5sum -c $md5);
 	return $?;
 }
@@ -110,10 +120,9 @@ sub check_md5{
 sub backup_config{
 	my $self = shift;
 	my %args = @_;
-
-	qx(cd $self->{'opencop_dir'});
-	my $date = localtime;
-	qx(tar cjf /tmp/opencop_config_backup_$date.tar.bz2 styles/ images/ javascripts/);
+	my $date = strftime('%Y-%m-%d-%H-%M-%S', localtime);
+	my $dirs = "styles/ images/ javascripts/";
+	qx(tar cjf "/tmp/opencop_config_backup_$date.tar.bz2" $dirs);
 	return $?;
 }
 
@@ -128,8 +137,9 @@ sub destroy{
 sub merge_changes{
 	my $self = shift;
 	my %args = @_;
-
-	qx(tar -C $self->{'opencop_dir'} --mode 770 -xjf $args{'package_path'});
+	warn @_;
+	
+	qx(tar --mode 770 -xjf $args{'package_path'} -C $self->{'opencop_dir'});
 	return $?;
 }
 

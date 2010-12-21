@@ -1,0 +1,7 @@
+	<div id="update_top">
+		<ul>
+			<li>Current version: [% cversion %]</li>
+			<li>Version available: [% version %]</li>
+		</ul>
+		<button id="update">Update</button>
+	</div>

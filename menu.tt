@@ -45,6 +45,7 @@
 						<li><a href="groups.pl">Groups</a></li>
 						<li><a href="permissions.pl">Permissions</a></li>
 						<li><a href="time_tracking.pl">Time Tracking</a></li>
+						<li><a href="update_page.pl">Update</a></li>
 					[% END %]
 					[% IF backend == "database" %]
 						<li><a href="password.pl">Change Password</a></li>
