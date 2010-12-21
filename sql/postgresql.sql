@@ -304,31 +304,6 @@ join
 join
 	property on value_property.property_id = property.id;
 
-CREATE OR REPLACE VIEW inventory AS
-select
-	*
-from
-	select_object();
-
-DROP TYPE IF EXISTS inventory_temp_holder CASCADE;
-CREATE TYPE inventory_temp_holder as (object INTEGER, property VARCHAR(255), value VARCHAR(255));
-
-DROP TYPE IF EXISTS inventory_holder CASCADE;
-CREATE TYPE inventory_holder as (id INTEGER, object INTEGER, property VARCHAR(255), value VARCHAR(255));
-
-CREATE OR REPLACE FUNCTION objects(o INTEGER) RETURNS SETOF inventory_holder AS $$
-DECLARE
-	r inventory_holder%rowtype;
-BEGIN
-	FOR r IN
-		select ovid,object,property,value from inventory_temp where object = o
-	LOOP
-		RETURN NEXT r;
-	END LOOP;
-	return;
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION select_object() RETURNS SETOF inventory_temp_holder AS $$
 DECLARE
 	r inventory_temp_holder%rowtype;
@@ -382,6 +357,32 @@ BEGIN
 	return;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW inventory AS
+select
+	*
+from
+	select_object();
+
+DROP TYPE IF EXISTS inventory_temp_holder CASCADE;
+CREATE TYPE inventory_temp_holder as (object INTEGER, property VARCHAR(255), value VARCHAR(255));
+
+DROP TYPE IF EXISTS inventory_holder CASCADE;
+CREATE TYPE inventory_holder as (id INTEGER, object INTEGER, property VARCHAR(255), value VARCHAR(255));
+
+CREATE OR REPLACE FUNCTION objects(o INTEGER) RETURNS SETOF inventory_holder AS $$
+DECLARE
+	r inventory_holder%rowtype;
+BEGIN
+	FOR r IN
+		select ovid,object,property,value from inventory_temp where object = o
+	LOOP
+		RETURN NEXT r;
+	END LOOP;
+	return;
+END;
+$$ LANGUAGE plpgsql;
+
 
 DROP TYPE IF EXISTS view_reports_holder CASCADE;
 CREATE TYPE view_reports_holder as (id INTEGER, name VARCHAR(255), report VARCHAR(255), owner INTEGER, description TEXT);
