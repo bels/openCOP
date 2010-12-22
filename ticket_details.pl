@@ -91,7 +91,7 @@ if($authenticated == 1){
 	);
 	if($user->is_admin(id => $id)){
 		print qq(
-			<select id="priority" name="priority">
+			<select id="priority" name="priority" class="styled_form_element">
 		);
 		for (my $i = 1; $i <= keys(%$priority_list); $i++){
 			print qq(<option value="$i");
