@@ -114,7 +114,7 @@
 				[% IF duplicate == 1 %]
 					<span class="error">This section name is already in use.  Please choose another.</span><br/><br/>
 				[% END %]
-				[% IF success == 1 %]
+				[% IF section_success == 1 %]
 					<span class="success">The section was created successfully.</span><br/><br/>
 				[% END %]
 				<form action="add_section.pl" method="POST">
