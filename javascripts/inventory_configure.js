@@ -82,7 +82,7 @@ $(document).ready(function(){
 	});
 
 });
-function load_associations(t){
+function load_associations(t,value){
 	var type = $('#type_select').val();
 	if($('#type_select').val() == ""){
 		type = t;
@@ -95,7 +95,16 @@ function load_associations(t){
 		success: function(data){
 			$('#a_tp_append_div').text("");
 			$('#a_tp_append_div').append(data);
-			$('#type_select option[value="' + type + '"]').attr('selected','selected');
+			if(type == ""){
+				type = value;
+				$('#type_select option').each(function(){
+					if($(this).text() == type){
+						$(this).attr('selected','selected');
+					}
+				});
+			} else {
+				 $('#type_select option[value="' + type + '"]').attr('selected','selected');
+			}
 		},
 		error: function(){
 			alert("Error");
@@ -177,7 +186,7 @@ function submit_tp(button){
 						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo(errorspace);
 						load_types();
 						load_types2();
-						load_associations(t);
+						load_associations(t,value);
 					} else if(error == "1"){
                                                 var str = data.replace(/^[\d\s]/,'');
 						$('.tp_return').remove();
