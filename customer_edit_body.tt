@@ -1,6 +1,6 @@
 		<div id="select_customer_div">
 			<label for="select_customer_select">Customer:</label>
-			<select id="select_customer_select">
+			<select id="select_customer_select" class="styled_form_element">
 				<option value=""></option>
 				[% FOREACH customer IN customers.keys %]
 				<option value="[% customers.$customer.id %]">[% customers.$customer.alias %]</option>
@@ -14,9 +14,9 @@
 			<form action="edit_customer.pl" method="POST" id="password_form" class="change_form">
 				<input type="hidden" name="id" id="id" value="">
 				<input type="hidden" name="type" id="type" value="password">
-				<label for="password1">New Password:</label><input type="password" name="password1" id="password1"><br />
-				<label for="password2">Confirm Password:</label><input type="password" name="password2" id="password2"><br/>
-				<input type="submit" value="Change Password" id="submit_button" class="change_submit">
+				<label for="password1">New Password:</label><input type="password" name="password1" id="password1" class="styled_form_element"><br />
+				<label for="password2">Confirm Password:</label><input type="password" name="password2" id="password2" class="styled_form_element"><br/>
+				<input type="image" src="images/submit.png" value="Change Password" id="submit_button" class="change_submit">
 			</form>
 		</div>
 	[% END %]
@@ -26,8 +26,8 @@
 			<form action="edit_customer.pl" method="POST" id="email_form" class="change_form">
 				<input type="hidden" name="id" id="id" value="">
 				<input type="hidden" name="type" id="type" value="email">
-				<label for="email1">New email:</label><input type="email" name="email1" id="email1"><br />
-				<label for="email2">Confirm email:</label><input type="email" name="email2" id="email2"><br/>
-				<input type="submit" value="Change Email Address" id="email_submit_button" class="change_submit">
+				<label for="email1">New email:</label><input type="email" name="email1" id="email1" class="styled_form_element"><br />
+				<label for="email2">Confirm email:</label><input type="email" name="email2" id="email2" class="styled_form_element"><br/>
+				<input type="image" src="images/change_email.png" value="Change Email Address" id="email_submit_button" class="change_submit">
 			</form>
 		</div>

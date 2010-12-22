@@ -91,7 +91,7 @@ if($authenticated == 1){
 	);
 	if($user->is_admin(id => $id)){
 		print qq(
-			<select id="priority" name="priority">
+			<select id="priority" name="priority" class="styled_form_element">
 		);
 		for (my $i = 1; $i <= keys(%$priority_list); $i++){
 			print qq(<option value="$i");
@@ -134,8 +134,7 @@ if($authenticated == 1){
 	print qq(
 		</span>
 		<br>
-		<label for="requested_on">Requested On:</label><span id="requested_on" name="requested_on">
-	);
+		<label for="requested_on">Requested On:</label><span id="requested_on" name="requested_on">);
 	print substr($results->{'requested'},0,16);
 	print qq(</span><label for="last_updated">Last Updated:</label><span id="last_updated" name="last_updated">);
 	print substr($results->{'updated'},0,16);

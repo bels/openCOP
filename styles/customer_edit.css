@@ -52,9 +52,19 @@ label.error{
 	text-align: right;
 }
 
+#submit_button{
+	width: 80px;
+}
+
+#email_submit_button{
+	width: 170px;
+}
+
 .change_submit{
 	margin-top: 10px;
-	margin-left: 175px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .change_title{

@@ -65,6 +65,7 @@ if($authenticated == 1)
 	my @sections = sort_hash_list($sections);
 
 	my $success = $q->param('success');
+	my $section_success = $q->param('section_success');
 	my $duplicate = $q->param('duplicate');
 	my $level_success = $q->param('level_success');
 	my $company_success = $q->param('company_success');
@@ -122,6 +123,7 @@ if($authenticated == 1)
 		notify				=>	$notification, 
 		fnotify				=>	\%fnotification,
 		duplicate			=>	$duplicate,
+		section_success	=> $section_success
 	};
 	
 	print "Content-type: text/html\n\n";
