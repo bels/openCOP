@@ -22,6 +22,7 @@ if($version_check->{'error'}){
 	if(defined($package->{'error'}) && $package->{'error'}){
 		warn $package->{'message'};
 	} else {
+		warn $package->{'message'};
 		$backup = $updater->backup_config;
 	}
 	
@@ -29,10 +30,9 @@ if($version_check->{'error'}){
 		warn "Backing up configuration may have failed. Verify manually\n";
 	} else {
 		$merge = $updater->merge_changes(package_path => $package->{'package_path'});
-		$config->{'version'} = $version_check->{'version'};
-		YAML::DumpFile("/usr/local/etc/opencop/config.yml",$config);
+		my $update_config = $updater->update_config(version => $version_check->{'version'});
 	}
-	
+
 	if(defined($merge) && $merge){
 		warn "Error encountered extracting updated files from tar. Check permissions.";
 	} else {

@@ -1,3 +1,4 @@
+---
 mail_server: %%MAIL_SERVER%%
 # this is used to set what server the mail shows it is coming from.  It should be set to the host name of where the helpdesk system lives.  It may be the same as the mail server.  If it is do not set this to localhost but instead the FQDN of the server
 sending_server: %%SMTP_SERVER%%

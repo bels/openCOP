@@ -9,6 +9,7 @@ use lib './libs';
 use ReadConfig;
 use POSIX 'strftime';
 use YAML;
+use Data::Dumper;
 
 require Exporter;
 
@@ -45,6 +46,7 @@ sub new{
 	my $self = bless({},$package);
 
 	$self->{'opencop_dir'} = qx(pwd);
+	chomp($self->{'opencop_dir'});
 	$self->{'working_dir'} = "/tmp/opencop_update";
 	if(! -d $self->{'working_dir'}){
 		qx(mkdir $self->{'working_dir'});
@@ -80,6 +82,7 @@ sub get_package{
 	my $md5_path = "$self->{'working_dir'}/opencop_$args{'version'}.md5";
 	my $package_url = "$config->{'update_url'}/opencop_$args{'version'}.tar.bz2";
 	my $package_path = "$self->{'working_dir'}/opencop_$args{'version'}.tar.bz2";
+	warn $args{'version'};
 
 	qx(curl -s $md5_url -o $md5_path);
 
@@ -142,20 +145,21 @@ sub update_config{
 	my %args = @_;
 
 	my @configs;
-	opendir DIRH, $self->{'opencop_dir'} or die "Couldn't open $!";
-	foreach (readdir DIRH){
-		if($_ =~ m/\.yml$/){
-			push(@configs,$_);
+	my $dir = $self->{'opencop_dir'};
+	opendir(DIR, $dir) or die "Couldn't open $self->{'opencop_dir'}: $!";
+	LINE: while(my $FILE = readdir(DIR)){
+		next LINE if($FILE =~ /^\.\.?/);
+		if($FILE =~ m/\.yml$/){
+			push(@configs,$FILE);
 		}
 	}
+	closedir(DIR);
 
 	foreach(@configs){
 		my $oldconfig = "/usr/local/etc/opencop/" . $_;
-		my $old = ReadConfig->new(config_type =>'YAML',config_file => $oldconfig);
-		$old->read_config;
 		my $newconfig = $self->{'opencop_dir'} . "/" . $_;
-		my $new = ReadConfig->new(config_type =>'YAML',config_file => $newconfig);
-		$new->read_config;
+		my $old = YAML::LoadFile($oldconfig);
+		my $new = YAML::LoadFile($newconfig);
 		foreach(keys %$new){
 			unless(defined($old->{$_})){
 				$old->{$_} = $new->{$_};
@@ -163,6 +167,10 @@ sub update_config{
 		}
 		YAML::DumpFile($oldconfig,$old);
 	}
+	my $tempconfig = "/usr/local/etc/opencop/config.yml";
+	my $temp = YAML::LoadFile($tempconfig);
+	$temp->{'version'} = $args{'version'};
+	YAML::DumpFile($tempconfig,$temp);
 }
 
 1;
