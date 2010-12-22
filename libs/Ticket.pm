@@ -114,7 +114,7 @@ sub render{
 				)
 			)
 		and
-			section_aclgroup.aclcreate;
+			section_aclgroup.aclcreate
 		and
 			not deleted
 	";
@@ -413,7 +413,8 @@ sub lookup{
 					where
 						name = ?
 				)
-			);
+			) and
+				not deleted
 		";
 	} else {
 		$query = "
@@ -437,7 +438,8 @@ sub lookup{
 					where
 						alias_id = ?
 				)
-			);
+			) and
+				not deleted
 		";
 	}
 	$sth = $dbh->prepare($query);
@@ -595,7 +597,8 @@ sub update{
 				where
 					alias_id = ?
 			)
-		);
+		) and
+			not deleted
 	";
 	$sth = $dbh->prepare($query);
 	$sth->execute($data->{'section'},$data->{'updater'});
@@ -643,7 +646,8 @@ sub update{
 					where
 						alias_id = ?
 				)
-			);
+			) and
+				not deleted
 		";
 		$sth = $dbh->prepare($query);
 		$sth->execute($data->{'section'},$data->{'updater'});
