@@ -1,11 +1,13 @@
 #errorspace{
+	margin-top: 5px;
 	width: auto;
+	text-align: right;
 }
 
 #configure_top{
 	float: left;
 	width: 600px;
-	height: 105px;
+	height: 125px;
 	min-width: 530px;
 	padding: 10px;
 	color: white;
@@ -63,6 +65,9 @@
 
 .tp_return{
 	display: inline-block;	
+}
+
+.error{
 	color: red;
 }
 

@@ -112,10 +112,10 @@
 			</div>
 			<div id="add_section_div">
 				[% IF duplicate == 1 %]
-					<span class="error">This section name is already in use.  Please choose another.</span><br/><br/>
+					<span class="error">This section name is already in use.  Please choose another.</span>
 				[% END %]
 				[% IF section_success == 1 %]
-					<span class="success">The section was created successfully.</span><br/><br/>
+					<span class="success">The section was created successfully.</span>
 				[% END %]
 				<form action="add_section.pl" method="POST">
 					<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name" class="styled_form_element"><a href="tips.pl?301" class="tooltip">?</a><br />

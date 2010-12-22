@@ -183,7 +183,7 @@ function submit_tp(button){
 						$('#' + which).val("");
 						$('#' + which).focus();
 						$('.tp_return').remove();
-						$('<label class="error tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo(errorspace);
+						$('<label class="tp_return">' + $('#' + which + '_select :selected').text() + ' successfully modified</label>').appendTo(errorspace);
 						load_types();
 						load_types2();
 						load_associations(t,value);
