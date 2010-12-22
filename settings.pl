@@ -74,7 +74,7 @@ if($authenticated == 1)
 	my $delete_site_level_success = $q->param('delete_site_level_success');
 	
 	my @styles = ( "styles/settings.css");
-	my @javascripts = ("javascripts/main.js","javascripts/jquery.validate.js","javascripts/settings.js");
+	my @javascripts = ("javascripts/jquery.json-2.2.js","javascripts/main.js","javascripts/jquery.validate.js","javascripts/settings.js");
 	my $meta_keywords = "";
 	my $meta_description = "";
 
