@@ -44,7 +44,7 @@ if($authenticated == 1)
 	}
 	my @uid = sort(@pid);
 
-	$query = "select * from aclgroup where name != 'admins' and name != 'customers';";
+	$query = "select id,name from aclgroup where name != 'admins' and name != 'customers';";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 
@@ -56,7 +56,7 @@ if($authenticated == 1)
 	shift(@pid);
 	my @gid = sort(@pid);
 
-	$query = "select * from aclgroup;";
+	$query = "select id,name from aclgroup;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 

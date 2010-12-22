@@ -86,7 +86,9 @@ sub render{
 				)
 			)
 		and
-			section_aclgroup.aclread;
+			section_aclgroup.aclread
+		and
+			not deleted
 	";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($args{'id'});
@@ -113,6 +115,8 @@ sub render{
 			)
 		and
 			section_aclgroup.aclcreate;
+		and
+			not deleted
 	";
 	$sth = $dbh->prepare($query);
 	$sth->execute($args{'id'});
@@ -150,7 +154,6 @@ sub render{
 
 	# Get the list of technicians
 	$query = "select id,alias from users where active = true and id not in (select alias_id from alias_aclgroup where aclgroup_id = (select id from aclgroup where name = 'customers'));";
-#	$query = "select id,alias from users where active;";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $tech_list = $sth->fetchall_hashref('alias');

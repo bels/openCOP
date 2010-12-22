@@ -59,18 +59,17 @@ if($authenticated == 1)
 	my $meta_keywords = "";
 	my $meta_description = "";
 
-	my $query = "select * from aclgroup";
+	my $query = "select id,name from aclgroup where name != 'customers'";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $gid_list = $sth->fetchall_hashref('name');
 	@pid = [];
 	foreach(keys %$gid_list){
-		unless($gid_list->{$_}->{'name'} eq "customers"){
-			push(@pid,$gid_list->{$_}->{'name'});
-		}
+		warn $gid_list->{$_}->{'name'};
+		push(@pid,$gid_list->{$_}->{'name'});
 	}
+	shift(@pid);
 	my @gid = sort(@pid);
-	shift(@gid);
 
 	my $file = "user_admin.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";

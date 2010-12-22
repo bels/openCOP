@@ -32,6 +32,7 @@ if($authenticated == 1)
 	my $vars = $q->Vars;
 	if ($vars->{'mode'} eq "add_group"){
 		my $groupname = $vars->{'groupname'};
+		$groupname =~ s/\'/\'\'/g;
 		my $error = 0;
 
 		$query = "select count(*) from aclgroup where name = '$groupname';";

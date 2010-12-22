@@ -76,17 +76,13 @@ $(document).ready(function(){
 				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
 					alert("Group added successfully");
+					location.reload(true);
 				} else if(error == "1"){
 					var str = data.replace(/^[\d\s]/,'');
 					alert("Duplicate entry encountered");
 				} else if(error == "2"){
 					var str = data.replace(/^[\d\s]/,'');
 					alert("Error executing insert statement");
-				}
-				if($('#select_group_select').val()){
-					load_associations_ug();
-					load_associations_gu();
-					location.reload(true);
 				}
 				$.unblockUI();
 			},

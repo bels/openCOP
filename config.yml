@@ -30,7 +30,7 @@ support_email: %%SUPPORT_EMAIL_ADDRESS%%
 support_phone_number: %%SUPPORT_PHONE_NUMBER%%
 ticket_mail_account: %%TICKET_MAIL_ACCOUNT%%
 ticket_mail_password: %%TICKET_MAIL_PASSWORD%%
-update_url: www.agnqtech.com/update OR WHATEVER
+update_url: update.agnqtech.com
 upload_file_dir: %%UPLOAD_FILE_DIR%%
 users_table: users
 version: 1.0
