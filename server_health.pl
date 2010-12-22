@@ -2,6 +2,8 @@
 
 use strict;
 use warnings;
+use lib './libs';
+use ReadConfig;
 
 my @diskio;
 my @mem;
@@ -10,6 +12,10 @@ my $mem = qx(which sysctl);
 my $iostat = qx(which iostat);
 chomp($mem);
 chomp($iostat);
+my $os = qx(uname);
+my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
+$config->read_config;
+my $version = $config->{'version'};
 
 my @drives = split(/\n/,qx(df -h));
 my @scratch = split(/\n/,qx(uptime));
@@ -29,6 +35,14 @@ my $diskio_threshold = 2;
 
 print "Content-type: text/html\n\n";
 
+print qq(
+	<div class="server_data_row">
+		<span class="sysinfo data_title">Operating System: </span><span clas="sysinfo">$os</span>
+	</div>
+	<div class="server_data_row">
+		<span class="sysinfo data_title">openCOP Version: </span><span class="sysinfo">$version</span>
+	</div>
+);
 my $i = 0;
 my $class;
 foreach (@drives)

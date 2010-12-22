@@ -337,43 +337,49 @@ BEGIN
 	LOOP
 		FOR r IN
 		select
-			object,
-			property,
+			inventory_temp.object,
+			inventory_temp.property,
 			CASE WHEN
-				property = 'company'
-			THEN
-				(select name as company
-					from
-						company
-					join
-						inventory_temp
-					on
-						cast(inventory_temp.value as integer) = company.id where inventory_temp.property = 'company'
-					and
-						object = i
-				)
-			WHEN
-				property = 'type'
+				inventory_temp.property = 'type'
 		        THEN
-		                (select template as type
+		                (select template.template as template
 	        	                from
 	                	                template
 	                        	join
 		                                inventory_temp
 		                        on
-	        	                        cast(inventory_temp.value as integer) = template.id where inventory_temp.property = 'type'
-					and
-					object = i
+	        	                        cast(inventory_temp.value as integer) = template.id
+						where (
+							inventory_temp.property = 'type'
+						and
+							object = i
+						)
+				)
+			WHEN
+				inventory_temp.property = 'company'
+			THEN
+				(select company.name as company
+					from
+						company
+					join
+						inventory_temp
+					on 
+						cast((select value from inventory_temp where property = 'company' and object = i) as integer) = company.id
+						where (
+							inventory_temp.property = 'company'
+						and
+							object = i
+						)
+					
 				)
 			ELSE
-				value
-				END
-			from inventory_temp where object = i
+				inventory_temp.value
+			END
+			from inventory_temp where inventory_temp.object = i
 		LOOP
 			RETURN NEXT r;
 		END LOOP;		
 	END LOOP;
-
 	return;
 END;
 $$ LANGUAGE plpgsql;
