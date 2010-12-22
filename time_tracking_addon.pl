@@ -57,7 +57,7 @@ if($authenticated == 1){
 	
 		my $ticket = {};
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
-		my $query = "select distinct(ticket) from audit where (technician = ? or updater = ? ) and updated between ? and ?;";
+		my $query = "select distinct(ticket) from audit where (technician = ? or updater = ? ) and (updated between ? and ?) and time_worked is not null";
 		my $sth = $dbh->prepare($query);
 		$sth->execute($id,$id,$sd,$ed);
 		my $results = $sth->fetchall_hashref('ticket');
