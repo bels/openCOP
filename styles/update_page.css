@@ -11,3 +11,8 @@
 	background-color: #fff;
 	padding: 5px;
 }
+
+#versions li{
+	list-style-type: none;
+	text-decoration: none;
+}

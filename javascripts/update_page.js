@@ -16,7 +16,6 @@ $(document).ready(function(){
 		});
 	});
 
-//	$('#update').bind('click',function(){
 	$('#yes').bind('click',function(){
 		var url = 'update.pl';
 		$.ajax({
