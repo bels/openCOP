@@ -2,9 +2,7 @@
 			<a href="customer.pl" class="customer_link">Enter a ticket</a>
 			<a href="customer_ticket.pl?status=open" class="customer_link">Open tickets</a>
 			<a href="customer_ticket.pl?status=closed" class="customer_link">Closed tickets</a>
-		[% IF backend == "database" %]
-			<a href="password.pl" class="customer_link">Change Password</a>
-		[% END %]
+			<a href="password.pl" class="customer_link">Change Settings</a>
 			<a href="customer_logout.pl" class="customer_link">Logout</a>
 		</div>
 		<div id="drop_shadow"></div>
