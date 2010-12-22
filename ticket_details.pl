@@ -134,8 +134,7 @@ if($authenticated == 1){
 	print qq(
 		</span>
 		<br>
-		<label for="requested_on">Requested On:</label><span id="requested_on" name="requested_on">
-	);
+		<label for="requested_on">Requested On:</label><span id="requested_on" name="requested_on">);
 	print substr($results->{'requested'},0,16);
 	print qq(</span><label for="last_updated">Last Updated:</label><span id="last_updated" name="last_updated">);
 	print substr($results->{'updated'},0,16);
