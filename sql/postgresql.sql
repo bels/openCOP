@@ -924,8 +924,8 @@ DECLARE
 BEGIN
 	FOR r IN
 		select
-			id,
-			alias,
+			users.id,
+			users.alias,
 			(current_timestamp - auth.created) as logged_in
 		from
 			users
