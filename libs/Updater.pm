@@ -56,7 +56,7 @@ sub check_version{
 	my $self = shift;
 	my %args = @_;
 
-	qx(curl $config->{'update_url'}/latest_version -o $self->{'working_dir'}/opencop_latest);
+	qx(curl -s $config->{'update_url'}/latest_version -o $self->{'working_dir'}/opencop_latest);
 	open (VERSION, "$self->{'working_dir'}/opencop_latest") or die "Could not open $self->{'working_dir'}/opencop_latest";
 	my @line = <VERSION>;
 	my $version = $line[0];
@@ -80,15 +80,15 @@ sub get_package{
 	my $package_url = "$config->{'update_url'}/opencop_$args{'version'}.tar.bz2";
 	my $package_path = "$self->{'working_dir'}/opencop_$args{'version'}.tar.bz2";
 
-	qx(curl $md5_url -o $md5_path);
+	qx(curl -s $md5_url -o $md5_path);
 
-	qx(curl $package_url -o $package_path);
+	qx(curl -s $package_url -o $package_path);
 	my $tar = "opencop_$args{'version'}.tar.bz2";
 	my $error = check_md5($md5_path,$self->{'working_dir'},$tar);
 	my $i = 0;
 	while($error && $i<5){
 		qx(rm $package_path);
-		qx(curl $package_url -o $package_path);
+		qx(curl -s $package_url -o $package_path);
 		$error = check_md5($md5_path,$self->{'working_dir'},$tar);
 		$i++;
 		unless($error){
