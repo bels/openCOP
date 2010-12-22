@@ -1,4 +1,10 @@
 $(document).ready(function(){
+	var requires_index = 1;
+	$('.requires').livequery(function(){
+		$(this).attr('id',requires_index);
+		requires_index++;
+	});
+
 	$('#wo_tabs').tabs({
 		panelTemplate: "<div>" + $('#content1').html() + "</div>"
 	});
@@ -11,6 +17,8 @@ $(document).ready(function(){
 		$('.requires').each(function(){
 			var ci;
 			var newHTML = "<option></option>";
+			var index = $(this).attr('id');
+			var step = $('#' + index + ' :selected').val();
 			$('#wo_tabs').find('div.ui-tabs-panel').each(function(){
 				var thisForm = $(this).find('form.newwo');
 				if(thisForm.length){
@@ -19,8 +27,13 @@ $(document).ready(function(){
 				}
 			});
 			ci = $(this).parent().parent().parent().attr('id').substr($(this).attr('id').length -1);
+			var ci = ci.substr(ci.length -1);
 			$(this).html(newHTML);
 			$(this).children('option[value=' + ci + ']').remove();
+			$(this).children('option[value=' + step + ']').attr('selected','selected');
+			if(ci == ($('ul.ui-tabs-nav').children().length -1)){
+				$(this).children('option[value=""]').attr('selected','selected');
+			}
 		});
 	});
 
