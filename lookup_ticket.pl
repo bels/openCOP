@@ -76,9 +76,9 @@ if($authenticated == 1)
 	my $sord = $data->{'sord'};
 
 	unless($data->{'section'} eq "pseudo"){
-	$query = "select count(*) from helpdesk where section = $data->{'section'};";
+		$query = "select count(*) from helpdesk where section = $data->{'section'} and active and status not in ('6','7')";
 	} else {
-		$query = "select count(*) from helpdesk where technician = $id;";
+		$query = "select count(*) from helpdesk where technician = $id and active and status not in ('6','7')";
 	}
 	$sth = $dbh->prepare($query);
 	$sth->execute;
@@ -160,9 +160,7 @@ if($authenticated == 1)
 		} else {
 			@ordered = sort { $b <=> $a } keys %{$section->{$data->{'section'}}};
 		}
-	#	foreach my $row (sort { $a <=> $b } keys %{$section->{$data->{'section'}}})
-		foreach my $row (@ordered)
-		{
+		foreach my $row (@ordered){
 			$xml .= "<row id='" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "'>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "</cell>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'status'} . "</cell>";
