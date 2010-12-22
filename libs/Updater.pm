@@ -8,6 +8,7 @@ use warnings;
 use lib './libs';
 use ReadConfig;
 use POSIX 'strftime';
+use YAML;
 
 require Exporter;
 
@@ -123,6 +124,8 @@ sub destroy{
 	my %args = @_;
 
 	qx(rm -rf $self->{'working_dir'});
+	my $rmfiles = $self->{'opencop_dir'} . "/*.yml";
+	qx(rm $rmfiles);
 	return $?;
 }
 
@@ -132,6 +135,34 @@ sub merge_changes{
 	
 	qx(tar --mode 770 -xjf $args{'package_path'} -C $self->{'opencop_dir'});
 	return $?;
+}
+
+sub update_config{
+	my $self = shift;
+	my %args = @_;
+
+	my @configs;
+	opendir DIRH, $self->{'opencop_dir'} or die "Couldn't open $!";
+	foreach (readdir DIRH){
+		if($_ =~ m/\.yml$/){
+			push(@configs,$_);
+		}
+	}
+
+	foreach(@configs){
+		my $oldconfig = "/usr/local/etc/opencop/" . $_;
+		my $old = ReadConfig->new(config_type =>'YAML',config_file => $oldconfig);
+		$old->read_config;
+		my $newconfig = $self->{'opencop_dir'} . "/" . $_;
+		my $new = ReadConfig->new(config_type =>'YAML',config_file => $newconfig);
+		$new->read_config;
+		foreach(keys %$new){
+			unless(defined($old->{$_})){
+				$old->{$_} = $new->{$_};
+			}
+		}
+		YAML::DumpFile($oldconfig,$old);
+	}
 }
 
 1;
