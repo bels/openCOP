@@ -33,8 +33,15 @@ if($authenticated == 1){
 	my $version = $update->check_version;
 	my $cversion = $config->{'version'};
 
-	my @styles = ( "styles/update_page.css");
-	my @javascripts = ("javascripts/update_page.js");
+	my @styles = (
+		"styles/main.css",
+		"styles/update_page.css",
+	);
+	my @javascripts = (
+		"javascripts/jquery.tools.min.js",
+		"javascripts/main.js",
+		"javascripts/update_page.js",
+	);
 	my $meta_keywords = "";
 	my $meta_description = "";
 

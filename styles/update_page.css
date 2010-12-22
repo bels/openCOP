@@ -1,0 +1,13 @@
+.dialog{
+	display: none;
+	text-align: left;
+	border:2px solid #333;
+	width: 400px;
+}
+
+#details{
+	margin: auto;
+	width: 390px;
+	background-color: #fff;
+	padding: 5px;
+}

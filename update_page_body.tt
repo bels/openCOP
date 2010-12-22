@@ -3,5 +3,11 @@
 			<li>Current version: [% cversion %]</li>
 			<li>Version available: [% version %]</li>
 		</ul>
-		<button id="update">Update</button>
+		<button id="update" rel="#confirm">Update</button>
 	</div>
+		<div id="confirm" class="dialog">
+			<div id="details">
+				<span id="warning">Warning: updating openCOP may result in the loss of Javascript/CSS customization. Custom user configuration will be backed up to /tmp/. Do you wish to proceed?</span>
+				<button id="yes">Yes</button><button id="no" class="close">No</button>
+			</div>
+		</div>

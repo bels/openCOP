@@ -1,5 +1,23 @@
 $(document).ready(function(){
-	$('#update').bind('click',function(){
+		var triggers = $('#update').overlay({
+			mask: {
+				loadSpeed: 200,
+				opacity: 0.6
+			}
+		});
+
+	$('#no').bind('click',function(e){
+		e.preventDefault();
+		var triggers = $('#update').overlay({
+			mask: {
+				loadSpeed: 200,
+				opacity: 0.6
+			}
+		});
+	});
+
+//	$('#update').bind('click',function(){
+	$('#yes').bind('click',function(){
 		var url = 'update.pl';
 		$.ajax({
 			type: 'POST',
