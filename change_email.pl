@@ -8,6 +8,7 @@ use lib './libs';
 use ReadConfig;
 use URI::Escape;
 use Digest::MD5 qw(md5_hex);
+use SessionFunctions;
 
 my $q = CGI->new();
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
