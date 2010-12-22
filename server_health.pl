@@ -26,7 +26,10 @@ if($iostat){
 	@diskio = split(/\n/,qx(iostat -d));
 }
 my @temp = split(/\,/,$scratch[0]);
-my @load = ($temp[3],$temp[4],$temp[5]);
+my @load;
+for(my $i = 0; $i <3; $i++){
+	unshift(@load,pop(@temp));
+}
 #thresholds
 my $disk_threshold = 75;
 my $mem_threshold = 75;
@@ -106,8 +109,7 @@ foreach (@mem)
 print qq(<div class="server_data_row">);
 print qq(<span class="data_title load_data">CPU Load Averages</span><br/>);
 $i = 0;
-foreach (@load)
-{
+foreach (@load){
 	if($i == 0){
 		my @temp = split(/:/, $_);
 		if(defined($temp[1])){
