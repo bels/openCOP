@@ -54,6 +54,12 @@ if($authenticated == 1){
 		$results->{$key} =~ s/\'\'/\'/g;
 	}
 
+	# Get the list of available technicians
+	$query = "select * from users join alias_aclgroup on users.id = alias_aclgroup.alias_id where active and aclgroup_id != (select id from aclgroup where name = 'customers')";
+	$sth = $dbh->prepare($query);
+	$sth->execute;
+	my $tech_list = $sth->fetchall_hashref('id');
+
 	my $site;
 	my $site_id = $results->{'site'};
 
@@ -82,7 +88,8 @@ if($authenticated == 1){
 	$sth->execute;
 	my $notes = $sth->fetchall_hashref('id');
 
-	$results->{'free_time'} = substr($results->{'free_time'},0,8);
+	$results->{'start_time'} = substr($results->{'start_time'},0,8);
+	$results->{'end_time'} = substr($results->{'end_time'},0,8);
 
 	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><div id="details_wrapper"><div class="form_title">Ticket Details</div>);
 	print qq(
@@ -131,10 +138,26 @@ if($authenticated == 1){
 		<br>
 		<label for="site">Site:</label><input type="text" id="site" name="site" value="$site" class="styled_form_element">
 		<label for="location">Location:</label><input type="text" id="location" name="location" value="$results->{'location'}" class="styled_form_element">
+		<label for="technician">Technician:</label>
+	);
+	if($user->is_admin(id => $id)){
+		print qq(
+			<select id="technician" name="technician" class="styled_form_element">
+		);
+		for (my $i = 1; $i <= keys(%$tech_list); $i++){
+			print qq(<option value="$i");
+			if($results->{'tech'} == $i){ print " selected"};
+			print qq(>$tech_list->{$i}->{'alias'}</option>);
+		}
+		print qq(</select>);
+	} else {
+		print qq(<span id="technician" name="technician">$tech_list->{$results->{'technician'}}->{'alias'}</span>);
+	}
+	print qq(
 		<br>
 		<label for="free">Free:</label><span id="free" name="free">$results->{'free_date'} 
 	);
-	print substr($results->{'free_time'},0,5);
+	print substr($results->{'start_time'},0,5) . " - " . substr($results->{'end_time'},0,5);
 	print qq(
 		</span>
 		<br>
@@ -163,7 +186,7 @@ if($authenticated == 1){
 	foreach my $t (@hash_order)
 	{
 		print "------------------------------------------------------<br />";
-		print $troubleshooting->{$t}->{'performed'} . "<br />";
+		print " - " . substr($troubleshooting->{$t}->{'performed'},0,16) . "<br />";
 		print $troubleshooting->{$t}->{'troubleshooting'} . "<br />";
 	}
 	
@@ -179,7 +202,7 @@ if($authenticated == 1){
 	foreach my $t (@hash_order)
 	{
 		print "------------------------------------------------------<br />";
-		print $notes->{$t}->{'performed'} . "<br />";
+		print " - " . substr($notes->{$t}->{'performed'},0,16) . "<br />";
 		print $notes->{$t}->{'note'} . "<br />";
 	}
 	print qq(</div><br />

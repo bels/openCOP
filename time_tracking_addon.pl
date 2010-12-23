@@ -70,7 +70,6 @@ if($authenticated == 1){
 				updated,
 				contact,
 				priority,
-				technician,
 				section,
 				status,
 				problem
@@ -246,6 +245,7 @@ if($authenticated == 1){
 			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'time_worked'} . "</cell>";
 			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'priority'} . "</cell>";
 			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'contact'} . "</cell>";
+			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'technician'} . "</cell>";
 			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'problem'} . "</cell>";
 			$innerXML[$count] .= "<cell>" . $new_ticket->{$t}->{'section'} . "</cell>";
 			$innerXML[$count] .= "</row>";

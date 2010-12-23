@@ -68,8 +68,17 @@ if($authenticated == 1)
 			$sth->execute;
 		}
 		my $notify = Notification->new;
-		$notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text", to => $email);
+		my $send_attachment = $notify->send_attachment(attachment_name => $name, attachment_file => "/tmp/$filename.csv", content_type => "application/text", to => $email);
 		print "Content-type: text/html\n\n";
+		if($send_attachment->{'error'} == 1){
+			warn "Failed to send email.";
+			warn $send_attachment->{'smtp_msg'};
+			print "1";
+			print "\n" . $send_attachment->{'smtp_msg'};
+		} else {
+			print "0";
+		}
+
 	} elsif($vars->{'mode'} eq "pdf"){
 
 	} elsif($vars->{'mode'} eq "excel"){

@@ -688,9 +688,16 @@ sub update{
 			$sth->execute($data->{'ticket_number'});
 			$data->{'priority'} = $sth->fetchrow_hashref;
 		}
+		unless(defined($data->{'technician'}) && $data->{'technician'} ne ""){
+			$query = "select technician from helpdesk where ticket = ?";
+			$sth = $dbh->prepare($query);
+			$sth->execute($data->{'ticket_number'});
+			$data->{'technician'} = $sth->fetchrow_hashref;
+		}
 		$query = "
 			select
 				update_ticket(
+					?,
 					?,
 					?,
 					?,
@@ -716,6 +723,7 @@ sub update{
 			$data->{'notes'},
 			$data->{'status'},
 			$data->{'priority'},
+			$data->{'technician'},
 			$data->{'updater'}
 		);
 		#this will return the id of the insert record if we ever find a use for it

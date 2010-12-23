@@ -42,6 +42,16 @@ sub new{
 	return $self;
 }
 
+sub reset_logout{
+	my $self = shift;
+	my %args = @_;
+
+	my $query = "select reset_logout(?)";
+	my $sth = $self->{'dbh'}->prepare($query);
+	$sth->execute($args{'id'});
+	return my $result = $sth->fetchrow_hashref;
+}
+
 sub authenticate_user{
 	my $self = shift;
 	my %args = @_;

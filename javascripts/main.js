@@ -87,4 +87,8 @@ function logout(){
 
 function resetLogout(){
 	logoutTimer = window.setTimeout('logout()', '3600000');
+	$.ajax({
+		type: 'GET',
+		url: 'reset_logout.pl'
+	});
 }

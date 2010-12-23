@@ -33,17 +33,18 @@ if($authenticated == 1)
 	my $vars = $q->Vars;
 	if ($vars->{'mode'} eq "init"){
 		my $type = $vars->{'type'};
+		warn $type;
 		if($type){
 			$query = "select property.property,template_property.id,template_property.property_id from template_property join property on template_property.property_id = property.id where template_id = '$type';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			$used_properties = $sth->fetchall_hashref('property');
+			$used_properties = $sth->fetchall_hashref('id');
 		}
 
-		$query = "select * from property;";
+		$query = "select id,property from property;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		my $all_properties  = $sth->fetchall_hashref('property');
+		my $all_properties  = $sth->fetchall_hashref('id');
 		my @used_properties;
 
 		$data .= qq(
@@ -54,22 +55,13 @@ if($authenticated == 1)
 			my $i;
 			my @pid;
 			foreach(keys %$used_properties){
-				push(@pid,$used_properties->{$_}->{'property'});
+				push(@pid,$used_properties->{$_});
 			}
-			my @ppid = sort({lc($a) cmp lc($b)} @pid);
-			for ($i = 0; $i <= $#ppid; $i++)
-			{
+			my @ppid = sort({lc($a->{'property'}) cmp lc($b->{'property'})} @pid);
+			for ($i = 0; $i <= $#ppid; $i++){
 				unless($used_properties->{$ppid[$i]}->{'property'} eq "type" || $used_properties->{$ppid[$i]}->{'property'} eq "company" || $used_properties->{$ppid[$i]}->{'property'} eq "name") {
 					push(@used_properties,$used_properties->{$ppid[$i]}->{'property_id'});
-					$data .= qq(<option selected="selected" value=$used_properties->{$ppid[$i]}->{'property_id'}>$used_properties->{$ppid[$i]}->{'property'}</option>);
-				}
-			}
-		}
-
-		foreach (keys %$all_properties){
-			foreach (@used_properties){
-				if($_ =~ m/$all_properties->{$_}->{'id'}/) {
-					delete($all_properties->{$_});
+					$data .= qq(<option selected="selected" value=$ppid[$i]->{'property_id'}>$ppid[$i]->{'property'}</option>);
 				}
 			}
 		}
@@ -78,12 +70,12 @@ if($authenticated == 1)
 			my $i;
 			my @pid;
 			foreach(keys %$all_properties){
-				push(@pid,$all_properties->{$_}->{'property'});
+				push(@pid,$all_properties->{$_});
 			}
-			my @ppid = sort({lc($a) cmp lc($b)} @pid);
+			my @ppid = sort({lc($a->{'property'}) cmp lc($b->{'property'})} @pid);
 			for ($i = 0; $i <= $#ppid; $i++){
 				unless($all_properties->{$ppid[$i]}->{'property'} eq "type" || $all_properties->{$ppid[$i]}->{'property'} eq "company" || $all_properties->{$ppid[$i]}->{'property'} eq "name") {
-					$data .= qq(<option value=$all_properties->{$ppid[$i]}->{'id'}>$all_properties->{$ppid[$i]}->{'property'}</option>);
+					$data .= qq(<option value=$ppid[$i]->{'id'}>$ppid[$i]->{'property'}</option>);
 				}
 			}
 		}
@@ -110,17 +102,14 @@ if($authenticated == 1)
 		}
 
 		for my $i (@selected) {
-			$query = "select count(*) from template_property where template_id = '$type' and property_id = '$i';";
+			$query = "delete from template_property where template_id = '$type' and property_id = '$i';";
 			$sth = $dbh->prepare($query);
 			$sth->execute;
-			my $count = $sth->fetchrow_hashref;
-			unless($count->{'count'}){
-				$query = "insert into template_property(template_id,property_id) values('$type','$i');";
-				$sth = $dbh->prepare($query);
-				$sth->execute;
-			} else {
-				$error++;
-			}
+		}
+		for my $i (@selected) {
+			$query = "insert into template_property(template_id,property_id) values('$type','$i');";
+			$sth = $dbh->prepare($query);
+			$sth->execute;
 		}
 		print "Content-type: text/html\n\n";
 		if($error){

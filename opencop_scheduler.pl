@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+
+my $cleanup_auth = "/usr/local/bin/cleanup_auth.pl";
 my $file = "/tmp/opencop/opencop_crontab";
 my $dir = "/tmp/opencop";
 if(-d $dir){
@@ -9,6 +11,8 @@ if(-d $dir){
 	qx(mkdir $dir);
 	qx(chmod 770 $dir);
 }
+
+my $sleep_count = 0;
 
 while(1){
 	sleep(3);
@@ -52,5 +56,10 @@ while(1){
 		qx(rm -f $file);
 		qx(rm -f /tmp/opencop/*.pl_schedule);
 		qx(rm -f /tmp/opencop/newcron);
+	}
+	$sleep_count++;
+	if(sleep_count > 20){
+		qx(perl $cleanup_auth);
+		$sleep_count = 0;
 	}
 }
