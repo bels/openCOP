@@ -64,7 +64,7 @@ sub check_version{
 		open (VERSION, "$self->{'working_dir'}/opencop_latest") or return(my $result = {error => 3, message => "Could not open $self->{'working_dir'}/opencop_latest",});
 		my @line = <VERSION>;
 		my $version = $line[0];
-		close VERSION or return(my $result = {error => 4, message => "Could not close $self->{'working_dir'}/opencop_latest",});
+		close VERSION or return($result = {error => 4, message => "Could not close $self->{'working_dir'}/opencop_latest",});
 		chomp($version);
 		if($version <= $config->{'version'}){
 			return my $result = {error => 0, message => "Already at latest version", version => $version};
@@ -72,7 +72,7 @@ sub check_version{
 			return my $result = {error => 1, message => "Newer version found", version => $version};
 		}
 	} else {
-		return my $result = {error => 2, message => "No update URL specified", version => $version};
+		return my $result = {error => 2, message => "No update URL specified"};
 	}
 }
 
@@ -110,10 +110,21 @@ sub get_package{
 
 
 sub check_md5{
+	my $md = Disgest::Md5->new;
 	my ($md5,$wd,$tar) = @_;
 	qx(sed -i 's=$tar=$wd/$tar=' $md5);
-	qx(md5sum -c $md5);
-	return $?;
+#	qx(md5 -c $md5);
+	my $md1 = qx(cat $md5|cut -d' ' -f 1);
+	my $file = qx(cat $md5|cut -d' ' -f 2);
+	chomp($file);
+	my $md2 = qx(md5 -r $file | cut -d' ' -f 1);
+	chomp($md1);
+	chomp($md2);
+	if($md1 == $md2){
+		return 0;
+	} else {
+		return 1;
+	}
 }
 
 sub backup_config{
