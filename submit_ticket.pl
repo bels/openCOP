@@ -39,15 +39,18 @@ if($authenticated){
 	}
 	my $access = $ticket->submit(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data); #need to pass in hashref named data
 	print "Content-type: text/html\n\n";
-	if($access->{'error'}){
+	if($access->{'error'} == 1){
 		warn "Access denied to section " .  $data->{'section'} . " for user " . $data->{'submitter'};
 		print "1";
 		print "Access denied";
+	} elsif($access->{'error'} == 2){
+		warn "Failed to send email.";
+		warn $access->{'smtp'}->{'smtp_msg'};
+		print "2";
+		print "\n" . $access->{'smtp'}->{'smtp_msg'};
 	} else {
 		print "0";
 	}
-}	
-else
-{
+} else {
 	print $q->redirect(-URL => $config->{'index_page'});
 }

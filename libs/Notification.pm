@@ -33,6 +33,7 @@ our $VERSION = '0.1';
 
 
 # Preloaded methods go here.
+my $error->{'error'} = 0;
 
 sub new{
 	my $package = shift;
@@ -52,8 +53,8 @@ sub new{
 sub by_email{
 	my $self = shift;
 	my %args = @_;
-	
-	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
+
+	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or return($error->{'by_email'} = {error => 1, call => 'new', smtp_msg => "Couldn't connect to the sending server",});
 	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};
 	my $company_name = $self->{'config'}->{'company_name'};
@@ -73,6 +74,7 @@ sub by_email{
 	$smtp->datasend("\n\nThank you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
 	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
 	$smtp->quit || handle_failure( $smtp, 'quit' );
+	return $error;
 }
 
 sub handle_failure{
@@ -83,20 +85,25 @@ sub handle_failure{
 	chomp $smtp_msg;
 
 	warn join( ':', $smtp->code, $call, $smtp_msg );
+	$error->{$smtp->code} = {
+		error		=>	1,
+		call		=>	$call,
+		smtp_msg	=>	$smtp_msg,
+	};
 }
 
 sub send_attachment{
 	my $self = shift;
 	my %args = @_;
 	
-	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
+	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or return($error->{'send_attachment'}  = {error => 1, call => 'new', smtp_msg => "Couldn't connect to the sending server",});
 	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};
 	my $company_name = $self->{'config'}->{'company_name'};
 	my $boundary = 'frontier';
 	my $data_file = $args{'attachment_file'};
 
-	open (DATA,$data_file) || die("Could not open the file");
+	open (DATA,$data_file) || return($error->{'send_attachment'}  = {error => 1, call => 'open_file', smtp_msg => "Could not open the file",});
 		my @csv = <DATA>;
 	close(DATA);
 
@@ -128,13 +135,14 @@ sub send_attachment{
     
 	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
 	$smtp->quit || handle_failure( $smtp, 'quit' );
+	return $error;
 }
 
 sub new_user{
 	my $self = shift;
 	my %args = @_;
 
-	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or die "Couldn't connect to the smtp server";
+	my $smtp = Net::SMTP->new($self->{'config'}->{'mail_server'},Hello => $self->{'config'}->{'sending_server'}) or return($error->{'new_user'}  = {error => 1, call => 'new', smtp_msg => "Couldn't connect to the sending server",});
 	my $message_body = $self->{'config'}->{$args{'mode'}}; #basically when using this function you are going to have to call it as such: $notify->by_email(mode =>'ticket_create', to => $address) and the mode has to match one in /usr/local/etc/opencop/notification.yml
 	my $email = $args{'to'};
 	my $company_name = $self->{'config'}->{'company_name'};
@@ -156,6 +164,7 @@ sub new_user{
 	$smtp->datasend("\n\nThank you,\n\n$company_name") || handle_failure( $smtp, 'data_send' );
 	$smtp->dataend() || handle_failure( $smtp, 'data_end' );
 	$smtp->quit || handle_failure( $smtp, 'quit' );
+	return $error;
 }
 
 1;

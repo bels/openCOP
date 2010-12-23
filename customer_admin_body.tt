@@ -6,7 +6,7 @@
 				<span class="success">The user was created successfully.</span>
 			[% END %]
 			<span id="title">Customer Creation</span>
-			<form action="add_customer.pl" method="POST" id="customer_admin_form">
+			<form id="customer_admin_form">
 				<label for="first">First Name:</label><input type="text" name="first" id="first">
 				<label for="middle_initial">Middle Initial:</label><input type="text" name="middle_initial" id="middle_initial">
 				<label for="last">Last Name:</label><input type="text" name="last" id="last">

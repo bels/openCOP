@@ -49,7 +49,9 @@ if($authenticated == 1)
 				)
 			)
 		and
-			section_aclgroup.aclread;
+			section_aclgroup.aclread
+		and
+			not deleted
 	";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($id);

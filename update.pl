@@ -17,12 +17,11 @@ my $merge;
 my $version_check = $updater->check_version or die "Died checking version";
 
 if($version_check->{'error'}){
-	$package = $updater->get_package(version => $version_check->{'version'}) or die "Died getting package";
+	$package = $updater->get_package(version => $version_check->{'version'}) or warn "Error getting package";
 
 	if(defined($package->{'error'}) && $package->{'error'}){
 		warn $package->{'message'};
 	} else {
-		warn $package->{'message'};
 		$backup = $updater->backup_config;
 	}
 	

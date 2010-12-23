@@ -160,7 +160,7 @@ if($authenticated == 1)
 		$sth->execute;
 		my $properties = $sth->fetchall_hashref('property');
 
-		$query = "select * from company where not deleted;";
+		$query = "select * from company where not deleted";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $companies= $sth->fetchall_hashref('name');
@@ -192,7 +192,6 @@ if($authenticated == 1)
 			$data .= qq(<option tpid="$special_case->{'type'}->{'id'}" value=$results->{$ppid[$i]}->{'id'}>$results->{$ppid[$i]}->{'template'}</option>);
 		}
 
-
 		$data .= qq(	</select></div>);
 
 		$data .= qq(	
@@ -205,8 +204,8 @@ if($authenticated == 1)
 		foreach(keys %$companies){
 			push(@pid,$companies->{$_}->{'name'});
 		}
+		shift(@pid);
 		my @ppid = sort({lc($a) cmp lc($b)} @pid);
-		shift(@ppid);
 		for ($i = 0; $i <= $#ppid; $i++){
 			$data .= qq(<option cpid="$special_case->{'company'}->{'id'}" value=$companies->{$ppid[$i]}->{'id'}>$companies->{$ppid[$i]}->{'name'}</option>);
 		}

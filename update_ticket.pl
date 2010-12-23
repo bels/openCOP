@@ -35,8 +35,6 @@ if($authenticated == 1)
 		warn "Access denied to section " .  $data->{'section'} . " for user " . $data->{'updater'};
 		print "Content-type: text/html\n\n";
 	} else {
-	#	my $previous = $q->referer();
-	#	print $q->redirect(-URL=> $previous);
 		print "Content-type: text/html\n\n";
 	}
 }	
