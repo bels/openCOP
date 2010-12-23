@@ -172,6 +172,7 @@ if($authenticated == 1)
 		}
 		
 		$xml .= "</rows>";
+		$xml =~ s/\'\'/\'/g;
 		print $xml;
 	}
 }	

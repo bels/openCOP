@@ -506,6 +506,12 @@ sub lookup{
 		$sth->execute(@placeholders);
 		$results = $sth->fetchall_hashref('ticket');
 	
+		#Sanitizing data retrieved from the database
+		foreach my $key (keys %$results){
+			foreach my $row (keys %{$results->{$key}}){
+				$results->{$key}->{$row} =~ s/\'\'/\'/g;
+			}
+		}
 		return $results;		
 	} elsif($access->{'read'}){
 		$query = "
@@ -554,6 +560,12 @@ sub lookup{
 		$sth->execute(@placeholders);
 		$results = $sth->fetchall_hashref('ticket');
 	
+		#Sanitizing data retrieved from the database
+		foreach my $key (keys %$results){
+			foreach my $row (keys %{$results->{$key}}){
+				$results->{$key}->{$row} =~ s/\'\'/\'/g;
+			}
+		}
 		return $results;
 	} else {
 		return $results = {

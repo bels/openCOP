@@ -274,6 +274,7 @@ if($authenticated == 1){
 			$xml .= $innerXML[$i];
 		}
 		$xml .= "</rows>";
+		$xml =~ s/\'\'/\'/g;
 		print "Content-type: text/xml;charset=utf-8\n\n";
 		print $xml;
 	}

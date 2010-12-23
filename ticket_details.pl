@@ -49,6 +49,10 @@ if($authenticated == 1){
 	$sth->execute;
 	my $priority_list = $sth->fetchall_hashref('id');
 
+	#Sanitizing data retrieved from the database
+	foreach my $key (keys %$results){
+		$results->{$key} =~ s/\'\'/\'/g;
+	}
 
 	my $site;
 	my $site_id = $results->{'site'};
