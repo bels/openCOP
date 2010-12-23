@@ -110,21 +110,10 @@ sub get_package{
 
 
 sub check_md5{
-	my $md = Disgest::Md5->new;
 	my ($md5,$wd,$tar) = @_;
-	qx(sed -i 's=$tar=$wd/$tar=' $md5);
-#	qx(md5 -c $md5);
-	my $md1 = qx(cat $md5|cut -d' ' -f 1);
-	my $file = qx(cat $md5|cut -d' ' -f 2);
-	chomp($file);
-	my $md2 = qx(md5 -r $file | cut -d' ' -f 1);
-	chomp($md1);
-	chomp($md2);
-	if($md1 == $md2){
-		return 0;
-	} else {
-		return 1;
-	}
+	qx(sed -i "" 's=$tar=$wd/$tar=' $md5);
+	qx(gmd5sum -c $md5);
+	return $?;
 }
 
 sub backup_config{
@@ -150,7 +139,7 @@ sub merge_changes{
 	my $self = shift;
 	my %args = @_;
 	
-	qx(tar --mode 770 -xjf $args{'package_path'} -C $self->{'opencop_dir'});
+	qx(tar -xjf $args{'package_path'} -C $self->{'opencop_dir'});
 	return $?;
 }
 
