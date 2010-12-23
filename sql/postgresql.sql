@@ -67,7 +67,14 @@ DROP TABLE IF EXISTS notes;
 CREATE TABLE notes(id SERIAL PRIMARY KEY, ticket_id INTEGER references helpdesk(ticket), note TEXT, performed TIMESTAMP DEFAULT current_timestamp);
 
 DROP TABLE IF EXISTS auth;
-CREATE TABLE auth (id BIGINT, session_key TEXT, created TIMESTAMP DEFAULT current_timestamp, user_id INTEGER references users(id) ,customer BOOLEAN DEFAULT true);
+CREATE TABLE auth (
+	id BIGINT,
+	session_key TEXT,
+	created TIMESTAMP DEFAULT current_timestamp,
+	user_id INTEGER references users(id),
+	customer BOOLEAN DEFAULT true,
+	last_active TIMESTAMP DEFAULT now()
+);
 
 DROP TABLE IF EXISTS reports;
 CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, name VARCHAR(255) UNIQUE, report TEXT, owner INTEGER DEFAULT '1', description TEXT DEFAULT null);
@@ -1124,6 +1131,20 @@ BEGIN
 		RETURN NEXT r;
 	END LOOP;
 	return;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION reset_logout(id_val INTEGER) RETURNS INTEGER AS $$
+BEGIN
+	update auth set last_active = now() where id = id_val;
+	RETURN id_val;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION cleanup_auth() RETURNS INTEGER AS $$
+BEGIN
+	DELETE FROM auth WHERE (now() - last_active) > '01:00:00';
+	RETURN '1';
 END;
 $$ LANGUAGE plpgsql;
 
