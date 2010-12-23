@@ -186,7 +186,7 @@ if($authenticated == 1){
 			<div id="attached">
 				<label>Attached Files</label>
 	);
-	my $dir = $config->{'upload_file_dir'} . $results->{'ticket'};
+	my $dir = $config->{'upload_file_dir'} . "/" . $results->{'ticket'};
 	opendir(DIR, $dir);
 	LINE: while(my $FILE = readdir(DIR)){
 		next LINE if($FILE =~ /^\.\.?/);

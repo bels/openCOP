@@ -51,6 +51,10 @@ sub upload_attachment{
 	my $errors;
 
 	my $safe_filename_characters = "a-zA-Z0-9_.-";
+	unless(-d $args{'upload_dir'}){
+		mkdir($args{'upload_dir'},0775) or $errors->{'mkdir'} = "Could not create $args{'upload_dir'}. Does www have write access to its parent directory?" && return $errors;
+	}
+	
 	my $upload_dir = $args{'upload_dir'} . "/" . $args{'ticket'} . "/";
 	my $filename = $args{'filename'};
 
