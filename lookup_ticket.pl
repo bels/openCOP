@@ -80,21 +80,26 @@ if($authenticated == 1)
 	} else {
 		$query = "select count(*) from helpdesk where technician = $id and active and status not in ('6','7')";
 	}
+
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	$count = $sth->fetchrow_hashref;
 	$count = $count->{'count'};
+	warn "Count: $count";
 	if( $count > 0 && $limit > 0) {
 		$total_pages = ceil($count/$limit); 
+		warn "Total Pages: $total_pages";
 	} else { 
 		$total_pages = 0;
 	} 
+	warn "Total Pages: $total_pages";
 	if($page > $total_pages){
 		$page=$total_pages;
 	}
+	warn "Page: $page";
 	my $start = $limit * $page - $limit;
 	if($start<0){$start=0};
-
+	warn "Start: $start";
 	unless($data->{'section'} eq "pseudo"){
 		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id, customer => "0", criteria => uri_unescape($data->{'search'}), offset => $start, limit => $limit, order_by => $sidx, order => $sord) or die "What?"; #need to pass in hashref named data
 	} else {

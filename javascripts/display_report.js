@@ -34,7 +34,14 @@ $(document).ready(function(){
 				url: 'export_report.pl',
 				data: {mode: mode, table: table, report_name: name},
 				success: function(data){
-					alert("The report has been sent.");
+					var error = data.substr(0,1);
+					if(error == "0"){
+						var str = data.replace(/^[\d\s]/,'');
+						alert("The report has been sent.");
+					} else if(error == "1"){
+						var str = data.replace(/^[\d\s]/,'');
+						alert(str);
+					}
 				},
 				error: function(){
 					alert("Error");
