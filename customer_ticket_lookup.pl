@@ -43,7 +43,7 @@ if($authenticated == 2)
 	
 	print qq(
 		<div id="ticket_details">
-			<div id="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Test company Helpdesk - Ticket #$ticket_number</div>
+			<h4>$config->{'company_name'} Helpdesk - Ticket #$ticket_number</h4>
 			<label>Ticket Contact:</label>$results->{'contact'}<br>
 			<label>Ticket Number:</label>$results->{'ticket'}<br>
 			<label>Ticket Status:</label>$ticket_statuses{$results->{'status'}}<br>
@@ -70,9 +70,9 @@ if($authenticated == 2)
 	}
 	print qq(
 				<label for="new_note">Update your ticket</label><br>
-				<textarea id="new_note" name="new_note" cols="80" rows="5"></textarea><br>
-				<button type="button" id="update_ticket_button">Update</button><br>
 				<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
+				<textarea id="new_note" name="new_note" cols="80" rows="5"></textarea><br>
+				<img src="images/update.png" id="update_ticket_button" class="image_button" alt="Update"><br>
 			</form>
 	);
 #	print qq(<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>);

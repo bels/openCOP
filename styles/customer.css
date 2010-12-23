@@ -58,23 +58,18 @@ input{
 
 #left{
 	float: left;
-	height: 600px;
 	width: 19%;
 	min-width: 175px;
 }
 
 #right_holder{
 	float: left;
-	height: 575px;
-	width: 75%;
 	padding-top: 25px;
 	padding-left: 25px;
 }
 
 #right{
 	float: left;
-	height: 100%;
-	overflow: auto;
 	width: 100%;
 }
 
@@ -280,12 +275,14 @@ h4{
 	padding-top: 10px;
 	padding-left: 5px;
 	overflow: hidden;
+	float: right;
 }
 
 #attach_div label{
 	margin: 0px;
 	margin-right: 5px;
 	cursor: pointer;
+	width: auto;
 }
 
 #add_notes_form{
