@@ -799,6 +799,7 @@ CREATE OR REPLACE FUNCTION update_ticket(
 	notes_val TEXT,
 	status_val INTEGER,
 	priority_val INTEGER,
+	technician_val INTEGER,
 	updater_val INTEGER
 ) RETURNS INTEGER AS $$
 DECLARE
@@ -824,6 +825,7 @@ BEGIN
 			location = location_val,
 			status = status_val,
 			priority = priority_val,
+			technician = technician_val,
 			closed_by = closed_by_text,
 			updater = updater_val
 		where ticket = ticket_number;
@@ -836,6 +838,7 @@ BEGIN
 			location = location_val,
 			status = status_val,
 			priority = priority_val,
+			technician = technician_val,
 			completed_by = completed_by_text,
 			updater = updater_val
 		where ticket = ticket_number;
@@ -848,6 +851,7 @@ BEGIN
 			location = location_val,
 			status = status_val,
 			priority = priority_val,
+			technician = technician_val,
 			updater = updater_val
 		where ticket = ticket_number;
 	END IF;
