@@ -83,7 +83,8 @@ if($authenticated == 1){
 	$sth->execute;
 	my $notes = $sth->fetchall_hashref('id');
 
-	$results->{'free_time'} = substr($results->{'free_time'},0,8);
+	$results->{'start_time'} = substr($results->{'start_time'},0,8);
+	$results->{'end_time'} = substr($results->{'end_time'},0,8);
 
 	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><div id="details_wrapper"><div class="form_title">Ticket Details</div>);
 	print qq(
@@ -151,7 +152,7 @@ if($authenticated == 1){
 		<br>
 		<label for="free">Free:</label><span id="free" name="free">$results->{'free_date'} 
 	);
-	print substr($results->{'free_time'},0,5);
+	print substr($results->{'start_time'},0,5) . " - " . substr($results->{'end_time'},0,5);
 	print qq(
 		</span>
 		<br>
@@ -180,7 +181,7 @@ if($authenticated == 1){
 	foreach my $t (@hash_order)
 	{
 		print "------------------------------------------------------<br />";
-		print $troubleshooting->{$t}->{'performed'} . "<br />";
+		print " - " . substr($troubleshooting->{$t}->{'performed'},0,16) . "<br />";
 		print $troubleshooting->{$t}->{'troubleshooting'} . "<br />";
 	}
 	
@@ -196,7 +197,7 @@ if($authenticated == 1){
 	foreach my $t (@hash_order)
 	{
 		print "------------------------------------------------------<br />";
-		print $notes->{$t}->{'performed'} . "<br />";
+		print " - " . substr($notes->{$t}->{'performed'},0,16) . "<br />";
 		print $notes->{$t}->{'note'} . "<br />";
 	}
 	print qq(</div><br />
