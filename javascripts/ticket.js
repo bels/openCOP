@@ -101,6 +101,12 @@ $(document).ready(function(){
 							$('#attach_form').submit();
 						}
 						window.location = "ticket.pl?mode=new";
+					} else if(error == 1){
+						var str = data.replace(/^[\d\s]/,'');
+						alert(str);
+					} else if(error == 2){
+						var str = data.replace(/^[\d\s]/,'');
+						alert("The following errors were encountered while processing your request:" + str);
 					} else {
 						var str = data.replace(/^[\d\s]/,'');
 						alert(str);

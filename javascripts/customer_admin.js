@@ -26,4 +26,31 @@ $(document).ready(function(){
 			site: "*"
 		}
 	});
+
+	$('#submit_button').bind('click',function(e){
+		e.preventDefault();
+		var url = 'add_customer.pl';
+		var the_data = $('#customer_admin_form').serialize();
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: the_data,
+			success: function(data){
+				var error = data.substr(0,1);
+				if(error == "1"){
+					var str = data.replace(/^[\d\s]/,'');
+					alert("The following errors were encountered while processing your request:" + str);
+					window.location = 'customer_admin.pl?success=1';
+				} else if(error == "2"){
+					var str = data.replace(/^[\d\s]/,'');
+					alert("A user with that name already exists. Please choose another.");
+				} else {
+					window.location = 'customer_admin.pl?success=1';
+				}
+			},
+			error: function(a,b,c){
+				alert(a.responseText + b + c);
+			}
+		});
+	});
 });

@@ -59,18 +59,21 @@ sub check_version{
 	my $self = shift;
 	my %args = @_;
 
-	qx(curl -s $config->{'update_url'}/latest_version -o $self->{'working_dir'}/opencop_latest);
-	open (VERSION, "$self->{'working_dir'}/opencop_latest") or die "Could not open $self->{'working_dir'}/opencop_latest";
-	my @line = <VERSION>;
-	my $version = $line[0];
-	close VERSION or die "Could not close $self->{'working_dir'}/opencop_latest";
-	chomp($version);
-	if($version <= $config->{'version'}){
-		return my $result = {error => 0, message => "Already at latest version", version => $version};
+	if(defined($config->{'update_url'})){
+		qx(curl -s $config->{'update_url'}/latest_version -o $self->{'working_dir'}/opencop_latest);
+		open (VERSION, "$self->{'working_dir'}/opencop_latest") or return(my $result = {error => 3, message => "Could not open $self->{'working_dir'}/opencop_latest",});
+		my @line = <VERSION>;
+		my $version = $line[0];
+		close VERSION or return(my $result = {error => 4, message => "Could not close $self->{'working_dir'}/opencop_latest",});
+		chomp($version);
+		if($version <= $config->{'version'}){
+			return my $result = {error => 0, message => "Already at latest version", version => $version};
+		} else {
+			return my $result = {error => 1, message => "Newer version found", version => $version};
+		}
 	} else {
-		return my $result = {error => 1, message => "Newer version found", version => $version};
+		return my $result = {error => 2, message => "No update URL specified", version => $version};
 	}
-
 }
 
 

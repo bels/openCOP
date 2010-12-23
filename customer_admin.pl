@@ -32,8 +32,15 @@ if($authenticated == 1)
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
-	my @styles = ( "styles/customer.css");
-	my @javascripts = ("javascripts/jquery.validate.js","javascripts/jquery.blockui.js","javascripts/main.js","javascripts/customer_admin.js");
+	my @styles = (
+		"styles/customer.css"
+	);
+	my @javascripts = (
+		"javascripts/jquery.validate.js",
+		"javascripts/jquery.blockui.js",
+		"javascripts/main.js",
+		"javascripts/customer_admin.js",
+	);
 	my $meta_keywords = "";
 	my $meta_description = "";
 	my $file = "customer_admin.tt";

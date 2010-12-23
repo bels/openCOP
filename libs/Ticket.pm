@@ -340,15 +340,29 @@ sub submit{
 		my $id = $sth->fetchrow_hashref;
 		my $notify = Notification->new(ticket_number => $id->{'insert_ticket'});
 
-		$notify->by_email(mode => 'ticket_create', to => $data->{'email'});
-		if(defined($data->{'tech_email'}))
-		{
-			$notify->by_email(mode => 'notify_tech', to => $data->{'tech_email'});
+		my $create_ticket = $notify->by_email(mode => 'ticket_create', to => $data->{'email'});
+		my $notify_tech;
+		if(defined($data->{'tech_email'})){
+			$notify_tech = $notify->by_email(mode => 'notify_tech', to => $data->{'tech_email'});
 		}
-		return $results = {
-			'error'		=>	"0",
-			'id'		=>	$id->{'insert_ticket'},
-		};
+		if($create_ticket->{'error'}){
+			return $results = {
+				'error'		=>	"2",
+				'id'		=>	$id->{'insert_ticket'},
+				smtp		=>	$create_ticket,
+			};
+		} elsif($notify_tech->{'error'}){
+			return $results = {
+				'error'		=>	"2",
+				'id'		=>	$id->{'insert_ticket'},
+				smtp		=>	$notify_tech,
+			};
+		} else {
+			return $results = {
+				'error'		=>	"0",
+				'id'		=>	$id->{'insert_ticket'},
+			};
+		}
 	} else {
 		return $results = {
 			'error'		=>	"1",

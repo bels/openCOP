@@ -44,14 +44,10 @@ if($authenticated == 1)
 	$config->read_config;
 	
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
-	
-	if($user->duplicate_check(alias => $alias) > 0)
-	{
-		my $errorpage = "customer_admin.pl?duplicate=1";
-		print $q->redirect(-URL=>$errorpage);
-	}
-	else
-	{
+	print "Content-type: text/html\n\n";
+	if($user->duplicate_check(alias => $alias) > 0){
+		print "2";
+	} else {
 		my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 		my $query = "select id from aclgroup where name = 'customers';";
 		my $sth = $dbh->prepare($query);
@@ -61,13 +57,20 @@ if($authenticated == 1)
 
 		$user->create_user(alias => $alias,password => $password, email => $email, first => $first, mi => $mi, last =>$last, site => $site, group => $group);
 		my $notify = Notification->new(ticket_number => '1');
-		$notify->new_user(mode => 'new_user', to => $email, first => $first, mi => $mi, last =>$last, password => $password, alias => $alias);
-		print $q->redirect(-URL => "customer_admin.pl?success=1");	
+		my $new_user = $notify->new_user(mode => 'new_user', to => $email, first => $first, mi => $mi, last =>$last, password => $password, alias => $alias);
+
+		if($new_user->{'error'} == 1){
+			warn "Failed to send email.";
+			warn $new_user->{'smtp_msg'};
+			print "1";
+			print "\n" . $new_user->{'smtp_msg'};
+		} else {
+			print "0";
+		}
+
 	}
 } elsif($authenticated == 2){
 	print $q->redirect(-URL => $config->{'index_page'})
-}
-else
-{
+} else {
 	print $q->redirect(-URL => $config->{'index_page'});
 }
