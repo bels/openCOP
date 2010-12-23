@@ -147,7 +147,7 @@ $(document).ready(function(){
 			url: url,
 			datatype: 'xml',
 			mtype: 'GET',
-			colNames: ['Ticket Number','Ticket Status','Last Updated','Time Worked','Ticket Priority','Ticket Contact','Problem','Section'],
+			colNames: ['Ticket Number','Ticket Status','Last Updated','Time Worked','Ticket Priority','Ticket Contact','Technician','Problem','Section'],
 			colModel: [
 				{name: 'ticket', index: 'ticket', width: 100, sortable: true},
 				{name: 'status', index: 'status', width: 150},
@@ -155,6 +155,7 @@ $(document).ready(function(){
 				{name: 'time_worked', index: 'time_worked', width: 150},
 				{name: 'priority', index: 'priority', width: 150},
 				{name: 'contact', index: 'contact', width: 175},
+				{name: 'technician', index: 'technician', width: 175},
 				{name: 'problem', index: 'problem', width: 200},
 				{name: 'section', index: 'section', width: 150}
 			],
