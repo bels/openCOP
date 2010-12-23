@@ -107,6 +107,7 @@ $(document).ready(function(){
 				if(error == "0"){
 					var str = data.replace(/^[\d\s]/,'');
 					alert("Group deleted successfully");
+					location.reload(true);
 				} else if(error == "1"){
 					alert("Error executing delete statement");
 				}
