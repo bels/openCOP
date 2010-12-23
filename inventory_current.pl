@@ -248,7 +248,7 @@ if($authenticated == 1) {
 			my $results = $sth->fetchall_hashref('template');
 	
 			$data = qq(
-				<select id="template_select" class="type_select">
+				<select id="template_select" class="type_select styled_form_element">
 					<option value="" selected="selected"></option>
 			);
 			my $i;
@@ -292,8 +292,8 @@ if($authenticated == 1) {
 		} else {
 		print "Content-type: text/html\n\n";
 			$data = qq(<label for="property_search">Refine search</label>
-				<input id="property_search">
-				<button id="property_search_button">Search</button>
+			<input id="property_search" class="styled_form_element">
+			<img src="images/search.png" id="property_search_button" class="image_button" alt="Search">
 			);
 		}
 		print $data;

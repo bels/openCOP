@@ -8,10 +8,14 @@
 	float: left;
 }
 
+#company_select_div img{
+	vertical-align: middle;
+}
 #current_object_div{
 	width: 100%;
-	height: 20px;
-	background-image: url('../images/title_bg.jpg');
+	padding-top: 2px;
+	height: 25px;
+	background: #333333 url('../images/title_bg.jpg') repeat-x;
 }
 
 #current_object_div label{
@@ -134,4 +138,11 @@ h2{
 	filter: Blur(Direction=135,Strength=2);
 	white-space: nowrap;
 	display: block;
+}
+
+input{
+	margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+	height: 20px !important;
 }
