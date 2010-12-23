@@ -211,6 +211,57 @@ INSERT INTO property(property) values('os');
 INSERT INTO property(property) values('scan_to_type');
 INSERT INTO property(property) values('bandwidth');
 INSERT INTO property(property) values('application_version');
+INSERT INTO property(property) values('serial');
+
+-- Default template-property associations
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'os'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'cpu'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'description'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'hard_drive'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'ram'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'vendor'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'model'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'ip_address'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'username'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'password'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'role'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'server'),(select id from property where property = 'serial'));
+
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'domain_name'),(select id from property where property = 'description'));
+
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'firewall'),(select id from property where property = 'ip_address'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'firewall'),(select id from property where property = 'vendor'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'firewall'),(select id from property where property = 'model'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'firewall'),(select id from property where property = 'serial'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'firewall'),(select id from property where property = 'description'));
+
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'router'),(select id from property where property = 'ip_address'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'router'),(select id from property where property = 'vendor'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'router'),(select id from property where property = 'model'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'router'),(select id from property where property = 'serial'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'router'),(select id from property where property = 'description'));
+
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'switch'),(select id from property where property = 'ip_address'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'switch'),(select id from property where property = 'vendor'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'switch'),(select id from property where property = 'model'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'switch'),(select id from property where property = 'serial'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'switch'),(select id from property where property = 'description'));
+
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'printer'),(select id from property where property = 'ip_address'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'printer'),(select id from property where property = 'vendor'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'printer'),(select id from property where property = 'model'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'printer'),(select id from property where property = 'serial'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'printer'),(select id from property where property = 'description'));
+
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'wap'),(select id from property where property = 'ip_address'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'wap'),(select id from property where property = 'vendor'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'wap'),(select id from property where property = 'model'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'wap'),(select id from property where property = 'serial'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'wap'),(select id from property where property = 'description'));
+
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'isp'),(select id from property where property = 'vendor'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'isp'),(select id from property where property = 'ip_address'));
+INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'isp'),(select id from property where property = 'description'));
 
 -- Adding admin user
 INSERT INTO users(alias,email,password,first, last) values('%%ADMIN_USER%%','%%ADMIN_EMAIL%%',MD5('%%ADMIN_PASSWORD%%'),'%%ADMIN_FIRST%%','%%ADMIN_LAST%%');
