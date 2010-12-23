@@ -5,14 +5,14 @@
 103	The Serial field should contain the serial number of the equipment experiencing the problem. If this is not relevant, leave it blank.
 104	The Contact field should contain the name of the person who should be contacted who will have first hand knowledge of the problem and be able to explain it in detail. This field is required.
 105	The Phone field should contain the phone number of either the contact person (preferred) or the author. This may be left blank.
-106	The Email field should contain the email address of either the contact person (preferred) or the author. This must be a valid email address.
+106	The Email field should contain the email address of either the contact person (preferred) or the author. This must be a valid email address.  This field is required.
 107	The Location field should indicate the room in which the equipment which is experiencing trouble resides. Or, it should describe the area where the problem is felt, or most felt. Additionally, it could specify which piece of equipment in the room/area is experiencing the problem, or experiencing it the most, if there is more than one piece of equipment in the designated area which could be confused with the affected equipment.
 108	The Priority field is for classifying the urgency of the problem being described. In almost all cases the priority will be "Normal" or less. If you are unsure of what the appropriate priority is use "Normal."
-109	The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, put it in the Helpdesk section and they will review it and make further adjustments if necessary.
+109	The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, leave the section field untouched and that group will review it and make further adjustments if necessary.
 110	The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator.
 111	The Problem field should contain a verbose description of the problem you observed, including any details that may be important or seem related. This field is required.
 112	The Troubleshooting Tried field should contain a description of all steps you took while attempting to resolve the Problem described above, as well as any results of that troubleshooting and a summary of where the problem now stands. This may be left blank.
-113	The Free Date field should contain the date on which the contact person (preferred) or the author will be available should it be necessary to contact someone regarding the ticket. If left blank, the current date will be used.
+113	The Date Free field should contain the date on which the contact person (preferred) or the author will be available should it be necessary to contact someone regarding the ticket. If left blank, the current date will be used.
 114	The Free Time field should contain the time of day at which the contact person (preferred) or the author will be available should it be necessary to contact someone regarding the ticket. If left blank, the current time will be used.
 115	The Notes field should contain any additional information for the technician. This may be left blank.
 200	Tips in the 200 range are for the inventory side.

@@ -33,7 +33,8 @@ our $VERSION = '0.1';
 
 
 # Preloaded methods go here.
-my $error->{'error'} = 0;
+my $error;
+$error->{'error'} = 0;
 
 sub new{
 	my $package = shift;
