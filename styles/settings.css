@@ -56,7 +56,6 @@ select{
 .success{
 	margin-bottom: 5px;
 	text-shadow: #333 1px 1px 1px;
-	filter: Blur(Direction=135,Strength=3);
 	white-space: nowrap;
 	font-size: .9em;
 	display: block;
@@ -74,7 +73,6 @@ select{
 
 .styled_text{
 	text-shadow: #333 1px 1px 1px;
-	filter: Blur(Direction=135,Strength=2);
 	white-space: nowrap;
 	font-size: .95em;
 }
