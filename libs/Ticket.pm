@@ -686,17 +686,29 @@ sub update{
 			$query = "select priority from helpdesk where ticket = ?";
 			$sth = $dbh->prepare($query);
 			$sth->execute($data->{'ticket_number'});
-			$data->{'priority'} = $sth->fetchrow_hashref;
+			my $temp = $sth->fetchrow_hashref;
+			$data->{'priority'} = $temp->{'priority'};
 		}
 		unless(defined($data->{'technician'}) && $data->{'technician'} ne ""){
 			$query = "select technician from helpdesk where ticket = ?";
 			$sth = $dbh->prepare($query);
 			$sth->execute($data->{'ticket_number'});
-			$data->{'technician'} = $sth->fetchrow_hashref;
+			my $temp = $sth->fetchrow_hashref;
+			$data->{'technician'} = $temp->{'technician'};
 		}
+		warn $data->{'update_section'};
+		unless(defined($data->{'update_section'}) && $data->{'section'} ne ""){
+			$query = "select section from helpdesk where ticket = ?";
+			$sth = $dbh->prepare($query);
+			$sth->execute($data->{'ticket_number'});
+			my $temp = $sth->fetchrow_hashref;
+			$data->{'update_section'} = $temp->{'section'};
+		}
+		warn $data->{'update_section'};
 		$query = "
 			select
 				update_ticket(
+					?,
 					?,
 					?,
 					?,
@@ -724,6 +736,7 @@ sub update{
 			$data->{'status'},
 			$data->{'priority'},
 			$data->{'technician'},
+			$data->{'update_section'},
 			$data->{'updater'}
 		);
 		#this will return the id of the insert record if we ever find a use for it

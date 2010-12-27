@@ -800,11 +800,11 @@ CREATE OR REPLACE FUNCTION update_ticket(
 	status_val INTEGER,
 	priority_val INTEGER,
 	technician_val INTEGER,
+	section_val INTEGER,
 	updater_val INTEGER
 ) RETURNS INTEGER AS $$
 DECLARE
 	site_val INTEGER;
-	section_val INTEGER;
 	last_id INTEGER;
 	closed_by_text VARCHAR(255);
 	completed_by_text VARCHAR(255);
@@ -826,7 +826,7 @@ BEGIN
 			status = status_val,
 			priority = priority_val,
 			technician = technician_val,
-			closed_by = closed_by_text,
+			section = section_val,
 			updater = updater_val
 		where ticket = ticket_number;
 	ELSIF status_val = '7' THEN
@@ -839,6 +839,7 @@ BEGIN
 			status = status_val,
 			priority = priority_val,
 			technician = technician_val,
+			section = section_val,
 			completed_by = completed_by_text,
 			updater = updater_val
 		where ticket = ticket_number;
@@ -852,6 +853,7 @@ BEGIN
 			status = status_val,
 			priority = priority_val,
 			technician = technician_val,
+			section = section_val,
 			updater = updater_val
 		where ticket = ticket_number;
 	END IF;
