@@ -64,7 +64,7 @@ sub check_version{
 		open (VERSION, "$self->{'working_dir'}/opencop_latest") or return(my $result = {error => 3, message => "Could not open $self->{'working_dir'}/opencop_latest",});
 		my @line = <VERSION>;
 		my $version = $line[0];
-		close VERSION or return(my $result = {error => 4, message => "Could not close $self->{'working_dir'}/opencop_latest",});
+		close VERSION or return($result = {error => 4, message => "Could not close $self->{'working_dir'}/opencop_latest",});
 		chomp($version);
 		if($version <= $config->{'version'}){
 			return my $result = {error => 0, message => "Already at latest version", version => $version};
@@ -72,7 +72,7 @@ sub check_version{
 			return my $result = {error => 1, message => "Newer version found", version => $version};
 		}
 	} else {
-		return my $result = {error => 2, message => "No update URL specified", version => $version};
+		return my $result = {error => 2, message => "No update URL specified"};
 	}
 }
 
@@ -111,8 +111,8 @@ sub get_package{
 
 sub check_md5{
 	my ($md5,$wd,$tar) = @_;
-	qx(sed -i 's=$tar=$wd/$tar=' $md5);
-	qx(md5sum -c $md5);
+	qx(sed -i "" 's=$tar=$wd/$tar=' $md5);
+	qx(gmd5sum -c $md5);
 	return $?;
 }
 
@@ -139,7 +139,7 @@ sub merge_changes{
 	my $self = shift;
 	my %args = @_;
 	
-	qx(tar --mode 770 -xjf $args{'package_path'} -C $self->{'opencop_dir'});
+	qx(tar -xjf $args{'package_path'} -C $self->{'opencop_dir'});
 	return $?;
 }
 

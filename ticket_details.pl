@@ -78,7 +78,7 @@ if($authenticated == 1){
 	$sth->execute;
 	my $troubleshooting = $sth->fetchall_hashref('id');
 
-	$query = "select * from section where not deleted";
+	$query = "select id,name from section where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $section_list = $sth->fetchall_hashref('id');
@@ -118,7 +118,24 @@ if($authenticated == 1){
 	);
 	print qq(
 		<br>
-		<label for="section">Section:</label><span id="section" name="section">$section_list->{$results->{'section'}}->{'name'}</span>
+		<label for="section">Section:</label>
+	);
+	if($user->is_admin(id => $id)){
+		print qq(
+			<select id="update_section" name="update_section" class="styled_form_element">
+		);
+		foreach(keys(%$section_list)){
+			print qq(<option value="$_");
+			if($results->{'section'} == $_){ print " selected"};
+			print qq(>$section_list->{$_}->{'name'}</option>);
+		}
+		print qq(</select>);
+	} else {
+		print qq(
+			<span id="section" name="section">$section_list->{$results->{'section'}}->{'name'}</span>
+		);
+	}
+	print qq(
 		<br>
 		<label for="status">Ticket Status:</label><select id="status" name="status"  class="styled_form_element">
 	);
