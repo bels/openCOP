@@ -42,7 +42,6 @@ if($authenticated == 1)
 	my @styles = (
 		"styles/inventory.css",
 		"styles/ui.multiselect.css",
-		"styles/smoothness/jquery-ui-1.8.5.custom.css"
 	);
 	my @javascripts = (
 		"javascripts/main.js",
