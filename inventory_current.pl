@@ -84,8 +84,8 @@ if($authenticated == 1) {
 		my @innerXML;
 		my $count = 0;
 		foreach my $row (@ordered){
-				my $type;
-				my $name;
+			my $type;
+			my $name;
 			foreach (keys %{$new_object->{$row}}){
 				if ($new_object->{$row}->{$_}->{'property'} eq "type"){
 					$query = "select template,id from template where id = '$new_object->{$row}->{$_}->{'value'}';";
@@ -442,6 +442,8 @@ if($authenticated == 1) {
 		print $data;
 	} elsif ($vars->{'mode'} eq "search"){
 		my $data = $q->Vars;
+		my $search = $data->{'search'};
+		my $property = $data->{'property'};
 		my $page = $data->{'page'};
 		if(!$page){$page=1};
 		my $limit = $data->{'rows'};
@@ -514,7 +516,15 @@ if($authenticated == 1) {
 				if ($new_object->{$row}->{$_}->{'property'} eq "name"){
 					$new_object->{$row}->{'name'} = $new_object->{$row}->{$_}->{'value'};
 				}
+				if ($new_object->{$row}->{$_}->{'property'} eq $property){
+					warn $new_object->{$row}->{$_}->{'property'};
+					warn $property;
+					$new_object->{$row}->{'search'} = $new_object->{$row}->{$_}->{'value'};
+				}
 			}
+			if($new_object->{$row}->{'search'} eq $search){
+				warn $search;
+				warn $new_object->{$row}->{'search'};
 				$innerXML[$count] .= "<row id='" . $row . "'>";
 				$innerXML[$count] .= "<cell>" . $row . "</cell>";
 				$innerXML[$count] .= "<cell>" . $new_object->{$row}->{'name'} . "</cell>";
@@ -522,6 +532,7 @@ if($authenticated == 1) {
 				$innerXML[$count] .= "<cell>" . $new_object->{$row}->{'company'} . "</cell>";
 				$innerXML[$count] .= "</row>";
 				$count++;
+			}
 		}
 
 		my $total_pages;
