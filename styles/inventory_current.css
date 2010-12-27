@@ -135,7 +135,6 @@ h2{
 #object_details h2{
 	margin-bottom: 5px;
 	text-shadow: #333 1px 1px 1px;
-	filter: Blur(Direction=135,Strength=2);
 	white-space: nowrap;
 	display: block;
 }

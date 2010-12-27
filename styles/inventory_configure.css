@@ -5,7 +5,6 @@
 }
 
 #configure_top{
-	float: left;
 	width: 600px;
 	height: 125px;
 	min-width: 530px;
@@ -21,11 +20,10 @@
 }
 
 #configure_bottom{
-	float: right;
-	width: 480px;
+	width: 600px;
 	min-width: 480px;
+	margin-top: 10px;
 	padding: 10px;
-	margin-left: 25px;
 	color: white;
 	background-color: #333;
 	background-image: url('../images/login_box_gradient.jpg');
@@ -71,9 +69,6 @@
 	color: red;
 }
 
-#t_tp_append_div{
-	display: inline;
-}
 
 .header_text{
 	display: block;

@@ -46,6 +46,5 @@
 
 h2{
 	text-shadow: #333 1px 1px 1px;
-	filter: Blur(Direction=135,Strength=2);
 	white-space: nowrap;
 }

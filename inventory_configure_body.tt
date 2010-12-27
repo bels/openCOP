@@ -19,8 +19,7 @@
 						<option value="template" selected="selected">Template</option>
 						<option value="property">Property</option>
 					</select>
-					<div id="t_tp_append_div">
-					</div>
+					<span id="t_tp_append_div"></span>
 				</form>
 				<img src="images/submit.png" id="submit_del_button" mode="del_tp" class="submit_button image_button" alt="Submit">
 			</div>

@@ -239,14 +239,12 @@ if($authenticated == 1)
 		
 		print $data;
 	} elsif ($vars->{'mode'} eq "onload_more"){
+		print "Content-type: text/html\n\n";
 		$query = "select * from template;";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		my $results = $sth->fetchall_hashref('template');
-		$data = qq(
-				<select id="del_tp" class="type_select styled_form_element">
-					<option value="" selected="selected"></option>
-		);
+		$data = qq(<select id="del_tp" class="type_select styled_form_element"><option value="" selected="selected"></option>);
 
 		my $i;
 		my @pid;
