@@ -121,14 +121,6 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.lookup_row').live("mouseover mouseout",function(event){
-		if(event.type == 'mouseover'){	
-			$(this).addClass('selected');
-		} else {
-			$(this).removeClass('selected');
-		}
-	});
-	
 	$("#customer_submit_button").click(function(){
 		resetLogout();
 		validateTicket();
@@ -229,13 +221,14 @@ $(document).ready(function(){
 			url: url,
 			datatype: 'xml',
 			mtype: 'GET',
-			colNames: ['Ticket Number','Ticket Status','Ticket Priority','Ticket Contact','Problem','Section'],
+			colNames: ['Ticket Number','Ticket Status','Ticket Priority','Ticket Contact','Problem','Location','Section'],
 			colModel: [
 				{name: 'ticket', index: 'ticket', width: 100, sortable: true},
 				{name: 'status', index: 'status', width: 100, sortable: true},
 				{name: 'priority', index: 'priority', width: 100, sortable: true},
 				{name: 'contact', index: 'contact', width: 125, sortable: true},
 				{name: 'problem', index: 'problem', width: 200, sortable: true},
+				{name: 'location', index: 'location', width: 200, sortable: true},
 				{name: 'name', index: 'name', width: 100, sortable: true}
 			],
 			pager: "#" + section_id,
@@ -275,6 +268,7 @@ $(document).ready(function(){
 	});
 
 	$('.ticket_lookup').each(function(){
+		$(this).trigger('reloadGrid', [{page: 1}]);
 		var section_id = $(this).attr('section');
 		var new_val = $('td#' + section_id + '_center span#sp_' + section_id).text();
 	});

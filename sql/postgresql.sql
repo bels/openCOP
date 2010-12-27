@@ -1205,6 +1205,226 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TYPE IF EXISTS ticket_holder CASCADE;
+CREATE TYPE ticket_holder AS (
+	ticket INTEGER,
+	pid INTEGER,
+	name VARCHAR(255),
+	status VARCHAR(255),
+	priority VARCHAR(255),
+	problem TEXT,
+	contact VARCHAR(255),
+	location VARCHAR(255)
+);
+
+CREATE OR REPLACE FUNCTION count_tickets(
+        section_val INTEGER,
+        alias_id_val INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+        read BOOLEAN;
+        complete BOOLEAN;
+	counter INTEGER;
+BEGIN
+        SELECT
+                        bool_or(section_aclgroup.aclread)
+        INTO read
+                from
+                        section_aclgroup
+                        join
+                                section on section.id = section_aclgroup.section_id
+                        join
+                                aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+                where
+                        section_aclgroup.section_id = section_val
+                and (
+                        section_aclgroup.aclgroup_id in (
+                                select
+                                        aclgroup_id
+                                from
+                                        alias_aclgroup
+                                where
+                                        alias_id = alias_id_val
+                        )
+                ) and
+                        not deleted;
+
+	SELECT
+                        bool_or(section_aclgroup.aclcomplete)
+	INTO complete
+                from
+                        section_aclgroup
+                        join
+                                section on section.id = section_aclgroup.section_id
+			join
+				aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+		where
+			section_aclgroup.section_id = section_val
+		and (
+			section_aclgroup.aclgroup_id in (
+				select
+					aclgroup_id
+				from
+					alias_aclgroup
+				where
+					alias_id = alias_id_val
+			)
+		) and
+			not deleted;
+
+	IF complete THEN
+		select
+			count(ticket)
+		INTO counter
+		from
+			helpdesk where 
+                                helpdesk.status not in ('7')
+                        and
+                                helpdesk.active
+                        and
+                                helpdesk.section = section_val
+		;
+		RETURN counter;
+	ELSIF read THEN
+		select
+			count(ticket)
+		INTO counter
+		from
+			helpdesk where 
+                                helpdesk.status not in ('6','7')
+                        and
+                                helpdesk.active
+                        and
+                                helpdesk.section = section_val
+		;
+		RETURN counter;
+	ELSE
+		select 0 INTO counter;
+		RETURN counter;
+	END IF;
+	RETURN -1;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION lookup_ticket(
+	section_val INTEGER,
+	alias_id_val INTEGER
+) RETURNS SETOF ticket_holder AS $$
+DECLARE
+	r ticket_holder%rowtype;
+	read BOOLEAN;
+	complete BOOLEAN;
+BEGIN
+		SELECT INTO read
+				bool_or(section_aclgroup.aclread)
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = section_val
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = alias_id_val
+				)
+			) and
+				not deleted
+		;
+
+		SELECT INTO complete
+				bool_or(section_aclgroup.aclcomplete)
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = section_val
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = alias_id_val
+				)
+			) and
+				not deleted
+		;
+	IF complete THEN
+		FOR r IN
+			select
+				helpdesk.ticket as ticket,
+				helpdesk.priority as pid,
+				section.name as name,
+				status.status as status,
+				priority.description as priority,
+				helpdesk.problem as problem,
+				helpdesk.contact as contact,
+				helpdesk.location as location
+			from
+				helpdesk
+			join
+				section on section.id = helpdesk.section
+			join
+				priority on priority.severity = helpdesk.priority
+			join
+				status on status.id = helpdesk.status
+			where
+				helpdesk.status not in ('7')
+			and
+				helpdesk.active
+			and
+				helpdesk.section = section_val
+		LOOP
+			RETURN NEXT r;
+		END LOOP;
+	
+	ELSIF read THEN
+		FOR r IN
+			select
+				helpdesk.ticket as ticket,
+				helpdesk.priority as pid,
+				section.name as name,
+				status.status as status,
+				priority.description as priority,
+				helpdesk.problem as problem,
+				helpdesk.contact as contact,
+				helpdesk.location as location
+			from
+				helpdesk
+			join
+				section on section.id = helpdesk.section
+			join
+				priority on priority.severity = helpdesk.priority
+			join
+				status on status.id = helpdesk.status
+			where
+				helpdesk.status not in ('6','7')
+			and
+				helpdesk.active
+			and
+				helpdesk.section = section_val
+		LOOP
+			RETURN NEXT r;
+		END LOOP;
+	
+	ELSE
+		RETURN NEXT r;
+	END IF;
+	RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Permissions and stuff
 DROP USER IF EXISTS %%DB_USER%%;
 CREATE USER %%DB_USER%% WITH PASSWORD '%%DB_PASSWORD%%';

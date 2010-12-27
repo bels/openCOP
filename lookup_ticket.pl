@@ -21,45 +21,19 @@ my $authenticated = 0;
 
 my $ticket = Ticket->new(mode => "");
 
-if(%cookie)
-{
+if(%cookie){
 	$authenticated = $session->is_logged_in(auth_table => $config->{'auth_table'},id => $cookie{'id'},session_key => $cookie{'session_key'});
 }
 
-if($authenticated == 1)
-{
+if($authenticated == 1){
 	my ($page, $total_pages, $count);
 	my $data = $q->Vars;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
 
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 
-	my @placeholders = ($id);
-	#This part will build the where clause to search all columns of the same datatype as the data passed in from the search box
 	my $query;
 	my $sth;
-	my $where = " AND ("; #this gets tacked on the end if search is defined.
-	if(defined($data->{'search'})){
-		if($data->{'search'} =~ m/\D/){
-			my @columns = ('troubleshooting.troubleshooting','users.alias','helpdesk.location','helpdesk.author','helpdesk.contact','helpdesk.notes','section.name','helpdesk.problem','priority.description','helpdesk.serial','helpdesk.contact_email','status.status','site.name');
-			foreach my $key (@columns){
-				$where .= "$key ILIKE ? OR ";
-				push(@placeholders,"%".uri_unescape($data->{'search'})."%");
-			}
-		} else {
-			my @columns = ('helpdesk.ticket');
-			foreach my $key (@columns){
-				$where .= "$key = ? OR ";
-				push(@placeholders,uri_unescape($data->{'search'}));
-			}
-		}
-		chomp($where);
-		chop($where); #removing the extra OR at the end
-		chop($where);
-		chop($where);
-		$where .= ")";
-	}
-	
 	my $section = {};
 
 	$query = "select id,name from section where not deleted";
@@ -76,32 +50,38 @@ if($authenticated == 1)
 	my $sord = $data->{'sord'};
 
 	unless($data->{'section'} eq "pseudo"){
-		$query = "select count(*) from helpdesk where section = $data->{'section'} and active and status not in ('6','7')";
+		$query = "select * from count_tickets(?,?)";
+		$sth = $dbh->prepare($query);
+		$sth->execute($data->{'section'},$id);
+		$count = $sth->fetchrow_hashref;
+		$count = $count->{'count_tickets'};
 	} else {
 		$query = "select count(*) from helpdesk where technician = $id and active and status not in ('6','7')";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		$count = $sth->fetchrow_hashref;
+		$count = $count->{'count'};
 	}
 
-	$sth = $dbh->prepare($query);
-	$sth->execute;
-	$count = $sth->fetchrow_hashref;
-	$count = $count->{'count'};
-	warn "Count: $count";
 	if( $count > 0 && $limit > 0) {
 		$total_pages = ceil($count/$limit); 
 		warn "Total Pages: $total_pages";
 	} else { 
 		$total_pages = 0;
 	} 
-	warn "Total Pages: $total_pages";
+
 	if($page > $total_pages){
 		$page=$total_pages;
 	}
-	warn "Page: $page";
+
 	my $start = $limit * $page - $limit;
 	if($start<0){$start=0};
-	warn "Start: $start";
+
 	unless($data->{'section'} eq "pseudo"){
-		$section->{$data->{'section'}} = $ticket->lookup(db_type => $config->{'db_type'},db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},data => $data,section => $data->{'section'}, id => $id, customer => "0", criteria => uri_unescape($data->{'search'}), offset => $start, limit => $limit, order_by => $sidx, order => $sord) or die "What?"; #need to pass in hashref named data
+		$query = "select ticket,pid,name,status,priority,problem,contact,location from lookup_ticket($data->{'section'},$id) order by $sidx $sord offset $start limit $limit";
+		$sth = $dbh->prepare($query);
+		$sth->execute;
+		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
 	} else {
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$query = "
@@ -111,19 +91,12 @@ if($authenticated == 1)
 				status.status as status,
 				priority.description as priority,
 				helpdesk.problem as problem,
+				helpdesk.location as location,
 				helpdesk.contact as contact
 			from
 				helpdesk
 				join
 					section on section.id = helpdesk.section
-				left outer join
-					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
-				left outer join
-					notes on notes.ticket_id = helpdesk.ticket
-				join
-					users on users.id = helpdesk.technician
-				left outer join
-					site on site.id = helpdesk.site
 				join
 					priority on priority.severity = helpdesk.priority
 				join
@@ -131,22 +104,14 @@ if($authenticated == 1)
 			where
 				helpdesk.status not in ('6','7')
 			and
-				helpdesk.active
+				helpdesk.technician = $id
 			and
-				helpdesk.technician = ?
-			";
-		if(defined($data->{'search'})){
-			$query .= $where;
-		}
-		$query .= "
-			order by ? $sord
-			offset ? limit ?;
+				helpdesk.active
+			order by $sidx $sord
+			offset $start limit $limit;
 		";
 		$sth = $dbh->prepare($query);
-		push(@placeholders,$sidx);
-		push(@placeholders,$start);
-		push(@placeholders,$limit);
-		$sth->execute(@placeholders);
+		$sth->execute;
 		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
 	}
 	if($section->{$data->{'section'}}->{'error'}) {
@@ -159,19 +124,15 @@ if($authenticated == 1)
 		$xml .= "<page>$page</page>";
 		$xml .= "<total>$total_pages</total>";
 		$xml .= "<records>$count</records>";
-		my @ordered;
-		if($sord eq "asc"){
-			@ordered = sort { $a <=> $b } keys %{$section->{$data->{'section'}}};
-		} else {
-			@ordered = sort { $b <=> $a } keys %{$section->{$data->{'section'}}};
-		}
-		foreach my $row (@ordered){
+		foreach my $row (sort { $a <=> $b } keys %{$section->{$data->{'section'}}}){
+			warn $row;
 			$xml .= "<row id='" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "'>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "</cell>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'status'} . "</cell>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'priority'} . "</cell>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'contact'} . "</cell>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'problem'} . "</cell>";
+			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'location'} . "</cell>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'name'} . "</cell>";
 			$xml .= "</row>";
 		}
