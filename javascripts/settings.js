@@ -86,12 +86,10 @@ $(document).ready(function(){
 		var module_name = $(this).attr('name');
 		if($(this).is(':checked')){
 			handle_modules(module_name,'enable');
-			location.href="settings.pl";
 		}
 		else
 		{
 			handle_modules(module_name,'disable');
-			location.href="settings.pl";
 		}
 	});
 });
@@ -113,5 +111,13 @@ function delete_site_level(){
 }
 
 function handle_modules(module_name,todo){
-	$.get("handle_module_status.pl",{name: module_name,action: todo});
+	$.ajax({
+		url: 'handle_module_status.pl',
+		type: 'GET",
+		data: {name: module_name,action: todo},
+		success: function(){
+			$("#modules").load("list_modules.pl");
+		//	location.href= 'settings.pl';
+		}
+	});
 }

@@ -58,7 +58,7 @@ while(1){
 		qx(rm -f /tmp/opencop/newcron);
 	}
 	$sleep_count++;
-	if(sleep_count > 20){
+	if($sleep_count > 20){
 		qx(perl $cleanup_auth);
 		$sleep_count = 0;
 	}

@@ -40,8 +40,8 @@ foreach my $entry ($result->entries){
 	if(defined($config->{'directory_type'})){
 		if($config->{'directory_type'} =~ m/AD/i)
 		{
-			my $sam = $entry->get_value('sAMAccountName'); #this more than likely is the same as the login name for Active Directory because of legacy stuff
-			$sth->execute($sam);
+			my $cn = $entry->get_value('sAMAccountName'); #this more than likely is the same as the login name for Active Directory because of legacy stuff
+			$sth->execute($cn);
 		} elsif($config->{'directory_type'} =~ m/eDirectory/i){
 			$cn = $entry->get_value('cn'); #eDirectory looks to use cn as the login name
 			$sth->execute($cn);
@@ -68,8 +68,12 @@ foreach my $entry ($result->entries){
 			my $email;
 			if(defined($entry->get_value('mail'))){$email = $entry->get_value('mail');} #where AD stores the email address
 			if(defined($entry->get_value('email'))){$email = $entry->get_value('email');} #where openLDAP stores the email address
-			my $query = "insert into users (first,last,email,alias) values ('$first','$last','$email','$cn')";
+			my $query = "insert into users (first,last,email,alias) values (?,?,?,?) returning id";
 			my $sth = $dbh->prepare($query);
+			$sth->execute($first,$last,$email,$cn);
+			my $result = $sth->fetchrow_hashref;
+			$query = "insert into alias_aclgroup(alias_id,aclgroup_id) values (?, (select id from aclgroup where name = 'customers'))";
+			$sth = $dbh->prepare($query);
 			$sth->execute;
 		}
 	}

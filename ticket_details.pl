@@ -163,7 +163,7 @@ if($authenticated == 1){
 		);
 		for (my $i = 1; $i <= keys(%$tech_list); $i++){
 			print qq(<option value="$i");
-			if($results->{'tech'} == $i){ print " selected"};
+			if($results->{'technician'} == $i){ print " selected"};
 			print qq(>$tech_list->{$i}->{'alias'}</option>);
 		}
 		print qq(</select>);
