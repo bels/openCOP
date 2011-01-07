@@ -11,6 +11,7 @@ use UserFunctions;
 use Ticket;
 use Data::Dumper;
 use URI::Escape;
+use POSIX qw(ceil);
 
 my $q = CGI->new();
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
