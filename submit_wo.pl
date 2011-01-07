@@ -106,10 +106,10 @@ if($authenticated == 1)
 		";
 		$sth = $dbh->prepare($query);
 		$sth->execute(
-				'$wo_list->{$_}->{'ticket'}',
-				'$wo_list->{$_}->{'requires'}',
-				'$wo_number->{'last_value'}',
-				'$wo_list->{$_}->{'step'}',
+				$wo_list->{$_}->{'ticket'},
+				$wo_list->{$_}->{'requires'},
+				$wo_number->{'last_value'},
+				$wo_list->{$_}->{'step'},
 		);
 		if($wo_list->{$_}->{'requires'}){
 			$query = "update helpdesk set active = false where ticket = ?;";

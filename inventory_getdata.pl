@@ -33,7 +33,6 @@ if($authenticated == 1)
 	my $vars = $q->Vars;
 	if ($vars->{'mode'} eq "init"){
 		my $type = $vars->{'type'};
-		warn $type;
 		if($type){
 			$query = "select property.property,template_property.id,template_property.property_id from template_property join property on template_property.property_id = property.id where template_id = '$type';";
 			$sth = $dbh->prepare($query);
