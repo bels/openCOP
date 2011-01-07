@@ -582,7 +582,6 @@ $(document).ready(function(){
 		});
 		var report_name = $('input#as').val();
 		var description = $('input#desc').val();
-		alert($.toJSON(h));
 		$.ajax({
 			type: 'POST',
 			url: 'build_sql.pl',
