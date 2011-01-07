@@ -59,7 +59,7 @@ if($authenticated == 1)
 			}
 			my @ppid = sort({lc($a->{'property'}) cmp lc($b->{'property'})} @pid);
 			for ($i = 0; $i <= $#ppid; $i++){
-				unless($used_properties->{$ppid[$i]}->{'property'} eq "type" || $used_properties->{$ppid[$i]}->{'property'} eq "company" || $used_properties->{$ppid[$i]}->{'property'} eq "name") {
+				unless($ppid[$i]->{'property'} eq "type" || $ppid[$i]->{'property'} eq "company" || $ppid[$i]->{'property'} eq "name") {
 					push(@used_properties,$used_properties->{$ppid[$i]}->{'property_id'});
 					$data .= qq(<option selected="selected" value=$ppid[$i]->{'property_id'}>$ppid[$i]->{'property'}</option>);
 				}
@@ -74,7 +74,7 @@ if($authenticated == 1)
 			}
 			my @ppid = sort({lc($a->{'property'}) cmp lc($b->{'property'})} @pid);
 			for ($i = 0; $i <= $#ppid; $i++){
-				unless($all_properties->{$ppid[$i]}->{'property'} eq "type" || $all_properties->{$ppid[$i]}->{'property'} eq "company" || $all_properties->{$ppid[$i]}->{'property'} eq "name") {
+				unless($ppid[$i]->{'property'} eq "type" || $ppid[$i]->{'property'} eq "company" || $ppid[$i]->{'property'} eq "name") {
 					$data .= qq(<option value=$ppid[$i]->{'id'}>$ppid[$i]->{'property'}</option>);
 				}
 			}
