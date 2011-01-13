@@ -43,9 +43,6 @@ if($authenticated == 2)
 	my $query = "update helpdesk set free_date = ?, start_time = ?, end_time = ? where ticket = ?";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($vars->{'free_date'},$vars->{'start_time'},$vars->{'end_time'},$tkid);
-#	$query = "insert into audit (notes,updater,ticket) values(?,?,?)";
-#	my $sth = $dbh->prepare($query);
-#	$sth->execute($new_note,$updater,$tkid);
 	
 	print "Content-type: text/html\n\n";
 }	

@@ -136,6 +136,14 @@ function company_select(){
 					$('#behind_popup').css({
 						'height': windowHeight
 					});
+					$(document).bind('keydown.escObject',function(e){
+						if(e.keyCode == 27){
+							resetLogout();
+							$('#behind_popup').fadeOut('slow');
+							$('#object_details').fadeOut('slow');
+						}
+					});
+
 				}
 			});
 		}
@@ -239,6 +247,11 @@ $(document).ready(function(){
 		});
 	});
 
+	$('#update_close').live('click',function(){
+		resetLogout();
+		$('#behind_popup').fadeOut('slow');
+		$('#object_details').fadeOut('slow');
+	});
 
 	$('.del_property').livequery(function(){
 		$(this).bind('click',function(e){

@@ -6,6 +6,29 @@ $(document).ready(function(){
 		});
 	});
 
+	$('#update_close').live('click',function(){
+		resetLogout();
+		$('#behind_popup').fadeOut('slow');
+		$('#ticket_details').fadeOut('slow');
+	});
+
+	$('#attach').live('click',function(){
+		$(document).unbind('keydown.escTicket');
+		$(document).bind('keydown.escAttach',function(e){
+			if(e.keyCode == 27){
+				$(document).bind('keydown.escTicket',function(e){
+					if(e.keyCode == 27){
+						resetLogout();
+						$('#behind_popup').fadeOut('slow');
+						$('#ticket_details').fadeOut('slow');
+						$(this).unbind(e);
+						$(document).unbind('keydown.escAttach');
+					}
+				});
+			}
+		});
+	});
+
 	$('#attach').livequery(function(){
 		var triggers = $('#attach').overlay({
 			mask: {
@@ -71,7 +94,11 @@ $(document).ready(function(){
 							$('#attach_form').append('<input type="hidden" name="utkid" id="utkid" value="' + $("#ticket_number").text() + '">');
 							$('#attach_form').submit();
 						}
-						window.location = "ticket.pl?mode=lookup";
+					//	window.location = "ticket.pl?mode=lookup";
+						var ticket_number = $("#ticket_number").text();
+						var url = "ticket_details.pl?ticket_number=" + ticket_number;
+						$('#ticket_details').load(url);
+						
 				},
 				error: function(xml,text,error){
 					alert("xml: " + xml.responseText + "\ntext: " + text + "\nerror: " + error);
@@ -262,6 +289,14 @@ $(document).ready(function(){
 				});
 				$('#behind_popup').css({
 					'height': windowHeight
+				});
+				$(document).bind('keydown.escTicket',function(e){
+					if(e.keyCode == 27){
+						resetLogout();
+						$('#behind_popup').fadeOut('slow');
+						$('#ticket_details').fadeOut('slow');
+						$(this).unbind(e);
+					}
 				});
 			}
 		});

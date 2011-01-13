@@ -141,7 +141,16 @@ h2{
 
 input{
 	margin-bottom: 0 !important;
-    margin-top: 0 !important;
-    padding: 0 !important;
+	margin-top: 0 !important;
+	padding: 0 !important;
 	height: 20px !important;
+}
+
+#update_close{
+	height: 17px;
+	left: 463px;
+	position: relative;
+	top: -10px;
+	width: 17px;
+	cursor: pointer;
 }

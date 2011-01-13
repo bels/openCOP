@@ -98,7 +98,6 @@ if($authenticated == 1){
 		my $count = 0;
 
 		my $new_ticket = {};
-
 		foreach my $t(@ordered){
 			$innerXML[$count] .= "<row id='" . $t . "'>";
 			foreach my $r (sort { $a <=> $b } keys %{$ticket->{$t}}){

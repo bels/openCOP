@@ -105,3 +105,12 @@
 #update_form select#technician{
 	width: 175px;
 }
+
+#update_close{
+	position: relative;
+	top: -35px;
+	width: 17px;
+	left: 891px;
+	height: 17px;
+	cursor: pointer;
+}

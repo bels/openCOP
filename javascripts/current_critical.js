@@ -44,7 +44,21 @@
 				$('#behind_popup').css({
 					'height': windowHeight
 				});
+				$(document).bind('keydown.escTicket',function(e){
+					if(e.keyCode == 27){
+						resetLogout();
+						$('#behind_popup').fadeOut('slow');
+						$('#ticket_details').fadeOut('slow');
+						$(this).unbind(e);
+					}
+				});
 			}
+	});
+
+	$('#update_close').live('click',function(){
+		resetLogout();
+		$('#behind_popup').fadeOut('slow');
+		$('#ticket_details').fadeOut('slow');
 	});
 
 	$('#cancel').live('click',function(e){
@@ -58,6 +72,24 @@
 		e.preventDefault();
 		$(this).ajaxSubmit({
 			iframe: true
+		});
+	});
+
+	$('#attach').live('click',function(){
+		resetLogout();
+		$(document).unbind('keydown.escTicket');
+		$(document).bind('keydown.escAttach',function(e){
+			if(e.keyCode == 27){
+				$(document).bind('keydown.escTicket',function(e){
+					if(e.keyCode == 27){
+						resetLogout();
+						$('#behind_popup').fadeOut('slow');
+						$('#ticket_details').fadeOut('slow');
+						$(this).unbind(e);
+						$(document).unbind('keydown.escAttach');
+					}
+				});
+			}
 		});
 	});
 

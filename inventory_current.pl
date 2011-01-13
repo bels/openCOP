@@ -333,7 +333,7 @@ if($authenticated == 1) {
 		}
 
 		print "Content-type: text/html\n\n";
-
+		print qq(<img src="images/close.png" id="update_close">);
 		print qq(<h2>Item Details</h2>);
 		print qq(<img src="images/save.png" class="image_button" id="update_object_button" object="$object_id" alt="Save">);
 		print qq(<img src="images/add_property.png" class="add_property image_button" alt="Add Property">);

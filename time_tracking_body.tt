@@ -14,6 +14,8 @@
 			<label for="end_date"> To: </label><input class="search styled_form_element" type="date" name="end_date" id="end_date" value="[% date %]">
 			<br />
 			<image src="images/display.png" class="image_button" id="display" alt="Display">
+			<div id="total_time">
+			</div>
 			<table id="tech_output">
 			</table>
 			<div id="tech_pager">

@@ -91,7 +91,7 @@ if($authenticated == 1){
 	$results->{'start_time'} = substr($results->{'start_time'},0,8);
 	$results->{'end_time'} = substr($results->{'end_time'},0,8);
 
-	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><div id="details_wrapper"><div class="form_title">Ticket Details</div>);
+	print qq(<form action="update_ticket.pl" method="POST" id="update_form"><div id="details_wrapper"><div class="form_title">Ticket Details</div><img id="update_close" src="images/close.png" />);
 	print qq(
 		
 			<input type="hidden" name="tech" value="1">

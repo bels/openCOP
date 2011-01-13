@@ -48,7 +48,7 @@ if($authenticated == 1)
 			active
 		) values (
 			true
-		);";
+		)";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	$query = "select last_value from wo_id_seq";
@@ -82,7 +82,6 @@ if($authenticated == 1)
 			}
 			$query =~ s/,$//;
 			$query .= ");";
-			warn $query;
 			$sth = $dbh->prepare($query);
 			$sth->execute;
 			my $ticket = $sth->fetchrow_hashref;

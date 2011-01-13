@@ -113,7 +113,7 @@ function delete_site_level(){
 function handle_modules(module_name,todo){
 	$.ajax({
 		url: 'handle_module_status.pl',
-		type: 'GET",
+		type: 'GET',
 		data: {name: module_name,action: todo},
 		success: function(){
 			$("#modules").load("list_modules.pl");

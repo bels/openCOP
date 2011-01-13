@@ -75,7 +75,6 @@ if($authenticated == 2)
 				<img src="images/update.png" id="update_ticket_button" class="image_button" alt="Update"><br>
 			</form>
 	);
-#	print qq(<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>);
 	print qq(<h4>Previous Notes</h4>);
 	my $zebra = "even";
 	foreach my $note (@$notes)

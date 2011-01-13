@@ -9,6 +9,29 @@ $(document).ready(function(){
 		});
 	});
 
+	$('#update_close').live('click',function(){
+		resetLogout();
+		$('#behind_popup').fadeOut('slow');
+		$('#ticket_details').fadeOut('slow');
+	});
+
+	$('#attach').live('click',function(){
+		$(document).unbind('keydown.escTicket');
+		$(document).bind('keydown.escAttach',function(e){
+			if(e.keyCode == 27){
+				$(document).bind('keydown.escTicket',function(e){
+					if(e.keyCode == 27){
+						resetLogout();
+						$('#behind_popup').fadeOut('slow');
+						$('#ticket_details').fadeOut('slow');
+						$(this).unbind(e);
+						$(document).unbind('keydown.escAttach');
+					}
+				});
+			}
+		});
+	});
+
 	$('#attach').livequery(function(){
 		var triggers = $('#attach').overlay({
 			mask: {
@@ -131,10 +154,31 @@ $(document).ready(function(){
 				$('#behind_popup').css({
 					'height': windowHeight
 				});
+				$(document).bind('keydown.escTicket',function(e){
+					if(e.keyCode == 27){
+						resetLogout();
+						$('#behind_popup').fadeOut('slow');
+						$('#ticket_details').fadeOut('slow');
+						$(this).unbind(e);
+					}
+				});
 			}
 		});
 		}
 	});
+	$('td[aria-describedby="tech_output_time_worked"]').livequery(function(){
+			var total_time;
+			var t5 = ['0','0','0'];
+			$('td[aria-describedby="tech_output_time_worked"]').each(function(){
+				var t4 = $(this).attr('title').split(':')
+				t5[0] = parseInt(t5[0]) + parseInt(t4[0]);
+				t5[1] = parseInt(t5[1]) + parseInt(t4[1]);
+				t5[2] = parseInt(t5[2]) + parseInt(t4[2]);
+			});
+			var total_time = t5.join(':');
+			$('#total_time').text('Total time worked by tech over period: ' + total_time);
+	});
+
 	$('div#by_ticket #display').bind('click',function(){
 		resetLogout();
 		var search = $('#ticket_search').val();
@@ -190,6 +234,14 @@ $(document).ready(function(){
 				});
 				$('#behind_popup').css({
 					'height': windowHeight
+				});
+				$(document).bind('keydown.escTicket',function(e){
+					if(e.keyCode == 27){
+						resetLogout();
+						$('#behind_popup').fadeOut('slow');
+						$('#ticket_details').fadeOut('slow');
+						$(this).unbind(e);
+					}
 				});
 			}
 		});
