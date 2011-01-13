@@ -10,6 +10,7 @@ use ReadConfig;
 use POSIX 'strftime';
 use YAML;
 use Data::Dumper;
+use DBI;
 
 require Exporter;
 
@@ -48,6 +49,7 @@ sub new{
 	$self->{'opencop_dir'} = qx(pwd);
 	chomp($self->{'opencop_dir'});
 	$self->{'working_dir'} = "/tmp/opencop_update";
+	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'db_user'},$args{'password'},{ pg_enable_utf8 => 1 });
 	if(! -d $self->{'working_dir'}){
 		qx(mkdir $self->{'working_dir'});
 	}
@@ -125,6 +127,15 @@ sub backup_config{
 	return $?;
 }
 
+sub backup_db{
+	my $self = shift;
+	my %args = @_;
+	my $date = strftime('%Y-%m-%d-%H-%M-%S', localtime);
+
+	qx(pg_dump -U $args{'db_user'} $args{'db_name'} > /tmp/$args{'db_name'}_$date.sql);
+	return $?;
+}
+
 sub destroy{
 	my $self = shift;
 	my %args = @_;
@@ -141,6 +152,51 @@ sub merge_changes{
 	
 	qx(tar -xjf $args{'package_path'} -C $self->{'opencop_dir'});
 	return $?;
+}
+
+sub update_db{
+	my $self = shift;
+	my %args = @_;
+
+	my $query;
+	my $sth;
+	my @configs;
+
+	my $dir = $self->{'opencop_dir'} . "/install/";
+	opendir(DIR, $dir) or die "Couldn't open $self->{'opencop_dir'}: $!";
+	LINE: while(my $FILE = readdir(DIR)){
+		next LINE if($FILE =~ /^\.\.?/);
+		if($FILE =~ m/\.sql$/){
+			push(@configs,$FILE);
+		}
+	}
+	closedir(DIR);
+
+	@configs = sort({$a <=> $b} @configs);
+
+	foreach(@configs){
+		my @scratch = split('.',$_);
+		if($scratch[0] <= $args{'version'}){
+			my $query = "";
+			my $new_statement = 0;
+			open FILE, "$_" or die "Couldn't open $_: $!";
+			foreach(<FILE>){
+				if($_ =~ m/^--##$/){
+					$new_statement = 1;
+				}
+				if($new_statement == 1){
+					$_ =~ s/--##//;
+					$query .= $_;
+				}
+				if($_ =~ m/^--\$\$$/){
+					$sth = $self->{'dbh'}->prepare($query) or warn "Could not prepare query while updating database.";
+					$sth->execute;
+					$new_statement = 0;
+					$query = "";
+				}
+			}
+		}
+	}
 }
 
 sub update_config{

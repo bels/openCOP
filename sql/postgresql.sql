@@ -265,8 +265,8 @@ INSERT INTO template_property(template_id,property_id) values((select id from te
 
 -- Adding admin user
 INSERT INTO users(alias,email,password,first, last) values('%%ADMIN_USER%%','%%ADMIN_EMAIL%%',MD5('%%ADMIN_PASSWORD%%'),'%%ADMIN_FIRST%%','%%ADMIN_LAST%%');
--- Adding default Helpdesk section.
-INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address'); -- Need to add the ability to change section's email addresses...
+-- Adding default helpdesk section.
+INSERT INTO section(name,email) values('helpdesk','helpdesk@email.address'); -- Need to add the ability to change section's email addresses...
 -- Adding priorities
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
@@ -1434,8 +1434,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON site_level TO %%DB_USER%%;
 GRANT SELECT, UPDATE ON site_level_id_seq TO %%DB_USER%%;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site TO %%DB_USER%%;
 GRANT SELECT, UPDATE ON site_id_seq TO %%DB_USER%%;
-GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk TO %%DB_USER%%;
-GRANT SELECT, UPDATE ON helpdesk_ticket_seq TO %%DB_USER%%;
+GRANT SELECT, INSERT, UPDATE, DELETE ON %%DB_USER%% TO %%DB_USER%%;
+GRANT SELECT, UPDATE ON %%DB_USER%%_ticket_seq TO %%DB_USER%%;
 GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO %%DB_USER%%;
 GRANT SELECT, UPDATE ON priority_id_seq TO %%DB_USER%%;
 GRANT SELECT, INSERT, UPDATE, DELETE ON section TO %%DB_USER%%;

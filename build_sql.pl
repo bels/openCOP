@@ -11,7 +11,6 @@ use UserFunctions;
 use DBI;
 use ReportFunctions;
 use JSON;
-use Data::Dumper;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -53,10 +52,7 @@ if($authenticated == 1)
 				@{$object->{'where'}}[2]->{'value'} = "%" . @{$object->{'where'}}[2]->{'value'} . "%";
 			}
 			$query .= "where (property = '@{$object->{'where'}}[0]->{'value'}' and value @{$object->{'where'}}[1]->{'value'} '@{$object->{'where'}}[2]->{'value'}') ";
-		#	$query .= "where (property = ? and value @{$object->{'where'}}[1]->{'value'} ?) ";
-		#	push(@prepare_array,@{$object->{'where'}}[0]->{'value'});
 			push(@columns,@{$object->{'where'}}[0]->{'value'});
-		#	push(@prepare_array,@{$object->{'where'}}[2]->{'value'});
 			for(my $i = 0; $i <= 2; $i++){
 				shift(@{$object->{'where'}});
 			}
@@ -65,22 +61,16 @@ if($authenticated == 1)
 					@{$object->{'where'}}[3]->{'value'} = "%" . @{$object->{'where'}}[3]->{'value'} . "%";
 				}
 				$query .= " @{$object->{'where'}}[0]->{'value'} ( property = '@{$object->{'where'}}[1]->{'value'}' and value @{$object->{'where'}}[2]->{'value'} '@{$object->{'where'}}[3]->{'value'}') ";
-			#	$query .= " @{$object->{'where'}}[0]->{'value'} ( property = ? and value @{$object->{'where'}}[2]->{'value'} ?) ";
-			#	push(@prepare_array,@{$object->{'where'}}[1]->{'value'});
 				push(@columns,@{$object->{'where'}}[1]->{'value'});
-			#	push(@prepare_array,@{$object->{'where'}}[3]->{'value'});
 				for(my $i = 0; $i <= 3; $i++){
 					shift(@{$object->{'where'}});
 				}
 			}
 		}
 
-#	$query .= ";";
-
 	my $store = $query;
 	my $sth = $dbh->prepare($query);
 	$sth->execute(@prepare_array);
-#	$sth->execute(@prepare_array);
 	my $results = $sth->fetchall_hashref('object');
 	my $new_object = {};
 	foreach(keys %$results){
@@ -110,11 +100,10 @@ if($authenticated == 1)
 			$sth->execute($store,$name,$id,$description);
 			my $report = $sth->fetchrow_hashref;
 			if(defined(@{$object->{'groups'}}[0])){
-				$insert = "select insert_reports_aclgroup(report_id,aclgroup_id,aclread) values(?,?,?);";
-#				$insert = "insert into reports_aclgroup (report_id,aclgroup_id,aclread) values(?,?,?);";
+				$insert = "select insert_reports_aclgroup(?,?);";
 				$sth = $dbh->prepare($insert);
 				foreach(@{$object->{'groups'}}){
-					$sth->execute($report->{'insert_reports'},$_->{'selected'},"true");
+					$sth->execute($report->{'insert_reports'},$_->{'selected'});
 				}
 			}
 			print "0";
@@ -169,7 +158,6 @@ if($authenticated == 1)
 			"javascripts/jquery.mousewheel.js",
 			"javascripts/mwheelIntent.js",
 			"javascripts/main.js",
-		#	"javascripts/display_report.js"
 		);
 		my $title = $config->{'company_name'} . " - Custom Report";
 		my $file = "display_report.tt";

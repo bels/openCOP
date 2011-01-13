@@ -1,0 +1,11 @@
+Create a file with the format of:
+--##
+sql statement to execute
+possibly multi-line
+--$$
+
+The filename must be in the format:
+VERSION.sql
+where VERSION is the version number of the release to which the sql udpates pertain. For example, version 1.0.1 would have a file named 101.sql
+
+The updater will apply the updates in numerical order, starting with the earliest.
