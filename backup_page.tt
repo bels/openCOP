@@ -1,0 +1,5 @@
+[% INCLUDE header.tt %]
+[% INCLUDE layout_top.tt %]
+[% INCLUDE menu.tt %]
+[% INCLUDE backup_page_body.tt %]
+[% INCLUDE footer.tt %]

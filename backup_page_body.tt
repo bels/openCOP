@@ -1,0 +1,9 @@
+	<div id="update_top">
+		<div id="backup_settings">
+			<div id="modify_schedule_div">
+				<img src="images/add.png" alt="Modify Schedule />
+		</div>
+		<div id="backup_now">
+			<img src="images/add.png" alt="Run Backup" />
+		</div>
+	</div>

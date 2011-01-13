@@ -1,5 +1,8 @@
 ---
 auth_table: auth
+backup_dir: %%BACKUP_DIR%%
+backup_mask: 3
+backup_on: false
 backend: database
 base_dn: %%BASE_DN%%
 company_domain: %%COMPANY_DOMAIN%%
