@@ -4,6 +4,7 @@
 				<li><a href="#delete_site_div" title="Remove a site.">Delete Site</a></li>
 				<li><a href="#add_site_level_div" title="Add a site level.  Site levels are used to create finer grained reports.">Add Site Level</a></li>
 				<li><a href="#delete_site_level_div" title="Remove a site level">Delete Site Level</a></li>
+				<li><a href="#change_site_level_div" title="Change a site level">Change Site Level</a></li>
 				<li><a href="#add_company_div" title="Add a company.  Companies have sites">Add Company</a></li>
 				<li><a href="#delete_company_div" title="Remove a company.">Delete Company</a></li>
 				<li><a href="#add_section_div" title="Add a section.  Sections could be considered queues">Add Section</a></li>
@@ -36,6 +37,24 @@
 					<label for="site_level_name">Site Level Name:</label><input type="text" name="site_level_name" id="site_level_name" class="styled_form_element"><a href="tips.pl?306" class="tooltip" target="_tips">?</a><br />
 					<input type="image" src="images/add.png"  alt="Add" id="level_submit_button">
 				</form>
+			</div>
+			<div id="change_site_level_div" class="style">
+					<span class="change_site_level_success success">The site level was changed successfully.</span>
+				<form action="change_site_level.pl" method="POST">
+					<label for="site_name">Site:</label>
+					<select name="change_site_name_select" id="change_site_name_select" class="styled_form_element">
+						[% FOREACH site IN sites_list %]
+						<option value="[% sites.$site.id %]">[% sites.$site.name %]</option>
+						[% END %]
+					</select>
+					<label for="change_site_level" class="change_site_label">Site Level:</label>
+					<select name="change_site_level" size="1" tabindex="1" id="change_site_level" class="styled_form_element">
+						[% FOREACH site_level IN site_level_list %]
+						<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
+						[% END %]
+					</select>
+				</form>
+				<img src="images/change.png" alt="Change" class="submit_button" id="change_site_level_submit_button">
 			</div>
 			<div id="delete_site_div" class="style">
 				[% IF delete_site_success == 1 %]

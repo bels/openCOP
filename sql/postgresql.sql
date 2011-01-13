@@ -1425,6 +1425,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION change_site_level(site_val INTEGER, site_level_val INTEGER) RETURNS VOID AS $$
+BEGIN
+	UPDATE site SET level = site_level_val WHERE id = site_val;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Permissions and stuff
 DROP USER IF EXISTS %%DB_USER%%;
 CREATE USER %%DB_USER%% WITH PASSWORD '%%DB_PASSWORD%%';

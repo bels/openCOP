@@ -1,3 +1,4 @@
+--##
 CREATE OR REPLACE FUNCTION update_ticket(
 	ticket_number BIGINT,
 	site_text text,
@@ -78,3 +79,4 @@ BEGIN
 	RETURN ticket_number;
 END;
 $$ LANGUAGE plpgsql;
+--$$

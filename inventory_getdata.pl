@@ -295,7 +295,7 @@ if($authenticated == 1)
 			);
 			$i--;
 			$data .= qq(
-				<button class="object_form object_remove_property_button">Remove</button>
+				<img src="images/remove.png" class="object_form object_remove_property_button image_button" alt="Remove" />
 			);
 			$i++;
 			$i++;

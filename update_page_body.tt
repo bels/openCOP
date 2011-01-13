@@ -2,7 +2,7 @@
 		<ul id="versions">
 			<li id="cversion">Current version: [% cversion %]</li>
 			<li id="aversion">Version available: [% version %]</li>
-		[% IF cversion != version %]
+		[% IF calcc < calcv %]
 			<button id="update" rel="#confirm">Update</button>
 		[% ELSE %]
 			<li id="up-to-date">Already at latest version</li>

@@ -26,9 +26,6 @@ if(%cookie)
 }
 
 if($authenticated == 1){
-#	use Data::Dumper;
-#	die Dumper $config;
-
 	my $user = UserFunctions->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
 	my $id = $session->get_id_for_session(auth_table => $config->{'auth_table'},id => $cookie{'id'});
 	my $update = Updater->new(db_name=> $config->{'db_name'},user =>$config->{'db_user'},password => $config->{'db_password'},db_type => $config->{'db_type'});
@@ -63,6 +60,8 @@ if($authenticated == 1){
 		backend => $config->{'backend'},
 		version => $version->{'version'},
 		cversion => $cversion,
+		calcv	=>	$version->{'calcv'},
+		calcc	=>	$version->{'calcc'},
 	};
 
 	print "Content-type: text/html\n\n";

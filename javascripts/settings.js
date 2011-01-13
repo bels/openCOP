@@ -8,6 +8,10 @@ $(document).ready(function(){
 		delete_site_level();
 	});
 
+	$('#change_site_level_submit_button').bind('click',function(){
+		change_site_level();
+	});
+
 //	$('.tooltip').css('color','white'); //this is to counter act the class color that is being inherited from the jquery tabs
 	$('#delete_site_level_submit_button').bind('click',function(){
 		var site = $('#delete_site_level_name').val();
@@ -108,6 +112,23 @@ function delete_site_level(){
 				alert("Emergency, emergency. There's an emergency going on here.");
 			}
 		});
+}
+
+function change_site_level(){
+	var site = $('#change_site_name_select').val();
+	var site_level = $('#change_site_level').val();
+	var url = 'change_site_level.pl';
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: {site: site, site_level: site_level},
+		success: function(data){
+			$('.change_site_level_success').show();
+		},
+		error: function(){
+			alert("Please consult RecoverPro FAQ.");
+		}
+	});
 }
 
 function handle_modules(module_name,todo){

@@ -12,7 +12,7 @@ my $mem = qx(which sysctl);
 my $iostat = qx(which iostat);
 chomp($mem);
 chomp($iostat);
-my $os = qx(uname);
+my $os = qx(uname -r -m -s);
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 $config->read_config;
 my $version = $config->{'version'};

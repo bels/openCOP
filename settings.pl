@@ -40,24 +40,29 @@ if($authenticated == 1)
 
 	my $i;
 	my $dbh = DBI->connect("dbi:$config->{'db_type'}:dbname=$config->{'db_name'}",$config->{'db_user'},$config->{'db_password'}, {pg_enable_utf8 => 1})  or die "Database connection failed in $0";
+
+	## Site levels
 	my $query = "select id,type from site_level where not deleted";
 	my $sth = $dbh->prepare($query);
 	$sth->execute;
 	my $site_levels = $sth->fetchall_hashref('type');
 	my @site_levels = sort_hash_list($site_levels);
 
+	## Sites
 	$query = "select id,name from site where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $sites = $sth->fetchall_hashref('name');
 	my @sites = sort_hash_list($sites);
 
+	## Companies
 	$query = "select id,name from company where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
 	my $companies = $sth->fetchall_hashref('name');
 	my @companies = sort_hash_list($companies);
 
+	## Sections
 	$query = "select id,name from section where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;

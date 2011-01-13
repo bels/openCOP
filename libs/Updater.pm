@@ -68,10 +68,15 @@ sub check_version{
 		my $version = $line[0];
 		close VERSION or return($result = {error => 4, message => "Could not close $self->{'working_dir'}/opencop_latest",});
 		chomp($version);
-		if($version <= $config->{'version'}){
-			return my $result = {error => 0, message => "Already at latest version", version => $version};
+		my $oversion = $version;
+		$oversion =~ s/\.//g;
+		$config->{'version'} =~ s/\.//g;
+		warn $config->{'version'};
+		warn $oversion;
+		if($oversion <= $config->{'version'}){
+			return my $result = {error => 0, message => "Already at latest version", version => $version, calcv => $oversion, calcc => $config->{'version'}};
 		} else {
-			return my $result = {error => 1, message => "Newer version found", version => $version};
+			return my $result = {error => 1, message => "Newer version found", version => $version, calcv => $oversion, calcc => $config->{'version'}};
 		}
 	} else {
 		return my $result = {error => 2, message => "No update URL specified"};

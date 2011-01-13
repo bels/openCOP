@@ -76,3 +76,11 @@ select{
 	white-space: nowrap;
 	font-size: .95em;
 }
+
+.submit_button{
+	cursor: pointer;
+}
+
+.change_site_level_success{
+	display: none;
+}
