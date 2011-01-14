@@ -20,7 +20,7 @@ if($action eq 'enable'){
 
 	opendir DIRH, "./modules" or die "Couldn't open $!";
 	foreach (sort readdir DIRH){
-		open FILE, "./modules/$_" or warn "Couldn't open $!";
+		open FILE, "./modules/$_" or die "Couldn't open $!";
 		my $file = $_;
 		foreach (<FILE>){
 			if($_ =~ m/MODULE_NAME/){

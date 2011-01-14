@@ -42,7 +42,11 @@ while(1){
 				foreach my $line (@crontab){
 					chomp($line);
 					chomp($_);
-					if($line =~ m/$_/){
+					my @new = split('\/',$line);
+					my @old = split('\/',$_);
+					my $newcomp = pop(@new);
+					my $oldcomp = pop(@old);
+					if($newcomp =~ m/$oldcomp/){
 						
 					} else {
 						print NEW "$line\n";

@@ -1,7 +1,13 @@
 	<div id="update_top">
 		<div id="backup_settings">
 			<div id="modify_schedule_div">
-				<img src="images/add.png" alt="Modify Schedule />
+				<h4 id="howto_title">How to modify backup schedule</h4>
+				<p class="label">Each column contains a number which corresponds to a time interval. The first number is minutes, the second is hours, the third is the day of the month, the fourth is the month and the fifth is the day of week. Each value can be a number, a range of numbers (i.e. 5-7) or a *, meaning 'any' for that value.</p>
+				<p class="label">The default schedule for backups is "Every Saturday at 11PM" which looks like "0 23 * * 6". '0' because we want it to run at 11:00 and '23' because in 24-hour time 23 == 11PM. The two *s show that we do not care which month it is, or which day in the month it is. Finally, the '6' at the end means 'on Saturday' because each day is assigned a value 0-6 starting with Sunday.</p>
+				<p class="label">For a more in-depth description of how this scheduling system works, read the <a href="http://en.wikipedia.org/wiki/Crontab">Wikipedia page</a> on crontab.</p>
+				<textarea id="crontab" name="crontab" cols="40"></textarea>
+				<img src="images/add.png" alt="Modify Schedule" />
+			</div>
 		</div>
 		<div id="backup_now">
 			<img src="images/add.png" alt="Run Backup" />

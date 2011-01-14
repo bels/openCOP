@@ -1,4 +1,119 @@
 --##
+CREATE OR REPLACE FUNCTION get_access(
+        section_val INTEGER,
+        alias_id_val INTEGER
+) RETURNS INTEGER AS $$
+DECLARE
+        read BOOLEAN;
+        complete BOOLEAN;
+BEGIN
+        SELECT
+                        bool_or(section_aclgroup.aclread)
+        INTO read
+                from
+                        section_aclgroup
+                        join
+                                section on section.id = section_aclgroup.section_id
+                        join
+                                aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+                where
+                        section_aclgroup.section_id = section_val
+                and (
+                        section_aclgroup.aclgroup_id in (
+                                select
+                                        aclgroup_id
+                                from
+                                        alias_aclgroup
+                                where
+                                        alias_id = alias_id_val
+                        )
+                ) and
+                        not deleted;
+
+	SELECT
+                        bool_or(section_aclgroup.aclcomplete)
+	INTO complete
+                from
+                        section_aclgroup
+                        join
+                                section on section.id = section_aclgroup.section_id
+			join
+				aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+		where
+			section_aclgroup.section_id = section_val
+		and (
+			section_aclgroup.aclgroup_id in (
+				select
+					aclgroup_id
+				from
+					alias_aclgroup
+				where
+					alias_id = alias_id_val
+			)
+		) and
+			not deleted;
+
+	IF complete THEN
+		RETURN 1;
+	ELSIF read THEN
+		RETURN 2;
+	ELSE
+		RETURN 0;
+	END IF;
+	RETURN -1;
+END;
+$$ LANGUAGE plpgsql;
+--$$
+--##
+CREATE OR REPLACE VIEW friendly_helpdesk AS
+	SELECT
+		ticket,
+		st.status AS status,
+		h.status AS status_id,
+		barcode,
+		si.name AS site,
+		h.site AS site_id,
+		location,
+		requested,
+		updated,
+		author,	
+		contact,
+		contact_phone,
+		notes,
+		s.name AS section,
+		h.section AS section_id,
+		problem,
+		p.description AS priority,
+		h.priority AS priority_id,
+		serial,
+		u.alias AS updater,
+		h.updater AS updater_id,
+		contact_email,
+		u.alias AS technician,
+		h.technician AS technician_id,
+		u.alias AS submitter,
+		h.submitter AS submitter_id,
+		free_date,
+		start_time,
+		end_time,
+		closed_by,
+		completed_by,
+		h.active
+	FROM
+		helpdesk AS h
+	JOIN
+		section AS s ON h.section = s.id
+	JOIN
+		priority AS p ON h.priority = p.severity
+	JOIN
+		status AS st ON h.status = st.id
+	JOIN
+		users AS u ON h.technician = u.id
+	JOIN
+		site AS si ON h.site = si.id
+	;
+--$$
+--##
 CREATE OR REPLACE FUNCTION change_site_level(site_val INTEGER, site_level_val INTEGER) RETURNS VOID AS $$
 BEGIN
 	UPDATE site SET level = site_level_val WHERE id = site_val;
@@ -112,6 +227,112 @@ INSERT INTO template_property(template_id,property_id) values((select id from te
 INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'isp'),(select id from property where property = 'description'));
 --$$
 --##
+CREATE OR REPLACE FUNCTION lookup_ticket(
+	section_val INTEGER,
+	alias_id_val INTEGER
+) RETURNS SETOF ticket_holder AS $$
+DECLARE
+	r ticket_holder%rowtype;
+	read BOOLEAN;
+	complete BOOLEAN;
+BEGIN
+		SELECT INTO read
+				bool_or(section_aclgroup.aclread)
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = section_val
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = alias_id_val
+				)
+			) and
+				not deleted
+		;
+
+		SELECT INTO complete
+				bool_or(section_aclgroup.aclcomplete)
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = section_val
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = alias_id_val
+				)
+			) and
+				not deleted
+		;
+	IF complete THEN
+		FOR r IN
+			SELECT
+				f.ticket,
+				f.priority_id,
+				f.section AS name,
+				f.priority,
+				f.problem,
+				f.contact,
+				f.location
+			FROM
+				friendly_helpdesk AS f
+			WHERE
+				f.status_id NOT IN ('7')
+			AND
+				f.active
+			AND
+				f.section_id = section_val
+		LOOP
+			RETURN NEXT r;
+		END LOOP;
+	
+	ELSIF read THEN
+		FOR r IN
+			SELECT
+				f.ticket,
+				f.priority_id,
+				f.section AS name,
+				f.priority,
+				f.problem,
+				f.contact,
+				f.location
+			FROM
+				friendly_helpdesk AS f
+			WHERE
+				f.status_id NOT IN ('6','7')
+			AND
+				f.active
+			AND
+				f.section_id = section_val
+		LOOP
+			RETURN NEXT r;
+		END LOOP;
+	
+	ELSE
+		RETURN NEXT r;
+	END IF;
+	RETURN;
+END;
+$$ LANGUAGE plpgsql;
+--##
+--$$
 CREATE OR REPLACE FUNCTION update_ticket(
 	ticket_number BIGINT,
 	site_text text,

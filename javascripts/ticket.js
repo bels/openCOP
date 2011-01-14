@@ -250,13 +250,13 @@ $(document).ready(function(){
 			mtype: 'GET',
 			colNames: ['Ticket Number','Ticket Status','Ticket Priority','Ticket Contact','Problem','Location','Section'],
 			colModel: [
-				{name: 'ticket', index: 'ticket', width: 100, sortable: true},
-				{name: 'status', index: 'status', width: 100, sortable: true},
-				{name: 'priority', index: 'priority', width: 100, sortable: true},
-				{name: 'contact', index: 'contact', width: 125, sortable: true},
-				{name: 'problem', index: 'problem', width: 200, sortable: true},
-				{name: 'location', index: 'location', width: 200, sortable: true},
-				{name: 'name', index: 'name', width: 100, sortable: true}
+				{name: 'ticket', index: 'ticket', width: 100, sortable: true, search: true, stype: 'text'},
+				{name: 'status', index: 'status', width: 100, sortable: true, search: true, stype: 'text'},
+				{name: 'priority', index: 'priority', width: 100, sortable: true, search: true, stype: 'text'},
+				{name: 'contact', index: 'contact', width: 125, sortable: true, search: true, stype: 'text'},
+				{name: 'problem', index: 'problem', width: 200, sortable: true, search: true, stype: 'text'},
+				{name: 'location', index: 'location', width: 200, sortable: true, search: true, stype: 'text'},
+				{name: 'name', index: 'name', width: 100, sortable: true, search: true, stype: 'text'}
 			],
 			pager: "#" + section_id,
 			rowNum: 10,
@@ -299,6 +299,17 @@ $(document).ready(function(){
 					}
 				});
 			}
+		});
+		$(this).jqGrid('filterToolbar',{
+			colModel: [
+				{name: 'ticket', index: 'ticket', width: 100, sortable: true, search: true, stype: 'text'},
+				{name: 'status', index: 'status', width: 100, sortable: true, search: true, stype: 'text'},
+				{name: 'priority', index: 'priority', width: 100, sortable: true, search: true, stype: 'text'},
+				{name: 'contact', index: 'contact', width: 125, sortable: true, search: true, stype: 'text'},
+				{name: 'problem', index: 'problem', width: 200, sortable: true, search: true, stype: 'text'},
+				{name: 'location', index: 'location', width: 200, sortable: true, search: true, stype: 'text'},
+				{name: 'name', index: 'name', width: 100, sortable: true, search: true, stype: 'text'}
+			]
 		});
 	});
 

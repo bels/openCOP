@@ -48,15 +48,73 @@ if($authenticated == 1){
 	my $sidx = $data->{'sidx'};
 	if(!$sidx){$sidx = 1};
 	my $sord = $data->{'sord'};
+	my $search_params;
+	my @possible = ("ticket","status","priority","contact","problem","location","section");
+
+	my $search = 0;
+	if(defined($data->{'_search'}) && $data->{'_search'} eq "true"){
+		$search = 1;
+		foreach(@possible){
+			if(defined($data->{$_})){
+				$search_params->{$_} = $data->{$_};
+			}
+		}
+	}
 
 	unless($data->{'section'} eq "pseudo"){
-		$query = "select * from count_tickets(?,?)";
-		$sth = $dbh->prepare($query);
-		$sth->execute($data->{'section'},$id);
+		if($search){
+			$query = "SELECT get_access(?,?) AS access";
+			$sth = $dbh->prepare($query);
+			$sth->execute($data->{'section'},$id);
+			my $access = $sth->fetchrow_hashref;
+			if($access->{'access'}){
+				if($access->{'access'} == 1){ # complete access
+					$query = "SELECT count(*) from friendly_helpdesk as f WHERE active AND status_id NOT IN ('7')";
+					foreach(keys %{$search_params}){
+						$query  .= " AND $_ ";
+						if($_ eq 'ticket'){
+							$query .= "= '$search_params->{$_}'";
+						} else {
+							$query .= "ilike '$search_params->{$_}%'";
+						}
+					}
+				} elsif($access->{'access'} == 2){ # read access
+					$query = "SELECT count(*) from friendly_helpdesk as f WHERE active AND status_id NOT IN ('6','7')";
+					foreach(keys %{$search_params}){
+						$query  .= " AND $_ ";
+						if($_ eq 'ticket'){
+							$query .= "= '$search_params->{$_}'";
+						} else {
+							$query .= "ilike '$search_params->{$_}%'";
+						}
+					}
+				} else { # no access
+					$query = "SELECT 0 AS count";
+				}
+				$sth = $dbh->prepare($query);
+				$sth->execute;
+			}
+		} else {
+			$query = "select * from count_tickets(?,?) AS count";
+			$sth = $dbh->prepare($query);
+			$sth->execute($data->{'section'},$id);
+		}
 		$count = $sth->fetchrow_hashref;
-		$count = $count->{'count_tickets'};
+		$count = $count->{'count'};
 	} else {
-		$query = "select count(*) from helpdesk where technician = $id and active and status not in ('6','7')";
+		$query = "select count(*) from friendly_helpdesk as f where technician_id = $id and active and status_id not in ('6','7')";
+		if($search){
+			foreach(keys %{$search_params}){
+				unless($search_params->{$_} eq 'pseudo'){
+					$query  .= " AND $_ ";
+					if($_ eq 'ticket'){
+						$query .= "= '$search_params->{$_}'";
+					} else {
+						$query .= "ilike '$search_params->{$_}%'";
+					}
+				}
+			}
+		}
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		$count = $sth->fetchrow_hashref;
@@ -65,7 +123,6 @@ if($authenticated == 1){
 
 	if( $count > 0 && $limit > 0) {
 		$total_pages = ceil($count/$limit); 
-		warn "Total Pages: $total_pages";
 	} else { 
 		$total_pages = 0;
 	} 
@@ -78,7 +135,20 @@ if($authenticated == 1){
 	if($start<0){$start=0};
 
 	unless($data->{'section'} eq "pseudo"){
-		$query = "select ticket,pid,name,status,priority,problem,contact,location from lookup_ticket($data->{'section'},$id) order by $sidx $sord offset $start limit $limit";
+		$query = "select ticket,pid,name,status,priority,problem,contact,location from lookup_ticket($data->{'section'},$id) WHERE 1 = 1";
+		if($search){
+			foreach(keys %{$search_params}){
+				unless($_ eq 'section'){
+					$query  .= " AND $_ ";
+					if($_ eq 'ticket'){
+						$query .= "= '$search_params->{$_}'";
+					} else {
+						$query .= "ilike '$search_params->{$_}%'";
+					}
+				}
+			}
+		}
+		$query .= " order by $sidx $sord offset $start limit $limit";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
 		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
@@ -86,27 +156,35 @@ if($authenticated == 1){
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$query = "
 			select
-				helpdesk.ticket as ticket,
-				section.name as name,
-				status.status as status,
-				priority.description as priority,
-				helpdesk.problem as problem,
-				helpdesk.location as location,
-				helpdesk.contact as contact
+				f.ticket as ticket,
+				f.section as name,
+				f.status as status,
+				f.priority as priority,
+				f.problem as problem,
+				f.location as location,
+				f.contact as contact
 			from
-				helpdesk
-				join
-					section on section.id = helpdesk.section
-				join
-					priority on priority.severity = helpdesk.priority
-				join
-					status on status.id = helpdesk.status
+				friendly_helpdesk as f
 			where
-				helpdesk.status not in ('6','7')
+				f.status_id not in ('6','7')
 			and
-				helpdesk.technician = $id
+				f.technician_id = $id
 			and
-				helpdesk.active
+				f.active
+		";
+		if($search){
+			foreach(keys %{$search_params}){
+				unless($_ eq 'pseudo' || $search_params->{$_} eq 'pseudo'){
+					$query  .= " AND $_ ";
+					if($_ eq 'ticket'){
+						$query .= "= '$search_params->{$_}'";
+					} else {
+						$query .= "ilike '$search_params->{$_}%'";
+					}
+				}
+			}
+		}
+		$query .= "
 			order by $sidx $sord
 			offset $start limit $limit;
 		";
@@ -125,7 +203,6 @@ if($authenticated == 1){
 		$xml .= "<total>$total_pages</total>";
 		$xml .= "<records>$count</records>";
 		foreach my $row (sort { $a <=> $b } keys %{$section->{$data->{'section'}}}){
-			warn $row;
 			$xml .= "<row id='" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "'>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "</cell>";
 			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'status'} . "</cell>";
@@ -146,3 +223,5 @@ else
 {
 	print $q->redirect(-URL => $config->{'index_page'});
 }
+
+
