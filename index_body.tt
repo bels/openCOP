@@ -7,10 +7,10 @@
 		</div>
 		
 		<div id="login_box">
-			<span id="login_title">Login</span>
+			<span id="login_title" class="styled_text">Login</span>
 			<form id="login_form" action="authenticate.pl" method="POST">
-				<label for="username">Username:</label><input type="text" id="username" name="username"><br />
-				<label for="password">Password:</label><input type="password" id="password" name="password"><br />
+				<label class="styled_text" for="username">Username:</label><input type="text" id="username" name="username"><br />
+				<label class="styled_text" for="password">Password:</label><input type="password" id="password" name="password"><br />
 				<input type="image" src="images/login.png" class="image_button" id="submit_button" alt="Login">
 			</form>
 			<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>

@@ -66,3 +66,9 @@ input{
 #unsupported_warning{
 	display: none;
 }
+
+.styled_text{
+	text-shadow: #000 1px 1px 1px;
+	white-space: nowrap;
+	font-size: .95em;
+}

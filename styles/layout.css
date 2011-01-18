@@ -132,7 +132,7 @@ body{
 
 label{
 	margin-bottom: 5px;
-	text-shadow: #333 1px 1px 1px;
+	text-shadow: #555 1px 0px 1px;
 	white-space: nowrap;
 	font-size: .95em;
 	display: block;
@@ -188,5 +188,7 @@ option{
 }
 
 #forgot_password_link{
-	margin-left: 60px;
+	margin-left: 80px;
+	text-decoration: none;
+	color: #55f;
 }
