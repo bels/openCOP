@@ -151,7 +151,7 @@ if($authenticated == 1){
 		$query .= " order by $sidx $sord offset $start limit $limit";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
+		$section->{$data->{'section'}}->{'data'} = $sth->fetchall_arrayref({});
 	} else {
 		#Currently 6 is the ticket status Closed.  If more ticket statuses are added check to make sure 6 is still closed.  If you start seeing closed ticket in the view then the status number changed
 		$query = "
@@ -190,7 +190,7 @@ if($authenticated == 1){
 		";
 		$sth = $dbh->prepare($query);
 		$sth->execute;
-		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
+		$section->{$data->{'section'}}->{'data'} = $sth->fetchall_arrayref({});
 	}
 	if($section->{$data->{'section'}}->{'error'}) {
 		warn "Access denied to section " .  $data->{'section'} . " for user $id";
@@ -202,15 +202,15 @@ if($authenticated == 1){
 		$xml .= "<page>$page</page>";
 		$xml .= "<total>$total_pages</total>";
 		$xml .= "<records>$count</records>";
-		foreach my $row (sort { $a <=> $b } keys %{$section->{$data->{'section'}}}){
-			$xml .= "<row id='" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "'>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'status'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'priority'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'contact'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'problem'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'location'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'name'} . "</cell>";
+		foreach my $row (@{$section->{$data->{'section'}}->{'data'}}){
+			$xml .= "<row id='" . $row->{'ticket'} . "'>";
+			$xml .= "<cell>" . $row->{'ticket'} . "</cell>";
+			$xml .= "<cell>" . $row->{'status'} . "</cell>";
+			$xml .= "<cell>" . $row->{'priority'} . "</cell>";
+			$xml .= "<cell>" . $row->{'contact'} . "</cell>";
+			$xml .= "<cell>" . $row->{'problem'} . "</cell>";
+			$xml .= "<cell>" . $row->{'location'} . "</cell>";
+			$xml .= "<cell>" . $row->{'name'} . "</cell>";
 			$xml .= "</row>";
 		}
 		
@@ -218,9 +218,7 @@ if($authenticated == 1){
 		$xml =~ s/\'\'/\'/g;
 		print $xml;
 	}
-}	
-else
-{
+} else {
 	print $q->redirect(-URL => $config->{'index_page'});
 }
 

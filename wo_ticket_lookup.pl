@@ -57,7 +57,7 @@ if($authenticated == 1)
 	my $query = "select * from wo_ticket where wo_id = ? order by ? $sord offset ? limit ?";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($wo_number,$sidx,$start,$limit);
-	my $wo = $sth->fetchall_hashref('id');
+	my $wo = $sth->fetchall_arrayref({});
 
 	$query = "
 			select
@@ -96,19 +96,12 @@ if($authenticated == 1)
 		$xml .= "<page>$page</page>";
 		$xml .= "<total>$total_pages</total>";
 		$xml .= "<records>$count</records>";
-		my @ordered;
-		if($sord eq "asc"){
-			@ordered = sort { $a <=> $b } keys %$wo;
-		} else {
-			@ordered = sort { $b <=> $a } keys %$wo;
-		}
-		foreach my $row (@ordered)
-		{
-			$sth->execute($wo->{$row}->{'ticket_id'});
+		foreach my $row (@{$wo}){
+			$sth->execute($row->{'ticket_id'});
 			my $ticket = $sth->fetchrow_hashref;
-			$xml .= "<row id='" . $wo->{$row}->{'ticket_id'}. "'>";
-			$xml .= "<cell>" . $wo->{$row}->{'step'}	. "</cell>";
-			$xml .= "<cell>" . $wo->{$row}->{'ticket_id'}	. "</cell>";
+			$xml .= "<row id='" . $row->{'ticket_id'}.  "'>";
+			$xml .= "<cell>" . $row->{'step'}	. "</cell>";
+			$xml .= "<cell>" . $row->{'ticket_id'}	. "</cell>";
 			$xml .= "<cell>" . $ticket->{'status'}		. "</cell>";
 			$xml .= "<cell>" . $ticket->{'priority'}	. "</cell>";
 			$xml .= "<cell>" . $ticket->{'technician'}	. "</cell>";

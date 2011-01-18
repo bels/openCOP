@@ -83,7 +83,7 @@ if($authenticated == 1){
 		";
 		my $sth = $dbh->prepare($query);
 		foreach(keys %$results){
-			$sth->execute($id,$_,$sd,$ed) or die "$query";
+			$sth->execute($id,$_->{'ticket'},$sd,$ed) or die "$query";
 			$ticket->{$_} = $sth->fetchall_hashref('record');
 		}
 
@@ -98,7 +98,7 @@ if($authenticated == 1){
 		my $count = 0;
 
 		my $new_ticket = {};
-		foreach my $t(@ordered){
+		foreach my $t(keys %$ticket){
 			$innerXML[$count] .= "<row id='" . $t . "'>";
 			foreach my $r (sort { $a <=> $b } keys %{$ticket->{$t}}){
 				$new_ticket->{$t} = {

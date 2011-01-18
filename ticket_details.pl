@@ -223,8 +223,8 @@ if($authenticated == 1){
 		print $notes->{$t}->{'note'} . "<br />";
 	}
 	print qq(</div><br />
-			<input type="image" src="images/update.png" id="update_button" alt="Update">
-			<img src="images/cancel.png" alt="Cancel" class="image_button" id="cancel">
+			<input type="image" src="images/update.png" id="update_button" alt="Update" />
+			<img src="images/close_button.png" alt="Cancel" class="image_button" id="cancel" />
 		</div>
 		<div id="attached_div">
 			<div id="attached">

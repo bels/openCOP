@@ -679,6 +679,34 @@ sub update{
 		$sth = $dbh->prepare($query);
 		$sth->execute($data->{'section'},$data->{'updater'});
 		$access = $sth->fetchrow_hashref;
+	} elsif($data->{'status'} == "6"){
+		$query = "
+			select
+				bool_or(section_aclgroup.aclcomplete) as access
+			from
+				section_aclgroup
+				join
+					section on section.id = section_aclgroup.section_id
+				join
+					aclgroup on aclgroup.id = section_aclgroup.aclgroup_id
+			where
+				section_aclgroup.section_id = ?
+			and (
+				section_aclgroup.aclgroup_id in (
+					select
+						aclgroup_id
+					from
+						alias_aclgroup
+					where
+						alias_id = ?
+				)
+			) and
+				not deleted
+		";
+		$sth = $dbh->prepare($query);
+		$sth->execute($data->{'section'},$data->{'updater'});
+		$access = $sth->fetchrow_hashref;
+		$access->{'access'} = ($access->{'access'} | $explicit_access->{'count'});
 	}
 	if($access->{'access'}){
 		my $query;

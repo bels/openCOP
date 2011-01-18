@@ -107,8 +107,6 @@ if($authenticated == 1){
 	$start = $limit * $page - $limit;
 	if($start<0){$start=0};
 
-
-
 	$query = "select id,name from section where not deleted";
 	$sth = $dbh->prepare($query);
 	$sth->execute;
@@ -116,38 +114,27 @@ if($authenticated == 1){
 	$data->{'section'} = "critical";
 		$query = "
 			select
-				helpdesk.ticket as ticket,
-				section.name as name,
-				status.status as status,
-				priority.description as priority,
-				helpdesk.contact as contact,
-				users.alias as technician,
-				helpdesk.problem as problem
+				f.ticket as ticket,
+				f.section as name,
+				f.status as status,
+				f.status_id as status_id,
+				f.priority as priority,
+				f.priority_id as priority_id,
+				f.contact as contact,
+				f.technician as technician,
+				f.technician_id as technician_id,
+				f.problem as problem
 			from
-				helpdesk
-				join
-					section on section.id = helpdesk.section
-				left outer join
-					troubleshooting on troubleshooting.ticket_id = helpdesk.ticket
-				left outer join
-					notes on notes.ticket_id = helpdesk.ticket
-				join
-					users on users.id = helpdesk.technician
-				left outer join
-					site on site.id = helpdesk.site
-				join
-					priority on priority.severity = helpdesk.priority
-				join
-					status on status.id = helpdesk.status
+				friendly_helpdesk AS f
 			where (
 				(
-					helpdesk.status not in ('6','7')
+					f.status_id not in ('6','7')
 				) and (
-					helpdesk.active
+					f.active
 				) and (
-					helpdesk.priority > '2'
+					f.priority_id > '2'
 				) and (
-					helpdesk.technician = ?
+					f.technician_id = ?
 					or (
 						select
 							bool_or(section_aclgroup.aclread) as read
@@ -175,7 +162,7 @@ if($authenticated == 1){
 		";
 		$sth = $dbh->prepare($query);
 		$sth->execute(@placeholders);
-		$section->{$data->{'section'}} = $sth->fetchall_hashref('ticket');
+		$section->{$data->{'section'}}->{'data'} = $sth->fetchall_arrayref({});
 	if($section->{$data->{'section'}}->{'error'}) {
 		warn "Access denied to section " .  $data->{'section'} . " for user $id";
 	} else {
@@ -186,21 +173,14 @@ if($authenticated == 1){
 		$xml .= "<page>$page</page>";
 		$xml .= "<total>$total_pages</total>";
 		$xml .= "<records>$count</records>";
-		my @ordered;
-		if($sord eq "asc"){
-			@ordered = sort { $a <=> $b } keys %{$section->{$data->{'section'}}};
-		} else {
-			@ordered = sort { $b <=> $a } keys %{$section->{$data->{'section'}}};
-		}
-		foreach my $row (@ordered)
-		{
-			$xml .= "<row id='" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "'>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'ticket'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'status'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'priority'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'technician'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'problem'} . "</cell>";
-			$xml .= "<cell>" . $section->{$data->{'section'}}->{$row}->{'section'} . "</cell>";
+		foreach my $row (@{$section->{$data->{'section'}}->{'data'}}){
+			$xml .= "<row id='" . $row->{'ticket'} . "'>";
+			$xml .= "<cell>" . $row->{'ticket'} . "</cell>";
+			$xml .= "<cell>" . $row->{'status'} . "</cell>";
+			$xml .= "<cell>" . $row->{'priority'} . "</cell>";
+			$xml .= "<cell>" . $row->{'technician'} . "</cell>";
+			$xml .= "<cell>" . $row->{'problem'} . "</cell>";
+			$xml .= "<cell>" . $row->{'name'} . "</cell>";
 			$xml .= "</row>";
 		}
 		
