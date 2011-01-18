@@ -71,6 +71,7 @@ $(document).ready(function(){
 		resetLogout();
 		$('#ticket_details').fadeOut('fast');
 		$('#behind_popup').fadeOut('fast');
+		location.reload(true);
 	});
 	
 	$('.jqgrow').livequery(function(){

@@ -159,7 +159,12 @@ $(document).ready(function(){
 		}
 	});
 
-	$("#customer_submit_button").click(function(){
+	$('#newticket').submit(function(e){
+		e.preventDefault();
+	});
+
+	$("#customer_submit_button").click(function(e){
+		e.preventDefault();
 		resetLogout();
 		validateTicket();
 		if($("#newticket").valid())
@@ -177,7 +182,7 @@ $(document).ready(function(){
 						var str = data.replace(/^[\d\s]/,'');
 						alert("Added the ticket");
 						$('#attach_form').submit();
-						window.location = "ticket.pl?mode=new";
+						window.location = "customer.pl";
 					} else {
 						var str = data.replace(/^[\d\s]/,'');
 						alert(str);

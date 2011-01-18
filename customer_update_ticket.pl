@@ -6,6 +6,7 @@ use Ticket;
 use CGI;
 use SessionFunctions;
 use CustomerFunctions;
+use Notification;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -43,7 +44,11 @@ if($authenticated == 2)
 	my $query = "update helpdesk set free_date = ?, start_time = ?, end_time = ? where ticket = ?";
 	my $sth = $dbh->prepare($query);
 	$sth->execute($vars->{'free_date'},$vars->{'start_time'},$vars->{'end_time'},$tkid);
-	
+	if(defined($vars->{'tech_email'})){
+		my $notify = Notification->new(ticket_number => $tkid);
+		$notify->by_email(mode => 'notify_tech_ticket_update', to => $vars->{'tech_email'});
+	}
+
 	print "Content-type: text/html\n\n";
 }	
 else

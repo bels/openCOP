@@ -5,6 +5,7 @@ use lib './libs';
 use Ticket;
 use CGI;
 use SessionFunctions;
+use Notification;
 
 my $config = ReadConfig->new(config_type =>'YAML',config_file => "/usr/local/etc/opencop/config.yml");
 
@@ -35,6 +36,8 @@ if($authenticated == 1)
 		warn "Access denied to section " .  $data->{'section'} . " for user " . $data->{'updater'};
 		print "Content-type: text/html\n\n";
 	} else {
+		my $notify = Notification->new(ticket_number => $data->{'ticket_number'});
+		$notify->by_email(mode => 'ticket_update', to => $data->{'contact_email'});
 		print "Content-type: text/html\n\n";
 	}
 }	

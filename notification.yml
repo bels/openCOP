@@ -9,6 +9,7 @@ ticket_create: %%TICKET_CREATE_BODY%%
 ticket_update: %%TICKET_UPDATE_BODY%%
 ticket_close: %%TICKET_CLOSE_BODY%%
 notify_tech: %%TECH_NOTIFY_BODY%%
+notify_tech_ticket_update: %%TECH_NOTIFY_TICKET_UPDATE_BODY%%
 company_name: %%COMPANY_NAME%%
 new_user: %%NEW_USER_BODY%%
 send_attachment: %%FILE_ATTACH_BODY%%

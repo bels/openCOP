@@ -224,7 +224,7 @@ if($authenticated == 1){
 	}
 	print qq(</div><br />
 			<input type="image" src="images/update.png" id="update_button" alt="Update" />
-			<img src="images/close_button.png" alt="Cancel" class="image_button" id="cancel" />
+			<img src="images/close_button.png" alt="Close" class="image_button" id="cancel" />
 		</div>
 		<div id="attached_div">
 			<div id="attached">

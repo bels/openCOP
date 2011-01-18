@@ -725,7 +725,6 @@ sub update{
 			my $temp = $sth->fetchrow_hashref;
 			$data->{'technician'} = $temp->{'technician'};
 		}
-		warn $data->{'update_section'};
 		unless(defined($data->{'update_section'}) && $data->{'section'} ne ""){
 			$query = "select section from helpdesk where ticket = ?";
 			$sth = $dbh->prepare($query);
@@ -733,7 +732,6 @@ sub update{
 			my $temp = $sth->fetchrow_hashref;
 			$data->{'update_section'} = $temp->{'section'};
 		}
-		warn $data->{'update_section'};
 		$query = "
 			select
 				update_ticket(
@@ -789,7 +787,11 @@ sub update{
 			$sth = $dbh->prepare($query);
 			$sth->execute($results->{'update_ticket'});
 		}
-		return $results;
+		my $return = {
+			error	=>	0,
+			update	=>	$results,
+		};
+		return $return;
 	} else {
 		return $results = {
 			'error'		=>	"1",
