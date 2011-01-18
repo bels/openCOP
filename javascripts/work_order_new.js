@@ -1,4 +1,15 @@
 $(document).ready(function(){
+	$('#blank').load('tips.html');
+
+	$('.tooltip').each(function(){
+		var $this = $(this);
+		var t = setTimeout(function(){
+			$this.attr('title',$('#' + $this.attr('tip')).text());
+		},'200');
+	});
+
+	$('#blank').html('');
+
 	$("#submit_button").click(function(){
 		resetLogout();
 		if(validateTicket($('#newwo')));{

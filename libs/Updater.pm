@@ -178,30 +178,35 @@ sub update_db{
 	closedir(DIR);
 
 	@configs = sort({$a <=> $b} @configs);
-
+	my $error = 0;
 	foreach(@configs){
-		my @scratch = split('.',$_);
-		if($scratch[0] <= $args{'version'}){
-			my $query = "";
-			my $new_statement = 0;
-			open FILE, "$_" or die "Couldn't open $_: $!";
-			foreach(<FILE>){
-				if($_ =~ m/^--##$/){
-					$new_statement = 1;
-				}
-				if($new_statement == 1){
-					$_ =~ s/--##//;
-					$query .= $_;
-				}
-				if($_ =~ m/^--\$\$$/){
-					$sth = $self->{'dbh'}->prepare($query) or warn "Could not prepare query while updating database.";
-					$sth->execute;
-					$new_statement = 0;
-					$query = "";
-				}
-			}
+		qx(psql -U $config->{'db_user'} $config->{'db_name'} < $_);
+		if($?){
+			$error++;
 		}
+#		my @scratch = split('.',$_);
+#		if($scratch[0] <= $args{'version'}){
+#			my $query = "";
+#			my $new_statement = 0;
+#			open FILE, "$_" or die "Couldn't open $_: $!";
+#			foreach(<FILE>){
+#				if($_ =~ m/^--##$/){
+#					$new_statement = 1;
+#				}
+#				if($new_statement == 1){
+#					$_ =~ s/--##//;
+#					$query .= $_;
+#				}
+#				if($_ =~ m/^--\$\$$/){
+#					$sth = $self->{'dbh'}->prepare($query) or warn "Could not prepare query while updating database.";
+#					$sth->execute;
+#					$new_statement = 0;
+#					$query = "";
+#				}
+#			}
+#		}
 	}
+	return $error;
 }
 
 sub update_config{

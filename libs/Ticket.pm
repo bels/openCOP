@@ -173,6 +173,7 @@ sub render{
 	}
 	my @javascripts = (
 		"javascripts/jquery.tools.min.js",
+		"javascripts/jquery.tools.tooltips.js",
 		"javascripts/grid.locale-en.js",
 		"javascripts/jquery.jqGrid.min.js",
 		"javascripts/jquery.validate.js",

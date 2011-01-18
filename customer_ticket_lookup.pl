@@ -56,14 +56,14 @@ if($authenticated == 2)
 	if($oc eq "open"){
 		print qq(
 				<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" value="$results->{'free_date'}" title="Click to edit" class="styled_form_element"><br>
-				<label for="start_time" class="short_label">From:</label><input type="time" name="start_time" id="start_time" class="free_time styled_form_element" value="$results->{'start_time'}"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
-				<label for="end_time" class="short_label">To:</label><input type="time" name="end_time" id="end_time" class="free_time styled_form_element" value="$results->{'end_time'}"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
+				<label for="start_time" class="short_label">From:</label><input type="time" name="start_time" id="start_time" class="free_time styled_form_element" value="$results->{'start_time'}"><img alt="?" src="images/qmark.png" class="tooltip" tip="114" />
+				<label for="end_time" class="short_label">To:</label><input type="time" name="end_time" id="end_time" class="free_time styled_form_element" value="$results->{'end_time'}"><img alt="?" src="images/qmark.png" class="tooltip" tip="114" />
 		);
 	} elsif ($oc eq "closed"){
 		print qq(
 				<label for="free_date" class="short_label">Date Free:</label><input type="date" name="free_date" id="free_date" value="$results->{'free_date'}" readonly="readonly"><br>
-				<label for="start_time" class="short_label">From:</label><input type="time" name="start_time" id="start_time" class="free_time styled_form_element" value="$results->{'start_time'}" readonly="readonly"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
-				<label for="end_time" class="short_label">To:</label><input type="time" name="end_time" id="end_time" class="free_time styled_form_element" value="$results->{'end_time'}" readonly="readonly"><a href="tips.pl?114" class="tooltip" target="_tips">?</a>
+				<label for="start_time" class="short_label">From:</label><input type="time" name="start_time" id="start_time" class="free_time styled_form_element" value="$results->{'start_time'}" readonly="readonly"><img alt="?" src="images/qmark.png" class="tooltip" tip="114" />
+				<label for="end_time" class="short_label">To:</label><input type="time" name="end_time" id="end_time" class="free_time styled_form_element" value="$results->{'end_time'}" readonly="readonly"><img alt="?" src="images/qmark.png" class="tooltip" tip="114" />
 		);
 	} else {
 		print qq(You should never see this);
@@ -88,7 +88,7 @@ if($authenticated == 2)
 		print substr(@$note[3],0,19);
 		print qq(:<br></span><span class="note">@$note[2]</span></div>);
 	}
-	print "\t\t</div>";
+	print qq(\t\t</div><div id="blank" style="display:none"></div>);
 }	
 else
 {

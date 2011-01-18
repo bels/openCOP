@@ -5,6 +5,17 @@ $(document).ready(function(){
 		requires_index++;
 	});
 
+	$('#blank').load('tips.html');
+
+	$('.tooltip').each(function(){
+		var $this = $(this);
+		var t = setTimeout(function(){
+			$this.attr('title',$('#' + $this.attr('tip')).text());
+		},'200');
+	});
+
+	$('#blank').html('');
+
 	$('#wo_tabs').tabs({
 		panelTemplate: "<div>" + $('#content1').html() + "</div>"
 	});

@@ -15,18 +15,18 @@
 				<select name="requires" size="1" tabindex="9" class="requires styled_form_element">
 					<option></option>
 				</select>
-				<a href="tips.pl?309" class="tooltip" target="_tips">?</a>
+				<img alt="?" src="images/qmark.png" tip="309" class="tooltip" />
 				<label for="section" class="short_label">Section:</label>
 				<select name="section" size="1" tabindex="11" class="section styled_form_element">
 					[% FOREACH section IN scl.sort %]
 					<option value="[% section_create_list.$section.section_id %]">[% section_create_list.$section.name %]</option>
 					[% END %]
 				</select>
-				<a href="tips.pl?109" class="tooltip" target="_tips">?</a>
+				<img alt="?" src="images/qmark.png" tip="109" class="tooltip" />
 			</div>
 			<div class="problem_details">
 				<h4>Problem Details</h4>
-				<label for="problem">Work Requested:</label><a href="tips.pl?310" class="tooltip" target="_tips">?</a><br />
+				<label for="problem">Work Requested:</label><img alt="?" src="images/qmark.png" tip="310" class="tooltip" /><br />
 				<textarea class="problem styled_form_element" style="width: 690px;" cols="80" rows="5" name="problem" tabindex="11"></textarea><br />
 				<img src="images/create_work_order.png" border=0 class="create_button">
 			</div>
@@ -34,4 +34,6 @@
 	</div>
 	<div id="new">
 	</div>
+</div>
+<div id="blank" style="display:none">
 </div>

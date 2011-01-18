@@ -3,6 +3,17 @@ $(document).ready(function(){
 		cache: false
 	});
 
+	$('#blank').load('tips.html');
+
+	$('.tooltip').each(function(){
+		var $this = $(this);
+		var t = setTimeout(function(){
+			$this.attr('title',$('#' + $this.attr('tip')).text());
+		},'200');
+	});
+
+	$('#blank').html('');
+
 	var logoutTimer = window.setTimeout('logout()', '3600000');
 
 	$('#attach_form').submit(function(e){

@@ -12,6 +12,17 @@ $(document).ready(function(){
 		change_site_level();
 	});
 
+	$('#blank').load('tips.html');
+
+	$('.tooltip').each(function(){
+		var $this = $(this);
+		var t = setTimeout(function(){
+			$this.attr('title',$('#' + $this.attr('tip')).text());
+		},'200');
+	});
+
+	$('#blank').html('');
+
 //	$('.tooltip').css('color','white'); //this is to counter act the class color that is being inherited from the jquery tabs
 	$('#delete_site_level_submit_button').bind('click',function(){
 		var site = $('#delete_site_level_name').val();

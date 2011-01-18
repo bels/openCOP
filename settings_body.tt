@@ -18,14 +18,14 @@
 					<span class="success">The site was created successfully.</span>
 				[% END %]
 				<form action="add_site.pl" method="POST">
-					<label for="site_name" class="add_site_label">Site Name:</label><input type="text" name="site_name" id="site_name" class="styled_form_element"><a href="tips.pl?304" class="tooltip" target="_tips">?</a>
+					<label for="site_name" class="add_site_label">Site Name:</label><input type="text" name="site_name" id="site_name" class="styled_form_element"><img alt="?" src="images/qmark.png" class="tooltip" tip="304" />
 					<label for="site_level" class="add_site_label">Site Level:</label>
 					<select name="site_level" size="1" id="site_level" class="styled_form_element">
 						[% FOREACH site_level IN site_level_list %]
 						<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
 						[% END %]
 					</select>
-					<a href="tips.pl?305" class="tooltip" target="_tips">?</a><br />
+					<img alt="?" src="images/qmark.png" class="tooltip" tip="305" /><br />
 					<input type="image" src="images/add.png" alt="Add" class="submit_button" id="add_site_submit_button">
 				</form>
 			</div>
@@ -34,7 +34,7 @@
 					<span class="success">The site level was created successfully.</span>
 				[% END %]
 				<form action="add_site_level.pl" method="POST">
-					<label for="site_level_name">Site Level Name:</label><input type="text" name="site_level_name" id="site_level_name" class="styled_form_element"><a href="tips.pl?306" class="tooltip" target="_tips">?</a><br />
+					<label for="site_level_name">Site Level Name:</label><input type="text" name="site_level_name" id="site_level_name" class="styled_form_element"><img alt="?" src="images/qmark.png" class="tooltip" tip="306" /><br />
 					<input type="image" src="images/add.png"  alt="Add" id="level_submit_button">
 				</form>
 			</div>
@@ -137,8 +137,8 @@
 					<span class="success">The section was created successfully.</span>
 				[% END %]
 				<form action="add_section.pl" method="POST">
-					<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name" class="styled_form_element"><a href="tips.pl?301" class="tooltip" target="_tips">?</a><br />
-					<label for="section_email">Section Email:</label><input type="text" name="section_email" id="section_email" class="styled_form_element"><a href="tips.pl?302" class="tooltip" target="_tips">?</a><br />
+					<label for="section_name">Section Name:</label><input type="text" name="section_name" id="section_name" class="styled_form_element"><img alt="?" src="images/qmark.png" class="tooltip" tip="301" /><br />
+					<label for="section_email">Section Email:</label><input type="text" name="section_email" id="section_email" class="styled_form_element"><img alt="?" src="images/qmark.png" class="tooltip" tip="302" /><br />
 					<input type="image" src="images/add.png" alt="Add" id="submit_button">
 				</form>
 			</div>
@@ -184,4 +184,6 @@
 			<button id="proceed">Okay</button><button id="cancel">Cancel</button>
 		</div>
 		<div id="behind_popup">
+		</div>
+		<div id="blank" style="display: none">
 		</div>
