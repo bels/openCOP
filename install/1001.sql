@@ -1,4 +1,7 @@
 --##
+ALTER TABLE users ADD COLUMN primary_contact_phone VARCHAR(255);
+--$$
+--##
 CREATE OR REPLACE FUNCTION get_access(
         section_val INTEGER,
         alias_id_val INTEGER

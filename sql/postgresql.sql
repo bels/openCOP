@@ -26,6 +26,7 @@ CREATE TABLE users (
 	middle_initial VARCHAR(100),
 	alias VARCHAR(100) UNIQUE,
 	email VARCHAR(100),
+	primary_contact_phone VARCHAR(255),
 	password VARCHAR(100),
 	active BOOLEAN DEFAULT true,
 	site INTEGER DEFAULT null

@@ -70,9 +70,11 @@ sub create_user{
 			alias,
 			password,
 			email,
+			primary_contact_phone,
 			site,
 			active
 		) values (
+			?,
 			?,
 			?,
 			?,
@@ -90,6 +92,7 @@ sub create_user{
 			$args{'mi'},
 			$args{'alias'},
 			$password,
+			$args{'phone'},
 			$args{'email'},
 			$args{'site'}
 	) or return undef;

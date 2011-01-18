@@ -31,6 +31,7 @@ if($authenticated == 1)
 	my $alias = uri_unescape($q->param('username')); #getting the username from the form
 	my $password = uri_unescape($q->param('password1')); #getting the password from the form
 	my $email = uri_unescape($q->param('email'));
+	my $phone = uri_unescape($q->param('phone'));
 	my $first = uri_unescape($q->param('first'));
 	my $mi = uri_unescape($q->param('middle_initial'));
 	my $last = uri_unescape($q->param('last'));
@@ -55,7 +56,7 @@ if($authenticated == 1)
 		my $result = $sth->fetchrow_hashref;
 		my $group = $result->{'id'};
 
-		$user->create_user(alias => $alias,password => $password, email => $email, first => $first, mi => $mi, last =>$last, site => $site, group => $group);
+		$user->create_user(alias => $alias,password => $password, email => $email, phone => $phone, first => $first, mi => $mi, last =>$last, site => $site, group => $group);
 		my $notify = Notification->new(ticket_number => '1');
 		my $new_user = $notify->new_user(mode => 'new_user', to => $email, first => $first, mi => $mi, last =>$last, password => $password, alias => $alias);
 

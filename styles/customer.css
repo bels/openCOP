@@ -128,8 +128,8 @@ input.error{
 }
 
 #add_customer_div{
-	height: 340px;
-	width: 400px;
+	height: 390px;
+	width: 420px;
 	color: white;
 	margin-right: auto;
 	margin-left: auto;
@@ -153,7 +153,7 @@ input.error{
 
 #customer_admin_form label{
 	display: inline-block;
-	width: 170px;
+	width: 190px;
 	margin-bottom: 10px;
 }
 
