@@ -69,8 +69,8 @@ sub create_user{
 			middle_initial,
 			alias,
 			password,
-			email,
 			primary_contact_phone,
+			email,
 			site,
 			active
 		) values (
