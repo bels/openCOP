@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 DATABASE=$1
+USER=$2
+usersql=createuser.sql
 sql=postgresql.sql
 PATH=$PATH:/usr/bin:/bin:/usr/local/bin
 echo "This script makes some assumptions.  Let me get them out of the way right now"
@@ -32,7 +34,8 @@ fi
 
 if [ -f $sql ] ; then
 	echo "Importing database schema\n"
-	psql $DATABASE < $sql
+	psql $DATABASE < $usersql
+	psql -U $USER $DATABASE < $sql
 	if [ $? -ne 0 ] ; then
 		echo "Couldn't import the database. Check my assumptions that I listed and then re-run this script."
 		exit 1

@@ -1,5 +1,4 @@
 -- This will remove any data in the database.  I would not recommend using this to recreate tables that got "messed up".  This file should only be used to do an initial creation of the database or to wipe everything and start over.
-
 DROP TABLE IF EXISTS site_level CASCADE;
 CREATE TABLE site_level (id SERIAL PRIMARY KEY, type VARCHAR(255) UNIQUE, deleted BOOLEAN DEFAULT false);
 
@@ -1533,8 +1532,6 @@ CREATE OR REPLACE VIEW friendly_helpdesk AS
 	;
 
 -- Permissions and stuff
-DROP USER IF EXISTS %%DB_USER%%;
-CREATE USER %%DB_USER%% WITH PASSWORD '%%DB_PASSWORD%%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON status TO %%DB_USER%%;
 GRANT SELECT, UPDATE ON status_id_seq TO %%DB_USER%%;
 GRANT SELECT, INSERT, UPDATE, DELETE ON site_level TO %%DB_USER%%;
