@@ -186,3 +186,7 @@ option{
 .critical_priority{
 	color: red;
 }
+
+#forgot_password_link{
+	margin-left: 60px;
+}

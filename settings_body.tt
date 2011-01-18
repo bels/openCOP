@@ -20,7 +20,7 @@
 				<form action="add_site.pl" method="POST">
 					<label for="site_name" class="add_site_label">Site Name:</label><input type="text" name="site_name" id="site_name" class="styled_form_element"><a href="tips.pl?304" class="tooltip" target="_tips">?</a>
 					<label for="site_level" class="add_site_label">Site Level:</label>
-					<select name="site_level" size="1" tabindex="1" id="site_level" class="styled_form_element">
+					<select name="site_level" size="1" id="site_level" class="styled_form_element">
 						[% FOREACH site_level IN site_level_list %]
 						<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
 						[% END %]
@@ -48,7 +48,7 @@
 						[% END %]
 					</select>
 					<label for="change_site_level" class="change_site_label">Site Level:</label>
-					<select name="change_site_level" size="1" tabindex="1" id="change_site_level" class="styled_form_element">
+					<select name="change_site_level" size="1" id="change_site_level" class="styled_form_element">
 						[% FOREACH site_level IN site_level_list %]
 						<option value="[% site_levels.$site_level.id %]">[% site_levels.$site_level.type %]</option>
 						[% END %]

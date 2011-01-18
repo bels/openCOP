@@ -10,6 +10,7 @@
 				<label for="password">Password:</label><input type="password" id="password" name="password"><br>
 				<input type="image" src="images/login.png" class="image_button" id="login_button" alt="Login">
 			</form>
+			<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>
 			[% IF errorcode == 1 %]
 			<div id="login_error_message_div">
 				<span id="login_error_message">An error has occured while processing your login attempt. Please check your username and try again.</span>
