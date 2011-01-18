@@ -70,6 +70,7 @@ if($authenticated == 2){
 	my $submitter = $info->{'first'} . " " . $info->{'last'};
 	my $email = $info->{'email'};
 	my $site = $info->{'site'};
+	my $phone = $info->{'primary_contact_phone'};
 
 	my $file = "customer.tt";
 	my $title = $config->{'company_name'} . " - Helpdesk Portal";
@@ -85,6 +86,7 @@ if($authenticated == 2){
 		priority_list => $priority_list,
 		section_list => $section_list,
 		author => $submitter,
+		phone	=>	$phone,
 		customer_email => $email,
 		display_author => $config->{'display_author'},
 		display_barcode => $config->{'display_barcode'},
