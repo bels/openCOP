@@ -173,7 +173,7 @@ sub update_db{
 	LINE: while(my $FILE = readdir(DIR)){
 		next LINE if($FILE =~ /^\.\.?/);
 		if($FILE =~ m/\.sql$/){
-			my @sqlver = split('.',$FILE);
+			my @sqlver = split(/\./,$FILE);
 			warn $sqlver[0];
 			warn  $args{'version'};
 			if($sqlver[0] > $args{'version'}){
@@ -183,10 +183,10 @@ sub update_db{
 	}
 	closedir(DIR);
 
-	@configs = sort({$a <=> $b} @configs);
+	@configs = sort({$a cmp $b} @configs);
 	my $error = 0;
 	foreach(@configs){
-		qx(psql -U $config->{'db_user'} $config->{'db_name'} < $_);
+		qx(psql -U $config->{'db_user'} $config->{'db_name'} < $dir$_);
 		if($?){
 			$error++;
 		}
