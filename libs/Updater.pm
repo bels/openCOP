@@ -49,7 +49,7 @@ sub new{
 	$self->{'opencop_dir'} = qx(pwd);
 	chomp($self->{'opencop_dir'});
 	$self->{'working_dir'} = "/tmp/opencop_update";
-	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'db_user'},$args{'password'},{ pg_enable_utf8 => 1 });
+	$self->{'dbh'} = DBI->connect("dbi:$args{'db_type'}:dbname=$args{'db_name'}",$args{'user'},$args{'password'},{ pg_enable_utf8 => 1 });
 	if(! -d $self->{'working_dir'}){
 		qx(mkdir $self->{'working_dir'});
 	}
@@ -79,6 +79,7 @@ sub check_version{
 			return my $result = {error => 1, message => "Newer version found", version => $version, calcv => $oversion, calcc => $config->{'version'}};
 		}
 	} else {
+		die "No update URL specified";
 		return my $result = {error => 2, message => "No update URL specified"};
 	}
 }
@@ -172,7 +173,12 @@ sub update_db{
 	LINE: while(my $FILE = readdir(DIR)){
 		next LINE if($FILE =~ /^\.\.?/);
 		if($FILE =~ m/\.sql$/){
-			push(@configs,$FILE);
+			my @sqlver = split('.',$FILE);
+			warn $sqlver[0];
+			warn  $args{'version'};
+			if($sqlver[0] > $args{'version'}){
+				push(@configs,$FILE);
+			}
 		}
 	}
 	closedir(DIR);

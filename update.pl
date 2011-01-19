@@ -17,8 +17,8 @@ my $merge;
 
 my $version_check = $updater->check_version or die "Died checking version";
 
-if($version_check->{'error'}){
-	$package = $updater->get_package(version => $version_check->{'version'}) or warn "Error getting package";
+if($version_check->{'error'} == 1){
+	$package = $updater->get_package(version => $version_check->{'calcv'}) or warn "Error getting package";
 
 	if(defined($package->{'error'}) && $package->{'error'}){
 		warn $package->{'message'};
@@ -34,7 +34,7 @@ if($version_check->{'error'}){
 		die "Encountered errorrs while backing up database. Verify that the database is running and try again.\n";
 	} else {
 		$merge = $updater->merge_changes(package_path => $package->{'package_path'});
-		$updater->update_db(version => $version_check->{'version'}, package_path => $package->{'package_path'});
+		$updater->update_db(version => $version_check->{'calcc'}, package_path => $package->{'package_path'});
 		my $update_config = $updater->update_config(version => $version_check->{'version'});
 	}
 
