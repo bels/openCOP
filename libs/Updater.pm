@@ -176,7 +176,7 @@ sub update_db{
 			my @sqlver = split(/\./,$FILE);
 			warn $sqlver[0];
 			warn  $args{'version'};
-			if($sqlver[0] > $args{'version'}){
+			if($sqlver[0] > $args{'version'} && $sqlver[0] <= $args{'newversion'}){
 				push(@configs,$FILE);
 			}
 		}

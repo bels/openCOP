@@ -1208,10 +1208,12 @@ $$ LANGUAGE plpgsql;
 DROP TYPE IF EXISTS ticket_holder CASCADE;
 CREATE TYPE ticket_holder AS (
 	ticket INTEGER,
-	pid INTEGER,
-	name VARCHAR(255),
-	status VARCHAR(255),
 	priority VARCHAR(255),
+	priority_id INTEGER,
+	name VARCHAR(255),
+	section_id INTEGER,
+	status VARCHAR(255),
+	status_id VARCHAR(255),
 	problem TEXT,
 	contact VARCHAR(255),
 	location VARCHAR(255)
@@ -1429,9 +1431,12 @@ BEGIN
 		FOR r IN
 			SELECT
 				f.ticket,
+				f.priority,
 				f.priority_id,
 				f.section AS name,
-				f.priority,
+				f.section_id,
+				f.status,
+				f.status_id,
 				f.problem,
 				f.contact,
 				f.location
@@ -1451,9 +1456,12 @@ BEGIN
 		FOR r IN
 			SELECT
 				f.ticket,
+				f.priority,
 				f.priority_id,
 				f.section AS name,
-				f.priority,
+				f.section_id,
+				f.status,
+				f.status_id,
 				f.problem,
 				f.contact,
 				f.location

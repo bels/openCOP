@@ -34,7 +34,7 @@ if($version_check->{'error'} == 1){
 		die "Encountered errorrs while backing up database. Verify that the database is running and try again.\n";
 	} else {
 		$merge = $updater->merge_changes(package_path => $package->{'package_path'});
-		$updater->update_db(version => $version_check->{'calcc'}, package_path => $package->{'package_path'});
+		$updater->update_db(version => $version_check->{'calcc'}, newversion => $version_check->{'calcv'}, package_path => $package->{'package_path'});
 		my $update_config = $updater->update_config(version => $version_check->{'version'});
 	}
 

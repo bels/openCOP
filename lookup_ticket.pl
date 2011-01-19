@@ -135,7 +135,7 @@ if($authenticated == 1){
 	if($start<0){$start=0};
 
 	unless($data->{'section'} eq "pseudo"){
-		$query = "select ticket,pid,name,status,priority,problem,contact,location from lookup_ticket($data->{'section'},$id) WHERE 1 = 1";
+		$query = "select ticket,priority,priority_id,name,section_id,status,status_id,problem,contact,location from lookup_ticket($data->{'section'},$id) WHERE 1 = 1";
 		if($search){
 			foreach(keys %{$search_params}){
 				unless($_ eq 'section'){
@@ -157,9 +157,12 @@ if($authenticated == 1){
 		$query = "
 			select
 				f.ticket as ticket,
-				f.section as name,
-				f.status as status,
 				f.priority as priority,
+				f.priority_id as priority_id,
+				f.section as name,
+				f.section_id as section_id,
+				f.status as status,
+				f.status_id as status_id,
 				f.problem as problem,
 				f.location as location,
 				f.contact as contact

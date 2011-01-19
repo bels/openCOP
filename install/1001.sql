@@ -230,6 +230,19 @@ INSERT INTO template_property(template_id,property_id) values((select id from te
 INSERT INTO template_property(template_id,property_id) values((select id from template where template = 'isp'),(select id from property where property = 'description'));
 --$$
 --##
+DROP TYPE IF EXISTS ticket_holder CASCADE;
+CREATE TYPE ticket_holder AS (
+	ticket INTEGER,
+	pid INTEGER,
+	name VARCHAR(255),
+	status VARCHAR(255),
+	priority VARCHAR(255),
+	problem TEXT,
+	contact VARCHAR(255),
+	location VARCHAR(255)
+);
+--$$
+--##
 CREATE OR REPLACE FUNCTION lookup_ticket(
 	section_val INTEGER,
 	alias_id_val INTEGER
