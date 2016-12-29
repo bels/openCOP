@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/local/bin/perl
 # This script will process mail and turn it into a ticket.  It may do other things in the future but who knows.
 
 use strict;

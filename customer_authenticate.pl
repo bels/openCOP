@@ -1,5 +1,4 @@
-#!/usr/bin/env perl
-
+#!/usr/local/bin/perl
 use lib './libs';
 use strict;
 use CGI;

@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/local/bin/perl
 # This script will download and remove all of the messages from the current mail server  for later processing
 
 if($ARGV[0] eq "enable")

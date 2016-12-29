@@ -5,6 +5,7 @@
 		<META name="keywords" content="[% keywords %]">
 		<META name="description" content="[% description %]">
 		<title>[% title %]</title>
+		<link rel="stylesheet" href="styles/common/bootstrap.min.css" type="text/css" media="screen">
 		<link rel="stylesheet" href="styles/smoothness/jquery-ui-1.8.6.custom.css" type="text/css" media="screen">
 		<link rel="stylesheet" href="styles/layout.css" type="text/css" media="screen">
 		[% FOREACH style IN styles %]

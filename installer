@@ -1,0 +1,237 @@
+#!/usr/bin/env bash
+# EB
+# 2010.10.13
+# v1
+
+OSVER=(`uname`)			# Get operating system type
+INSTALL_LOG=("/tmp/opencop_install.log")
+INITIAL_DIR=`pwd`
+PATH=$PATH:/usr/local/bin:/bin:/usr/bin #to help make sure installations succeed
+declare -A REQHASH=(		# Define a list of required ports
+	["perl"]="perl5.8"
+	["apache"]="apache22"
+	["postgresql-server"]="postgresql84-server"
+	["p5-HTML-Template"]="p5-HTML-Template"
+	["p5-DBI"]="p5-DBI"
+	["p5-DBD-Pg"]="p5-DBD-Pg"
+	["p5-Template-Toolkit"]="p5-Template-Toolkit"
+	["p5-YAML"]="p5-YAML"
+	["p5-URI-Escape-XS"]="p5-URI-Escape-XS"
+	["p5-Digest-MD5"]="p5-Digest-MD5"
+	["p5-Data-Dumper"]="p5-Data-Dumper"
+	["p5-Net-SMTP_auth"]="p5-Net-SMTP_auth"
+	["p5-Mail-IMAPClient"]="p5-Mail-IMAPClient"
+	["p5-Date-Manip"]="p5-Date-Manip"
+	["p5-Authen-SASL"]="p5-Authen-SASL"
+	["p5-libwww"]="p5-libwww"
+	["p5-JSON"]="p5-JSON"
+	["p5-DBD-Excel"]="p5-DBD-Excel"
+	["p5-SQL-Statement"]="p5-SQL-Statement"
+	["p5-perl-ldap"]="p5-perl-ldap"
+	["coreutils"]="coreutils"
+)
+
+declare -A ANSWERS=(
+	["%%COMPANY_NAME%%"]=""
+	["%%COMPANY_DOMAIN%%"]=""
+	["%%BACKUP_DIR%%"]=""
+	["%%URL%%"]=""
+	["%%MAIL_SERVER%%"]=""
+	["%%SUPPORT_EMAIL_ADDRESS%%"]=""
+	["%%SUPPORT_PHONE_NUMBER%%"]=""
+	["%%DB_NAME%%"]=""
+	["%%DB_USER_PASSWORD%%"]=""
+	["%%DB_USER%%"]=""
+	["%%TICKET_MAIL_ACCOUNT%%"]=""
+	["%%TICKET_MAIL_PASSWORD%%"]=""
+	["%%ADMIN_FIRST%%"]=""
+	["%%DIRECTORY_TYPE%%"]=""
+	["%%LDAP_SERVER%%"]=""
+	["%%BASE_DN%%"]=""
+	["%%LDAP_SERVICE_ACCOUNT%%"]=""
+	["%%LDAP_SERVICE_PASSWORD%%"]=""
+	["%%ADMIN_LAST%%"]=""
+	["%%ADMIN_USER%%"]=""
+	["%%ADMIN_PASSWORD%%"]=""
+	["%%ADMIN_EMAIL%%"]=""
+	["%%DIRECTORY_LOGIN_ATTRIBUTE%%"]=""
+	["%%UPLOAD_SIZE%%"]=""
+	["%%UPLOAD_DIR%%"]=""
+)
+
+function die() {
+	echo "$@" >&2
+	exit 1
+}
+
+if [ ! -f ./sql/setup_postgresql.sh ]; then
+	die "This script must be run from the root directory of the openCOP files"
+fi
+
+#gets answer for config files
+LDAP="n"
+echo -e "This script will setup your openCOP installation"
+echo -e "We are going to ask you a few questions now\n\n"
+echo -en "What is your company name: "
+read ANSWERS[%%COMPANY_NAME%%]
+echo -en "What is your company domain: "
+read ANSWERS[%%COMPANY_DOMAIN%%]
+echo -en "What is the url to access this web app: "
+read ANSWERS[%%URL%%]
+echo -en "What is your mail server address: "
+read ANSWERS[%%MAIL_SERVER%%]
+echo -en "What is your support email address: "
+read ANSWERS[%%SUPPORT_EMAIL_ADDRESS%%]
+echo -en "What is your support phone number: "
+read ANSWERS[%%SUPPORT_PHONE_NUMBER%%]
+#for now the only support DB_TYPE is Pg so I am setting that.  In the future this will be a question allowing the user to specify
+ANSWERS[%%DB_TYPE%%]="Pg"
+echo -en "What do you want to name your database: "
+read ANSWERS[%%DB_NAME%%]
+echo -en "What do you want to name your database user: "
+read ANSWERS[%%DB_USER%%]
+echo -en "What password do you want to give your database user: "
+read ANSWERS[%%DB_USER_PASSWORD%%]
+echo -en "What email account would you like users to email for ticket creation (An email to this account will create a ticket. Don't use the address just the account name): "
+read ANSWERS[%%TICKET_MAIL_ACCOUNT%%]
+echo -en "What is the password to the ticket email account: "
+read ANSWERS[%%TICKET_MAIL_PASSWORD%%]
+echo -en "Will you be using a LDAP backend for authentication (AD, eDirectory, openLDAP, etc..) [y/N]"
+read LDAP
+if [[ $LDAP == "y" ]] || [[ $LDAP == "Y" ]]; then
+	echo -en "What type of directory are you using [AD|eDirectory|LDAP|]: "
+	read ANSWERS[%%DIRECTORY_TYPE%%]
+	echo -en "What is your LDAP server address: "
+	read ANSWERS[%%LDAP_SERVER%%]
+	echo -en "What is your base dn: "
+	read ANSWERS[%%BASE_DN%%]
+	echo -en "LDAP service account (This account needs to have read writes to the whole directory): "
+	read ANSWERS[%%LDAP_SERVICE_ACCOUNT%%]
+	echo -en "LDAP service account password: "
+	read ANSWERS[%%LDAP_SERVICE_PASSWORD%%]
+	if [ ${ANSWERS[%%DIRECTORY_TYPE%%]} == "LDAP" ]; then
+		echo -en "LDAP username attribute: "
+		read ANSWERS[%%DIRECTORY_LOGIN_ATTRIBUTE%%]
+	fi
+fi
+echo -e "What file size do you want to limit uploads to (in M. 10 = 10MB):"
+read ANSWERS[%%UPLOAD_SIZE%%]
+echo -e "What directory do you want to store your uploads in (a relative or absolute path will work as long as www has rights to the directory):"
+read ANSWERS[%%UPLOAD_DIR%%]
+echo -e "What directory do you want to store your backups in? (a relative or absolute path will work as long as www has rights to the directory):"
+read ANSWERS[%%BACKUP_DIR%%]
+echo -e "Time to get information about your admin user for the helpdesk"
+echo -en "Admin first name: "
+read ANSWERS[%%ADMIN_FIRST%%]
+echo -en "Admin last name: "
+read ANSWERS[%%ADMIN_LAST%%]
+echo -en "Admin username: "
+read ANSWERS[%%ADMIN_USER%%]
+echo -en "Admin password: "
+read ANSWERS[%%ADMIN_PASSWORD%%]
+echo -en "Admin email address: "
+read ANSWERS[%%ADMIN_EMAIL%%]
+
+FILES_TO_HAVE_VALUES_REPLACED=( config.yml sql\/postgresql.sql sql\/createuser.sql )
+
+for i in "${FILES_TO_HAVE_VALUES_REPLACED[@]}"; do
+	for j in ${!ANSWERS[@]}; do
+		sed -i -E 's/'"$j"'/'"${ANSWERS[${j}]}/g"'' $i
+	done
+done
+
+function dependencyCheckFor_freebsd() {		# Check if it's installed under FreeBSD
+	if [ -z "$1" ]; then
+		return
+	fi
+	echo -n "Checking for $1 ... "
+	for j in ${PKG[@]}; do
+		if [ $j == $1 ]; then
+#			echo "${[${j}]}"  # for version reporting
+			echo "yes"
+			return 0
+		fi
+	done
+	PKG_PATH=${REQHASH[${1}]}
+
+	CHDIR=`find /usr/ports/ -iname "$PKG_PATH" |awk '{print $0 }'`
+	cd $CHDIR && make -DBATCH -DDISABLE_VULNERABILITIES install clean >>$INSTALL_LOG || echo "ERROR: Could not install $1 at $CHDIR">>$INSTALL_LOG
+#	echo "no"
+}
+
+if [ $OSVER == "FreeBSD" ]; then
+	echo "This install script relies on the apache22 and postgres84-server packages."
+	PKG=(`pkg_version|cut -d' ' -f 1`)
+	VER=(`pkg_info|cut -d' ' -f 1`)
+	
+	for i in ${!REQHASH[@]}; do
+		dependencyCheckFor_freebsd $i
+	done
+	
+	for i in ${!REQHASH[@]}; do
+		VAL=`pkg_info | grep "^$i"`
+		if [ "$VAL" == "" ]; then
+			echo "$i didn't install">>$INSTALL_LOG
+		fi
+	done
+	
+	#getting the document root from the apache config
+	DR=`grep "^DocumentRoot" /usr/local/etc/apache22/httpd.conf | awk '{print $2}' | sed -e 's/"//g'`
+	INSTALL_DIR="${DR}/opencop"
+	#updating our apache config file to put our stuff in the right place
+	TEMP_INSTALL_DIR=${INSTALL_DIR//\//\\/}
+	sed -i -E 's/%%DR%%/'"$TEMP_INSTALL_DIR/g"'' ./install/httpd-opencop.conf
+	sed -i -E 's/%%VH%%/'"${ANSWERS[%%URL%%]}/g"'' ./install/httpd-opencop.conf
+	if [ ! -d $INSTALL_DIR ]; then
+		mkdir $INSTALL_DIR || die "Could not create $INSTALL_DIR. Do you have write permission?"
+	fi
+	
+	cd "$INITIAL_DIR"
+	echo -n "Copying files from `pwd` to $INSTALL_DIR ... "
+	`cp -R ./* $INSTALL_DIR >>$INSTALL_LOG`
+	echo -en "done\nSetting permissions ... "
+	`find $INSTALL_DIR -type d -exec chmod 775 {} \;`
+	`find $INSTALL_DIR -type f -exec chmod 770 {} \;`
+	`chmod a+rx $INSTALL_DIR/sql/*`
+	chown -R www:www $INSTALL_DIR/*
+	echo -e "done\nSetting up postgres ... "
+	# need to add checking to see if initdb has been run yet.  if this script installs postgresql then it will run initdb but
+	# if the user installed postgresql but did not run initdb then we will have a problem
+	if [ ! -d "/usr/local/pgsql/data" ]; then
+		chown pgsql:pgsql /usr/local/pgsql
+		su - pgsql -c "/usr/local/bin/initdb -D/usr/local/pgsql/data"
+		echo "postgresql_enable=\"YES\"">>/etc/rc.conf
+	fi
+	/usr/local/etc/rc.d/postgresql start
+	su - pgsql -c "cd $INSTALL_DIR/sql && /usr/local/bin/bash ./setup_postgresql.sh ${ANSWERS[%%DB_NAME%%]} ${ANSWERS[%%DB_USER%%]}" || die "Could not execute setup_postgresql.sh"
+
+	echo -e "done\nCreating service account ... "
+	echo "opencop" | pw useradd opencop -q -n opencop -G www -s csh -m -d /home/opencop -c 'openCOP service account' -h 0
+	if [ $? == 0 ]; then
+		echo "Created user opencop."
+	else
+		echo "Error creating user."
+	fi
+
+	mkdir /usr/local/etc/opencop
+	mv $INSTALL_DIR/*.yml /usr/local/etc/opencop
+	mv $INSTALL_DIR/opencop_scheduler.pl /usr/local/bin/
+	chown opencop:opencop /usr/local/bin/opencop_scheduler.pl
+	chown opencop:opencop $INSTALL_DIR/install/opencop_scheduler
+	crontab -u opencop $INSTALL_DIR/install/opencop_scheduler
+	su - opencop -c "/usr/local/bin/opencop_scheduler.pl &"
+	mv $INSTALL_DIR/cleanup_auth.pl /usr/local/bin/
+	chown opencop:opencop /usr/local/bin/cleanup_auth.pl
+	cp $INSTALL_DIR/install/httpd-opencop.conf /usr/local/etc/apache22/Includes
+	echo "apache22_enable=\"YES\"">>/etc/rc.conf
+	/usr/local/etc/rc.d/apache22 restart
+	rm -rf $INSTALL_DIR/doc $INSTALL_DIR/install $INSTALL_DIR/sql $INSTALL_DIR/installer
+
+elif [ $OSVER == "Linux" ]; then
+	echo "This is a Linux distribution"
+else
+	echo "Not FreeBSD/Linux"
+fi
+
+
+

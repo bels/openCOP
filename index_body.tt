@@ -6,14 +6,30 @@
 			<span id="lrw_text">You appear to be running an unsupported browser. Either install IE9, FIrefox 3.5+, Opera, Chrome or Safari 3+ or you may experience display issues.</span>
 		</div>
 		
-		<div id="login_box">
-			<span id="login_title" class="styled_text">Login</span>
-			<form id="login_form" action="authenticate.pl" method="POST">
-				<label class="styled_text" for="username">Username:</label><input type="text" id="username" name="username"><br />
-				<label class="styled_text" for="password">Password:</label><input type="password" id="password" name="password"><br />
-				<input type="image" src="images/login.png" class="image_button" id="submit_button" alt="Login">
+		<div class="well col-md-4 col-md-offset-4">
+			<h3 class="text-center">Login</h3>
+			<form id="login_form" class="form-horizontal" action="authenticate.pl" method="POST">
+				<div class="form-group">
+					<label for="username" class="col-md-3 control-label">Username:</label>
+					<div class="col-md-9">
+						<input class="form-control" type="text" id="username" name="username" placeholder="Username">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="password" class="col-md-3 control-label">Password:</label>
+					<div class="col-md-9">
+						<input class="form-control" type="password" id="password" name="password" placeholder="Password">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-offset-4 col-md-4">
+						<input type="submit" class="btn" id="submit_button" alt="Login">
+					</div>
+				</div>
 			</form>
-			<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>
+			<div class="col-md-12 text-center">
+				<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>
+			</div>
 			[% IF errorcode == 1 %]
 			<div id="login_error_message_div">
 				<span id="login_error_message">An error has occured while processing your login attempt. Please check your username and try again.</span>
