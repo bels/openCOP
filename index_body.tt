@@ -1,12 +1,6 @@
 		<div id="drop_shadow"></div>
-		<div id="low_resolution_warning">
-			<span id="lrw_text">You appear to have a resolution lower than 1024x768. You may experience display issues.</span>
-		</div>
-		<div id="unsupported_warning">
-			<span id="lrw_text">You appear to be running an unsupported browser. Either install IE9, FIrefox 3.5+, Opera, Chrome or Safari 3+ or you may experience display issues.</span>
-		</div>
 		
-		<div class="well col-md-4 col-md-offset-4">
+		<div class="well col-md-4 col-md-offset-4 top-buffer">
 			<h3 class="text-center">Login</h3>
 			<form id="login_form" class="form-horizontal" action="authenticate.pl" method="POST">
 				<div class="form-group">
@@ -23,7 +17,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-md-offset-4 col-md-4">
-						<input type="submit" class="btn" id="submit_button" alt="Login">
+						<input type="submit" class="btn btn-default" id="submit_button" alt="Login">
 					</div>
 				</div>
 			</form>
