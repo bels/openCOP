@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
@@ -21,8 +21,9 @@
 			}
 		</style>
 		<![endif]-->
-		<script type="text/javascript" src="javascripts/jquery.js"></script>
-		<script type="text/javascript" src="javascripts/jquery-ui-1.8.6.custom.min.js"></script>
+		<script type="text/javascript" src="javascripts/common/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="javascripts/common/jquery/jquery_ui/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="javascripts/common/bootstrap.min.js"></script>
 		<script type="text/javascript" src="javascripts/jquery.scrollabletab.js"></script>
 		<script type="text/javascript" src="javascripts/jquery.livequery.js"></script>
 		<script type="text/javascript" src="javascripts/jquery.hoverIntent.minified.js"></script>

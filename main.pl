@@ -39,6 +39,7 @@ if($authenticated == 1){
 		'keywords' => $meta_keywords,
 		'description' => $meta_description,
 		'company_name' => $config->{'company_name'},
+		page => 'main',
 		logo => $config->{'logo_image'},
 		is_admin => $user->is_admin(id => $id),
 		backend => $config->{'backend'},
