@@ -1,1 +1,0 @@
-CREATE USER opencop_user WITH PASSWORD '%%DB_PASSWORD%%';

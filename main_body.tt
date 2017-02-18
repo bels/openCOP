@@ -1,11 +1,21 @@
-		<div id="tabs">
-			<ul>
-				<li><a href="server_health.pl">Server Status</a></li>
-				<li><a href="current_critical.pl">Current Critical Tickets</a></li>
-				<li><a href="agents_working.pl">Working Technicians</a></li>
-		<!--		<li><a href="#closure_info">Closure Info</a></li> -->
-			</ul>
-		<!--
-			<div id="closure_info" class="content"><p>This box will have closure information and possibly customer survey results.  I think it should have a tabbing system that allows the user to switch between Ticket Closure, Work Order Closure, Last 10 Customer Surveys</p></div>
-		-->
+		<div class="container-fluid">
+			<div class="row">
+				<div id="tabs" class="col-sm-12">
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#server-health" data-url="server_health.pl" role="tab" data-toggle="tab">Server Status</a></li>
+						<li role="presentation"><a href="#current-critical" data-url="current_critical.pl" role="tab" data-toggle="tab">Current Critical Tickets</a></li>
+						<li role="presentation"><a href="#active-agents" data-url="agents_working.pl" role="tab" data-toggle="tab">Working Technicians</a></li>
+				<!--		<li role="presentation"><a href="#closure_info" role="tab" data-toggle="tab">Closure Info</a></li> -->
+					</ul>
+				<!--
+					<div id="closure_info" class="content"><p>This box will have closure information and possibly customer survey results.  I think it should have a tabbing system that allows the user to switch between Ticket Closure, Work Order Closure, Last 10 Customer Surveys</p></div>
+				-->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="server-health"></div>
+						<div role="tabpanel" class="tab-pane" id="current-critical"></div>
+						<div role="tabpanel" class="tab-pane" id="active-agents"></div>
+					</div>
+				</div>
+				
+			</div>
 		</div>

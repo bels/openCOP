@@ -1,6 +1,4 @@
 $(document).ready(function(){
-	var tabs;
-	var wo_tabs;
 	var tickets;
 	var multiselect = 0;
 	var inventory_current;
@@ -9,17 +7,26 @@ $(document).ready(function(){
 	} else {
 		inventory_current = 0;
 	}
-	if($('#tabs').length){
-		tabs = 1;
-	} else {
-		tabs = 0;
-	}
-	if($('#wo_tabs').length){
-		wo_tabs = 1;
-	} else {
-		wo_tabs = 0;
-	}
 
+	//to have data when the tab first shows up. this will be replaced when we move to mojolicious but for now here is my stop gap
+	$.ajax({
+		url: 'server_health.pl',
+		method: 'GET'
+	}).done(function(data){
+		$('#server-health').html(data);
+	});
+	//get ajax data on tab change
+	$('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+		var $target = $(e.target) // activated tab
+		var $content_div = $($target.attr("href"));
+		$.ajax({
+			url: $target.data('url'),
+			method: 'GET'
+		}).done(function(data){
+			$content_div.html(data);
+		});
+	});
+	
 	$.ajaxSetup({
 		cache: false
 	});
@@ -54,9 +61,6 @@ $(document).ready(function(){
 		resetLogout();
 		$(this).find("ul.subnav").slideUp('fast');
 	}
-	if(tabs){
-		$("#tabs").tabs().scrollabletab();
-	}
 	
 	$('.styled_form_element').focusin(function(){
 		$(this).addClass('focus');
@@ -64,14 +68,6 @@ $(document).ready(function(){
 	
 	$('.styled_form_element').focusout(function(){
 		$(this).removeClass('focus');
-	});
-	
-	$('#cancel').live('click',function(e){
-		e.preventDefault();
-		resetLogout();
-		$('#ticket_details').fadeOut('fast');
-		$('#behind_popup').fadeOut('fast');
-		location.reload(true);
 	});
 	
 	$('.jqgrow').livequery(function(){
