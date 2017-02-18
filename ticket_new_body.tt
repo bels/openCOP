@@ -1,19 +1,53 @@
-		<h4>[% company_name %] Helpdesk - Input a new ticket</h4>
-		<form id="newticket">
-			<div id="author_div">
-				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;General Information</div>
-				<label for="site" class="short_label">Site:</label>
-				<select name="site" size="1" tabindex="1" id="site" class="styled_form_element">
-					<option></option>
-					[% FOREACH site IN ssite %]
-					<option value="[% site_list.$site.id %]">[% site_list.$site.name %]</option>
-					[% END %]
-				</select>
-				<br />
-				<label for="author" class="short_label">Author:</label><input type="text" name="author" id="author" value="[% info.first _ ' ' _ info.last %]" tabindex=2 class="styled_form_element"><img alt="?" src="images/qmark.png" tip="101" class="tooltip" />
-				<label for="barcode" class="short_label">Barcode:</label><input type="text" name="barcode" id="barcode" tabindex=3 class="styled_form_element"><img alt="?" src="images/qmark.png" tip="102" class="tooltip" />
-				<label for="serial" class="short_label">Serial:</label><input type="text" name="serial" id="serial" tabindex=4 class="styled_form_element"><img alt="?" src="images/qmark.png" tip="103" class="tooltip" /><br />
-				<label for="contact" class="short_label">Contact:</label><input type="text" name="contact" id="contact" value="[% info.first _ ' ' _ info.last %]" tabindex=5 class="styled_form_element"><img alt="?" src="images/qmark.png" tip="104" class="tooltip" />
+	<div class="container-fluid"> 
+		<h3 class="center-block">[% company_name %] Helpdesk - Input a new ticket</h3>
+		<form class="form-horizontal" id="newticket">
+			<fieldset>
+				<legend>General Information</legend>
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label for="site" class="col-sm-1 control-label">Site:</label>
+						<div class="col-sm-4">
+							<select name="site" size="1" tabindex="1" id="site" class="form-control">
+								<option></option>
+								[% FOREACH site IN ssite %]
+								<option value="[% site_list.$site.id %]">[% site_list.$site.name %]</option>
+								[% END %]
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label for="author" class="col-sm-1 control-label">Author:</label>
+						<div class="col-sm-2">
+							<input type="text" name="author" id="author" value="[% info.first _ ' ' _ info.last %]" tabindex=2 class="form-control">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Author field should contain your name. No matter who you are or who you are putting the ticket in for, you are the author and your name is required."></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="barcode" class="col-sm-1 control-label">Barcode:</label>
+						<div class="col-sm-2">
+							<input type="text" name="barcode" id="barcode" tabindex=3 class="form-control">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Barcode field should contain the barcode of the computer or other piece of equipment that has the problem you are describing. If the device does not have a barcode but does have a serial number, use the Serial field instead. If there is no barcode do not put anything in the Barcode field."></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="serial" class="col-sm-1 control-label">Serial:</label>
+						<div class="col-sm-2">
+							<input type="text" name="serial" id="serial" tabindex=4 class="form-control">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Serial field should contain the serial number of the equipment experiencing the problem. If this is not relevant, leave it blank."></span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label for="contact" class="col-sm-1 control-label">Contact:</label>
+						<div class="col-sm-2">
+							<input type="text" name="contact" id="contact" value="[% info.first _ ' ' _ info.last %]" tabindex=5 class="form-control">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Contact field should contain the name of the person who should be contacted who will have first hand knowledge of the problem and be able to explain it in detail. This field is required."></span>
+						</div>
+					</div>
+					<div class="form-group"
 				<label for="phone" class="short_label">Phone:</label><input type="text" name="phone" id="phone" tabindex=6 class="styled_form_element"><img alt="?" src="images/qmark.png" tip="105" class="tooltip" />
 				<label for="email" class="short_label">Email:</label><input type="text" name="email" value="[% info.email %]" id="email" tabindex=7 class="styled_form_element"><img alt="?" src="images/qmark.png" tip="105" class="tooltip" /><br />
 				<label for="location" class="short_label">Location:</label><input type="text" name="location" id="location" tabindex=8 class="styled_form_element"><img alt="?" src="images/qmark.png" tip="107" class="tooltip" />
@@ -41,9 +75,9 @@
 					[% END %]
 				</select>
 				<img alt="?" src="images/qmark.png" tip="110" class="tooltip" />
-			</div>
-			<div id="problem_details">
-				<div class="form_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Problem Details</div>
+			</fieldset>
+			<fieldset>
+				<legend>Problem Details</legend>
 				<div id="problem_wrapper">
 					<label for="problem">Problem:</label><img alt="?" src="images/qmark.png" tip="111" class="tooltip" /><br />
 					<textarea id="tech_problem" cols="80" rows="5" name="problem" tabindex="11" class="styled_form_element"></textarea><br />
@@ -52,7 +86,7 @@
 					<img src="images/submit.png" class="image_button" id="submit_button" alt="Submit">
 				</div>
 				<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
-			</div>
+			</fieldset>
 		</form>
 		<div id="multiAttach" class="dialog">
 			<div id="details">
@@ -67,3 +101,4 @@
 		</div>
 		<div id="blank" style="display: none">
 		</div>
+	</div>

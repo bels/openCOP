@@ -17,7 +17,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-12">
-						<input type="submit" class="btn btn-default center-block" id="submit_button" alt="Login">
+						<button type="submit" class="btn btn-default center-block" id="submit_button" alt="Login">Login</button>
 					</div>
 				</div>
 			</form>
