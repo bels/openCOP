@@ -1,0 +1,8 @@
+% layout 'default';
+% title 'Login';
+
+%= include 'auth/login_form.html.ep'
+
+		<div id="drop_shadow"></div>
+
+		%= content_for login_form

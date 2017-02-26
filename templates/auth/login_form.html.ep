@@ -1,6 +1,5 @@
-		<div id="drop_shadow"></div>
-		
-		<div class="well col-md-4 col-md-offset-4 top-buffer">
+% content_for login_form => begin
+	<div class="well col-md-4 col-md-offset-4 top-buffer">
 			<h3 class="text-center">Login</h3>
 			<form id="login_form" class="form-horizontal" action="authenticate.pl" method="POST">
 				<div class="form-group">
@@ -24,9 +23,11 @@
 			<div class="col-md-12 text-center">
 				<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>
 			</div>
-			[% IF errorcode == 1 %]
+			% if($errorcode) {
 			<div id="login_error_message_div">
 				<span id="login_error_message">An error has occured while processing your login attempt. Please check your username and try again.</span>
 			</div>
-			[% END %]
+			% }
 		</div>
+
+% end
