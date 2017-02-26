@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+		<META name="keywords" content="<%= meta_keywords %>">
+		<META name="description" content="<%= meta_description %>">
+		<title><%= title %></title>
+		<link rel="stylesheet" href="styles/common/bootstrap.min.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="styles/layout.css" type="text/css" media="screen">
+  		%= stylesheet '/css/common/bootstrap.css'
+  		%= stylesheet '/css/private/layout.css'
+		% if(stash('styles')){
+		  	% foreach my $style (@{stash('styles')}){
+		  		%= stylesheet $style
+		  	% }
+		% }
+
+		<script type="text/javascript" src="javascripts/common/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="javascripts/common/bootstrap.min.js"></script>
+		% if(stash('js')){
+		  	% foreach my $script (@{stash('js')}){
+		  		%= javascript $script
+		  	% }
+		% }
+	</head>
+    <body>
+    	<%= content %>
+    </body>
+</html>
