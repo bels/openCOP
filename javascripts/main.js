@@ -49,8 +49,6 @@ $(document).ready(function(){
 	} else {
 		$("ul.subnav").parent().append("<span></span>"); //Only shows drop down trigger when js is enabled (Adds empty span tag after ul.subnav*)
 	}
-
-	$("ul.topnav li").hoverIntent(config);
 	
 	function showMenu(){
 		resetLogout();
@@ -62,19 +60,19 @@ $(document).ready(function(){
 		$(this).find("ul.subnav").slideUp('fast');
 	}
 	
-	$('.styled_form_element').focusin(function(){
+	$('input').focusin(function(){
 		$(this).addClass('focus');
 	});
 	
-	$('.styled_form_element').focusout(function(){
-		$(this).removeClass('focus');
+	$('select').focusin(function(){
+		$(this).addClass('focus');
 	});
 	
-	$('.jqgrow').livequery(function(){
-		$(this).children('td[title="Normal"]').parent().addClass("normal_priority");
-		$(this).children('td[title="Low"]').parent().addClass("low_priority");
-		$(this).children('td[title="High"]').parent().addClass("high_priority");
-		$(this).children('td[title="Business Critical"]').parent().addClass("critical_priority");
+	$('input').focusout(function(){
+		$(this).removeClass('focus');
+	});
+	$('select').focusout(function(){
+		$(this).removeClass('focus');
 	});
 });
 

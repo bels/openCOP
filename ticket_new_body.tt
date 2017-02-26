@@ -19,22 +19,28 @@
 				<div class="col-md-12">
 					<div class="form-group col-md-4">
 						<label for="author" class="col-md-4 control-label">Author:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<input type="text" name="author" id="author" value="[% info.first _ ' ' _ info.last %]" tabindex=2 class="form-control">
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Author field should contain your name. No matter who you are or who you are putting the ticket in for, you are the author and your name is required."></span>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="barcode" class="col-md-4 control-label">Barcode:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<input type="text" name="barcode" id="barcode" tabindex=3 class="form-control">
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Barcode field should contain the barcode of the computer or other piece of equipment that has the problem you are describing. If the device does not have a barcode but does have a serial number, use the Serial field instead. If there is no barcode do not put anything in the Barcode field."></span>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="serial" class="col-md-4 control-label">Serial:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<input type="text" name="serial" id="serial" tabindex=4 class="form-control">
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Serial field should contain the serial number of the equipment experiencing the problem. If this is not relevant, leave it blank."></span>
 						</div>
 					</div>
@@ -42,22 +48,28 @@
 				<div class="col-md-12">
 					<div class="form-group col-md-4">
 						<label for="contact" class="col-md-4 control-label">Contact:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<input type="text" name="contact" id="contact" value="[% info.first _ ' ' _ info.last %]" tabindex=5 class="form-control">
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Contact field should contain the name of the person who should be contacted who will have first hand knowledge of the problem and be able to explain it in detail. This field is required."></span>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="phone" class="col-md-4 control-label">Phone:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<input type="text" name="phone" id="phone" tabindex=6 class="form-control">
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Phone field should contain the phone number of either the contact person (preferred) or the author. This may be left blank."></span>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="email" class="col-md-4 control-label">Email:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<input type="text" name="email" value="[% info.email %]" id="email" tabindex=7 class="form-control"><img alt="?" src="images/qmark.png" tip="105" class="tooltip" />
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Email field should contain the email address of either the contact person (preferred) or the author. This must be a valid email address.  This field is required."></span>
 						</div>
 					</div>
@@ -65,31 +77,37 @@
 				<div class="col-md-12">
 					<div class="form-group col-md-4">
 						<label for="location" class="col-md-4 control-label">Location:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<input type="text" name="location" id="location" tabindex=8 class="form-control">
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Location field should indicate the room in which the equipment which is experiencing trouble resides. Or, it should describe the area where the problem is felt, or most felt. Additionally, it could specify which piece of equipment in the room/area is experiencing the problem, or experiencing it the most, if there is more than one piece of equipment in the designated area which could be confused with the affected equipment."></span>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="priority" class="col-md-4 control-label">Priority:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<select name="priority" size="1" tabindex="9" id="priority" class="form-control">
 								[% FOREACH i IN priority_list.keys %]
 								[% j = loop.count %]
 								<option value="[% j %]" [% IF j == 2 %]selected[% END %]>[% priority_list.$j.description %]</option>
 								[% END %]
 							</select>
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Priority field is for classifying the urgency of the problem being described. In almost all cases the priority will be "Normal" or less. If you are unsure of what the appropriate priority is use "Normal.""></span>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="section" class="col-md-4 control-label">Section:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<select name="section" size="1" tabindex="10" id="section" class="form-control">
 								[% FOREACH section IN ssection %]
 								<option value="[% section_create_list.$section.section_id %]">[% section_create_list.$section.name %]</option>
 								[% END %]
 							</select>
+						</div>
+						<div class="col-md-1">
 							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, leave the section field untouched and that group will review it and make further adjustments if necessary."></span>
 						</div>
 					</div>
@@ -97,26 +115,44 @@
 				<div class="col-md-12">
 					<div class="col-md-4 form-group">
 						<label for="tech" class="col-md-4 control-label">Tech:</label>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<select name="tech" size="1" tabindex="10" id="tech" class="form-control">
 								<option></option>
 								[% FOREACH tech IN stech %]
 								<option value="[% tech_list.$tech.id %]">[% tech_list.$tech.alias %]</option>
 								[% END %]
 							</select>
-						<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator."></span>
+						</div>
+						<div class="col-md-1">
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator."></span>
+						</div>
+					</div>
 			</fieldset>
-			<fieldset>
+			<fieldset class="form-group">
 				<legend>Problem Details</legend>
-				<div id="problem_wrapper">
-					<label for="problem">Problem:</label><img alt="?" src="images/qmark.png" tip="111" class="tooltip" /><br />
-					<textarea id="tech_problem" cols="80" rows="5" name="problem" tabindex="11" class="styled_form_element"></textarea><br />
-					<label for="troubleshoot">Troubleshooting Tried:</label><img alt="?" src="images/qmark.png" tip="112" class="tooltip" /><br />
-					<textarea  id="troubleshoot" cols="80" rows="5" name="troubleshoot" tabindex="12" class="styled_form_element"></textarea> <br />
-					<img src="images/submit.png" class="image_button" id="submit_button" alt="Submit">
+				<div class="col-md-7">
+					<div id="problem_wrapper" class="col-md-12">
+						<div class="col-md-12">
+							<label for="problem">Problem:</label>
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Problem field should contain a verbose description of the problem you observed, including any details that may be important or seem related. This field is required."></span>
+						</div>
+						<textarea id="tech_problem" rows="5" name="problem" tabindex="11" class="form-control col-md-12"></textarea>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-12">
+							<label for="troubleshoot">Troubleshooting Tried:</label>
+							<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Troubleshooting Tried field should contain a description of all steps you took while attempting to resolve the Problem described above, as well as any results of that troubleshooting and a summary of where the problem now stands. This may be left blank."></span>
+						</div>
+						<textarea  id="troubleshoot" rows="5" name="troubleshoot" tabindex="12" class="form-control col-md-12"></textarea>
+					</div>
 				</div>
-				<div id="attach_div"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
+				<div id="attach_div" class="col-md-5"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
 			</fieldset>
+			<div class="form-group">
+				<div class="col-md-12">
+					<button type="submit" id="submit_button" class="btn btn-default center-block">Submit</button>
+				</div>
+			</div>
 		</form>
 		<div id="multiAttach" class="dialog">
 			<div id="details">

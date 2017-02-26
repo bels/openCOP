@@ -2,56 +2,6 @@
 	z-index: -1;
 }
 
-.short_label{
-	display: inline-block;
-	width: 90px;
-	text-align: right;
-	margin-right: 5px;
-	margin-top: 5px;
-}
-
-#problem_div{
-	display: inline-block;
-	float: left;
-	width: 900px;
-}
-
-#problem_details{
-	width: 890px;
-	height: 350px;
-	margin-top: 15px;
-	margin-left: 15px;
-	border: 1px solid black;
-}
-
-#problem_details label{
-	margin-left: 35px;
-	margin-top: 5px;
-	display: inline-block;
-	vertical-align: top;
-}
-
-#problem_details textarea{
-	margin-left: 35px;
-	width: 490px;
-}
-
-#problem_details button{
-	margin-left: 35px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-#update_form input{
-	width: 170px;
-	margin-right: 5px;
-}
-
-#update_form span{
-	width: 170px;
-	margin-right: 5px;
-}
-
 .error{
 	color: red;
 	font-size: .7em;
@@ -59,10 +9,6 @@
 
 #search_form input{
 	margin-left: 10px;
-}
-
-#submit_button{
-	margin-left: 35px;
 }
 
 .dialog{
@@ -100,16 +46,6 @@
 	width: 390px;
 	background-color: #fff;
 	padding: 5px;
-}
-
-.attached_file{
-	text-decoration: none;
-}
-
-#problem_wrapper{
-	display: inline-block;
-	float: left;
-	width: 600px;
 }
 
 .ui-jqgrid{

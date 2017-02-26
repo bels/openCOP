@@ -172,13 +172,9 @@ sub render{
 		push(@styles,"styles/ticket_details.css");
 	}
 	my @javascripts = (
-		"javascripts/jquery.tools.min.js",
-		"javascripts/jquery.tools.tooltips.js",
 		"javascripts/grid.locale-en.js",
 		"javascripts/jquery.jqGrid.min.js",
 		"javascripts/jquery.validate.js",
-		"javascripts/jquery.mousewheel.js",
-		"javascripts/mwheelIntent.js",
 		"javascripts/jquery.blockui.js",
 		"javascripts/jquery.form.js",
 		"javascripts/main.js",
