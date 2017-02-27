@@ -23,7 +23,7 @@
 			<div class="col-md-12 text-center">
 				<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>
 			</div>
-			% if($errorcode) {
+			% if(stash('errorcode')) {
 			<div id="login_error_message_div">
 				<span id="login_error_message">An error has occured while processing your login attempt. Please check your username and try again.</span>
 			</div>

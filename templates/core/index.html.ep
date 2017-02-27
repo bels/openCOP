@@ -1,8 +1,8 @@
 % layout 'default';
 % title 'Login';
 
-%= include 'auth/login_form.html.ep'
-
+%= include 'auth/login_form'
+		<div id="logo_div" class="col-md-12"><img src="<%= config('logo') %>" id="logo" class="pull-left"><span id="company_name_span" class="pull-right"><%= config('company_name') %> Ticketing System</span></div>
 		<div id="drop_shadow"></div>
 
-		%= content_for login_form
+		%= content_for 'login_form'
