@@ -1,1 +1,0 @@
-	<div id="logo_div" class="col-md-12"><img src="[% logo %]" id="logo" class="pull-left"><!-- i'd like to make this a variable so if they don't have a logo it won't show up --><span id="company_name_span" class="pull-right">[% company_name %] Ticketing System</span></div>
