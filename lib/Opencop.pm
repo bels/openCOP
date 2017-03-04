@@ -3,6 +3,8 @@ use Mojo::Base 'Mojolicious';
 
 use Mojo::Pg;
 use Opencop::Model::Audit;
+use Opencop::Model::Account;
+use Opencop::Model::Auth;
 
 # This method will run once at server start
 sub startup {
@@ -17,6 +19,14 @@ sub startup {
   $self->helper(audit => sub { 
   	my $app = shift;
 	state $core = Opencop::Model::Audit->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 :  0)
+  });
+  $self->helper(account => sub {
+  	my $app = shift;
+  	state $account = Opencop::Model::Account->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+  });
+  $self->helper(auth => sub {
+  	my $app = shift;
+  	state $auth = Opencop::Model::Auth->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   
   $self->helper(meta_keywords => sub {
