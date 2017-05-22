@@ -21,7 +21,7 @@ sub page_visit{
 		}
 	};
 	#make this a configuration file option
-	$self->{'db'}->db->query(
+	$self->pg->db->query(
 		'insert into audit.traffic(method,uri,protocol,host,host_port,referring_page,client_ip,user_agent,client_port) values (?,?,?,?,?,?,?,?,?)',
 		$important_data->{'method'},
 		$important_data->{'uri'},
