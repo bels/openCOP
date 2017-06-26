@@ -1,6 +1,8 @@
 CREATE SCHEMA IF NOT EXISTS auth AUTHORIZATION opencop_user;
 
-CREATE TABLE auth.users (
+SET SEARCH_PATH TO auth,public;
+
+CREATE TABLE users (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
@@ -10,97 +12,97 @@ CREATE TABLE auth.users (
 	login_identifier TEXT UNIQUE,
 	password TEXT,
 	active BOOLEAN DEFAULT true,
-	site INTEGER DEFAULT null
+	site UUID REFERNCES opencop.company(id) DEFAULT null
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON auth.users TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.users
+GRANT SELECT, INSERT, UPDATE, DELETE ON users TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON users
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
 -------------------------------------------------------------------------------------
 
-CREATE TABLE auth.profile_data_type(
+CREATE TABLE profile_data_type(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
 	description TEXT NOT NULL
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON auth.profile_data_type TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.profile_data_type
+GRANT SELECT, INSERT, UPDATE, DELETE ON profile_data_type TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON profile_data_type
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
 -------------------------------------------------------------------------------------
 
-CREATE TABLE auth.profile(
+CREATE TABLE profile(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
-	user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-	data_type UUID REFERENCES auth.profile_data_type(id),
+	user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+	data_type UUID REFERENCES profile_data_type(id),
 	content TEXT NOT NULL,
 	default_primary BOOLEAN DEFAULT TRUE NOT NULL,
 	active BOOLEAN DEFAULT TRUE
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON auth.profile TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.profile
+GRANT SELECT, INSERT, UPDATE, DELETE ON profile TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON profile
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 	
 -------------------------------------------------------------------------------------
 
-CREATE TABLE auth.permissions (
+CREATE TABLE permissions (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
 	permission TEXT NOT NULL
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON auth.permissions TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.permissions
+GRANT SELECT, INSERT, UPDATE, DELETE ON permissions TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON permissions
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
 -------------------------------------------------------------------------------------
 
-CREATE TABLE auth.object(
+CREATE TABLE object(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
 	name TEXT NOT NULL
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON auth.object TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.object
+GRANT SELECT, INSERT, UPDATE, DELETE ON object TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON object
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
 -------------------------------------------------------------------------------------
 
-CREATE TABLE auth.user_permission (
+CREATE TABLE user_permission (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
-	user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-	permission_id UUID NOT NULL REFERENCES auth.permissions(id) ON DELETE CASCADE,
-	object_id UUID NOT NULL REFERENCES auth.object(id) ON DELETE CASCADE,
+	user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	permission_id UUID NOT NULL REFERENCES permissions(id) ON DELETE CASCADE,
+	object_id UUID NOT NULL REFERENCES object(id) ON DELETE CASCADE,
 	UNIQUE (user_id,permission_id,object_id)
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON auth.user_permission TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.user_permission
+GRANT SELECT, INSERT, UPDATE, DELETE ON user_permission TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON user_permission
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
 -------------------------------------------------------------------------------------
 
-CREATE TABLE auth.sessions(
+CREATE TABLE sessions(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
-	user_id UUID NOT NULL REFERENCES auth.users(id),
+	user_id UUID NOT NULL REFERENCES users(id),
 	login_identifier TEXT NOT NULL,
 	ip TEXT NOT NULL,
 	active BOOLEAN DEFAULT true
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON auth.sessions TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.sessions
+GRANT SELECT, INSERT, UPDATE, DELETE ON sessions TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON sessions
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
