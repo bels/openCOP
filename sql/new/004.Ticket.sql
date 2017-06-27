@@ -56,6 +56,7 @@ CREATE TABLE ticket (
 	contact TEXT,
 	contact_phone TEXT,
 	section UUID references section(id),
+	short_description TEXT,
 	problem TEXT,
 	priority UUID references priority(id),
 	serial TEXT,
