@@ -38,4 +38,33 @@ sub edit{
 	
 }
 
+sub get_profile_data{
+	my ($self,$user_id,$data_type) = @_;
+	
+my $with_data_type =<<SQL;
+select
+	content,
+	default_primary
+from 
+	profile
+where user_id = ? and data_type = (select id from profile_data_type where description = ?) and active = true
+SQL
+my $without_data_type =<<SQL;
+select
+	p.content,
+	p.default_primary,
+	pdt.description
+from
+	profile p
+join
+	profile_data_type pdt
+on
+	p.data_type = pdt.id
+SQL
+	if(defined($data_type)){
+		return $self->pg->db->query($with_data_type,$user_id,$data_type)->hashes->to_array;
+	} else {
+		return $self->pg->db->query('select content, from profile where user_id = ? and active = true',$user_id)->hashes->to_array;
+	}
+}
 1;

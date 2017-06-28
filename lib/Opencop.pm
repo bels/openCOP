@@ -16,6 +16,7 @@ sub startup {
   $self->plugin('Config');
   
   $self->helper(pg => sub { state $pg = Mojo::Pg->new( shift->config('pg'))});
+  $self->pg->search_path(['ticket','auth','audit','public']);
   $self->helper(audit => sub { 
   	my $app = shift;
 	state $core = Opencop::Model::Audit->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 :  0)
@@ -47,7 +48,9 @@ sub startup {
   # Normal route to controller
   $r->get('/')->to('core#index')->name('index');
   $r->get('/customer')->to('customer#index')->name('customer_index');
+  $r->post('/auth')->to('auth#authenticate')->name('auth');
   my $authed = $r->under()->to('auth#check_session');
+  $authed->get('/technician/dashboard')->to('technician#dashboard')->name('technician_dashboard');
   $authed->get('/ticket/new')->to('ticket#new_form')->name('new_ticket_form');
   $authed->post('/ticket/new')->to('ticket#new')->name('new_ticket');
   $authed->post('/ticket/update/:ticket_number')->to('ticket#update')->name('update_ticket');
@@ -73,6 +76,7 @@ sub startup {
   $authed->get('/inventory/:asset_id')->to('inventory#view')->name('view_asset');
   $authed->get('/customer/view/all')->to('customer#view_all')->name('view_all_customers');
   $authed->post('/customer/edit')->to('customer#edit')->name('edit_customer');
+  $authed->get('/customer/dashboard')->to('customer#dashboard')->name('customer_dashboard');
   $authed->get('/customer/:customer')->to('customer#view')->name('view_customer');
   $authed->get('/admin/work_orders')->to('admin#work_orders')->name('admin_work_orders');
   $authed->get('/admin/users')->to('admin#view_users')->name('view_users');
@@ -89,7 +93,7 @@ sub startup {
   $authed->get('/permissions/new')->to('admin#new_permission_form')->name('new_permission_form');
   $authed->post('/permissions/new')->to('admin#new_permission')->name('new_permission');
   $authed->post('/permissions/edit')->to('admin#edit_permission')->name('edit_permission');
-  $authed->post('/logout')->to('auth#logout')->name('logout');
+  $authed->get('/logout')->to('auth#logout')->name('logout');
 }
 
 1;

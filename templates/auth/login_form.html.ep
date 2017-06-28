@@ -1,33 +1,33 @@
 % content_for login_form => begin
 	<div class="well col-md-4 col-md-offset-4 top-buffer">
-			<h3 class="text-center">Login</h3>
-			<form id="login_form" class="form-horizontal" action="authenticate.pl" method="POST">
-				<div class="form-group">
-					<label for="username" class="col-md-3 control-label">Username:</label>
-					<div class="col-md-9">
-						<input class="form-control" type="text" id="username" name="username" placeholder="Username">
-					</div>
+		<h3 class="text-center">Login</h3>
+		%= form_for auth => (class => 'form-horizontal', method => 'POST') => begin
+			<div class="form-group">
+				%= label_for username => 'Username', class => 'control-label col-md-3'
+				<div class="col-md-9">
+					%= text_field 'username', class => 'form-control', id => 'username', placeholder => 'Username'
 				</div>
-				<div class="form-group">
-					<label for="password" class="col-md-3 control-label">Password:</label>
-					<div class="col-md-9">
-						<input class="form-control" type="password" id="password" name="password" placeholder="Password">
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-12">
-						<button type="submit" class="btn btn-default center-block" id="submit_button" alt="Login">Login</button>
-					</div>
-				</div>
-			</form>
-			<div class="col-md-12 text-center">
-				<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>
 			</div>
-			% if(stash('errorcode')) {
-			<div id="login_error_message_div">
-				<span id="login_error_message">An error has occured while processing your login attempt. Please check your username and try again.</span>
+			<div class="form-group">
+				%= label_for password => 'Password', class => 'control-label col-md-3'
+				<div class="col-md-9">
+					%= password_field 'password', class => 'form-control', id => 'password', placeholder => 'Password'
+				</div>
 			</div>
-			% }
+			<div class="form-group">
+				<div class="col-sm-12">
+					<button type="submit" class="btn btn-default center-block" id="submit_button" alt="Login">Login</button>
+				</div>
+			</div>
+		% end
+		<div class="col-md-12 text-center">
+			<a id="forgot_password_link" href="forgot_password.pl">Forgot your password?</a>
 		</div>
+		% if(flash('login_error')) {
+		<div class="text-center">
+			<h3 class="text-danger"><%= flash('login_error') %></h3>
+		</div>
+		% }
+	</div>
 
 % end

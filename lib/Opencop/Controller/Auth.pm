@@ -12,7 +12,7 @@ sub authenticate{
 		my $session = $self->auth->retrieveSessionByID($session);
 		$self->redirect_to($self->url_for($self->config->{'landing_page'}));
 	}
-	my $username = $self->param('email-address') // '';
+	my $username = $self->param('username') // '';
 	my $password = $self->param('password') // '';
 	my $address = $self->tx->remote_address // 'Could not get ip. Something is wrong!';
 	warn sprintf('username: %s password: %s address: %s',$username,$password , $address) if $self->app->mode eq 'development';
@@ -24,12 +24,24 @@ sub authenticate{
 			$self->render(json => {success => Mojo::JSON->true}) and return;	
 		}
 		$self->redirect_to($self->flash('destination')) and return if defined $self->flash('destination');
-		$self->redirect_to($self->url_for($self->config->{'landing_page'}));
+		my $profile_data = $self->account->get_profile_data($self->session('user_id'),'account_type');
+		my $active_account_type = undef;
+		foreach my $data (@{$profile_data}){
+			if($data->{'default_primary'}){
+				$active_account_type = $data->{'content'};
+				$self->session(account_type => $active_account_type);
+			}
+		}
+		if($active_account_type eq 'technician'){
+			$self->redirect_to($self->url_for($self->config->{'technician_landing_page'}));
+		} else {
+			$self->redirect_to($self->url_for($self->config->{'customer_landing_page'}));
+		}
 		return;
 	} else {
 		if($session_info->{'status'} == Opencop::Model::Auth::ACCOUNT_LOCKED){
-			$self->flash(error => 'You have failed login 3 times. Please wait 10 minutes before trying again. This is to help protect your security.');
-			$self->redirect_to($self->url_for('login'));
+			$self->flash(login_error => 'You have failed login 3 times. Please wait 10 minutes before trying again. This is to help protect your security.');
+			$self->redirect_to($self->url_for('index'));
 		}
 		if($self->tx->req->is_xhr){
 			$self->render(json => {success => Mojo::JSON->false})
@@ -41,7 +53,7 @@ sub authenticate{
 				#i know this is redundant but in case we want to give a different error message later we can
 				$self->flash(login_error => 'Bad username/password');
 			}
-			$self->redirect_to($self->url_for('login'));
+			$self->redirect_to($self->url_for('index'));
 		}
 		return;
 	}
@@ -62,4 +74,11 @@ sub check_session {
 	return;
 }
 
+sub logout{
+	my $self = shift;
+	
+	$self->auth->logout($self->session('id'));
+	$self->session(expires => 1);
+	$self->redirect_to($self->url_for('index'));
+}
 1;

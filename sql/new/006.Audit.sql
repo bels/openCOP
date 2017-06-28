@@ -18,11 +18,11 @@ CREATE TABLE audit.traffic(
 	client_port TEXT
 );
 
-GRANT ALL ON audit.traffic TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON audit.traffic
+GRANT ALL ON traffic TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON traffic
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
-CREATE TABLE audit.auth(
+CREATE TABLE auth(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	client_ip TEXT,
@@ -30,24 +30,22 @@ CREATE TABLE audit.auth(
 	login_successful BOOLEAN
 );
 
-GRANT ALL ON audit.auth TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON audit.auth
+GRANT ALL ON auth TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 	
 CREATE TABLE ticket (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
+	update_type TEXT,
 	status INTEGER,
-	site INTEGER,
-	location TEXT,
 	updated TIMESTAMP DEFAULT current_timestamp,
-	contact_name Text,
 	notes TEXT,
-	section UUID REFERENCES ticket.section(id),
-	priority UUID REFERENCES ticket.priority(id),
-	contact_email TEXT,
-	technician UUID REFERENCES auth.users(id),
 	updater UUID REFERENCES auth.users(id),
 	ticket UUID REFERENCES ticket.ticket(id),
 	time_worked INTERVAL
 );
+
+GRANT ALL ON ticket TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON ticket
+	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
