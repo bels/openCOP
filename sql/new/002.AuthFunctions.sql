@@ -7,12 +7,12 @@ BEGIN
 	IF FOUND THEN
 		INSERT INTO auth.profile (user_id,content,data_type) VALUES (user_id_val,email_val,(SELECT auth.profile_data_type.id FROM auth.profile_data_type WHERE description = 'email' LIMIT 1));
 		IF FOUND THEN
-			RETURN QUERY SELECT user_id_val,1,'Login Successful';
+			RETURN QUERY SELECT user_id_val,1,'User created successfully'::TEXT;
 		ELSE
-			RETURN QUERY SELECT user_id_val,-2,'Could not insert profile data';
+			RETURN QUERY SELECT user_id_val,-2,'Could not insert profile data'::TEXT;
 		END IF;
 	ELSE
-		RETURN QUERY SELECT user_id_val,-1,'Failed to create user';
+		RETURN QUERY SELECT user_id_val,-1,'Failed to create user'::TEXT;
 	END IF;
 	RETURN;
 END;
