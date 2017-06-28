@@ -69,6 +69,7 @@ CREATE TABLE ticket (
 	end_time TIME,
 	closed_by UUID references auth.users(id),
 	completed_by UUID references auth.users(id),
+	total_time_worked INTERVAL,
 	active BOOLEAN DEFAULT true
 );
 
