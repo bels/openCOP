@@ -72,8 +72,8 @@ CREATE TABLE ticket (
 	active BOOLEAN DEFAULT true
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON helpdesk TO opencop_user;
-CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON helpdesk
+GRANT SELECT, INSERT, UPDATE, DELETE ON ticket TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON ticket
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
 CREATE TABLE troubleshooting(
