@@ -1,9 +1,9 @@
-CREATE OR REPLACE FUNCTION auth.register(name_val TEXT, password_val TEXT, email_val TEXT) RETURNS TABLE(id UUID, status INTEGER, message TEXT) AS $$
+CREATE OR REPLACE FUNCTION auth.register(first_name_val TEXT, last_name_val TEXT, password_val TEXT, email_val TEXT) RETURNS TABLE(id UUID, status INTEGER, message TEXT) AS $$
 DECLARE
     user_id_val UUID;
 BEGIN
 	
-	INSERT INTO auth.users (name,password,login_identifier) VALUES (name_val,crypt(password_val,gen_salt('bf',8)),email_val) RETURNING auth.users.id INTO user_id_val;
+	INSERT INTO auth.users (first,last,password,login_identifier) VALUES (first_name_val,last_name_val,crypt(password_val,gen_salt('bf',8)),email_val) RETURNING auth.users.id INTO user_id_val;
 	IF FOUND THEN
 		INSERT INTO auth.profile (user_id,content,data_type) VALUES (user_id_val,email_val,(SELECT auth.profile_data_type.id FROM auth.profile_data_type WHERE description = 'email' LIMIT 1));
 		IF FOUND THEN
