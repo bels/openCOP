@@ -80,6 +80,7 @@ CREATE TABLE troubleshooting(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
+	technician UUID references auth.users(id),
 	ticket UUID references ticket(id),
 	troubleshooting TEXT,
 	performed TIMESTAMP DEFAULT current_timestamp

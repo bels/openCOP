@@ -1,28 +1,4 @@
 
-
-DROP TABLE IF EXISTS audit;
-CREATE TABLE audit (
-	record BIGSERIAL PRIMARY KEY,
-	status INTEGER,
-	site INTEGER,
-	location TEXT,
-	updated TIMESTAMP DEFAULT current_timestamp,
-	contact VARCHAR(255),
-	notes TEXT,
-	section INT,
-	priority INT,
-	tech VARCHAR(255),
-	contact_email VARCHAR(255),
-	technician INTEGER,
-	updater INTEGER,
-	ticket INTEGER,
-	closed_by VARCHAR(255) DEFAULT NULL,
-	completed_by VARCHAR(255) DEFAULT NULL,
-	closed_date TIMESTAMP,
-	completed_date TIMESTAMP,
-	time_worked INTERVAL
-);
-
 DROP TABLE IF EXISTS template CASCADE;
 DROP TABLE IF EXISTS property CASCADE; 
 DROP TABLE IF EXISTS value CASCADE;
