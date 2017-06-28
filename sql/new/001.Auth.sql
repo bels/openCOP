@@ -12,7 +12,7 @@ CREATE TABLE users (
 	login_identifier TEXT UNIQUE,
 	password TEXT,
 	active BOOLEAN DEFAULT true,
-	site UUID REFERENCES opencop.company(id) DEFAULT null
+	site UUID REFERENCES opencop.company(id)
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO opencop_user;

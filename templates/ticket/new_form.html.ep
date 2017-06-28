@@ -1,0 +1,13 @@
+% layout 'default';
+% title 'New Form';
+
+%= include 'ticket/form'
+
+	<div class="container">
+		<div class="row">
+			<h3 class="center-block"><%= stash('company_name') // 'COMPANY NAME NOT SET' %> Helpdesk - Input a new ticket</h3>
+		</div>
+		<div class="row">
+			%= content_for 'new_ticket'
+		</div>
+	</div>

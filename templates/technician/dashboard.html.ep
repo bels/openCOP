@@ -2,3 +2,5 @@
 % title 'Dashboard';
 
 <h2>Technician Dashboard</h2>
+
+<a href="<%= url_for('new_ticket_form') %>" class="btn btn-primary">New Ticket</a>

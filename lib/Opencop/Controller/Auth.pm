@@ -69,7 +69,7 @@ sub check_session {
 	if($self->tx->req->is_xhr){
 		$self->render(json => {status => Mojo::JSON->false}, status => 403);
 	} else {
-		$self->redirect_to($self->url_for('login'));
+		$self->redirect_to($self->url_for('index'));
 	}
 	return;
 }

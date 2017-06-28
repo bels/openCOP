@@ -1,6 +1,6 @@
 set search_path to ticket,public;
 
-INSERT INTO section(name,email) values('helpdesk','helpdesk@email.address');
+INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address');
 
 INSERT INTO status (status) values ('New');
 INSERT INTO status (status) values ('In Progress');

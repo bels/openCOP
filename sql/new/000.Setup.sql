@@ -54,3 +54,9 @@ CREATE TABLE site (
 GRANT SELECT, INSERT, UPDATE, DELETE ON site TO opencop_user;
 CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON site
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
+	
+----- Init Data
+
+insert into site_level(type) values('Headquarters');
+insert into site_level(type) values('Branch Office');
+insert into site_level(type) values('Satelite Office');

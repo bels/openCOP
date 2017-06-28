@@ -38,6 +38,14 @@ sub edit{
 	
 }
 
+sub full_name{
+	my ($self,$user_id) = @_;
+
+	my $name = $self->pg->db->query("select first || ' ' || last as name from users where id = ?",$user_id)->hash;
+	
+	return $name->{'name'};
+}
+
 sub get_profile_data{
 	my ($self,$user_id,$data_type) = @_;
 	

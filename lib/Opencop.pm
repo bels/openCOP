@@ -5,6 +5,7 @@ use Mojo::Pg;
 use Opencop::Model::Audit;
 use Opencop::Model::Account;
 use Opencop::Model::Auth;
+use Opencop::Model::Ticket;
 
 # This method will run once at server start
 sub startup {
@@ -16,7 +17,7 @@ sub startup {
   $self->plugin('Config');
   
   $self->helper(pg => sub { state $pg = Mojo::Pg->new( shift->config('pg'))});
-  $self->pg->search_path(['ticket','auth','audit','public']);
+  $self->pg->search_path(['ticket','opencop','auth','audit','public']);
   $self->helper(audit => sub { 
   	my $app = shift;
 	state $core = Opencop::Model::Audit->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 :  0)
@@ -28,6 +29,10 @@ sub startup {
   $self->helper(auth => sub {
   	my $app = shift;
   	state $auth = Opencop::Model::Auth->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+  });
+  $self->helper(ticket => sub {
+  	my $app = shift;
+  	state $ticket = Opencop::Model::Ticket->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   
   $self->helper(meta_keywords => sub {

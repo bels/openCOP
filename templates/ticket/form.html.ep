@@ -1,0 +1,167 @@
+% content_for new_ticket => begin
+
+	%= form_for new_ticket => (class => 'form-horizontal', method => 'POST') => begin
+			 
+			%= form_for new_ticket => (class => 'form-horizontal', method => 'POST') => begin
+				<fieldset>
+					<legend>General Information</legend>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								%= label_for site => 'Site', class => 'control-label col-md-2'
+								<div class="col-md-4">
+									%= select_field site => $sites, class => 'form-control col-md-10', id => 'site', tabindex => 1
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group col-md-4">
+								%= label_for author => 'Author', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= text_field author => stash('author'), class => 'form-control', id => 'author', tabindex => 2
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Author field should contain your name. No matter who you are or who you are putting the ticket in for, you are the author and your name is required."></span>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								%= label_for barcode => 'Barcode', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= text_field 'barcode', class => 'form-control', id => 'barcode', tabindex => 3
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Barcode field should contain the barcode of the computer or other piece of equipment that has the problem you are describing. If the device does not have a barcode but does have a serial number, use the Serial field instead. If there is no barcode do not put anything in the Barcode field."></span>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								%= label_for serial => 'Serial', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= text_field 'serial', class => 'form-control', id => 'serial', tabindex => 4
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Serial field should contain the serial number of the equipment experiencing the problem. If this is not relevant, leave it blank."></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group col-md-4">
+								%= label_for contact => 'Contact', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= text_field contact => stash('author'), class => 'form-control', id => 'contact', tabindex => 5
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Contact field should contain the name of the person who should be contacted who will have first hand knowledge of the problem and be able to explain it in detail. This field is required."></span>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								%= label_for phone => 'Phone', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= text_field 'phone', class => 'form-control', id => 'phone', tabindex => 6
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Phone field should contain the phone number of either the contact person (preferred) or the author. This may be left blank."></span>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								%= label_for email => 'Email', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= text_field email => session('username'), class => 'form-control', id => 'phone', tabindex => 7
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Email field should contain the email address of either the contact person (preferred) or the author. This must be a valid email address.  This field is required."></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group col-md-4">
+								%= label_for location => 'Location', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= text_field 'location', class => 'form-control', id => 'location', tabindex => 8
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Location field should indicate the room in which the equipment which is experiencing trouble resides. Or, it should describe the area where the problem is felt, or most felt. Additionally, it could specify which piece of equipment in the room/area is experiencing the problem, or experiencing it the most, if there is more than one piece of equipment in the designated area which could be confused with the affected equipment."></span>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								%= label_for priority => 'Priority', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= select_field priority => $priorities, class => 'form-control', id => 'priority', tabindex => 9
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Priority field is for classifying the urgency of the problem being described. In almost all cases the priority will be "Normal" or less. If you are unsure of what the appropriate priority is use "Normal.""></span>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								%= label_for section => 'Section', class => 'control-label col-md-3'
+								<div class="col-md-7">
+									%= select_field section => $sections, class => 'form-control', id => 'section', tabindex => 10
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, leave the section field untouched and that group will review it and make further adjustments if necessary."></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="col-md-4 form-group">
+								%= label_for tech => 'Tech', class => 'col-md-3 control-label'
+								<div class="col-md-7">
+									%= select_field tech => $technicians, class => 'form-control', id => 'tech', tabindex => 11
+								</div>
+								<div class="col-md-1">
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator."></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="form-group">
+					<legend>Problem Details</legend>
+					<div class="row">
+						<div class="col-md-7">
+							<div id="problem_wrapper" class="col-md-12">
+								<div class="col-md-12">
+									%= label_for problem => 'Problem', class => 'control-label'
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Problem field should contain a verbose description of the problem you observed, including any details that may be important or seem related. This field is required."></span>
+								</div>
+								<textarea id="tech_problem" rows="5" name="problem" tabindex="11" class="form-control col-md-12"></textarea>
+							</div>
+							<div class="col-md-12">
+								<div class="col-md-12">
+									%= label_for troubleshoot => 'Troubleshooting Tried', class => 'control-label'
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Troubleshooting Tried field should contain a description of all steps you took while attempting to resolve the Problem described above, as well as any results of that troubleshooting and a summary of where the problem now stands. This may be left blank."></span>
+								</div>
+								<textarea  id="troubleshoot" rows="5" name="troubleshoot" tabindex="12" class="form-control col-md-12"></textarea>
+							</div>
+						</div>
+						<div id="attach_div" class="col-md-5"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
+					</div>
+				</fieldset>
+				<div class="form-group">
+					<div class="col-md-12">
+						<button type="submit" id="submit_button" class="btn btn-default center-block">Submit</button>
+					</div>
+				</div>
+			% end
+			<div id="multiAttach" class="dialog hidden">
+				<div id="details">
+					<form id="attach_form" enctype="multipart/form-data" method="post" action="upload_file.pl">
+						<center><label>Attach a file</label></center>
+						<input type="hidden" name="mode" id="mode" value="new">
+						<input type="file" name="file1" id="file1" num="1">
+						<img src="images/plus.png" class="add_file image_button" alt="Add">
+						<input type="image" src="images/submit.png" name="close_attach" id="close_attach" class="close" alt="Done">
+					</form>
+				</div>
+			</div>
+			<div id="blank" style="display: none">
+			</div>
+	% end
+% end
