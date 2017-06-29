@@ -57,7 +57,7 @@ sub startup {
   my $authed = $r->under()->to('auth#check_session');
   $authed->get('/technician/dashboard')->to('technician#dashboard')->name('technician_dashboard');
   $authed->get('/ticket/new')->to('ticket#new_form')->name('new_ticket_form');
-  $authed->post('/ticket/new')->to('ticket#new')->name('new_ticket');
+  $authed->post('/ticket/new')->to('ticket#new_ticket')->name('new_ticket');
   $authed->post('/ticket/update/:ticket_number')->to('ticket#update')->name('update_ticket');
   $authed->get('/ticket/queue/all')->to('ticket#all_queues')->name('view_all_ticket_queues');
   $authed->get('/ticket/queue/:queue')->to('ticket#queue')->name('view_ticket_queue');

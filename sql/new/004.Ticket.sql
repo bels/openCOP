@@ -50,29 +50,27 @@ CREATE TABLE ticket (
 	barcode TEXT,
 	site UUID references opencop.site(id),
 	location TEXT,
-	requested TIMESTAMP DEFAULT current_timestamp,
-	updated TIMESTAMP,
+	requested TIMESTAMPTZ DEFAULT current_timestamp,
+	updated TIMESTAMPTZ,
 	author TEXT,
 	contact TEXT,
 	contact_phone TEXT,
 	section UUID references section(id),
-	short_description TEXT,
+	synopsis TEXT,
 	problem TEXT,
 	priority UUID references priority(id),
 	serial TEXT,
 	updater UUID references auth.users(id),
 	contact_email TEXT,
 	technician UUID references auth.users(id),
-	submitter TEXT NOT NULL,
-	free_date DATE,
-	start_time TIME,
-	end_time TIME,
+	submitter UUID NOT NULL references auth.users(id),
+	availability_time TIMESTAMPTZ,
 	closed_by UUID references auth.users(id),
 	completed_by UUID references auth.users(id),
-	total_time_worked INTERVAL,
 	active BOOLEAN DEFAULT true
 );
 
+GRANT USAGE, SELECT ON SEQUENCE ticket_ticket_seq TO opencop_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ticket TO opencop_user;
 CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON ticket
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
@@ -84,7 +82,7 @@ CREATE TABLE troubleshooting(
 	technician UUID references auth.users(id),
 	ticket UUID references ticket(id),
 	troubleshooting TEXT,
-	performed TIMESTAMP DEFAULT current_timestamp
+	performed TIMESTAMPTZ DEFAULT current_timestamp
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO opencop_user;
@@ -97,7 +95,7 @@ CREATE TABLE notes(
 	modified TIMESTAMPTZ DEFAULT now(),
 	ticket UUID references ticket(id),
 	note TEXT,
-	performed TIMESTAMP DEFAULT current_timestamp
+	performed TIMESTAMPTZ DEFAULT current_timestamp
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON notes TO opencop_user;

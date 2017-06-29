@@ -39,7 +39,7 @@ CREATE TABLE ticket (
 	genesis TIMESTAMPTZ DEFAULT now(),
 	update_type TEXT,
 	status INTEGER,
-	updated TIMESTAMP DEFAULT current_timestamp,
+	updated TIMESTAMPTZ DEFAULT current_timestamp,
 	notes TEXT,
 	updater UUID REFERENCES auth.users(id),
 	ticket UUID REFERENCES ticket.ticket(id),

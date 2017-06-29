@@ -4,6 +4,55 @@ use Mojo::Base -base;
 has 'pg';
 has 'debug';
 
+sub new_ticket{
+	my ($self,$data,$submitter_id) = @_;
+warn $submitter_id;
+my $sql =<<SQL;
+insert into ticket(
+	status,
+	barcode,
+	site,
+	location,
+	author,
+	contact,
+	contact_phone,
+	section,
+	synopsis,
+	problem,
+	priority,
+	serial,
+	contact_email,
+	technician,
+	submitter,
+	availability_time)
+values
+	(
+	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+	)
+returning id
+SQL
+	my $ticket = $self->pg->db->query($sql,
+		$data->{'status'},
+		$data->{'barcode'},
+		$data->{'site'},
+		$data->{'location'},
+		$data->{'author'},
+		$data->{'contact'},
+		$data->{'phone'},
+		$data->{'section'},
+		$data->{'synopsis'},
+		$data->{'problem'},
+		$data->{'priority'},
+		$data->{'serial'},
+		$data->{'email'},
+		$data->{'tech'},
+		$submitter_id,
+		$data->{'availability_time'}
+	)->hash;
+	
+	return $ticket->{'id'};
+}
+
 sub site_list{
 	my $self = shift;
 	

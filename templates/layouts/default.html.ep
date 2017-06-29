@@ -12,8 +12,8 @@
 		  	% }
 		% }
 
-		%= javascript '/javascripts/common/jquery/jquery.min.js'
-		%= javascript '/javascripts/common/bootstrap.min.js'
+		%= javascript '/js/common/jquery/jquery.min.js'
+		%= javascript '/js/common/bootstrap.min.js'
 		% if(stash('js')){
 		  	% foreach my $script (@{stash('js')}){
 		  		%= javascript $script
