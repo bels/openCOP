@@ -55,7 +55,7 @@
 							<div class="form-group col-md-4">
 								%= label_for contact => 'Contact', class => 'control-label col-md-3'
 								<div class="col-md-7">
-									%= text_field contact => stash('author'), class => 'form-control', id => 'contact', tabindex => 6
+									%= text_field 'contact', class => 'form-control', id => 'contact', tabindex => 6
 								</div>
 								<div class="col-md-1">
 									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Contact field should contain the name of the person who should be contacted who will have first hand knowledge of the problem and be able to explain it in detail. This field is required."></span>

@@ -1,0 +1,177 @@
+% content_for ticket_details => begin
+			<fieldset>
+				<legend>General Information</legend>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group col-md-4">
+							%= label_for site => 'Site', class => 'control-label col-md-3'
+							<div class="col-md-9 site static">
+								<span><%= $ticket->{'site_name'} %></span>
+							</div>
+							<div class="col-md-9 hidden site input">
+								%= select_field site => $sites, class => 'form-control', id => 'site', tabindex => 1
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							%= label_for synopsis => 'Synopsis', class => 'control-label col-md-3'
+							<div class="col-md-9 synopsis static">
+								<span><%= $ticket->{'synopsis'} %></span>
+							</div>
+							<div class="col-md-9 hidden synopsis input">
+								%= text_field 'synopsis' => $ticket->{'synopsis'}, class => 'form-control', id => 'synopsis', tabindex => 2
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group col-md-4">
+							%= label_for author => 'Author', class => 'control-label col-md-3'
+							<div class="col-md-7 author static">
+								<span><%= $ticket->{'author'} %></span>
+							</div>
+							<div class="col-md-7 hidden author input">
+								%= text_field author => $ticket->{'author'}, class => 'form-control', id => 'author', tabindex => 3
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							%= label_for barcode => 'Barcode', class => 'control-label col-md-3'
+							<div class="col-md-7 barcode static">
+								<span><%= $ticket->{'barcode'} %></span>
+							</div>
+							<div class="col-md-7 hidden barcode input">
+								%= text_field 'barcode' => $ticket->{'barcode'}, class => 'form-control', id => 'barcode', tabindex => 4
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							%= label_for serial => 'Serial', class => 'control-label col-md-3'
+							<div class="col-md-7 serial static">
+								<span><%= $ticket->{'serial'} %></span>
+							</div>
+							<div class="col-md-7 hidden serial input">
+								%= text_field 'serial' => $ticket->{'serial'}, class => 'form-control', id => 'serial', tabindex => 5
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group col-md-4">
+							%= label_for contact => 'Contact', class => 'control-label col-md-3'
+							<div class="col-md-7 contact static">
+								<span><%= $ticket->{'contact'} %></span>
+							</div>
+							<div class="col-md-7 hidden contact input">
+								%= text_field contact => $ticket->{'contact'}, class => 'form-control', id => 'contact', tabindex => 6
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							%= label_for phone => 'Phone', class => 'control-label col-md-3'
+							<div class="col-md-7 phone static">
+								<span><%= $ticket->{'contact_phone'} %></span>
+							</div>
+							<div class="col-md-7 hidden phone input">
+								%= text_field 'phone' => $ticket->{'contact_phone'}, class => 'form-control contact-group', id => 'phone', tabindex => 7
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							%= label_for email => 'Email', class => 'control-label col-md-3'
+							<div class="col-md-7 email static">
+								<span><%= $ticket->{'contact_email'} %></span>
+							</div>
+							<div class="col-md-7 hidden email input">
+								%= text_field email => $ticket->{'contact_email'}, class => 'form-control contact-group', id => 'email', tabindex => 8
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group col-md-4">
+							%= label_for location => 'Location', class => 'control-label col-md-3'
+							<div class="col-md-7 location static">
+								<span><%= $ticket->{'location'} %></span>
+							</div>
+							<div class="col-md-7 hidden location input">
+								%= text_field 'location' => $ticket->{'location'}, class => 'form-control', id => 'location', tabindex => 9
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							%= label_for priority => 'Priority', class => 'control-label col-md-3'
+							<div class="col-md-7 priority static">
+								<span><%= $ticket->{'priority_name'} %></span>
+							</div>
+							<div class="col-md-7 hidden input priority">
+								%= select_field priority => $priorities, class => 'form-control', id => 'priority', tabindex => 10
+							</div>
+							<div class="col-md-1">
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							%= label_for section => 'Section', class => 'control-label col-md-3'
+							<div class="col-md-7 static section">
+								<span><%= $ticket->{'section_name'} %></span>
+							</div>
+							<div class="col-md-7 hidden input section">
+								%= select_field section => $sections, class => 'form-control', id => 'section', tabindex => 11
+							</div>
+							<div class="col-md-1">
+								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, leave the section field untouched and that group will review it and make further adjustments if necessary."></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-4 form-group">
+							%= label_for tech => 'Tech', class => 'col-md-3 control-label'
+							<div class="col-md-7 static tech">
+								<span><%= $ticket->{'tech_name'} %></span>
+							</div>
+							<div class="col-md-7 hidden input tech">
+								%= select_field tech => $technicians, class => 'form-control', id => 'tech', tabindex => 12
+							</div>
+							<div class="col-md-1">
+								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator."></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Problem Details</legend>
+				<div class="row">
+					<div class="col-md-7">
+						<div class="form-group col-md-12">
+							<div class="col-md-12">
+								%= label_for problem => 'Problem', class => 'control-label'
+								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Problem field should contain a verbose description of the problem you observed, including any details that may be important or seem related. This field is required."></span>
+							</div>
+							<textarea id="problem" rows="5" name="problem" tabindex="13" class="form-control col-md-12"></textarea>
+						</div>
+						<div class="form-group col-md-12">
+							<div class="col-md-12">
+								%= label_for troubleshoot => 'Troubleshooting Tried', class => 'control-label'
+								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Troubleshooting Tried field should contain a description of all steps you took while attempting to resolve the Problem described above, as well as any results of that troubleshooting and a summary of where the problem now stands. This may be left blank."></span>
+							</div>
+							<textarea  id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control col-md-12"></textarea>
+						</div>
+					</div>
+					<div id="attach_div" class="col-md-5"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
+				</div>
+			</fieldset>
+% end

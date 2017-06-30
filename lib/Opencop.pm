@@ -35,6 +35,19 @@ sub startup {
   	state $ticket = Opencop::Model::Ticket->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   
+  $self->helper(set_selected => sub{
+  	#must pass in an array ref containing a hashref in each element
+  	my ($app,$list,$index_to_match,$selected) = @_;
+
+  	for my $i (0 .. scalar @{$list} - 1){
+  		if($list->[$i][$index_to_match] eq $selected){
+  			push(@{$list->[$i]},selected => 'selected');
+  		}
+  	}
+  	
+  	return $list;
+  });
+  
   $self->helper(meta_keywords => sub {
   	
   });
@@ -58,10 +71,10 @@ sub startup {
   $authed->get('/technician/dashboard')->to('technician#dashboard')->name('technician_dashboard');
   $authed->get('/ticket/new')->to('ticket#new_form')->name('new_ticket_form');
   $authed->post('/ticket/new')->to('ticket#new_ticket')->name('new_ticket');
-  $authed->post('/ticket/update/:ticket_number')->to('ticket#update')->name('update_ticket');
+  $authed->post('/ticket/update/:ticket_id')->to('ticket#update')->name('update_ticket');
   $authed->get('/ticket/queue/all')->to('ticket#all_queues')->name('view_all_ticket_queues');
   $authed->get('/ticket/queue/:queue')->to('ticket#queue')->name('view_ticket_queue');
-  $authed->get('/ticket/:ticket_number')->to('ticket#view_ticket')->name('view_ticket');
+  $authed->get('/ticket/:ticket_id')->to('ticket#view_ticket')->name('view_ticket');
   $authed->get('/work-order/new')->to('workorder#new_form')->name('new_work_order_form');
   $authed->post('/work-order')->to('workorder#new')->name('new_work_order');
   $authed->get('/work-order/queue/all')->to('workorder#all_work_orders')->name('view_all_work_orders');

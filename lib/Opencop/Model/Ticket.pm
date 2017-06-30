@@ -27,12 +27,12 @@ insert into ticket(
 	availability_time)
 values
 	(
-	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+	(select id from status where status = 'New'),
+	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
 	)
 returning id
 SQL
 	my $ticket = $self->pg->db->query($sql,
-		$data->{'status'},
 		$data->{'barcode'},
 		$data->{'site'},
 		$data->{'location'},
@@ -105,5 +105,103 @@ and
 SQL
 
 	return $self->pg->db->query($sql)->arrays->to_array;
+}
+
+sub queue_overview{
+	my ($self,$tech_id) = @_;
+
+my $sql =<<SQL;
+select
+	t.id,
+	t.ticket,
+	t.synopsis,
+	u.first || ' ' || u.last as technician,
+	s.status,
+	se.name as section,
+	t.genesis
+from
+	ticket t
+join
+	users u
+on
+	t.technician = u.id
+join
+	status s
+on
+	t.status = s.id
+join
+	section se
+on
+	t.section = se.id
+where
+	t.section in (select section from technician_section where technician = ?)
+and
+	t.technician = ?
+SQL
+	#grab all tickets for technician
+	my $tickets = $self->pg->db->query($sql,$tech_id,$tech_id)->hashes->to_array;
+	
+	#organize tickets into sections
+	my $queues = {};
+	foreach my $ticket (@{$tickets}){
+		$queues->{$ticket->{'section'}} = [] unless exists($queues->{$ticket->{'section'}});
+
+		push(@{$queues->{$ticket->{'section'}}},$ticket);	
+	}
+
+	return $queues;
+}
+
+sub get_ticket{
+	my ($self,$id) = @_;
+
+my $sql =<<SQL;
+select
+	t.id,
+	t.genesis,
+	t.site,
+	si.name as site_name,
+	t.synopsis,
+	t.author,
+	t.barcode,
+	t.serial,
+	t.contact,
+	t.contact_phone,
+	t.location,
+	t.priority,
+	p.severity || ' - ' || p.description priority_name,
+	t.section,
+	se.name as section,
+	t.technician,
+	u.first || ' ' || u.last as tech_name,
+	t.problem,
+	s.status
+from
+	ticket t
+join
+	users u
+on
+	t.technician = u.id
+join
+	status s
+on
+	t.status = s.id
+join
+	section se
+on
+	t.section = se.id
+join
+	priority p
+on
+	t.priority = p.id
+join
+	site si
+on
+	t.site = si.id
+where
+	t.id = ?
+SQL
+
+	return $self->pg->db->query($sql,$id)->hash;
 }
 1;

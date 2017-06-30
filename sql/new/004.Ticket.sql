@@ -28,7 +28,19 @@ COMMENT ON TABLE section IS 'A section could be something like telecom, helpdesk
 GRANT SELECT, INSERT, UPDATE, DELETE ON section TO opencop_user;
 CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON section
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
-	
+
+CREATE TABLE technician_section(
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	genesis TIMESTAMPTZ DEFAULT now(),
+	modified TIMESTAMPTZ DEFAULT now(),
+	technician UUID REFERENCES auth.users(id),
+	section UUID REFERENCES section(id)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON technician_section TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON technician_section
+	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
+
 CREATE TABLE priority (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
@@ -50,7 +62,6 @@ CREATE TABLE ticket (
 	barcode TEXT,
 	site UUID references opencop.site(id),
 	location TEXT,
-	requested TIMESTAMPTZ DEFAULT current_timestamp,
 	updated TIMESTAMPTZ,
 	author TEXT,
 	contact TEXT,
