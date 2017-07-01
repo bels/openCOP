@@ -4,8 +4,8 @@ SET SEARCH_PATH TO ticket,public;
 
 CREATE TABLE status (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	status TEXT NOT NULL,
 	active BOOLEAN DEFAULT true
 );
@@ -16,8 +16,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON status
 
 CREATE TABLE section (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	name TEXT UNIQUE,
 	email TEXT,
 	active BOOLEAN DEFAULT TRUE
@@ -31,8 +31,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON section
 
 CREATE TABLE technician_section(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	technician UUID REFERENCES auth.users(id),
 	section UUID REFERENCES section(id)
 );
@@ -43,8 +43,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON technician_section
 
 CREATE TABLE priority (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	severity INTEGER NOT NULL,
 	description TEXT NOT NULL
 );
@@ -55,8 +55,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON priority
 	
 CREATE TABLE ticket (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	ticket BIGSERIAL,
 	status UUID references status(id),
 	barcode TEXT,
@@ -88,8 +88,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON ticket
 
 CREATE TABLE troubleshooting(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	technician UUID references auth.users(id),
 	ticket UUID references ticket(id),
 	troubleshooting TEXT,
@@ -102,8 +102,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON troubleshooting
 
 CREATE TABLE notes(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	ticket UUID references ticket(id),
 	note TEXT,
 	performed TIMESTAMPTZ DEFAULT current_timestamp
@@ -115,8 +115,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON notes
 
 CREATE TABLE reports (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	name TEXT NOT NULL UNIQUE,
 	report TEXT,
 	owner UUID references auth.users(id),
@@ -129,8 +129,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON reports
 
 CREATE TABLE wo(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	name TEXT NOT NULL,
 	active BOOLEAN DEFAULT true
 );
@@ -141,8 +141,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON wo
 	
 CREATE TABLE wo_template(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	wo_id UUID references wo(id) ON DELETE CASCADE,
 	section_id UUID references section(id) ON DELETE CASCADE,
 	requires_id UUID references wo_template(id),
@@ -156,8 +156,8 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON wo_template
 
 CREATE TABLE wo_ticket (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	genesis TIMESTAMPTZ DEFAULT now(),
-	modified TIMESTAMPTZ DEFAULT now(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	ticket UUID REFERENCES ticket(id),
 	requires UUID REFERENCES ticket(id),
 	wo_id UUID references wo(id),
