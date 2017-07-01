@@ -172,15 +172,17 @@
 									Date: <%= $t->{'genesis'} %><br>
 									Troubleshooting: <%= $t->{'troubleshooting'} %>
 									<hr>
-								% end 
+								% } 
 							</p>
-							<textarea  id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control troubleshoot hidden input col-md-12">
+							<textarea id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control troubleshoot hidden input col-md-12">
 								% foreach my $t (@{$troubleshooting}){
-									Technician: <%= $t->{'tech_name'} %><br>
-									Date: <%= $t->{'genesis'} %><br>
-									Troubleshooting: <%= $t->{'troubleshooting'} %>
-									<hr>
-								% end 
+Technician: <%= $t->{'tech_name'} %>
+Date: <%= $t->{'genesis'} %>
+Troubleshooting: <%= $t->{'troubleshooting'} %>
+
+-------------------------------------------------------------------------
+
+								% } 
 							</textarea>
 						</div>
 					</div>
