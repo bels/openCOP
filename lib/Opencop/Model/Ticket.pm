@@ -32,6 +32,10 @@ values
 	)
 returning id
 SQL
+
+my $troubleshooting_sql =<<SQL;
+insert into troubleshooting(technician, ticket, troubleshooting) values(?,?,?)
+SQL
 	my $ticket = $self->pg->db->query($sql,
 		$data->{'barcode'},
 		$data->{'site'},
@@ -50,6 +54,7 @@ SQL
 		$data->{'availability_time'}
 	)->hash;
 	
+	$self->pg->db->query($troubleshooting_sql,$submitter_id,$ticket->{'id'},$data->{'troubleshoot'});
 	return $ticket->{'id'};
 }
 
@@ -160,6 +165,7 @@ select
 	t.id,
 	t.genesis,
 	t.site,
+	t.ticket,
 	si.name as site_name,
 	t.synopsis,
 	t.author,
@@ -167,6 +173,7 @@ select
 	t.serial,
 	t.contact,
 	t.contact_phone,
+	t.contact_email,
 	t.location,
 	t.priority,
 	p.severity || ' - ' || p.description priority_name,
@@ -203,5 +210,26 @@ where
 SQL
 
 	return $self->pg->db->query($sql,$id)->hash;
+}
+
+sub get_troubleshooting{
+	my ($self,$ticket_id) = @_;
+	
+my $sql =<<SQL;
+select
+	u.first || ' ' || u.last as tech_name,
+	t.troubleshooting,
+	t.genesis
+from
+	troubleshooting t
+join
+	users u
+on
+	t.technician = u.id
+where
+	ticket = ?
+SQL
+
+	return $self->pg->db->query($sql,$ticket_id)->hashes->to_array;
 }
 1;

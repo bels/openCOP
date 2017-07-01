@@ -43,6 +43,7 @@ sub view_ticket{
 			'/js/common/jquery/plugins/jquery.validate.min.js',
 			'/js/common/jquery/plugins/additional-methods.min.js',
 			'/js/private/new_ticket.js',
+			'/js/private/ticket.js',
 		],
 		company_name => $self->config->{'company_name'},
 		sites => $self->set_selected($sites,1,$ticket->{'site'}),
@@ -50,7 +51,8 @@ sub view_ticket{
 		priorities => $self->set_selected($priorities,1,$ticket->{'priority'}),
 		sections => $self->set_selected($sections,1,$ticket->{'section'}),
 		technicians => $self->set_selected($technicians,1,$ticket->{'technician'}),
-		ticket => $ticket
+		ticket => $ticket,
+		troubleshooting => $self->ticket->get_troubleshooting($self->param('ticket_id'))
 	);
 }
 1;

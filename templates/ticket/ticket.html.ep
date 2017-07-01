@@ -130,7 +130,7 @@
 								%= select_field section => $sections, class => 'form-control', id => 'section', tabindex => 11
 							</div>
 							<div class="col-md-1">
-								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, leave the section field untouched and that group will review it and make further adjustments if necessary."></span>
+								
 							</div>
 						</div>
 					</div>
@@ -146,7 +146,6 @@
 								%= select_field tech => $technicians, class => 'form-control', id => 'tech', tabindex => 12
 							</div>
 							<div class="col-md-1">
-								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator."></span>
 							</div>
 						</div>
 					</div>
@@ -159,16 +158,30 @@
 						<div class="form-group col-md-12">
 							<div class="col-md-12">
 								%= label_for problem => 'Problem', class => 'control-label'
-								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Problem field should contain a verbose description of the problem you observed, including any details that may be important or seem related. This field is required."></span>
 							</div>
-							<textarea id="problem" rows="5" name="problem" tabindex="13" class="form-control col-md-12"></textarea>
+							<p class="problem static"><%= $ticket->{'problem'} %></p>
+							<textarea id="problem" rows="5" name="problem" tabindex="13" class="form-control hidden problem input col-md-12"><%= $ticket->{'problem'} %></textarea>
 						</div>
 						<div class="form-group col-md-12">
 							<div class="col-md-12">
 								%= label_for troubleshoot => 'Troubleshooting Tried', class => 'control-label'
-								<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Troubleshooting Tried field should contain a description of all steps you took while attempting to resolve the Problem described above, as well as any results of that troubleshooting and a summary of where the problem now stands. This may be left blank."></span>
 							</div>
-							<textarea  id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control col-md-12"></textarea>
+							<p class="troubleshoot static">
+								% foreach my $t (@{$troubleshooting}){
+									Technician: <%= $t->{'tech_name'} %><br>
+									Date: <%= $t->{'genesis'} %><br>
+									Troubleshooting: <%= $t->{'troubleshooting'} %>
+									<hr>
+								% end 
+							</p>
+							<textarea  id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control troubleshoot hidden input col-md-12">
+								% foreach my $t (@{$troubleshooting}){
+									Technician: <%= $t->{'tech_name'} %><br>
+									Date: <%= $t->{'genesis'} %><br>
+									Troubleshooting: <%= $t->{'troubleshooting'} %>
+									<hr>
+								% end 
+							</textarea>
 						</div>
 					</div>
 					<div id="attach_div" class="col-md-5"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>

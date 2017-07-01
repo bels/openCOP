@@ -5,7 +5,10 @@
 
 	<div class="container">
 		<div class="row">
-			<h3 class="center-block"><%= stash('company_name') // 'COMPANY NAME NOT SET' %> Helpdesk - Ticket #<%= $ticket->{'ticket'} %></h3>
+			<h3 class="center-block">
+				<%= stash('company_name') // 'COMPANY NAME NOT SET' %> Helpdesk - Ticket #<%= $ticket->{'ticket'} %>
+			</h3>
+			<button class="btn btn-primary edit" title="Click to unlock for editing" alt="Edit">Edit</button> 
 		</div>
 		<div class="row">
 %= content_for 'ticket_details'
