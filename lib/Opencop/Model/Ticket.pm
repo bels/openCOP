@@ -33,9 +33,6 @@ values
 returning id
 SQL
 
-my $troubleshooting_sql =<<SQL;
-insert into troubleshooting(technician, ticket, troubleshooting) values(?,?,?)
-SQL
 	my $ticket = $self->pg->db->query($sql,
 		$data->{'barcode'},
 		$data->{'site'},
@@ -53,8 +50,8 @@ SQL
 		$submitter_id,
 		$data->{'availability_time'}
 	)->hash;
-	
-	$self->pg->db->query($troubleshooting_sql,$submitter_id,$ticket->{'id'},$data->{'troubleshoot'});
+
+	$self->_insert_troubleshooting($submitter_id,$ticket->{'id'},$data->{'troubleshoot'});
 	return $ticket->{'id'};
 }
 
@@ -231,5 +228,29 @@ where
 SQL
 
 	return $self->pg->db->query($sql,$ticket_id)->hashes->to_array;
+}
+
+sub update_ticket{
+	my ($self,$data) = @_;
+
+my $sql =<<SQL;
+update ticket set
+	
+
+SQL
+	$self->_insert_troubleshooting($self->session(''),$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};
+	
+	return;
+}
+
+sub _insert_troubleshooting{
+	my ($self,$tech,$ticket,$data) = @_;
+	
+my $troubleshooting_sql =<<SQL;
+insert into troubleshooting(technician, ticket, troubleshooting) values(?,?,?)
+SQL
+
+	$self->pg->db->query($troubleshooting_sql,$tech,$ticket,$data);
+	return;
 }
 1;

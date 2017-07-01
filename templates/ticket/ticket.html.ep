@@ -1,4 +1,6 @@
 % content_for ticket_details => begin
+			%= hidden_field ticket_id => $ticket_id, id => 'ticket_id', class => 'input'
+			%= csrf_field id => 'csrf_token'
 			<fieldset>
 				<legend>General Information</legend>
 				<div class="row">
@@ -174,16 +176,7 @@
 									<hr>
 								% } 
 							</p>
-							<textarea id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control troubleshoot hidden input col-md-12">
-								% foreach my $t (@{$troubleshooting}){
-Technician: <%= $t->{'tech_name'} %>
-Date: <%= $t->{'genesis'} %>
-Troubleshooting: <%= $t->{'troubleshooting'} %>
-
--------------------------------------------------------------------------
-
-								% } 
-							</textarea>
+							<textarea id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control troubleshoot hidden input col-md-12" placeholder="Add Your New Troubleshooting"></textarea>
 						</div>
 					</div>
 					<div id="attach_div" class="col-md-5"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>

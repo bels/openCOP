@@ -23,6 +23,10 @@ sub new_form{
 sub new_ticket{
 	my $self = shift;
 
+	unless($self->session('csrf_token') eq $self->param('csrf_token')){
+		$self->render(json => {message => 'CSRF Token Bad'}, status => 403);
+		return;
+	}
 	warn $self->dumper($self->req->params->to_hash,$self->session->{'user_id'}) if $self->app->mode eq 'development';
 	$self->ticket->new_ticket($self->req->params->to_hash,$self->session->{'user_id'});
 	$self->redirect_to($self->url_for('new_ticket_form'));
@@ -54,5 +58,17 @@ sub view_ticket{
 		ticket => $ticket,
 		troubleshooting => $self->ticket->get_troubleshooting($self->param('ticket_id'))
 	);
+}
+
+sub update{
+	my $self = shift;
+	my $data = $self->req->json;
+
+	unless($self->session('csrf_token') eq $data->{'csrf_token'}){
+		$self->render(json => {message => 'CSRF Token Bad'}, status => 403);
+		return;
+	}
+	
+	$self->render(json => {status => Mojo::JSON->true, message => 'Submitted'}, status => 200);
 }
 1;
