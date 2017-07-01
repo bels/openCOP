@@ -92,8 +92,7 @@ CREATE TABLE troubleshooting(
 	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	technician UUID references auth.users(id),
 	ticket UUID references ticket(id),
-	troubleshooting TEXT,
-	performed TIMESTAMPTZ DEFAULT current_timestamp
+	troubleshooting TEXT
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO opencop_user;
@@ -105,8 +104,7 @@ CREATE TABLE notes(
 	genesis TIMESTAMPTZ DEFAULT current_timestamp,
 	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	ticket UUID references ticket(id),
-	note TEXT,
-	performed TIMESTAMPTZ DEFAULT current_timestamp
+	note TEXT
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON notes TO opencop_user;
