@@ -62,7 +62,6 @@ CREATE TABLE ticket (
 	barcode TEXT,
 	site UUID references opencop.site(id),
 	location TEXT,
-	updated TIMESTAMPTZ,
 	author TEXT,
 	contact TEXT,
 	contact_phone TEXT,
