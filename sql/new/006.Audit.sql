@@ -5,6 +5,7 @@ set search_path to audit,public;
 CREATE TABLE audit.traffic(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	client_ip TEXT,
 	uri TEXT,
 	login_identifier TEXT,
@@ -25,6 +26,7 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON traffic
 CREATE TABLE auth(
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	client_ip TEXT,
 	login_identifier TEXT,
 	login_successful BOOLEAN
@@ -37,9 +39,9 @@ CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth
 CREATE TABLE ticket (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	update_type TEXT,
 	status INTEGER,
-	updated TIMESTAMPTZ DEFAULT current_timestamp,
 	notes TEXT,
 	updater UUID REFERENCES auth.users(id),
 	ticket UUID REFERENCES ticket.ticket(id),
