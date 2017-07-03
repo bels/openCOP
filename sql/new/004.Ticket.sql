@@ -70,7 +70,6 @@ CREATE TABLE ticket (
 	problem TEXT,
 	priority UUID references priority(id),
 	serial TEXT,
-	updater UUID references auth.users(id),
 	contact_email TEXT,
 	technician UUID references auth.users(id),
 	submitter UUID NOT NULL references auth.users(id),
