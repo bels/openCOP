@@ -9,7 +9,12 @@ sub new_form{
 		js => [
 			'/js/common/jquery/plugins/jquery.validate.min.js',
 			'/js/common/jquery/plugins/additional-methods.min.js',
+			'/js/common/moment.js',
+			'/js/common/bootstrap-datetimepicker.min.js',
 			'/js/private/new_ticket.js',
+		],
+		styles => [
+			'/styles/common/bootstrap-datetimepicker.css'
 		],
 		company_name => $self->config->{'company_name'},
 		sites => $self->ticket->site_list,
@@ -41,13 +46,19 @@ sub view_ticket{
 	my $priorities = $self->ticket->priority_list;
 	my $sections = $self->ticket->section_list;
 	my $technicians = $self->ticket->technician_list;
+	my $statuses = $self->ticket->status_list;
 
 	$self->stash(
 		js => [
 			'/js/common/jquery/plugins/jquery.validate.min.js',
 			'/js/common/jquery/plugins/additional-methods.min.js',
+			'/js/common/moment.js',
+			'/js/common/bootstrap-datetimepicker.js',
 			'/js/private/new_ticket.js',
 			'/js/private/ticket.js',
+		],
+		styles => [
+			'/styles/common/datepicker/bootstrap-datetimepicker.css'
 		],
 		company_name => $self->config->{'company_name'},
 		sites => $self->set_selected($sites,1,$ticket->{'site'}),
@@ -56,7 +67,8 @@ sub view_ticket{
 		sections => $self->set_selected($sections,1,$ticket->{'section'}),
 		technicians => $self->set_selected($technicians,1,$ticket->{'technician'}),
 		ticket => $ticket,
-		troubleshooting => $self->ticket->get_troubleshooting($self->param('ticket_id'))
+		troubleshooting => $self->ticket->get_troubleshooting($self->param('ticket_id')),
+		statuses => $self->set_selected($statuses,1,$ticket->{'status'})
 	);
 }
 

@@ -52,6 +52,7 @@ SQL
 	)->hash;
 
 	$self->_insert_troubleshooting($submitter_id,$ticket->{'id'},$data->{'troubleshoot'});
+	$self->_add_history($ticket->{'id'},'create','new',$submitter_id,undef,undef);
 	return $ticket->{'id'};
 }
 
@@ -70,6 +71,8 @@ select
 	id
 from
 	priority
+where
+	active = true
 SQL
 	return $self->pg->db->query($sql)->arrays->to_array;
 }
@@ -109,6 +112,20 @@ SQL
 	return $self->pg->db->query($sql)->arrays->to_array;
 }
 
+sub status_list{
+	my $self = shift;
+
+my $sql =<<SQL;
+select
+	status,
+	id
+from
+	status
+where
+	active = true
+SQL
+	return $self->pg->db->query($sql)->arrays->to_array;
+}
 sub queue_overview{
 	my ($self,$tech_id) = @_;
 
@@ -179,7 +196,8 @@ select
 	t.technician,
 	u.first || ' ' || u.last as tech_name,
 	t.problem,
-	s.status
+	s.status,
+	t.availability_time
 from
 	ticket t
 join
@@ -235,11 +253,43 @@ sub update_ticket{
 
 my $sql =<<SQL;
 update ticket set
-	
-
+	site = ?,
+	status = ?,
+	barcode = ?,
+	serial = ?,
+	author = ?,
+	location = ?,
+	contact = ?,
+	contact_phone = ?,
+	contact_email = ?,
+	section = ?,
+	synopsis = ?,
+	problem = ?,
+	priority = ?,
+	technician = ?,
+	availability_time = ?
+where
+	id = ?
 SQL
-	$self->_insert_troubleshooting($self->session(''),$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};
-	
+	$self->pg->db->query($sql,
+		$data->{'site'},
+		$data->{'status'},
+		$data->{'barcode'},
+		$data->{'serial'},
+		$data->{'author'},
+		$data->{'location'},
+		$data->{'contact'},
+		$data->{'phone'},
+		$data->{'email'},
+		$data->{'section'},
+		$data->{'synopsis'},
+		$data->{'problem'},
+		$data->{'priority'},
+		$data->{'tech'},
+		$data->{'availability_time'}
+	);
+	$self->_insert_troubleshooting($self->session('user_id'),$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};
+	$self->_add_history($data->{'ticket_id'},'update',$data->{'status'},$self->session('user_id'),undef,undef);
 	return;
 }
 
@@ -251,6 +301,17 @@ insert into troubleshooting(technician, ticket, troubleshooting) values(?,?,?)
 SQL
 
 	$self->pg->db->query($troubleshooting_sql,$tech,$ticket,$data);
+	return;
+}
+
+sub _add_history{
+	my ($self,$ticket,$update_type,$status,$updater,$notes,$time_worked) = @_;
+	
+my $sql =<<SQL;
+insert into audit.ticket
+	(update_type, status, notes, updater, ticket, time_worked) values (?,?,?,?,?,?)
+SQL
+	$self->pg->db->query($sql,$update_type,$status,$notes,$updater,$ticket,$time_worked);
 	return;
 }
 1;

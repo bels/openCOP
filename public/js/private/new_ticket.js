@@ -5,6 +5,7 @@
 			success: "valid"
 		});
 
+		$('.date-picker').datetimepicker();
 		$('.new-ticket.form').validate({
 			rules:{
 				synopsis: {

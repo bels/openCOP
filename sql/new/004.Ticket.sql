@@ -46,7 +46,8 @@ CREATE TABLE priority (
 	genesis TIMESTAMPTZ DEFAULT current_timestamp,
 	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	severity INTEGER NOT NULL,
-	description TEXT NOT NULL
+	description TEXT NOT NULL,
+	active BOOLEAN DEFAULT true
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON priority TO opencop_user;
