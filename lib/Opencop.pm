@@ -96,6 +96,12 @@ sub startup {
   $authed->post('/customer/edit')->to('customer#edit')->name('edit_customer');
   $authed->get('/customer/dashboard')->to('customer#dashboard')->name('customer_dashboard');
   $authed->get('/customer/:customer')->to('customer#view')->name('view_customer');
+  $authed->get('/admin/client/setup')->to('admin#client_setup_page')->name('client_setup_page');
+  $authed->get('/admin/client/list')->to('admin#client_list')->name('client_list_page');
+  $authed->post('/admin/client/new')->to('admin#new_client')->name('new_client');
+  $authed->post('/admin/client/edit')->to('admin#edit_client')->name('edit_client');
+  $authed->get('/admin/client/:id')->to('admin#client_page')->name('client_page');
+  $authed->get('/admin/client')->to('admin#client_dashboard')->name('client_dashboard');
   $authed->get('/admin/work_orders')->to('admin#work_orders')->name('admin_work_orders');
   $authed->get('/admin/users')->to('admin#view_users')->name('view_users');
   $authed->get('/admin/new/user')->to('admin#new_user_form')->name('new_user_form');
