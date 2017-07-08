@@ -1,0 +1,6 @@
+% content_for customer_form => begin
+
+	%= form_for new_customer => (method => 'POST', class => 'form-horizontal') => begin
+	
+	% end
+% end

@@ -1,0 +1,10 @@
+% layout 'default';
+% title 'Admin Dashboard';
+
+%= include 'admin/user_form'
+
+<a href="<%= url_for('admin_customer_dashboard') %>" class="btn btn-primary">Cucstomer Dashboard</a>
+<a href="<%= url_for('general_settings') %>" class="btn btn-primary">General Settings</a>
+
+
+	%= content_for 'user_form'

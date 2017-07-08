@@ -1,0 +1,6 @@
+% layout 'default';
+% title 'Admin Customer Dashboard';
+
+%= include 'admin/customer_form'
+
+	%= content_for 'customer_form'
