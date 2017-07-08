@@ -8,11 +8,11 @@ CREATE TABLE users (
 	modified TIMESTAMPTZ DEFAULT now(),
 	first TEXT,
 	last TEXT,
-	middle_initial TEXT,
+	middle TEXT,
 	login_identifier TEXT UNIQUE,
 	password TEXT,
 	active BOOLEAN DEFAULT true,
-	site UUID REFERENCES opencop.company(id)
+	site UUID REFERENCES opencop.site(id)
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON users TO opencop_user;
