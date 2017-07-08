@@ -45,10 +45,10 @@ CREATE TABLE site (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT now(),
-	level UUID references site_level(id) ON DELETE CASCADE,
+	level UUID NOT NULL references site_level(id) ON DELETE CASCADE,
 	name TEXT,
 	active BOOLEAN DEFAULT TRUE,
-	company_id UUID references company(id) ON DELETE CASCADE
+	company_id UUID NOT NULL references company(id) ON DELETE CASCADE
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON site TO opencop_user;
