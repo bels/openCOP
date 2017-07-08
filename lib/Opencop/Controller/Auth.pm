@@ -46,10 +46,10 @@ sub authenticate{
 		if($self->tx->req->is_xhr){
 			$self->render(json => {success => Mojo::JSON->false})
 		} else {
-			if(Opencop::Model::Auth::BAD_PASSWORD){
+			if($session_info->{'status'} == Opencop::Model::Auth::BAD_PASSWORD){
 				$self->flash(login_error => 'Bad username/password');
 			}
-			if(Opencop::Model::Auth::BAD_USERNAME){
+			if($session_info->{'status'} == Opencop::Model::Auth::BAD_USERNAME){
 				#i know this is redundant but in case we want to give a different error message later we can
 				$self->flash(login_error => 'Bad username/password');
 			}

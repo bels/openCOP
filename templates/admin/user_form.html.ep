@@ -1,3 +1,65 @@
-% layout 'default';
-% title 'Admin - Create New User';
+% content_for user_form => begin
 
+	%= form_for new_user => (method => 'POST', class => 'form-horizontal') => begin
+		%= csrf_field
+		<div class="form-group">
+			%= label_for username => 'Username', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'username', class => 'form-control', id => 'username', tabindex => 1, placeholder => 'username@domain.com'
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for firstname => 'First Name', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'firstname', class => 'form-control', id => 'firstname', tabindex => 2, placeholder => 'First Name'
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for middlename => 'Middle Name', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'middlename', class => 'form-control', id => 'middlename', tabindex => 3, placeholder => 'Middle Name'
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for lastname => 'Last Name', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'lastname', class => 'form-control', id => 'lastname', tabindex => 4, placeholder => 'Last Name'
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for password1 => 'Password', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= password_field 'password1', class => 'form-control', id => 'password1', tabindex => 5, placeholder => 'Password'
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for password2 => 'Retype Password', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= password_field 'password2', class => 'form-control', id => 'password2', tabindex => 6, placeholder => 'Password'
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for site => 'Site', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= select_field site => $sites, class => 'form-control', id => 'site', tabindex => 7
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for phone => 'Phone Number', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'phone', class => 'form-control', id => 'phone', tabindex => 8, placeholder => 'Phone Number'
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for email => 'Email', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'email', class => 'form-control', id => 'email', tabindex => 9, placeholder => 'username@company.com'
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-offset-3 col-md-9">
+				<button class="btn btn-primary" type="submit">Create User</button>
+			</div>
+		</div>
+	% end
+% end
