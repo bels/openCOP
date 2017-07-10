@@ -47,6 +47,10 @@ CREATE TABLE site (
 	modified TIMESTAMPTZ DEFAULT now(),
 	level UUID NOT NULL references site_level(id) ON DELETE CASCADE,
 	name TEXT,
+	street TEXT,
+	city TEXT,
+	state TEXT,
+	zip TEXT,
 	active BOOLEAN DEFAULT TRUE,
 	company_id UUID NOT NULL references company(id) ON DELETE CASCADE
 );

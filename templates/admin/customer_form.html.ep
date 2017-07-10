@@ -1,6 +1,13 @@
 % content_for customer_form => begin
 
 	%= form_for new_customer => (method => 'POST', class => 'form-horizontal') => begin
-	
+		%= csrf_field
+		<div class="form-group">
+			%= label_for name => 'Company Name', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'username', class => 'form-control', id => 'username', tabindex => 1, placeholder => 'Company Name'
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary">Create Customer</button>
 	% end
 % end

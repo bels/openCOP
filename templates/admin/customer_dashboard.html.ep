@@ -2,5 +2,8 @@
 % title 'Admin Customer Dashboard';
 
 %= include 'admin/customer_form'
+%= include 'admin/site_form'
 
 	%= content_for 'customer_form'
+	
+	%= content_for 'site_form'

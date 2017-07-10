@@ -97,7 +97,11 @@ sub startup {
   $authed->post('/admin/customer/new')->to('admin#new_customer')->name('new_customer');
   $authed->post('/admin/customer/edit')->to('admin#edit_customer')->name('edit_customer');
   $authed->get('/admin/customer/dashboard')->to('admin#customer_dashboard')->name('admin_customer_dashboard');
-  $authed->get('/admin/customer/:customer')->to('admin#viewcustomer')->name('view_customer');
+  $authed->post('/admin/customer/delete')->to('admin#delete_customer')->name('delete_customer');
+  $authed->post('/admin/customer/site/new')->to('admin#new_site')->name('new_site');
+  $authed->post('/admin/customer/site/edit')->to('admin#edit_site')->name('edit_site');
+  $authed->post('/admin/customer/site/delete')->to('admin#delete_site')->name('delete_site');
+  $authed->get('/admin/customer/:customer')->to('admin#view_customer')->name('view_customer');
   $authed->get('/admin/work_orders')->to('admin#work_orders')->name('admin_work_orders');
   $authed->get('/admin/users')->to('admin#view_users')->name('view_users');
   $authed->post('/admin/new/user')->to('admin#new_user')->name('new_user');
