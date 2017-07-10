@@ -14,3 +14,5 @@ INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');
 INSERT INTO priority(severity,description) values(3,'High');
 INSERT INTO priority(severity,description) values(4,'Business Critical');
+
+INSERT INTO technician_section(technician,section) VALUES ((select id from auth.users where first = 'Admin'),(select id from section where name = 'Helpdesk'));

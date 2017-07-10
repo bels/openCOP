@@ -90,7 +90,7 @@ CREATE TABLE troubleshooting(
 	genesis TIMESTAMPTZ DEFAULT current_timestamp,
 	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	technician UUID references auth.users(id),
-	ticket UUID references ticket(id),
+	ticket UUID references ticket(id) on delete cascade,
 	troubleshooting TEXT
 );
 

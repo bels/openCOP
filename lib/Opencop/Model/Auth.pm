@@ -119,6 +119,47 @@ sub cleanUpSessions{
 	return;
 }
 
+sub hasPermission{
+	my $self = shift;
+	#unless(defined($self->{'session'})){
+		#TODO find some way of accessing the login identifier here because we need to ensure the session is able to be retrieved to check against permissions
+		# problem is, there is no way right now to have access to that unless we explicitly pass it in which goes against some of the pilosphies I have for this...
+		# for some reason during the initial login of this the session doesn't get stored it's basically fucked for that user on out
+		# some known ways that it could not get set are webserver restarts, load balancer issues
+		#$self->{'session'} = $self->retrieveSession($username);
+	#}
+	my ($user_id,$permission,$object) = (undef,undef,undef);
+	if(scalar @_ == 3){ #calling this function supplying the userid
+		($user_id,$permission,$object) = (shift,shift,shift);	
+	}
+	if(defined($user_id) && defined($permission) && defined($object)){
+		if($object !~ m/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/){
+			return $self->pg->db->query('select * from auth.has_permission(?,?,?::TEXT)',$user_id,$permission,$object)->hash->{'has_permission'};
+		} else {
+			return $self->pg->db->query('select * from auth.has_permission(?,?,?::UUID)',$user_id,$permission,$object)->hash->{'has_permission'};
+		}
+	} else {
+		#TODO improve this logging
+		$self->{'logger'}->log('Could not check if the user has permission. Something was undefined');
+	}
+}
+
+sub grantPermission{
+	my $self = shift;
+	
+	my ($user_id,$permission,$object) = (undef,undef,undef);
+	if(scalar @_ == 3){ #calling this function supplying the userid
+		($user_id,$permission,$object) = (shift,shift,shift);	
+	}
+	#this will fail if any of these variables aren't set.  there should be logging for higher levels of debugging also maybe a failback
+	if($object !~ m/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/){
+		my $object_id = $self->pg->db->query('select id from auth.object where name = ?',$object)->hash->{'id'};
+		return $self->pg->db->query('select * from auth.give_permission(?,?,?)',$user_id,$permission,$object_id)->hash->{'give_permission'};
+	} else {
+		return $self->pg->db->query('select * from auth.give_permission(?,?,?)',$user_id,$permission,$object)->hash->{'give_permission'};
+	}
+}
+
 #destroys the db session
 sub logout{
 	my ($self,$id) = @_;

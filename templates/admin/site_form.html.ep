@@ -3,36 +3,52 @@
 	%= form_for new_site => (method => 'POST', class => 'form-horizontal') => begin
 		%= csrf_field
 		<div class="form-group">
+			%= label_for name => 'Site Name', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= text_field 'name', class => 'form-control', id => 'name', tabindex => 1, placeholder => 'Site Name'
+			</div>
+		</div>
+		<div class="form-group">
 			%= label_for company => 'Company', class => 'control-label col-md-3'
 			<div class="col-md-9">
-				%= select_field company => $company, class => 'form-control', id => 'company', tabindex => 1
+				%= select_field company => $companies, class => 'form-control', id => 'company', tabindex => 2
+			</div>
+		</div>
+		<div class="form-group">
+			%= label_for level => 'Site Level', class => 'control-label col-md-3'
+			<div class="col-md-9">
+				%= select_field level => $levels, class => 'form-control', id => 'level', tabindex => 3
 			</div>
 		</div>
 		<div class="form-group">
 			%= label_for street => 'Street', class => 'control-label col-md-3'
 			<div class="col-md-9">
-				%= text_field 'street', class => 'form-control', id => 'street', tabindex => 2, placeholder => '111 Street Address'
+				%= text_field 'street', class => 'form-control', id => 'street', tabindex => 4, placeholder => '111 Street Address'
 			</div>
 		</div>
 		<div class="form-group">
 			%= label_for city => 'City', class => 'control-label col-md-3'
 			<div class="col-md-9">
-				%= text_field 'city', class => 'form-control', id => 'city', tabindex => 3, placeholder => 'City'
+				%= text_field 'city', class => 'form-control', id => 'city', tabindex => 5, placeholder => 'City'
 			</div>
 		</div>
 		<div class="form-group">
 			%= label_for state => 'State', class => 'control-label col-md-3'
 			<div class="col-md-9">
-				%= text_field 'state', class => 'form-control', id => 'state', tabindex => 4, placeholder => 'State'
+				%= text_field 'state', class => 'form-control', id => 'state', tabindex => 6, placeholder => 'State'
 			</div>
 		</div>
 		<div class="form-group">
 			%= label_for zip => 'Zip', class => 'control-label col-md-3'
 			<div class="col-md-9">
-				%= text_field 'zip', class => 'form-control', id => 'zip', tabindex => 5, placeholder => 'Zip'
+				%= text_field 'zip', class => 'form-control', id => 'zip', tabindex => 7, placeholder => 'Zip'
 			</div>
 		</div>
-		<button type="submit" class="btn btn-primary">Create Site</button>
+		<div class="form-group">
+			<div class="col-md-offset-3 col-md-9">
+				<button type="submit" class="btn btn-primary create-site">Create Site</button>
+			</div>
+		</div>
 	% end
 	
 % end

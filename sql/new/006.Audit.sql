@@ -41,10 +41,10 @@ CREATE TABLE ticket (
 	genesis TIMESTAMPTZ DEFAULT now(),
 	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	update_type TEXT,
-	status INTEGER,
+	status UUID references ticket.status(id),
 	notes TEXT,
 	updater UUID REFERENCES auth.users(id),
-	ticket UUID REFERENCES ticket.ticket(id),
+	ticket UUID REFERENCES ticket.ticket(id) ON DELETE CASCADE,
 	time_worked INTERVAL
 );
 

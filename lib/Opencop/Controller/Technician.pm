@@ -6,7 +6,7 @@ sub dashboard{
 
 	$self->stash(
 		js => ['/js/private/queue.js'],
-		styles => ['/styles/private/queue.css'],
+		styles => ['/styles/private/technician_dashboard.css','/styles/private/queue.css'],
 		queues => $self->ticket->queue_overview($self->session('user_id'))
 	);
 }

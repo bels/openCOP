@@ -3,8 +3,14 @@
 
 %= include 'admin/user_form'
 
-<a href="<%= url_for('admin_customer_dashboard') %>" class="btn btn-primary">Cucstomer Dashboard</a>
-<a href="<%= url_for('general_settings') %>" class="btn btn-primary">General Settings</a>
-
-
-	%= content_for 'user_form'
+	<div class="row content">
+		<div class="col-md-2 left-column">
+			<a href="<%= url_for('general_settings') %>" class="btn btn-primary">General Settings</a>
+			<br>
+			<br>
+			<a href="<%= url_for('admin_customer_dashboard') %>" class="btn btn-primary">Customer Dashboard</a>
+		</div>
+		<div class="col-md-10 right-column">
+			%= content_for 'user_form'
+		</div>
+	</div>

@@ -32,7 +32,7 @@ values
 	)
 returning id
 SQL
-
+	my $availability_time = $data->{'availability_time'} ne '' ? $data->{'availability_time'} : undef;
 	my $ticket = $self->pg->db->query($sql,
 		$data->{'barcode'},
 		$data->{'site'},
@@ -48,7 +48,7 @@ SQL
 		$data->{'email'},
 		$data->{'tech'},
 		$submitter_id,
-		$data->{'availability_time'}
+		$availability_time
 	)->hash;
 
 	$self->_insert_troubleshooting($submitter_id,$ticket->{'id'},$data->{'troubleshoot'});
@@ -271,6 +271,7 @@ update ticket set
 where
 	id = ?
 SQL
+	my $availability_time = $data->{'availability_time'} ne '' ? $data->{'availability_time'} : undef;
 	$self->pg->db->query($sql,
 		$data->{'site'},
 		$data->{'status'},
@@ -286,7 +287,7 @@ SQL
 		$data->{'problem'},
 		$data->{'priority'},
 		$data->{'tech'},
-		$data->{'availability_time'}
+		$availability_time
 	);
 	$self->_insert_troubleshooting($self->session('user_id'),$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};
 	$self->_add_history($data->{'ticket_id'},'update',$data->{'status'},$self->session('user_id'),undef,undef);
@@ -309,7 +310,7 @@ sub _add_history{
 	
 my $sql =<<SQL;
 insert into audit.ticket
-	(update_type, status, notes, updater, ticket, time_worked) values (?,?,?,?,?,?)
+	(update_type, status, notes, updater, ticket, time_worked) values (?,(select id from status where lower(status) = lower(?)),?,?,?,?)
 SQL
 	$self->pg->db->query($sql,$update_type,$status,$notes,$updater,$ticket,$time_worked);
 	return;

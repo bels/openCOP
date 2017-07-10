@@ -13,8 +13,21 @@ sub dashboard{
 	);
 }
 
+sub general_settings{
+	my $self = shift;
+
+}
+
 sub new_customer{
 	my $self = shift;
+	
+	unless($self->session('csrf_token') eq $self->param('csrf_token')){
+		#TODO add error message later
+		$self->redirect_to($self->req->headers->referrer);
+		return;
+	}
+	$self->core->new_customer($self->param('name'));
+	$self->redirect_to($self->req->headers->referrer);
 }
 
 sub edit_customer{
@@ -23,6 +36,11 @@ sub edit_customer{
 
 sub customer_dashboard{
 	my $self = shift;
+	
+	$self->stash(
+		companies => $self->core->company_list,
+		levels => $self->core->site_level_list
+	);
 }
 
 sub delete_customer{
@@ -31,6 +49,14 @@ sub delete_customer{
 
 sub new_site{
 	my $self = shift;
+	
+	unless($self->session('csrf_token') eq $self->param('csrf_token')){
+		#TODO add error message later
+		$self->redirect_to($self->req->headers->referrer);
+		return;
+	}
+	$self->core->new_site($self->req->params->to_hash);
+	$self->redirect_to($self->req->headers->referrer);
 }
 
 sub edit_site{

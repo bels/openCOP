@@ -6,6 +6,7 @@ use Opencop::Model::Audit;
 use Opencop::Model::Account;
 use Opencop::Model::Auth;
 use Opencop::Model::Ticket;
+use Opencop::Model::Core;
 
 # This method will run once at server start
 sub startup {
@@ -34,6 +35,10 @@ sub startup {
   	my $app = shift;
   	state $ticket = Opencop::Model::Ticket->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
+  $self->helper(core => sub {
+  	my $app = shift;
+  	state $ticket = Opencop::Model::Core->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+  });
   
   $self->helper(set_selected => sub{
   	#must pass in an array ref containing a hashref in each element
@@ -55,7 +60,12 @@ sub startup {
   $self->helper(meta_description => sub{
   	
   });
-  
+  $self->helper(has_permission => sub{
+	my ($self,$permission,$object) = @_;
+	#i don't like this.  I would prefer to not have to pass in the user id but the backend can't handle checking permissions without it yet
+	return $self->auth->hasPermission($self->session->{'user_id'},$permission,$object); 
+  });
+
   $self->hook(before_dispatch => sub{
 	my $self = shift;
 	$self->audit->page_visit($self->tx);
@@ -63,7 +73,7 @@ sub startup {
   # Router
   my $r = $self->routes;
 
-  # Normal route to controller
+  # Normal route to controller 
   $r->get('/')->to('core#index')->name('index');
   $r->get('/customer')->to('customer#index')->name('customer_index');
   $r->post('/auth')->to('auth#authenticate')->name('auth');
