@@ -64,7 +64,10 @@ sub check_session {
 	my $self = shift;
 
 	my $session = $self->session->{'id'} // '00000000-0000-0000-0000-000000000000';
-	return 1 if $self->auth->verifySession($session);
+	if($self->auth->verifySession($session)){
+		$self->auth->refreshSession($session);
+		return 1;
+	}
 	$self->flash(error => 'You tried to access a resource that requires you to be logged in.  Please login to continue.');
 	if($self->tx->req->is_xhr){
 		$self->render(json => {status => Mojo::JSON->false}, status => 403);
