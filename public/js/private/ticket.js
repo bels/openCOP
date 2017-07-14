@@ -30,5 +30,17 @@
 				
 			});
 		});
+		
+		$('.add.troubleshooting.btn').click(function(){
+			var $form = $(this).parent().parent().find('form');
+			var data = $form.serialize();
+			$.ajax({
+				url: $form.attr('action'),
+				method: $form.attr('method'),
+				data: data
+			}).done(function(data){
+				alert('troubleshooting added');
+			});
+		});
 	});
 })();

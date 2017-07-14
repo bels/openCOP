@@ -7,4 +7,7 @@ sub index {
 
 }
 
+sub dashboard{
+	my $self = shift;
+}
 1;

@@ -2,16 +2,29 @@
 % title 'Ticket ' . $ticket->{'ticket'};
 
 %= include 'ticket/ticket'
+%= include 'ticket/add_troubleshooting_modal'
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
-			<h3 class="center-block">
-				<%= stash('company_name') // 'COMPANY NAME NOT SET' %> Helpdesk - Ticket #<%= $ticket->{'ticket'} %>
-			</h3>
-			<button class="btn btn-primary edit" title="Click to unlock for editing" alt="Edit">Edit</button>
-			<button class="btn btn-primary save hidden" title="Save Edits" alt="Edit">Save Changes</button>
-		</div>
-		<div class="row">
-%= content_for 'ticket_details'
+			<div class="col-md-3 left-column">
+				<a href="<%= url_for('new_ticket_form') %>" class="btn btn-primary">New Ticket</a>
+				<br>
+				<br>
+				<a href="<%= url_for('technician_dashboard') %>" class="btn btn-primary">Technician Dashboard</a>
+			</div>
+			<div class="col-md-9 right-column">
+				<h3 class="center-block">
+					<%= stash('company_name') // 'COMPANY NAME NOT SET' %> Helpdesk - Ticket #<%= $ticket->{'ticket'} %>
+				</h3>
+				<button class="btn btn-primary edit" title="Click to unlock for editing" alt="Edit">Edit</button>
+				<button class="btn btn-primary save hidden" title="Save Edits" alt="Save Changes">Save Changes</button>
+				<button class="btn btn-primary troubleshooting" title="Click to add your troubleshooting" alt="Add Troubleshooting"  data-toggle="modal" data-target="#troubleshootingModal">Add Troubleshooting</button>
+			
+				<div class="row">
+		%= content_for 'ticket_details'
+				</div>
+			</div>
 		</div>
 	</div>
+	
+		%= content_for 'add_troubleshooting_modal'

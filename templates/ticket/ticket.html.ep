@@ -190,7 +190,7 @@
 							<div class="col-md-12">
 								%= label_for troubleshoot => 'Troubleshooting Tried', class => 'control-label'
 							</div>
-							<p class="troubleshoot static">
+							<p class="troubleshoot">
 								% foreach my $t (@{$troubleshooting}){
 									Technician: <%= $t->{'tech_name'} %><br>
 									Date: <%= $t->{'genesis'} %><br>
@@ -198,7 +198,6 @@
 									<hr>
 								% } 
 							</p>
-							<textarea id="troubleshoot" rows="5" name="troubleshoot" tabindex="14" class="form-control troubleshoot hidden input col-md-12" placeholder="Add Your New Troubleshooting"></textarea>
 						</div>
 					</div>
 					<div id="attach_div" class="col-md-5"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>

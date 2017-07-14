@@ -1,0 +1,41 @@
+% content_for add_troubleshooting_modal => begin
+
+<div class="modal fade" tabindex="-1" id="troubleshootingModal" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Add Troubleshooting</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" action="<%= url_for('add_troubleshooting') %>" method="POST">
+					%= hidden_field ticket_id => $ticket_id, id => 'ticket_id', class => 'input'
+					<div class="form-group">
+						<label for="troubleshooting_time" class="control-label col-md-3 text-right">Time</label>
+						<div class="col-md-9">
+							<div class="col-md-3">
+								<input type="text" name="troubleshooting_time" class="form-control troubleshooting_time">
+							</div>
+							<div class="col-md-9">
+								<select name="time_interval" class="form-control time_interval col-md-10">
+									<option value="Minute">Minute</option>
+									<option value="Hour">Hour</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="troubleshoot" class="control-label">Troubleshooting</label>
+						<textarea id="troubleshoot" rows="5" name="troubleshoot" class="form-control troubleshoot input col-md-12" placeholder="Add Your New Troubleshooting"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary add troubleshooting">Add Troubleshooting</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+% end

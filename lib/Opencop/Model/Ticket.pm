@@ -6,7 +6,7 @@ has 'debug';
 
 sub new_ticket{
 	my ($self,$data,$submitter_id) = @_;
-warn $submitter_id;
+
 my $sql =<<SQL;
 insert into ticket(
 	status,
@@ -51,7 +51,7 @@ SQL
 		$availability_time
 	)->hash;
 
-	$self->_insert_troubleshooting($submitter_id,$ticket->{'id'},$data->{'troubleshoot'});
+	$self->_insert_troubleshooting($submitter_id,$ticket->{'id'},$data->{'time_worked'},$data->{'troubleshoot'});
 	$self->_add_history($ticket->{'id'},'create','new',$submitter_id,undef,undef);
 	return $ticket->{'id'};
 }
@@ -250,7 +250,7 @@ SQL
 }
 
 sub update_ticket{
-	my ($self,$data) = @_;
+	my ($self,$updater_id,$data) = @_;
 
 my $sql =<<SQL;
 update ticket set
@@ -290,19 +290,26 @@ SQL
 		$data->{'tech'},
 		$availability_time
 	);
-	$self->_insert_troubleshooting($self->session('user_id'),$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};
+	$self->_insert_troubleshooting($updater_id,$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};
 	$self->_add_history($data->{'ticket_id'},'update',$data->{'status'},$self->session('user_id'),undef,undef);
 	return;
 }
 
+sub add_troubleshooting{
+	my ($self,$updater_id,$data) = @_;
+	#this is a called from a controller from a certain code path
+
+	$self->_insert_troubleshooting($updater_id,$data->{'ticket_id'},$data->{'troubleshooting_time'} . ' ' . $data->{'time_interval'},$data->{'troubleshoot'});
+}
+
 sub _insert_troubleshooting{
-	my ($self,$tech,$ticket,$data) = @_;
+	my ($self,$tech,$ticket,$time_worked,$data) = @_;
 	
 my $troubleshooting_sql =<<SQL;
-insert into troubleshooting(technician, ticket, troubleshooting) values(?,?,?)
+insert into troubleshooting(technician, ticket, time_worked, troubleshooting) values(?,?,?,?)
 SQL
 
-	$self->pg->db->query($troubleshooting_sql,$tech,$ticket,$data);
+	$self->pg->db->query($troubleshooting_sql,$tech,$ticket,$time_worked,$data);
 	return;
 }
 

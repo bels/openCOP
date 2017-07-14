@@ -78,6 +78,7 @@ sub startup {
   $r->get('/customer')->to('customer#index')->name('customer_index');
   $r->post('/auth')->to('auth#authenticate')->name('auth');
   my $authed = $r->under()->to('auth#check_session');
+  $authed->get('/dashboard')->to('core#dashboard')->name('dashboard'); #Reroutes people to the right dashboard depending if they are a customer or technician
   $authed->get('/technician/dashboard')->to('technician#dashboard')->name('technician_dashboard');
   $authed->get('/customer/dashboard')->to('customer#dashboard')->name('customer_dashboard');
   $authed->get('/ticket/new')->to('ticket#new_form')->name('new_ticket_form');
@@ -85,6 +86,7 @@ sub startup {
   $authed->post('/ticket/update/:ticket_id')->to('ticket#update')->name('update_ticket');
   $authed->get('/ticket/queue/all')->to('ticket#all_queues')->name('view_all_ticket_queues');
   $authed->get('/ticket/queue/:queue')->to('ticket#queue')->name('view_ticket_queue');
+  $authed->post('/ticket/troubleshooting/add')->to('ticket#add_troubleshooting')->name('add_troubleshooting');
   $authed->get('/ticket/:ticket_id')->to('ticket#view_ticket')->name('view_ticket');
   $authed->get('/work-order/new')->to('workorder#new_form')->name('new_work_order_form');
   $authed->post('/work-order')->to('workorder#new')->name('new_work_order');
@@ -106,7 +108,7 @@ sub startup {
   $authed->get('/admin/customer/list')->to('admin#list')->name('list_customers');
   $authed->post('/admin/customer/new')->to('admin#new_customer')->name('new_customer');
   $authed->post('/admin/customer/edit')->to('admin#edit_customer')->name('edit_customer');
-  $authed->get('/admin/customer/dashboard')->to('admin#customer_dashboard')->name('admin_customer_dashboard');
+  $authed->get('/admin/customer/settings')->to('admin#customer_settings')->name('admin_customer_settings');
   $authed->post('/admin/customer/delete')->to('admin#delete_customer')->name('delete_customer');
   $authed->post('/admin/customer/site/new')->to('admin#new_site')->name('new_site');
   $authed->post('/admin/customer/site/edit')->to('admin#edit_site')->name('edit_site');

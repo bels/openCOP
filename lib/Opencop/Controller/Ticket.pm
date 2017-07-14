@@ -53,12 +53,12 @@ sub view_ticket{
 			'/js/common/jquery/plugins/jquery.validate.min.js',
 			'/js/common/jquery/plugins/additional-methods.min.js',
 			'/js/common/moment.js',
-			'/js/common/bootstrap-datetimepicker.js',
+			'/js/common/bootstrap-datetimepicker.min.js',
 			'/js/private/new_ticket.js',
 			'/js/private/ticket.js',
 		],
 		styles => [
-			'/styles/common/datepicker/bootstrap-datetimepicker.css'
+			'/styles/common/bootstrap-datetimepicker.css'
 		],
 		company_name => $self->config->{'company_name'},
 		sites => $self->set_selected($sites,1,$ticket->{'site'}),
@@ -81,6 +81,15 @@ sub update{
 		return;
 	}
 	
+	$self->update_ticket($self->session('user_id'),$data);
 	$self->render(json => {status => Mojo::JSON->true, message => 'Submitted'}, status => 200);
+}
+
+sub add_troubleshooting{
+	my $self = shift;
+
+	$self->ticket->add_troubleshooting($self->session('user_id'),$self->req->params->to_hash);
+	
+	$self->render(json => {message => 'Add Troubleshooting', success => Mojo::JSON->true},status => 200);
 }
 1;

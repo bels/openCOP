@@ -34,7 +34,7 @@ sub edit_customer{
 	my $self = shift;
 }
 
-sub customer_dashboard{
+sub customer_settings{
 	my $self = shift;
 	
 	$self->stash(
