@@ -133,6 +133,7 @@ my $sql =<<SQL;
 select
 	t.id,
 	t.ticket,
+	t.contact,
 	t.synopsis,
 	u.first || ' ' || u.last as technician,
 	s.status,

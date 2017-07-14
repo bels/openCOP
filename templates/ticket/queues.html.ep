@@ -5,6 +5,7 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				<th>Ticket Number</th>
+				<th>Contact</th>
 				<th>Synopsis</th>
 				<th>Technician</th>
 				<th>Status</th>
@@ -14,6 +15,7 @@
 			% foreach my $ticket (@{$queues->{$section}}){
 				<tr data-id="<%= $ticket->{'id'} %>">
 					<td><%= $ticket->{'ticket'} %></td>
+					<td><%= $ticket->{'contact'} %></td>
 					<td><%= $ticket->{'synopsis'} %></td>
 					<td><%= $ticket->{'technician'} %></td>
 					<td><%= $ticket->{'status'} %></td>
