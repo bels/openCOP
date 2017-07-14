@@ -27,7 +27,7 @@
 				data: JSON.stringify(data),
 				dataType: 'json'
 			}).done(function(data){
-				
+				window.location.href = window.location.href;
 			});
 		});
 		

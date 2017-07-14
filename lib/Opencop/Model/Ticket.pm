@@ -288,10 +288,11 @@ SQL
 		$data->{'problem'},
 		$data->{'priority'},
 		$data->{'tech'},
-		$availability_time
+		$availability_time,
+		$data->{'ticket_id'}
 	);
 	$self->_insert_troubleshooting($updater_id,$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};
-	$self->_add_history($data->{'ticket_id'},'update',$data->{'status'},$self->session('user_id'),undef,undef);
+	$self->_add_history($data->{'ticket_id'},'update',$data->{'status'},$updater_id,undef,undef);
 	return;
 }
 

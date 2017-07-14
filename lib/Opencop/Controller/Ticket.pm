@@ -81,7 +81,7 @@ sub update{
 		return;
 	}
 	
-	$self->update_ticket($self->session('user_id'),$data);
+	$self->ticket->update_ticket($self->session('user_id'),$data);
 	$self->render(json => {status => Mojo::JSON->true, message => 'Submitted'}, status => 200);
 }
 
