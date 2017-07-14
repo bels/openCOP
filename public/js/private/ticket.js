@@ -40,6 +40,7 @@
 				data: data
 			}).done(function(data){
 				alert('troubleshooting added');
+				window.location.href = window.location.href;
 			});
 		});
 	});
