@@ -3,11 +3,19 @@
 
 %= include 'ticket/form'
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
-			<h3 class="center-block"><%= stash('company_name') // 'COMPANY NAME NOT SET' %> Helpdesk - Input a new ticket</h3>
-		</div>
-		<div class="row">
-			%= content_for 'new_ticket'
-		</div>
+			<div class="col-md-3 left-column">
+				<a href="<%= url_for('new_ticket_form') %>" class="btn btn-primary">New Ticket</a>
+				<br>
+				<br>
+				<a href="<%= url_for('technician_dashboard') %>" class="btn btn-primary">Technician Dashboard</a>
+			</div>
+			<div class="col-md-9 right-column">
+				<h3 class="center-block"><%= stash('company_name') // 'COMPANY NAME NOT SET' %> Helpdesk - Input a new ticket</h3>
+				<div class="row">
+					%= content_for 'new_ticket'
+				</div>
+			</div>
+		
 	</div>

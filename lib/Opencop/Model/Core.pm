@@ -31,4 +31,10 @@ sub new_site{
 		)->hash;
 	return $id->{'id'};
 }
+
+sub section_list{
+	my $self = shift;
+	
+	return $self->pg->db->query('select name,id from section order by name asc')->arrays->to_array;
+}
 1;

@@ -1,7 +1,7 @@
 % content_for queues => begin
 
-	% foreach my $section (keys %{$queues}){
-		<h3><%= $section %></h3>
+	% foreach my $section (@{$sections}){
+		<h3><%= $section->[0] %></h3>
 		<table class="table table-striped table-hover">
 			<thead>
 				<th>Ticket Number</th>
@@ -12,7 +12,7 @@
 				<th>Submitted Date</th>
 			</thead>
 			<tbody>
-			% foreach my $ticket (@{$queues->{$section}}){
+			% foreach my $ticket (@{$queues->{$section->[0]}}){
 				<tr data-id="<%= $ticket->{'id'} %>">
 					<td><%= $ticket->{'ticket'} %></td>
 					<td><%= $ticket->{'contact'} %></td>
@@ -25,4 +25,5 @@
 			</tbody>
 		</table>
 	%}
+
 % end

@@ -2,14 +2,30 @@ package Opencop::Controller::Admin;
 use Mojo::Base 'Mojolicious::Controller';
 
 sub new_user{
+	my $self = shift;
 	
+	my $rv = $self->account->create($self->param('firstname'),$self->param('lastname'),$self->param('password1'),$self->param('username'),0);
+	if($rv->{'status'} == 1){
+		my $id = $rv->{'id'};
+		$self->account->account_type($id,$self->param('account_type'));
+		unless($self->param('site') eq ''){
+			$self->account->site($id,$self->param('site'));
+		}
+	}
+	#TODO add error messages to the front end and handle error cases
+	$self->redirect_to($self->url_for('admin_dashboard'));
 }
 
 sub dashboard{
 	my $self = shift;
 	
+	my $site_list = [['No Site' => '']];
+	my $sl = $self->ticket->site_list;
+	foreach my $row (@{$sl}){
+		push(@{$site_list},$row);
+	}
 	$self->stash(
-		sites => $self->ticket->site_list
+		sites => $site_list
 	);
 }
 

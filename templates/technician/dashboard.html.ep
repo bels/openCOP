@@ -9,7 +9,10 @@
 				<br>
 				% if(has_permission('admin','opencop system')){
 					<a href="<%= url_for('admin_dashboard') %>" class="btn btn-primary">Admin Dashboard</a>
+					<br>
+					<br>
 				% }
+				<a href="<%= url_for('logout') %>" class="btn btn-danger">Logout</a>
 			</div>
 			<div class="col-md-9 right-column">
 				%= content_for 'queues'

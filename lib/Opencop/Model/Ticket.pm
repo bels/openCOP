@@ -155,11 +155,9 @@ on
 	t.section = se.id
 where
 	t.section in (select section from technician_section where technician = ?)
-and
-	t.technician = ?
 SQL
 	#grab all tickets for technician
-	my $tickets = $self->pg->db->query($sql,$tech_id,$tech_id)->hashes->to_array;
+	my $tickets = $self->pg->db->query($sql,$tech_id)->hashes->to_array;
 	
 	#organize tickets into sections
 	my $queues = {};

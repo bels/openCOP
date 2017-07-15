@@ -12,13 +12,13 @@ use constant {
 };
 
 sub create{
-	my ($self,$name,$password,$email,$activate) = @_;
+	my ($self,$firstname,$lastname,$password,$username,$activate) = @_;
 	
-	my $rs = $self->pg->db->query('select * from auth.register(?,?,?)',$name,$password,$email)->hash;
+	my $rs = $self->pg->db->query('select * from auth.register(?,?,?,?)',$firstname,$lastname,$password,$username)->hash;
 
 	if($rs->{'status'} == SUCCESS){
 		if($activate == 1){
-			my $result = $self->pg->db->query('select * from platform.create_token(?,?)',$name,'activation')->hash;
+			my $result = $self->pg->db->query('select * from platform.create_token(?,?)',$rs->{'id'},'activation')->hash;
 			if($result->{'status'} == 1){
 				$rs->{'token'} = $result->{'token'};
 			}
@@ -74,5 +74,29 @@ SQL
 	} else {
 		return $self->pg->db->query('select content, from profile where user_id = ? and active = true',$user_id)->hashes->to_array;
 	}
+}
+
+sub account_type{
+	my $self = shift;
+	#pass in id, then account type
+	my ($id,$type) = (undef,undef);
+	if(@_){
+		($id,$type) = @_;
+		$self->pg->db->query("select * from update_profile(?,'account_type',?)",$id,$type);
+	}
+	
+	return $self->pg->db->query("select content from profile where data_type = (select id from profile_data_type where description = 'account_type') and user_id = ?",$id)->hash;
+}
+
+sub site{
+	my $self = shift;
+	
+	my ($id,$site) = (undef,undef);
+	if(@_){
+		($id,$site) = @_;
+		$self->pg->db->query('update users set site = ? where id = ?',$site,$id);
+	}
+	
+	return $self->pg->db->query('select site from users where id = ?',$id)->hash->{'site'};
 }
 1;

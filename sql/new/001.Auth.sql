@@ -106,3 +106,33 @@ CREATE TABLE sessions(
 GRANT SELECT, INSERT, UPDATE, DELETE ON sessions TO opencop_user;
 CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON sessions
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
+
+-------------------------------------------------------------------------------------
+
+CREATE TABLE account_associations(
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	genesis TIMESTAMPTZ DEFAULT now(),
+	modified TIMESTAMPTZ DEFAULT now(),
+	primary_account UUID REFERENCES auth.users(id),
+	secondary_account UUID REFERENCES auth.users(id)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON auth.account_associations TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.account_associations
+	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
+
+-------------------------------------------------------------------------------------
+
+CREATE TABLE on_behalf_permissions(
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	genesis TIMESTAMPTZ DEFAULT now(),
+	modified TIMESTAMPTZ DEFAULT now(),
+	association UUID NOT NULL REFERENCES auth.account_associations(id) ON DELETE CASCADE,
+	permission UUID NOT NULL REFERENCES auth.permissions(id) ON DELETE CASCADE,
+	object UUID NOT NULL REFERENCES auth.object(id) ON DELETE CASCADE,
+	UNIQUE (association,permission,object)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON auth.on_behalf_permissions TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON auth.on_behalf_permissions
+	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
