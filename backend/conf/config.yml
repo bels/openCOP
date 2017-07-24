@@ -1,13 +1,13 @@
 ---
-mail_server:  10.1.1.30
-helpdesk_account: helpdesk@infinity-ts.com
-helpdesk_password: Turbo01Cloud!!
+mail_server:  IP_OR_FQDN
+helpdesk_account: test@example.com
+helpdesk_password: FILL_ME_IN
 ssl: 1
 uid: 1
 port: 993
 mail_inbox_folder: Inbox
-mail_processed_folder: Addressed
-ticket_db: opencop
-db_username: opencop_user
-db_user_password: PAssword1234!@#$
+mail_processed_folder: 'Inbox/Addressed'
+ticket_db: FILL_ME_IN
+db_username: FILL_ME_IN
+db_user_password: FILL_ME_IN
 ticket_table: ticket

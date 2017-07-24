@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 sub dashboard{
 	my $self = shift;
-warn $self->dumper($self->ticket->queue_overview($self->session('user_id')));
+
 	$self->stash(
 		js => ['/js/private/queue.js'],
 		styles => ['/styles/private/technician_dashboard.css','/styles/private/queue.css'],

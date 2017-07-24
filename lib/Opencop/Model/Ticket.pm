@@ -141,7 +141,7 @@ select
 	t.genesis
 from
 	ticket t
-join
+left join
 	users u
 on
 	t.technician = u.id
@@ -199,7 +199,7 @@ select
 	t.availability_time
 from
 	ticket t
-join
+left join
 	users u
 on
 	t.technician = u.id
@@ -215,7 +215,7 @@ join
 	priority p
 on
 	t.priority = p.id
-join
+left join
 	site si
 on
 	t.site = si.id
