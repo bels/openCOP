@@ -183,8 +183,8 @@
 							<div class="col-md-12">
 								%= label_for problem => 'Problem', class => 'control-label'
 							</div>
-							<p class="problem static"><%= $ticket->{'problem'} %></p>
-							<textarea id="problem" rows="5" name="problem" tabindex="13" class="form-control hidden problem input col-md-12"><%= $ticket->{'problem'} %></textarea>
+							<p class="problem static"><%== $ticket->{'problem'} %></p>
+							<textarea id="problem" rows="5" name="problem" tabindex="13" class="form-control hidden problem input col-md-12"><%== $ticket->{'problem'} %></textarea>
 						</div>
 						<div class="form-group col-md-12">
 							<div class="col-md-12">

@@ -43,13 +43,12 @@ my $sth = $dbh->prepare($sql);
 foreach my $msg (@msgs) {
 	my $raw = $imap->message_string($msg) or die $imap->LastError;
 	my $email = Courriel->parse(text => $raw);
-	#my $envelope = $imap->get_envelope($msg) or die "Could not get envelope: $@\n";
-	#my $sender = $envelope->sender_addresses or die "Could not get sender from envelope: $@\n";
-	#my $subject = $imap->subject($msg) or die "Could not get subject: $@\n";
-	#my $raw_body = $imap->body_string($msg) or die "Could not get body string: $@\n";
-	
+
 	my $sender = $email->from();
+	## kinda a hack cause I'm not sure the proper way to achieve what I'm doing with this module is
 	my $body = $email->plain_body_part();
+	$body = $email->html_body_part() unless defined $body;
+	## end hack
 	$sth->execute($sender->address,$sender->address,$email->subject(),$body->content());
 
 
