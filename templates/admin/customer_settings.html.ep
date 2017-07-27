@@ -4,6 +4,19 @@
 %= include 'admin/customer_form'
 %= include 'admin/site_form'
 
-	%= content_for 'customer_form'
+		<div class="row content">
+			<div class="col-md-2 left-column">
+				% if(has_permission('admin','opencop system')){
+					<a href="<%= url_for('admin_dashboard') %>" class="btn btn-primary">Admin Dashboard</a>
+					<br>
+					<br>
+				% }
+				<a href="<%= url_for('logout') %>" class="btn btn-danger">Logout</a>
+			</div>
+			<div class="col-md-10 right-column">
+				%= content_for 'customer_form'
 	
-	%= content_for 'site_form'
+				%= content_for 'site_form'
+			</div>
+		</div>
+	

@@ -1,0 +1,29 @@
+% layout 'default';
+% title 'User Preferences';
+
+		<div class="row content">
+			<div class="col-md-3 left-column">
+				<a href="<%= url_for('technician_dashboard') %>" class="btn btn-primary">Technician Dashboard</a>
+				<br>
+				<br>
+				<a href="<%= url_for('logout') %>" class="btn btn-danger">Logout</a>
+			</div>
+			<div class="col-md-9 right-column">
+				<h3>Reset Password</h3>
+				%= form_for set_password => (class => 'form-inline password-form', method => 'POST') => begin
+				<form class="form-inline">
+					<div class="form-group">
+						%= label_for password1 => 'Password'
+						%= password_field 'password1', class => 'form-control', id => 'password1', tabindex => 1, placeholder => 'Password'
+					</div>
+					<div class="form-group">
+						%= label_for password2 => 'Password'
+						%= password_field 'password2', class => 'form-control', id => 'password2', tabindex => 2, placeholder => 'Retype Password'
+					</div>
+					<button type="submit" class="btn btn-primary">Reset Password</button>
+				% end
+				% if(defined(flash('success'))){
+					<p class="<% if(flash('success')){ %>bg-success<% } else { %>bg-danger<% } %>"><%= flash('message') %></p>
+				% }
+			</div>
+		</div>
