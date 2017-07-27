@@ -68,7 +68,7 @@ sub view_ticket{
 		technicians => $self->set_selected($technicians,1,$ticket->{'technician'}),
 		ticket => $ticket,
 		troubleshooting => $self->ticket->get_troubleshooting($self->param('ticket_id')),
-		statuses => $self->set_selected($statuses,1,$ticket->{'status'})
+		statuses => $self->set_selected($statuses,0,$ticket->{'status'})
 	);
 }
 
