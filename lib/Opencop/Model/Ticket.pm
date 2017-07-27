@@ -179,7 +179,7 @@ select
 	t.genesis,
 	t.site,
 	t.ticket,
-	si.name as site_name,
+	c.name || ' - ' || si.name as site_name,
 	t.synopsis,
 	t.author,
 	t.barcode,
@@ -219,6 +219,10 @@ left join
 	site si
 on
 	t.site = si.id
+left join
+	company c
+on
+	si.company_id = c.id
 where
 	t.id = ?
 SQL
