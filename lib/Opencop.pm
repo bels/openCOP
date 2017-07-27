@@ -81,6 +81,8 @@ sub startup {
   $authed->get('/dashboard')->to('core#dashboard')->name('dashboard'); #Reroutes people to the right dashboard depending if they are a customer or technician
   $authed->get('/technician/dashboard')->to('technician#dashboard')->name('technician_dashboard');
   $authed->get('/customer/dashboard')->to('customer#dashboard')->name('customer_dashboard');
+  $authed->get('/user/preferences')->to('user#preferences')->name('user_preferences');
+  $authed->post('/user/password/set')->to('user#set_password')->name('set_password');
   $authed->get('/ticket/new')->to('ticket#new_form')->name('new_ticket_form');
   $authed->post('/ticket/new')->to('ticket#new_ticket')->name('new_ticket');
   $authed->post('/ticket/update/:ticket_id')->to('ticket#update')->name('update_ticket');

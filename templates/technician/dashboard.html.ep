@@ -12,6 +12,9 @@
 					<br>
 					<br>
 				% }
+				<a href="<%= url_for('user_preferences') %>" class="btn btn-primary">User Preferences</a>
+				<br>
+				<br>
 				<a href="<%= url_for('logout') %>" class="btn btn-danger">Logout</a>
 			</div>
 			<div class="col-md-9 right-column">

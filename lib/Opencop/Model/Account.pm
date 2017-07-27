@@ -38,6 +38,13 @@ sub edit{
 	
 }
 
+sub set_password{
+	my ($self,$user,$password) = @_;
+
+	$self->pg->db->query("update auth.users set password = crypt(?,gen_salt('bf',8)) where id = ?",$password,$user);
+	return;
+}
+
 sub full_name{
 	my ($self,$user_id) = @_;
 
