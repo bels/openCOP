@@ -1,1 +1,1 @@
-5 * * * * /path/to/your/opencop/installation/backend/mail_to_ticket.pl
+*/5 * * * * /path/to/your/opencop/installation/backend/mail_to_ticket.pl
