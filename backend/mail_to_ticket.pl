@@ -46,8 +46,8 @@ foreach my $msg (@msgs) {
 
 	my $sender = $email->from();
 	## kinda a hack cause I'm not sure the proper way to achieve what I'm doing with this module is
-	my $body = $email->plain_body_part();
-	$body = $email->html_body_part() unless defined $body;
+	my $body = $email->html_body_part();
+	$body = $email->plan_body_part() unless defined $body;
 	## end hack
 	$sth->execute($sender->address,$sender->address,$email->subject(),$body->content());
 
