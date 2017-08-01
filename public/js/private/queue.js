@@ -1,7 +1,7 @@
 ;(function(){
 
 	$(function(){
-		$.fn.dataTable.ext.type.order['status-sort'] = function ( d ) {
+		$.fn.dataTable.ext.type.order['status-sort-pre'] = function ( d ) {
 		    switch ( d ) {
 		        case 'New':    return 1;
 		        case 'In Progress': return 2;
@@ -16,14 +16,7 @@
 		$('.queue .table').DataTable({
 			'colReorder': true,
 			'paging': false,
-			'aoColumns': [
-				null,
-				null,
-				null,
-				null,
-				{'orderSequence': ['asc']},
-				null
-			],
+			'order': [[4,'asc']],
 			'columnDefs': [
 				{
 					'type': 'status-sort',
