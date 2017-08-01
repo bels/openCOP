@@ -1,6 +1,7 @@
 ;(function(){
 
 	$(function(){
+		$('.queue .table').DataTable();
 		$('td').click(function(){
 			var $this = $(this);
 			window.location = '/ticket/' + $this.closest('tr').data('id');
