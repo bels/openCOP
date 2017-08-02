@@ -246,6 +246,8 @@ on
 	t.technician = u.id
 where
 	ticket = ?
+order by
+	t.genesis desc
 SQL
 
 	return $self->pg->db->query($sql,$ticket_id)->hashes->to_array;
