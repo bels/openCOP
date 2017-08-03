@@ -25,14 +25,8 @@ sub authenticate{
 		}
 		$self->redirect_to($self->flash('destination')) and return if defined $self->flash('destination');
 		my $profile_data = $self->account->get_profile_data($self->session('user_id'),'account_type');
-		my $active_account_type = undef;
-		foreach my $data (@{$profile_data}){
-			if($data->{'default_primary'}){
-				$active_account_type = $data->{'content'};
-				$self->session(account_type => $active_account_type);
-			}
-		}
-		if($active_account_type eq 'technician'){
+		
+		if($self->session('account_type') eq 'Technician'){
 			$self->redirect_to($self->url_for($self->config->{'technician_landing_page'}));
 		} else {
 			$self->redirect_to($self->url_for($self->config->{'customer_landing_page'}));

@@ -175,10 +175,12 @@ sub _createSession{
 	my $id = $self->pg->db->query('insert into auth.sessions (user_id,login_identifier,ip) values ((select id from auth.users where login_identifier = ?),?,?) returning id',$username,$username,$ip)->hash;
 	
 	if(defined($id->{'id'})){ #making sure we actually were able to create the session and return the id
+		my $account_info = $self->pg->db->query('select u.id,name as account_type from auth.users u join auth.account_types a on u.account_type = a.id where login_identifier = ?',$username)->hash;
 		my $session = {
 			id => $id->{'id'},
-			user_id => $self->pg->db->query('select id from auth.users where login_identifier = ?',$username)->hash->{'id'},
+			user_id => $account_info->{'id'},
 			status => 1,
+			account_type => $account_info->{'account_type'},
 			username => $username
 		};
 		

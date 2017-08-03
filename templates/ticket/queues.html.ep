@@ -4,27 +4,15 @@
 		<div class="queue">
 			<h3><%= $section->[0] %></h3>
 			<div class="checkbox">
+				% foreach my $status (@{$status_list}){
 				<label>
-					<input type="checkbox" class="toggle visible" value="New" checked> New
+					% if((session('account_type') eq 'Quality Assurance') || (session('account_type') eq 'Technician' && $status->[0] ne 'Closed')) {
+						<input type="checkbox" class="toggle visible" value="<%= $status->[0] %>" checked> <%= $status->[0] %>
+					% } else {
+						<input type="checkbox" class="toggle visible" value="<%= $status->[0] %>"> <%= $status->[0] %>
+					% }
 				</label>
-				<label>
-					<input type="checkbox" class="toggle visible" value="In Progress" checked> In Progress
-				</label>
-				<label>
-					<input type="checkbox" class="toggle visible" value="Waiting Customer" checked> Waiting Customer
-				</label>
-				<label>
-					<input type="checkbox" class="toggle visible" value="Waiting Vendor" checked> Waiting Vendor
-				</label>
-				<label>
-					<input type="checkbox" class="toggle visible" value="Waiting Other" checked> Waiting Other
-				</label>
-				<label>
-					<input type="checkbox" class="toggle visible" value="Closed"> Closed
-				</label>
-				<label>
-					<input type="checkbox" class="toggle visible" value="Completed"> Completed
-				</label>
+				% }
 			</div>
 			<table class="table table-striped table-hover">
 				<thead>

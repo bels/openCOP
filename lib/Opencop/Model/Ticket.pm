@@ -161,9 +161,11 @@ on
 	t.section = se.id
 where
 	t.section in (select section from technician_section where technician = ?)
+and
+	s.id in (select status from account_available_statuses where account_type = (select account_type from users u where u.id = ?) )
 SQL
-	#grab all tickets for technician
-	my $tickets = $self->pg->db->query($sql,$tech_id)->hashes->to_array;
+	#grab all tickets for technician and don't retreive tickets that are in statuses they shouldn't see
+	my $tickets = $self->pg->db->query($sql,$tech_id,$tech_id)->hashes->to_array;
 	
 	#organize tickets into sections
 	my $queues = {};
