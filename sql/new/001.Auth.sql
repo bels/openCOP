@@ -2,6 +2,20 @@ CREATE SCHEMA IF NOT EXISTS auth AUTHORIZATION opencop_user;
 
 SET SEARCH_PATH TO auth,public;
 
+CREATE TABLE account_types(
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	genesis TIMESTAMPTZ DEFAULT now(),
+	modified TIMESTAMPTZ DEFAULT now(),
+	name TEXT NOT NULL,
+	active BOOLEAN DEFAULT true
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON account_types TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON account_types
+	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
+
+-------------------------------------------------------------------------------------
+
 CREATE TABLE users (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT now(),
@@ -11,6 +25,7 @@ CREATE TABLE users (
 	middle TEXT,
 	login_identifier TEXT UNIQUE,
 	password TEXT,
+	account_type UUID NOT NULL REFERENCES account_types(id),
 	active BOOLEAN DEFAULT true,
 	site UUID REFERENCES opencop.site(id)
 );

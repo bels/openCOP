@@ -46,7 +46,7 @@ sub view_ticket{
 	my $priorities = $self->ticket->priority_list;
 	my $sections = $self->ticket->section_list;
 	my $technicians = $self->ticket->technician_list;
-	my $statuses = $self->ticket->status_list;
+	my $statuses = $self->ticket->status_list($self->session('user_id'));
 
 	$self->stash(
 		js => [

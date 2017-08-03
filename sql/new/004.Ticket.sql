@@ -14,6 +14,18 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON status TO opencop_user;
 CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON status
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
+CREATE TABLE account_available_statuses(
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
+	account_type UUID NOT NULL REFERENCES auth.account_types(id),
+	status UUID NOT NULL REFERENCES status(id)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON account_available_statuses TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON account_available_statuses
+	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
+
 CREATE TABLE section (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 	genesis TIMESTAMPTZ DEFAULT current_timestamp,

@@ -115,18 +115,22 @@ SQL
 }
 
 sub status_list{
-	my $self = shift;
+	my ($self,$id) = @_;
 
 my $sql =<<SQL;
 select
 	status,
-	id
+	s.id
 from
-	status
+	status s
 where
 	active = true
+and
+	s.id in (select status from account_available_statuses where account_type = (select account_type from users u where u.id = ?) )
+order by
+	genesis asc
 SQL
-	return $self->pg->db->query($sql)->arrays->to_array;
+	return $self->pg->db->query($sql,$id)->arrays->to_array;
 }
 sub queue_overview{
 	my ($self,$tech_id) = @_;
