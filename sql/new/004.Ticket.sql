@@ -77,6 +77,7 @@ CREATE TABLE ticket (
 	availability_time TIMESTAMPTZ,
 	closed_by UUID references auth.users(id),
 	completed_by UUID references auth.users(id),
+	billable BOOLEAN DEFAULT false,
 	active BOOLEAN DEFAULT true
 );
 

@@ -127,10 +127,19 @@
 							<div class="form-group col-md-4">
 								%= label_for availability_time => 'Availability', class => 'control-label col-md-3'
 								<div class="col-md-7">
-									%= text_field 'availability_time', class => 'form-control  date-picker', id => 'availability_time', tabindex => 9
+									%= text_field 'availability_time', class => 'form-control  date-picker', id => 'availability_time', tabindex => 13
 								</div>
 								<div class="col-md-1">
 									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Pick a time and date we would be able to work on this problem."></span>
+								</div>
+							</div>
+							<div class="form-group col-md-4">
+								<div class="col-md-offset-3 col-md-7">
+									<label>
+										<input type="checkbox" name="billable" id="billable" tabindex=14> Billable
+									</label>
+								</div>
+								<div class="col-md-1">
 								</div>
 							</div>
 						</div>

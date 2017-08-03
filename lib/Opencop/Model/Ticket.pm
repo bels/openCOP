@@ -24,11 +24,12 @@ insert into ticket(
 	contact_email,
 	technician,
 	submitter,
-	availability_time)
+	availability_time,
+	billable)
 values
 	(
 	(select id from status where status = 'New'),
-	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
 	)
 returning id
 SQL
@@ -48,7 +49,8 @@ SQL
 		$data->{'email'},
 		$data->{'tech'},
 		$submitter_id,
-		$availability_time
+		$availability_time,
+		$data->{'billable'}
 	)->hash;
 
 	$self->_insert_troubleshooting($submitter_id,$ticket->{'id'},$data->{'time_worked'},$data->{'troubleshoot'});
@@ -196,7 +198,8 @@ select
 	u.first || ' ' || u.last as tech_name,
 	t.problem,
 	s.status,
-	t.availability_time
+	t.availability_time,
+	t.billable
 from
 	ticket t
 left join
@@ -272,7 +275,8 @@ update ticket set
 	problem = ?,
 	priority = ?,
 	technician = ?,
-	availability_time = ?
+	availability_time = ?,
+	billable = ?
 where
 	id = ?
 SQL
@@ -293,6 +297,7 @@ SQL
 		$data->{'priority'},
 		$data->{'tech'},
 		$availability_time,
+		$data->{'billable'},
 		$data->{'ticket_id'}
 	);
 	$self->_insert_troubleshooting($updater_id,$data->{'ticket_id'},$data->{'troubleshoot'}) if $data->{'troubleshoot'};

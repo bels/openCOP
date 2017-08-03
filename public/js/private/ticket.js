@@ -10,6 +10,7 @@
 			});
 			$this.hide();
 			$('.save.btn').removeClass('hidden');
+			$('#billable').prop('disabled','');
 		});
 		
 		$('.save.btn').click(function(){
@@ -17,9 +18,10 @@
 			$('.input .form-control').each(function(index,element){
 				data[$(element).attr('id')] = $(element).val();
 			});
-			$('.input').each(function(index,element){
+			$('input:not(.form-control,#billable)').each(function(index,element){
 				data[$(element).attr('id')] = $(element).val();
 			});
+			data['billable'] = $('#billable').prop('checked');
 			data['csrf_token'] = $('#csrf_token').val();
 			$.ajax({
 				url: '/ticket/update/' + $('#ticket_id').val(),
