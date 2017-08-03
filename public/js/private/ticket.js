@@ -15,7 +15,7 @@
 		
 		$('.save.btn').click(function(){
 			var data = {};
-			$('.input .form-control').each(function(index,element){
+			$('.form-control').each(function(index,element){
 				data[$(element).attr('id')] = $(element).val();
 			});
 			$('input:not(.form-control,#billable)').each(function(index,element){

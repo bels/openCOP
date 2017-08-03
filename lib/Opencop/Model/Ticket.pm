@@ -197,7 +197,7 @@ select
 	t.priority,
 	p.severity || ' - ' || p.description priority_name,
 	t.section,
-	se.name as section,
+	se.name as section_name,
 	t.technician,
 	u.first || ' ' || u.last as tech_name,
 	t.problem,
