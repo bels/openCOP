@@ -24,7 +24,6 @@ sub authenticate{
 			$self->render(json => {success => Mojo::JSON->true}) and return;	
 		}
 		$self->redirect_to($self->flash('destination')) and return if defined $self->flash('destination');
-		my $profile_data = $self->account->get_profile_data($self->session('user_id'),'account_type');
 		
 		if($self->session('account_type') eq 'Technician'){
 			$self->redirect_to($self->url_for($self->config->{'technician_landing_page'}));
