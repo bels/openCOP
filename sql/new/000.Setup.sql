@@ -10,6 +10,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--- Custom Types ---
+
+CREATE TYPE troubleshooting_time AS(
+	troubleshooting TEXT,
+	time_worked INTERVAL
+);
 
 ---- Auth Dependencies ----
 

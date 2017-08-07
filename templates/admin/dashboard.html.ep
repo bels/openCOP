@@ -12,6 +12,9 @@
 			<br>
 			<br>
 			<a href="<%= url_for('technician_dashboard') %>" class="btn btn-primary">Technician Dashboard</a>
+			<br>
+			<br>
+			<a href="<%= url_for('view_all_reports') %>" class="btn btn-primary">Reports</a>
 		</div>
 		<div class="col-md-10 right-column">
 			%= content_for 'user_form'
