@@ -10,7 +10,12 @@ sub authenticate{
 		#checking what we have in the database vs what is in the cookie if there is one
 		#if there is no cookie for this domain, create one
 		my $session = $self->auth->retrieveSessionByID($session);
-		$self->redirect_to($self->url_for($self->config->{'landing_page'}));
+		$self->session($session);
+		if($self->session('account_type') eq 'Technician'){
+			$self->redirect_to($self->url_for($self->config->{'technician_landing_page'})) and return;
+		} else {
+			$self->redirect_to($self->url_for($self->config->{'customer_landing_page'})) and return;
+		}
 	}
 	my $username = $self->param('username') // '';
 	my $password = $self->param('password') // '';
@@ -24,7 +29,7 @@ sub authenticate{
 			$self->render(json => {success => Mojo::JSON->true}) and return;	
 		}
 		$self->redirect_to($self->flash('destination')) and return if defined $self->flash('destination');
-		
+
 		if($self->session('account_type') eq 'Technician'){
 			$self->redirect_to($self->url_for($self->config->{'technician_landing_page'}));
 		} else {

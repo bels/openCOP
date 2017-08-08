@@ -56,11 +56,13 @@ sub retrieveSession{
 	my ($self,$username) = @_;
 	
 	my $session_from_db = $self->pg->db->query('select * from auth.sessions where login_identifier = ? order by modified desc limit 1',$username)->hash;
+	my $account_type = $self->pg->db->query('select at.name from auth.users u join auth.account_types at on u.account_type = at.id where u.login_identifier = ?',$username)->hash;
 	my $session = {
 		id => $session_from_db->{'id'},
 		user_id => $session_from_db->{'user_id'},
 		status => 1,
-		username => $username
+		username => $username,
+		account_type => $account_type->{'name'}
 	};
 	
 	return $session;
@@ -71,6 +73,7 @@ sub retrieveSessionByID{
 	my ($self,$id) = @_;
 	
 	my $session_from_db = $self->pg->db->query('select * from auth.sessions where id = ? order by modified desc limit 1',$id)->hash;
+	my $account_type = $self->pg->db->query('select at.name from auth.users u join auth.account_types at on u.account_type = at.id where u.id = ?',$id)->hash;
 	unless(defined($session_from_db)){
 		return undef;
 	}
@@ -78,7 +81,8 @@ sub retrieveSessionByID{
 		id => $session_from_db->{'id'},
 		user_id => $session_from_db->{'user_id'},
 		status => 1,
-		username => $id
+		username => $id,
+		account_type => $account_type->{'name'}
 	};
 	
 	return $session;
@@ -112,7 +116,7 @@ sub refreshSession{
 sub cleanUpSessions{
 	my $self = shift;
 	
-	my $ttl = 15;
+	my $ttl = 480;
 	$ttl = $ttl . ' minutes';
 	$self->pg->db->query('update auth.sessions set active = false where modified < (now() - ?::INTERVAL)',$ttl);
 	
