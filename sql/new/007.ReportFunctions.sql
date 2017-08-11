@@ -331,3 +331,30 @@ END;
 $$ LANGUAGE plpgsql;
 
 ----------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION billable_tickets(timeframe INTERVAL) RETURNS TABLE(id UUID,synopsis TEXT, company_name TEXT) AS $$
+BEGIN
+	SELECT
+		t.id,
+		t.synopsis,
+		c.name
+	FROM
+		ticket t
+	JOIN
+		site s
+	ON
+		t.site = s.id
+	JOIN
+		company c
+	ON
+		s.company_id = c.id
+	WHERE
+		t.genesis <= now()
+	AND
+		t.genesis >= now() - timeframe
+	AND
+		t.paid = false;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------------------------------------

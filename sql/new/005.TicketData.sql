@@ -31,3 +31,9 @@ INSERT INTO priority(severity,description) values(3,'High');
 INSERT INTO priority(severity,description) values(4,'Business Critical');
 
 INSERT INTO technician_section(technician,section) VALUES ((select id from auth.users where first = 'Admin'),(select id from section where name = 'Helpdesk'));
+
+INSERT INTO reports(name, report, description) VALUES ('Tickets Received','tickets_received','How many tickets the helpdesk has received over a certain period of time');
+INSERT INTO reports(name, report, description) VALUES ('Tickets Per User', 'tickets_received_per_user','Returns the tickets put in over a certain time frame per user');
+INSERT INTO reports(name, report, description) VALUES ('Tickets Closed','tickets_closed','Returns the tickets closed by company and technician');
+INSERT INTO reports(name, report, description) VALUES ('Ticket Open Times','ticket_time','Returns tickets age and synopsis');
+INSERT INTO reports(name, report, description) VALUES ('Billable Tickets','billable_tickets','Returns tickets that are marked billable in a certain timeframe');

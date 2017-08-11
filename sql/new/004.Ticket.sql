@@ -90,6 +90,7 @@ CREATE TABLE ticket (
 	closed_by UUID references auth.users(id),
 	completed_by UUID references auth.users(id),
 	billable BOOLEAN DEFAULT false,
+	paid BOOLEAN DEFAULT false,
 	active BOOLEAN DEFAULT true
 );
 
@@ -130,12 +131,26 @@ CREATE TABLE reports (
 	modified TIMESTAMPTZ DEFAULT current_timestamp,
 	name TEXT NOT NULL UNIQUE,
 	report TEXT,
-	owner UUID references auth.users(id),
+	public BOOLEAN DEFAULT true,
 	description TEXT DEFAULT null
+	active BOOLEAN DEFAULT true
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON reports TO opencop_user;
 CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON reports
+	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
+
+CREATE TABLE report_authorized_users(
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	genesis TIMESTAMPTZ DEFAULT current_timestamp,
+	modified TIMESTAMPTZ DEFAULT current_timestamp,
+	report UUID NOT NULL REFERENCES reports(id),
+	"user" UUID NOT NULL REFERENCES auth.users(id),
+	active BOOLEAN DEFAULT true
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON report_authorized_users TO opencop_user;
+CREATE TRIGGER integrity_enforcement BEFORE UPDATE ON report_authorized_users
 	FOR EACH ROW EXECUTE PROCEDURE public.integrity_enforcement();
 
 CREATE TABLE wo(

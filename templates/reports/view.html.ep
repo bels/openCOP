@@ -1,0 +1,43 @@
+% layout 'default';
+% title 'Report';
+
+		<div class="row content">
+			<div class="col-md-3 left-column">
+				% if(has_permission('admin','opencop system')){
+					<a href="<%= url_for('admin_dashboard') %>" class="btn btn-primary">Admin Dashboard</a>
+					<br>
+					<br>
+				% }
+				<a href="<%= url_for('user_preferences') %>" class="btn btn-primary">User Preferences</a>
+				<br>
+				<br>
+				<a href="<%= url_for('view_all_reports') %>" class="btn btn-primary">Reports</a>
+				<br>
+				<br>
+				<a href="<%= url_for('logout') %>" class="btn btn-danger">Logout</a>
+			</div>
+			<div class="col-md-9 right-column">
+				<h3>Time Frame</h3>
+				<select name="timeframe" id="timeframe">
+					<option value="1 day">Last 24 Hours</option>
+					<option value="1 week">Last Week</option>
+					<option value="2 weeks">Last 2 Weeks</option>
+					<option value="3 weeks">Last 3 Weeks</option>
+					<option value="1 Month">Last Month</option>
+					<option value="6 Months">Last 6 Months</option>
+					<option value="1 Year">Last Year</option>
+				</select>
+				- or -
+				<form class="form-inline">
+					<div class="form-group">
+						<label for="start-date">Start Date</label>
+						<input type="text" name="start-date" id="start-date">
+					</div>
+					<div class="form-group">
+						<label for="end-date">End Date</label>
+						<input type="text" name="end-date" id="end-date">
+					</div>
+				</form>
+				<button class="run-report btn btn-primary">Run Report</button>
+			</div>
+		</div>

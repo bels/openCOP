@@ -7,6 +7,7 @@ use Opencop::Model::Account;
 use Opencop::Model::Auth;
 use Opencop::Model::Ticket;
 use Opencop::Model::Core;
+use Opencop::Model::Reports;
 
 # This method will run once at server start
 sub startup {
@@ -38,6 +39,10 @@ sub startup {
   $self->helper(core => sub {
   	my $app = shift;
   	state $ticket = Opencop::Model::Core->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+  });
+  $self->helper(reports => sub {
+  	my $app = shift;
+  	state $ticket = Opencop::Model::Reports->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   
   $self->helper(set_selected => sub{
@@ -99,7 +104,8 @@ sub startup {
   $authed->get('/report-builder')->to('reports#report_builder_form')->name('report_builder_form');
   $authed->post('/report-builder')->to('reports#save_report')->name('save_report');
   $authed->get('/reports')->to('reports#view_all')->name('view_all_reports');
-  $authed->get('/report/:report')->to('report#view')->name('view_report');
+  $authed->get('/report/:report')->to('reports#view')->name('view_report');
+  $authed->post('/report/:report')->to('reports#retrieve_report')->name('retrieve_report');
   $authed->get('/inventory/add')->to('inventory#add_form')->name('add_inventory_form');
   $authed->post('/inventory/add')->to('inventory#add')->name('add_inventory');
   $authed->get('/inventory')->to('inventory#view_all')->name('view_all_inventory');
