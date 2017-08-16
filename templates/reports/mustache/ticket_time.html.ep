@@ -1,0 +1,16 @@
+% content_for 'ticket_time' => begin
+			<thead>
+				<th>Ticket #</th>
+				<th>Synopsis</th>
+				<th>Total Time</th>
+			</thead>
+			<tbody>
+				{{#report}}
+					<tr>
+						<td>{{ticket_number}}</td>
+						<td>{{synopsis}}</td>
+						<td>{{total_time}}</td>
+					</tr>
+				{{/report}}
+			</tbody>
+% end

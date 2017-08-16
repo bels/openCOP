@@ -228,11 +228,12 @@ $$ LANGUAGE plpgsql;
 
 ----------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION tickets_closed(timeframe INTERVAL) RETURNS TABLE(id UUID,company_id UUID, company TEXT, technician TEXT) AS $$
+CREATE OR REPLACE FUNCTION tickets_closed(timeframe INTERVAL) RETURNS TABLE(id UUID,ticket_number BIGINT, company_id UUID, company TEXT, technician TEXT) AS $$
 BEGIN
 	RETURN QUERY
 		SELECT
 			t.id,
+			t.ticket,
 			c.id,
 			c.name,
 			u.first || ' ' || u.last as name
@@ -250,28 +251,25 @@ BEGIN
 			company c
 		ON
 			s.company_id = c.id
-		JOIN
-			audit.ticket at
-		ON
-			t.id = at.ticket
 		WHERE
-			c.id = company_id_val
+			(t.status = (select status.id from status where status = 'Closed')
+		OR
+			t.status = (select status.id from status where status = 'Completed'))
 		AND
-			at.status = (select id from status where status = 'Closed')
+			t.modified <= now()
 		AND
-			t.genesis <= now()
-		AND
-			t.genesis >= now() - timeframe;
+			t.modified >= now() - timeframe;
 END;
 $$ LANGUAGE plpgsql;
 
 ----------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION tickets_closed(start_date DATE, end_date DATE) RETURNS TABLE(id UUID,company_id UUID, company TEXT, technician TEXT) AS $$
+CREATE OR REPLACE FUNCTION tickets_closed(start_date DATE, end_date DATE) RETURNS TABLE(id UUID,ticket_number BIGINT,company_id UUID, company TEXT, technician TEXT) AS $$
 BEGIN
 	RETURN QUERY
 		SELECT
 			t.id,
+			t.ticket,
 			c.id,
 			c.name,
 			u.first || ' ' || u.last as name
@@ -289,24 +287,20 @@ BEGIN
 			company c
 		ON
 			s.company_id = c.id
-		JOIN
-			audit.ticket at
-		ON
-			t.id = at.ticket
 		WHERE
-			c.id = company_id_val
+			(t.status = (select status.id from status where status = 'Closed')
+		OR
+			t.status = (select status.id from status where status = 'Completed'))
 		AND
-			at.status = (select id from status where status = 'Closed')
+			t.modified::DATE <= end_date
 		AND
-			t.genesis::DATE <= end_date
-		AND
-			t.genesis::DATE >= start_date;
+			t.modified::DATE >= start_date;
 END;
 $$ LANGUAGE plpgsql;
 
 ----------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION ticket_time(ticket_id UUID) RETURNS TABLE(id UUID,synopsis TEXT,total_time INTERVAL, troubleshooting troubleshooting_time[]) AS $$
+CREATE OR REPLACE FUNCTION ticket_time(ticket_id UUID) RETURNS TABLE(id UUID,ticket_number BIGINT, synopsis TEXT,total_time INTERVAL, troubleshooting troubleshooting_time[]) AS $$
 DECLARE
 	total_troubleshooting troubleshooting_time[];
 BEGIN
@@ -314,6 +308,7 @@ BEGIN
 	RETURN QUERY
 		SELECT
 			t.id,
+			t.ticket,
 			t.synopsis,
 			sum(tr.time_worked),
 			total_troubleshooting
@@ -332,28 +327,30 @@ $$ LANGUAGE plpgsql;
 
 ----------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION billable_tickets(timeframe INTERVAL) RETURNS TABLE(id UUID,synopsis TEXT, company_name TEXT) AS $$
+CREATE OR REPLACE FUNCTION billable_tickets(timeframe INTERVAL) RETURNS TABLE(id UUID,ticket_number BIGINT, synopsis TEXT, company_name TEXT) AS $$
 BEGIN
-	SELECT
-		t.id,
-		t.synopsis,
-		c.name
-	FROM
-		ticket t
-	JOIN
-		site s
-	ON
-		t.site = s.id
-	JOIN
-		company c
-	ON
-		s.company_id = c.id
-	WHERE
-		t.genesis <= now()
-	AND
-		t.genesis >= now() - timeframe
-	AND
-		t.paid = false;
+	RETURN QUERY
+		SELECT
+			t.id,
+			t.ticket,
+			t.synopsis,
+			c.name
+		FROM
+			ticket t
+		JOIN
+			site s
+		ON
+			t.site = s.id
+		JOIN
+			company c
+		ON
+			s.company_id = c.id
+		WHERE
+			t.genesis <= now()
+		AND
+			t.genesis >= now() - timeframe
+		AND
+			t.paid = false;
 END;
 $$ LANGUAGE plpgsql;
 

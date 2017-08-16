@@ -1,6 +1,12 @@
 % layout 'default';
 % title 'Report';
 
+% include 'reports/mustache/tickets_received';
+% include 'reports/mustache/tickets_per_user';
+% include 'reports/mustache/tickets_closed';
+% include 'reports/mustache/ticket_time';
+% include 'reports/mustache/billable_tickets';
+
 		<div class="row content">
 			<div class="col-md-3 left-column">
 				% if(has_permission('admin','opencop system')){
@@ -17,27 +23,68 @@
 				<a href="<%= url_for('logout') %>" class="btn btn-danger">Logout</a>
 			</div>
 			<div class="col-md-9 right-column">
-				<h3>Time Frame</h3>
-				<select name="timeframe" id="timeframe">
-					<option value="1 day">Last 24 Hours</option>
-					<option value="1 week">Last Week</option>
-					<option value="2 weeks">Last 2 Weeks</option>
-					<option value="3 weeks">Last 3 Weeks</option>
-					<option value="1 Month">Last Month</option>
-					<option value="6 Months">Last 6 Months</option>
-					<option value="1 Year">Last Year</option>
-				</select>
-				- or -
-				<form class="form-inline">
-					<div class="form-group">
-						<label for="start-date">Start Date</label>
-						<input type="text" name="start-date" id="start-date">
-					</div>
-					<div class="form-group">
-						<label for="end-date">End Date</label>
-						<input type="text" name="end-date" id="end-date">
-					</div>
-				</form>
-				<button class="run-report btn btn-primary">Run Report</button>
+				%== '<h2>Tickets Received</h2>' if stash('current_report') eq 'tickets_received'
+				%== '<h2>Tickets Received Per User</h2>' if stash('current_report') eq 'tickets_received_per_user'
+				%== '<h2>Tickets Closed</h2>' if stash('current_report') eq 'tickets_closed'
+				%== '<h2>Tickets Open Time</h2>' if stash('current_report') eq 'ticket_time'
+				%== '<h2>Billable Tickets</h2>' if stash('current_report') eq 'billable_tickets'
+				
+				<input type="hidden" value="<%= stash('current_report') %>" class="current-report">
+				
+				% if(stash('current_report') ne 'ticket_time'){
+					<h3>Time Frame</h3>
+					<form class="form-inline" method="POST" action="/report/<%= stash('current_report') %>">
+						<select name="timeframe" id="timeframe">
+							<option></option>
+							<option value="1 day">Last 24 Hours</option>
+							<option value="1 week">Last Week</option>
+							<option value="2 weeks">Last 2 Weeks</option>
+							<option value="3 weeks">Last 3 Weeks</option>
+							<option value="1 Month">Last Month</option>
+							<option value="6 Months">Last 6 Months</option>
+							<option value="1 Year">Last Year</option>
+						</select>
+						- or -
+						<div class="form-group">
+							<label for="start-date">Start Date</label>
+							<input type="text" name="start-date" class="date-picker" id="start-date">
+						</div>
+						<div class="form-group">
+							<label for="end-date">End Date</label>
+							<input type="text" name="end-date" class="date-picker" id="end-date">
+						</div>
+						<button type="button" class="run-report btn btn-primary">Run Report</button>
+					</form>
+				% } else {
+					<h3>Enter Ticket Number</h3>
+					<form class="form-inline" method="POST" action="/report/<%= stash('current_report') %>">
+						<div class="form-group">
+							<label for="ticket">Ticket Number</label>
+							<input name="ticket" id="ticket">
+						</div>
+						<button type="button" class="run-report btn btn-primary">Run Report</button>
+					</form>
+				% }
+				<div id="report-data">
+					<table class="data table table-striped table-hover">
+					
+					</table>
+				</div>
 			</div>
 		</div>
+		
+		<script type="text/template" id="tickets_received" class="template">
+			%= content_for 'tickets_received'
+		</script>
+		<script type="text/template" id="tickets_per_user" class="template">
+			%= content_for 'tickets_per_user'
+		</script>
+		<script type="text/template" id="tickets_closed" class="template">
+			%= content_for 'tickets_closed'
+		</script>
+		<script type="text/template" id="ticket_time" class="template">
+			%= content_for 'ticket_time'
+		</script>
+		<script type="text/template" id="billable_tickets" class="template">
+			%= content_for 'billable_tickets'
+		</script>

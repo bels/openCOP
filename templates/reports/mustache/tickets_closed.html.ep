@@ -1,0 +1,16 @@
+% content_for 'tickets_closed' => begin
+			<thead>
+				<th>Company</th>
+				<th>Ticket #</th>
+				<th>Technician</th>
+			</thead>
+			<tbody>
+				{{#report}}
+					<tr>
+						<td>{{company}}</td>
+						<td>{{ticket_number}}</td>
+						<td>{{technician}}</td>
+					</tr>
+				{{/report}}
+			</tbody>
+% end

@@ -1,0 +1,16 @@
+% content_for 'billable_tickets' => begin
+			<thead>
+				<th>Ticket #</th>
+				<th>Company Name</th>
+				<th>Synopsis</th>
+			</thead>
+			<tbody>
+				{{#report}}
+					<tr>
+						<td>{{ticket_number}}</td>
+						<td>{{company_name}}</td>
+						<td>{{synopsis}}</td>
+					</tr>
+				{{/report}}
+			</tbody>
+% end

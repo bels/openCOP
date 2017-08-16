@@ -1,0 +1,16 @@
+% content_for 'tickets_per_user' => begin
+			<thead>
+				<th>Company</th>
+				<th>Author</th>
+				<th>Contact</th>
+			</thead>
+			<tbody>
+				{{#report}}
+					<tr>
+						<td>{{company}}</td>
+						<td>{{author_name}}</td>
+						<td>{{contact_name}}</td>
+					</tr>
+				{{/report}}
+			</tbody>
+% end

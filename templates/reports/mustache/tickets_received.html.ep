@@ -1,0 +1,14 @@
+% content_for tickets_received => begin
+			<thead>
+				<th>Company</th>
+				<th>Amount</th>
+			</thead>
+			<tbody>
+				{{#report}}
+					<tr>
+						<td>{{company}}</td>
+						<td>{{amount}}</td>
+					</tr>
+				{{/report}}
+			</tbody>
+% end

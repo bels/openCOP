@@ -42,7 +42,7 @@ sub startup {
   });
   $self->helper(reports => sub {
   	my $app = shift;
-  	state $ticket = Opencop::Model::Reports->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+  	state $reports = Opencop::Model::Reports->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   
   $self->helper(set_selected => sub{
