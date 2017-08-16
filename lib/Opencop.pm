@@ -12,6 +12,12 @@ use Opencop::Model::Reports;
 # This method will run once at server start
 sub startup {
   my $self = shift;
+  
+  #### CHANGE THIS FOR YOUR DEPLOYMENT #####
+  
+  $self->secrets(['OpenCOP!!','Helpdesk1234','ToManyProblems1!']);
+  $self->session(expiration => 28800);
+  #####
 
   # Documentation browser under "/perldoc"
   $self->plugin('PODRenderer');
