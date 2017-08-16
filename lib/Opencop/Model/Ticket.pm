@@ -140,6 +140,7 @@ select
 	t.id,
 	t.ticket,
 	t.contact,
+	c.name as company,
 	t.synopsis,
 	u.first || ' ' || u.last as technician,
 	s.status,
@@ -159,6 +160,14 @@ join
 	section se
 on
 	t.section = se.id
+join
+	site
+on
+	t.site = site.id
+join
+	company c
+on
+	site.company_id = c.id
 where
 	t.section in (select section from technician_section where technician = ?)
 and

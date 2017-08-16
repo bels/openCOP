@@ -18,6 +18,7 @@
 				<thead>
 					<th>Ticket Number</th>
 					<th>Contact</th>
+					<th>Company</th>
 					<th>Synopsis</th>
 					<th>Technician</th>
 					<th>Status</th>
@@ -28,6 +29,7 @@
 					<tr data-id="<%= $ticket->{'id'} %>" data-status="<%= $ticket->{'status'} %>" class="<% if($ticket->{'status'} eq 'Completed' || $ticket->{'status'} eq 'Closed'){ %>collapse<% } %>">
 						<td><%= $ticket->{'ticket'} %></td>
 						<td><%= $ticket->{'contact'} %></td>
+						<td><%= $ticket->{'company'} %></td>
 						<td><%= $ticket->{'synopsis'} %></td>
 						<td><%= $ticket->{'technician'} %></td>
 						<td><%= $ticket->{'status'} %></td>
