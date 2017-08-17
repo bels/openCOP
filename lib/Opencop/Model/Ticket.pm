@@ -160,11 +160,11 @@ join
 	section se
 on
 	t.section = se.id
-join
+left join
 	site
 on
 	t.site = site.id
-join
+left join
 	company c
 on
 	site.company_id = c.id
