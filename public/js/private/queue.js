@@ -23,7 +23,7 @@
 				}
 			]
 		});
-		$('td').click(function(){
+		$('table').on('click','td',function(){
 			var $this = $(this);
 			window.location = '/ticket/' + $this.closest('tr').data('id');
 		});
