@@ -15,7 +15,6 @@
 		};
 		$('.queue .table').DataTable({
 			'colReorder': true,
-			'paging': false,
 			'order': [[4,'asc']],
 			'columnDefs': [
 				{
