@@ -19,6 +19,7 @@
 				<button class="btn btn-primary edit" title="Click to unlock for editing" alt="Edit">Edit</button>
 				<button class="btn btn-primary save hidden" title="Save Edits" alt="Save Changes">Save Changes</button>
 				<button class="btn btn-primary troubleshooting" title="Click to add your troubleshooting" alt="Add Troubleshooting"  data-toggle="modal" data-target="#troubleshootingModal">Add Troubleshooting</button>
+				<button class="btn btn-danger delete" title="Click to delete this ticket" alt="Delete Ticket" data-ticket-id="<%= $ticket_id %>">Delete</button>
 			
 				<div class="row">
 		%= content_for 'ticket_details'

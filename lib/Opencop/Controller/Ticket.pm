@@ -92,4 +92,17 @@ sub add_troubleshooting{
 	
 	$self->render(json => {message => 'Add Troubleshooting', success => Mojo::JSON->true},status => 200);
 }
+
+sub delete{
+	my $self = shift;
+	
+	#TODO add some form of permission checking as it makes sense
+	unless($self->session('csrf_token') eq $self->param('csrf_token')){
+		$self->render(json => {message => 'CSRF Token Bad'}, status => 403);
+		return;
+	}
+	my $success = $self->ticket->delete($self->param('ticket_id'));
+	$self->render(json => {message => 'Deleted Ticket', success => Mojo::JSON->true},status => 200) and return if $success;
+	$self->render(json => {message => 'Failed to deleted ticket', success => Mojo::JSON->false},status => 200) and return;
+}
 1;

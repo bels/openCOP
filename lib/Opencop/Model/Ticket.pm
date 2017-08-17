@@ -169,6 +169,8 @@ join
 on
 	site.company_id = c.id
 where
+	t.active = true
+and
 	t.section in (select section from technician_section where technician = ?)
 and
 	s.id in (select status from account_available_statuses where account_type = (select account_type from users u where u.id = ?) )
@@ -325,6 +327,23 @@ sub add_troubleshooting{
 	#this is a called from a controller from a certain code path
 
 	$self->_insert_troubleshooting($updater_id,$data->{'ticket_id'},$data->{'troubleshooting_time'} . ' ' . $data->{'time_interval'},$data->{'troubleshoot'});
+}
+
+sub delete{
+	my ($self,$ticket_id) = @_;
+	
+my $sql =<<SQL;
+update
+	ticket
+set
+	active = false
+where
+	id = ?
+SQL
+	$self->pg->db->query($sql,$ticket_id);
+	
+	#TODO add some error checking
+	return 1;
 }
 
 sub _insert_troubleshooting{

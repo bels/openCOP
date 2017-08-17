@@ -45,5 +45,25 @@
 				window.location.href = window.location.href;
 			});
 		});
+		
+		$('.delete.btn').click(function(){
+			var $this = $(this);
+			var u = '/ticket/delete/' + $this.data('ticket-id');
+			var d = {
+				ticket_id: $this.data('ticket-id'),
+				csrf_token: $('#csrf_token').val()
+			};
+			$.ajax({
+				url: u,
+				method: 'POST',
+				data: d
+			}).done(function(data){
+				if(data.success){
+					alert('Deleted Ticket');
+				} else {
+					alert('Could not delete ticket');
+				}
+			});
+		});
 	});
 })();
