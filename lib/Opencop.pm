@@ -8,6 +8,7 @@ use Opencop::Model::Auth;
 use Opencop::Model::Ticket;
 use Opencop::Model::Core;
 use Opencop::Model::Reports;
+use Opencop::Model::Queues;
 
 # This method will run once at server start
 sub startup {
@@ -49,6 +50,10 @@ sub startup {
   $self->helper(reports => sub {
   	my $app = shift;
   	state $reports = Opencop::Model::Reports->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+  });
+  $self->helper(queues => sub {
+    my $app = shift;
+    state $queues = Opencop::Model::Queues->new(pg => $app-pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   
   $self->helper(set_selected => sub{
