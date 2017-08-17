@@ -28,7 +28,7 @@ sub startup {
   $self->pg->search_path(['ticket','opencop','auth','audit','public']);
   $self->helper(audit => sub { 
   	my $app = shift;
-	state $core = Opencop::Model::Audit->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 :  0)
+	state $audit = Opencop::Model::Audit->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 :  0)
   });
   $self->helper(account => sub {
   	my $app = shift;
@@ -44,7 +44,7 @@ sub startup {
   });
   $self->helper(core => sub {
   	my $app = shift;
-  	state $ticket = Opencop::Model::Core->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+  	state $core = Opencop::Model::Core->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   $self->helper(reports => sub {
   	my $app = shift;
@@ -100,6 +100,7 @@ sub startup {
   $authed->get('/ticket/queue/all')->to('ticket#all_queues')->name('view_all_ticket_queues');
   $authed->get('/ticket/queue/:queue')->to('ticket#queue')->name('view_ticket_queue');
   $authed->post('/ticket/troubleshooting/add')->to('ticket#add_troubleshooting')->name('add_troubleshooting');
+  $authed->post('/ticket/delete/:ticket_id')->to('ticket#delete')->name('delete_ticket');
   $authed->get('/ticket/:ticket_id')->to('ticket#view_ticket')->name('view_ticket');
   $authed->get('/work-order/new')->to('workorder#new_form')->name('new_work_order_form');
   $authed->post('/work-order')->to('workorder#new')->name('new_work_order');
