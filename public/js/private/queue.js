@@ -15,11 +15,11 @@
 		};
 		$('.queue .table').DataTable({
 			'colReorder': true,
-			'order': [[4,'asc']],
+			'order': [[5,'asc']],
 			'columnDefs': [
 				{
 					'type': 'status-sort',
-					'targets': 4
+					'targets': 5
 				}
 			]
 		});
