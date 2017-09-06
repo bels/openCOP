@@ -4,6 +4,7 @@ INSERT INTO section(name,email) values('Helpdesk','helpdesk@email.address');
 
 INSERT INTO status (status) values ('New');
 INSERT INTO status (status) values ('In Progress');
+INSERT INTO status (status) values ('On-Site Scheduled');
 INSERT INTO status (status) values ('Waiting Customer');
 INSERT INTO status (status) values ('Waiting Vendor');
 INSERT INTO status (status) values ('Waiting Other');
@@ -12,6 +13,7 @@ INSERT INTO status (status) values ('Completed');
 
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Technician'),(select id from status where status = 'New'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Technician'),(select id from status where status = 'In Progress'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Technician'),(select id from status where status = 'On-Site Scheduled'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Technician'),(select id from status where status = 'Waiting Customer'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Technician'),(select id from status where status = 'Waiting Vendor'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Technician'),(select id from status where status = 'Waiting Other'));
@@ -19,6 +21,7 @@ INSERT INTO account_available_statuses(account_type,status) values((select id fr
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Quality Assurance'),(select id from status where status = 'Completed'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'New'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'In Progress'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'On-Site Scheduled'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'Waiting Customer'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'Waiting Vendor'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'Waiting Other'));
