@@ -22,6 +22,7 @@
 					'data': queue,
 					'colReorder': true,
 					'order': [[5,'asc']],
+					'rowId': 0,
 					'columns': [
 						{ 'data': 1 },
 						{ 'data': 2 },
@@ -43,7 +44,7 @@
 		
 		$('table').on('click','td',function(){
 			var $this = $(this);
-			window.location = '/ticket/' + $this.closest('tr').data('id');
+			window.location = '/ticket/' + $this.closest('tr').attr('id');
 		});
 		
 		$('.toggle.visible').click(function(){
