@@ -13,16 +13,34 @@
 		    }
 		    return 0;
 		};
-		$('.queue .table').DataTable({
-			'colReorder': true,
-			'order': [[5,'asc']],
-			'columnDefs': [
-				{
-					'type': 'status-sort',
-					'targets': 5
-				}
-			]
+		$.ajax({
+			url: '/ticket/queue/all',
+			method: 'GET'
+		}).done(function(data){
+			$.each(data.queues,function(index,queue){
+				$('.queue .table[data-queue-id=' + index + ']').DataTable({
+					'data': queue,
+					'colReorder': true,
+					'order': [[5,'asc']],
+					'columns': [
+						{ 'data': 1 },
+						{ 'data': 2 },
+						{ 'data': 3 },
+						{ 'data': 4 },
+						{ 'data': 5 },
+						{ 'data': 6 },
+						{ 'data': 8 },
+					],
+					'columnDefs': [
+						{
+							'type': 'status-sort',
+							'targets': 5
+						}
+					]
+				});
+			});
 		});
+		
 		$('table').on('click','td',function(){
 			var $this = $(this);
 			window.location = '/ticket/' + $this.closest('tr').data('id');

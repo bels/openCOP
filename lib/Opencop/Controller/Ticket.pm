@@ -105,4 +105,36 @@ sub delete{
 	$self->render(json => {message => 'Deleted Ticket', success => Mojo::JSON->true},status => 200) and return if $success;
 	$self->render(json => {message => 'Failed to deleted ticket', success => Mojo::JSON->false},status => 200) and return;
 }
+
+sub all_queues{
+	my $self = shift;
+
+	my $queues = $self->queue->queues_available_to_user($self->session('user_id'));
+	my $statuses = $self->ticket->status_list($self->session('user_id'));
+	my $tickets = [];
+	foreach my $queue (@{$queues}){
+		my $t = $self->queue->get_queue($queue,$statuses); 
+		push(@{$tickets},$t);
+	} 
+
+	if($self->tx->req->is_xhr){
+		$self->render(json => {queues => $tickets, success => Mojo::JSON->true},status => 200);
+	} else {
+		#add a view for this later
+	}
+}
+
+sub get_queue{
+	my $self = shift;
+
+	my $statuses = $self->ticket->status_list($self->session('user_id'));
+	
+	my $tickets = $self->queue->get_queue($self->param('queue'),$statuses);
+	
+	if($self->tx->req->is_xhr){
+		$self->render(json => {tickets => $tickets, success => Mojo::JSON->true},status => 200);
+	} else {
+		#add a view for this later
+	}
+}
 1;

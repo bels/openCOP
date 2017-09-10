@@ -1,5 +1,5 @@
 % content_for queues => begin
-
+	% my $i = 0;
 	% foreach my $section (@{$sections}){
 		<div class="queue">
 			<h3><%= $section->[0] %></h3>
@@ -14,7 +14,7 @@
 				</label>
 				% }
 			</div>
-			<table class="table table-striped table-hover">
+			<table class="table table-striped table-hover" data-queue-id="<%= $i %>">
 				<thead>
 					<th>Ticket Number</th>
 					<th>Contact</th>
@@ -25,20 +25,10 @@
 					<th>Submitted Date</th>
 				</thead>
 				<tbody>
-				% foreach my $ticket (@{$queues->{$section->[0]}}){
-					<tr data-id="<%= $ticket->{'id'} %>" data-status="<%= $ticket->{'status'} %>" class="<% if($ticket->{'status'} eq 'Completed' || $ticket->{'status'} eq 'Closed'){ %>collapse<% } %>">
-						<td><%= $ticket->{'ticket'} %></td>
-						<td><%= $ticket->{'contact'} %></td>
-						<td><%= $ticket->{'company'} %></td>
-						<td><%= $ticket->{'synopsis'} %></td>
-						<td><%= $ticket->{'technician'} %></td>
-						<td><%= $ticket->{'status'} %></td>
-						<td><%= $ticket->{'genesis'} %></td>
-					</tr>
-				% }
 				</tbody>
 			</table>
 		</div>
+		% $i++;
 	%}
 
 % end

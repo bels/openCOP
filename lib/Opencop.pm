@@ -51,9 +51,9 @@ sub startup {
   	my $app = shift;
   	state $reports = Opencop::Model::Reports->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
-  $self->helper(queues => sub {
+  $self->helper(queue => sub {
     my $app = shift;
-    state $queues = Opencop::Model::Queues->new(pg => $app-pg, debug => $app->app->mode eq 'development' ? 1 : 0);
+    state $queue = Opencop::Model::Queues->new(pg => $app->pg, debug => $app->app->mode eq 'development' ? 1 : 0);
   });
   
   $self->helper(set_selected => sub{
