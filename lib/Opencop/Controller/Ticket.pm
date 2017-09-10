@@ -110,7 +110,8 @@ sub all_queues{
 	my $self = shift;
 
 	my $queues = $self->queue->queues_available_to_user($self->session('user_id'));
-	my $statuses = $self->ticket->status_list($self->session('user_id'));
+	my $statuses = $self->every_param('status');
+	#my $statuses = $self->ticket->status_list($self->session('user_id'));
 	my $tickets = [];
 	foreach my $queue (@{$queues}){
 		my $t = $self->queue->get_queue($queue,$statuses); 

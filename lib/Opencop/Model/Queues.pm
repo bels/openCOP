@@ -19,11 +19,13 @@ sub get_queue{
 	if(ref $statuses eq 'ARRAY'){
 		if(is_uuid_string($statuses->[0])){
 			#looks like list of uuids
-			$status_array = join("'::UUID,'",@{$statuses});
+			$status_array = "'";
+			$status_array .= join("'::UUID,'",@{$statuses});
+			$status_array .= "'";
 		} else {
 			#I am assuming you used the status_list function in the ticket model to pass in the status list here
 			foreach my $row (@{$statuses}){
-				$status_array .=  "'" . $row->[1] . "'::UUID,"; 
+				$status_array .=  "'" . $row->[1] . "'::UUID,";
 			}
 			chop($status_array);
 		}
@@ -37,7 +39,7 @@ sub get_queue{
 		}
 	}
 
-my $sql =<<SQL;
+my $sql =<<"SQL";
 select
 	t.id,
 	t.ticket,
@@ -80,7 +82,6 @@ order by
 	t.genesis desc
 SQL
 
-	warn $queue;
 	return $self->pg->db->query($sql,$queue)->arrays->to_array;
 }
 

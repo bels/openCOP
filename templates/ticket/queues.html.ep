@@ -7,9 +7,9 @@
 				% foreach my $status (@{$status_list}){
 				<label>
 					% if((session('account_type') eq 'Quality Assurance') || (session('account_type') eq 'Technician' && $status->[0] ne 'Closed')) {
-						<input type="checkbox" class="toggle visible" value="<%= $status->[0] %>" checked> <%= $status->[0] %>
+						<input type="checkbox" class="toggle visible" value="<%= $status->[1] %>" checked> <%= $status->[0] %>
 					% } else {
-						<input type="checkbox" class="toggle visible" value="<%= $status->[0] %>"> <%= $status->[0] %>
+						<input type="checkbox" class="toggle visible" value="<%= $status->[1] %>"> <%= $status->[0] %>
 					% }
 				</label>
 				% }
