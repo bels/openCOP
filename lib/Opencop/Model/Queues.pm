@@ -85,4 +85,14 @@ SQL
 	return $self->pg->db->query($sql,$queue)->arrays->to_array;
 }
 
+sub get_client_queue{
+	my $self = shift;
+
+	my $sql = <<SQL;
+	
+	
+SQL
+	return $self->pg->db->query($sql,)
+	
+}
 1;

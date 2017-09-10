@@ -1,0 +1,6 @@
+% layout 'default';
+% title 'Client Login';
+
+%= include 'auth/login_form'
+
+		%= content_for 'login_form'

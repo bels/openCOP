@@ -33,7 +33,7 @@ sub authenticate{
 		if($self->session('account_type') eq 'Technician'){
 			$self->redirect_to($self->url_for($self->config->{'technician_landing_page'}));
 		} else {
-			$self->redirect_to($self->url_for($self->config->{'customer_landing_page'}));
+			$self->redirect_to($self->url_for($self->config->{'client_landing_page'}));
 		}
 		return;
 	} else {

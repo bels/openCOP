@@ -64,6 +64,12 @@ sub site_list{
 	return $self->pg->db->query("select c.name || ' - ' || s.name as name,s.id from site s join company c on s.company_id = c.id")->arrays->to_array;
 }
 
+sub client_site_list{
+	my ($self,$user_id) = @_;
+	
+	return $self->pg->db->query("select c.name || ' - ' || s.name as name,s.id from site s join company c on s.company_id = c.id join users u on s.id = u.site where u.id = ?",$user_id)->arrays->to_array;
+}
+
 sub priority_list{
 	my $self = shift;
 

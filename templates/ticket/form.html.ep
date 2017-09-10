@@ -103,13 +103,15 @@
 								</div>
 							</div>
 							<div class="form-group col-md-4">
-								%= label_for section => 'Section', class => 'control-label col-md-3'
-								<div class="col-md-7">
-									%= select_field section => $sections, class => 'form-control', id => 'section', tabindex => 11
-								</div>
-								<div class="col-md-1">
-									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, leave the section field untouched and that group will review it and make further adjustments if necessary."></span>
-								</div>
+								% if(session('account_type') ne 'Client'){
+									%= label_for section => 'Section', class => 'control-label col-md-3'
+									<div class="col-md-7">
+										%= select_field section => $sections, class => 'form-control', id => 'section', tabindex => 11
+									</div>
+									<div class="col-md-1">
+										<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The Section field describes who the problem should be reported to. If you know for sure which section your problem is for, place it in that section. If you have any doubts at all, leave the section field untouched and that group will review it and make further adjustments if necessary."></span>
+									</div>
+								% }
 							</div>
 						</div>
 					</div>
@@ -134,13 +136,15 @@
 								</div>
 							</div>
 							<div class="form-group col-md-4">
-								<div class="col-md-offset-3 col-md-7">
-									<label>
-										<input type="checkbox" name="billable" id="billable" tabindex=14> Billable
-									</label>
-								</div>
-								<div class="col-md-1">
-								</div>
+								% if(session('account_type') ne 'Client'){
+									<div class="col-md-offset-3 col-md-7">
+										<label>
+											<input type="checkbox" name="billable" id="billable" tabindex=14> Billable
+										</label>
+									</div>
+									<div class="col-md-1">
+									</div>
+								% }
 							</div>
 						</div>
 					</div>

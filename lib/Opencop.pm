@@ -91,12 +91,12 @@ sub startup {
 
   # Normal route to controller 
   $r->get('/')->to('core#index')->name('index');
-  $r->get('/customer')->to('customer#index')->name('customer_index');
+  $r->get('/client')->to('client#index')->name('customer_index');
   $r->post('/auth')->to('auth#authenticate')->name('auth');
   my $authed = $r->under()->to('auth#check_session');
   $authed->get('/dashboard')->to('core#dashboard')->name('dashboard'); #Reroutes people to the right dashboard depending if they are a customer or technician
   $authed->get('/technician/dashboard')->to('technician#dashboard')->name('technician_dashboard');
-  $authed->get('/customer/dashboard')->to('customer#dashboard')->name('customer_dashboard');
+  $authed->get('/client/dashboard')->to('client#dashboard')->name('client_dashboard');
   $authed->get('/user/preferences')->to('user#preferences')->name('user_preferences');
   $authed->post('/user/password/set')->to('user#set_password')->name('set_password');
   $authed->get('/ticket/new')->to('ticket#new_form')->name('new_ticket_form');
