@@ -33,6 +33,8 @@ values
 	)
 returning id
 SQL
+	my $section = $data->{'section'};
+	$section = $self->pg->db->query("select id from section where name = 'Helpdesk'")->hash->{'id'} unless defined($data->{'section'});
 	my $availability_time = $data->{'availability_time'} ne '' ? $data->{'availability_time'} : undef;
 	my $ticket = $self->pg->db->query($sql,
 		$data->{'barcode'},
@@ -41,7 +43,7 @@ SQL
 		$data->{'author'},
 		$data->{'contact'},
 		$data->{'phone'},
-		$data->{'section'},
+		$section,
 		$data->{'synopsis'},
 		$data->{'problem'},
 		$data->{'priority'},
@@ -139,64 +141,6 @@ order by
 SQL
 	return $self->pg->db->query($sql,$id)->arrays->to_array;
 }
-
-### deprecated
-#sub queue_overview{
-#	my ($self,$tech_id) = @_;
-
-#my $sql =<<SQL;
-#select
-#	t.id,
-#	t.ticket,
-#	t.contact,
-#	c.name as company,
-#	t.synopsis,
-#	u.first || ' ' || u.last as technician,
-#	s.status,
-#	se.name as section,
-#	t.genesis
-#from
-#	ticket t
-#left join
-#	users u
-#on
-#	t.technician = u.id
-#join
-#	status s
-#on
-#	t.status = s.id
-#join
-#	section se
-#on
-#	t.section = se.id
-#left join
-#	site
-#on
-#	t.site = site.id
-#left join
-#	company c
-#on
-#	site.company_id = c.id
-#where
-#	t.active = true
-#and
-#	t.section in (select section from technician_section where technician = ?)
-#and
-#	s.id in (select status from account_available_statuses where account_type = (select account_type from users u where u.id = ?) )
-#SQL
-	#grab all tickets for technician and don't retreive tickets that are in statuses they shouldn't see
-#	my $tickets = $self->pg->db->query($sql,$tech_id,$tech_id)->hashes->to_array;
-	
-	#organize tickets into sections
-#	my $queues = {};
-#	foreach my $ticket (@{$tickets}){
-#		$queues->{$ticket->{'section'}} = [] unless exists($queues->{$ticket->{'section'}});
-
-#		push(@{$queues->{$ticket->{'section'}}},$ticket);	
-#	}
-
-#	return $queues;
-#}
 
 sub get_ticket{
 	my ($self,$id) = @_;

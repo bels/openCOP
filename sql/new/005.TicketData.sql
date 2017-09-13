@@ -27,6 +27,13 @@ INSERT INTO account_available_statuses(account_type,status) values((select id fr
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'Waiting Other'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'Closed'));
 INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Admin'),(select id from status where status = 'Completed'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Client'),(select id from status where status = 'New'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Client'),(select id from status where status = 'In Progress'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Client'),(select id from status where status = 'On-Site Scheduled'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Client'),(select id from status where status = 'Waiting Customer'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Client'),(select id from status where status = 'Waiting Vendor'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Client'),(select id from status where status = 'Waiting Other'));
+INSERT INTO account_available_statuses(account_type,status) values((select id from auth.account_types where name = 'Client'),(select id from status where status = 'Closed'));
 
 INSERT INTO priority(severity,description) values(1,'Low');
 INSERT INTO priority(severity,description) values(2,'Normal');

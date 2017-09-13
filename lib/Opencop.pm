@@ -103,6 +103,7 @@ sub startup {
   $authed->post('/ticket/new')->to('ticket#new_ticket')->name('new_ticket');
   $authed->post('/ticket/update/:ticket_id')->to('ticket#update')->name('update_ticket');
   $authed->get('/ticket/queue/all')->to('ticket#all_queues')->name('view_all_ticket_queues');
+  $authed->get('/ticket/client/queue')->to('ticket#client_queue')->name('client_queue');
   $authed->get('/ticket/queue/:queue')->to('ticket#queue')->name('view_ticket_queue');
   $authed->post('/ticket/troubleshooting/add')->to('ticket#add_troubleshooting')->name('add_troubleshooting');
   $authed->post('/ticket/delete/:ticket_id')->to('ticket#delete')->name('delete_ticket');

@@ -149,7 +149,7 @@ sub client_queue{
 
 	my $statuses = $self->every_param('status');
 	
-	my $tickets = $self->queue->get_client_queue($self->session('user_id'));
+	my $tickets = $self->queue->get_client_queue($self->session('user_id'),$statuses);
 	
 	if($self->tx->req->is_xhr){
 		$self->render(json => {tickets => $tickets, success => Mojo::JSON->true},status => 200);

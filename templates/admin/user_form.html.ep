@@ -59,7 +59,7 @@
 		<div class="form-group">
 			%= label_for account_type => 'Account Type', class => 'control-label col-md-3'
 			<div class="col-md-9">
-				%= select_field account_type => [[Technician => 'technician'],[Client => 'client']], class => 'form-control', id => 'site', tabindex => 10
+				%= select_field account_type => $account_type_list, class => 'form-control', id => 'site', tabindex => 10
 			</div>
 		</div>
 		<div class="form-group">

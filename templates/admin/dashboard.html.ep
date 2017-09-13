@@ -15,8 +15,12 @@
 			<br>
 			<br>
 			<a href="<%= url_for('view_all_reports') %>" class="btn btn-primary">Reports</a>
+			<br>
+			<br>
+			<a href="<%= url_for('logout') %>" class="btn btn-danger">Logout</a>
 		</div>
 		<div class="col-md-10 right-column">
+			<h3>New User</h3>
 			%= content_for 'user_form'
 		</div>
 	</div>

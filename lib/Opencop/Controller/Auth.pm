@@ -30,7 +30,7 @@ sub authenticate{
 		}
 		$self->redirect_to($self->flash('destination')) and return if defined $self->flash('destination');
 
-		if($self->session('account_type') eq 'Technician'){
+		if($self->session('account_type') ne 'Client'){
 			$self->redirect_to($self->url_for($self->config->{'technician_landing_page'}));
 		} else {
 			$self->redirect_to($self->url_for($self->config->{'client_landing_page'}));

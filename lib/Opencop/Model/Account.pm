@@ -12,7 +12,7 @@ use constant {
 };
 
 sub create{
-	my ($self,$firstname,$lastname,$password,$username,$activate) = @_;
+	my ($self,$firstname,$lastname,$password,$username,$activate,$account_type) = @_;
 	
 	my $rs = $self->pg->db->query('select * from auth.register(?,?,?,?)',$firstname,$lastname,$password,$username)->hash;
 
@@ -25,6 +25,7 @@ sub create{
 		} else{
 			my $result = $self->pg->db->query('update auth.users set active = true where id = ?',$rs->{'id'});
 		}
+		$self->pg->db->query('update users set account_type = ? where id = ?',$account_type,$rs->{'id'});
 	}
 
 	return $rs;
@@ -83,16 +84,10 @@ SQL
 	}
 }
 
-sub account_type{
+sub type_list{
 	my $self = shift;
-	#pass in id, then account type
-	my ($id,$type) = (undef,undef);
-	if(@_){
-		($id,$type) = @_;
-		$self->pg->db->query("select * from update_profile(?,'account_type',?)",$id,$type);
-	}
-	
-	return $self->pg->db->query("select content from profile where data_type = (select id from profile_data_type where description = 'account_type') and user_id = ?",$id)->hash;
+
+	return $self->pg->db->query('select name, id from account_types')->arrays->to_array;
 }
 
 sub site{

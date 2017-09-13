@@ -118,13 +118,15 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="col-md-4 form-group">
-								%= label_for tech => 'Tech', class => 'col-md-3 control-label'
-								<div class="col-md-7">
-									%= select_field tech => $technicians, class => 'form-control', id => 'tech', tabindex => 12
-								</div>
-								<div class="col-md-1">
-									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator."></span>
-								</div>
+								% if(session('account_type') ne 'Client'){
+									%= label_for tech => 'Tech', class => 'col-md-3 control-label'
+									<div class="col-md-7">
+										%= select_field tech => $technicians, class => 'form-control', id => 'tech', tabindex => 12
+									</div>
+									<div class="col-md-1">
+										<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="The assigned technician field is for directly assigning tickets to a certain technician.  This is useful for tickets related to something someone was already working on. If blank, a technician may be assigned by the administrator."></span>
+									</div>
+								% }
 							</div>
 							<div class="form-group col-md-4">
 								%= label_for availability_time => 'Availability', class => 'control-label col-md-3'

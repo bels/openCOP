@@ -86,13 +86,67 @@ SQL
 }
 
 sub get_client_queue{
-	my $self = shift;
+	my ($self,$id,$statuses) = @_;
+
+	my $status_array = '';
+	if(ref $statuses eq 'ARRAY'){
+		if(is_uuid_string($statuses->[0])){
+			#looks like list of uuids
+			$status_array = "'";
+			$status_array .= join("'::UUID,'",@{$statuses});
+			$status_array .= "'";
+		} else {
+			#I am assuming you used the status_list function in the ticket model to pass in the status list here
+			foreach my $row (@{$statuses}){
+				$status_array .=  "'" . $row->[1] . "'::UUID,";
+			}
+			chop($status_array);
+		}
+	} else {
+		#looks like you passed in a single UUID?
+		if(is_uuid_string($statuses)){
+			$status_array = "ARRAY['$statuses']";
+		} else {
+			#we don't want this to error so we're just putting a empty uuid here
+			$status_array = 'ARRAY[' . create_uuid(UUID_NIL) . ']';
+		}
+	}
 
 	my $sql = <<SQL;
-	
-	
+select
+	t.id,
+	t.ticket,
+	t.contact,
+	t.synopsis,
+	u.first || ' ' || u.last as technician,
+	s.status,
+	se.name as section,
+	t.genesis
+from
+	ticket t
+left join
+	users u
+on
+	t.technician = u.id
+join
+	status s
+on
+	t.status = s.id
+join
+	section se
+on
+	t.section = se.id
+where
+	t.active = true
+and
+	t.submitter = ?
+and
+	s.id in ($status_array)
+order by
+	t.genesis desc
 SQL
-	return $self->pg->db->query($sql,)
+
+	return $self->pg->db->query($sql,$id)->arrays->to_array;
 	
 }
 1;

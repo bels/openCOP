@@ -4,10 +4,9 @@ use Mojo::Base 'Mojolicious::Controller';
 sub new_user{
 	my $self = shift;
 	
-	my $rv = $self->account->create($self->param('firstname'),$self->param('lastname'),$self->param('password1'),$self->param('username'),0);
+	my $rv = $self->account->create($self->param('firstname'),$self->param('lastname'),$self->param('password1'),$self->param('username'),0,$self->param('account_type'));
 	if($rv->{'status'} == 1){
 		my $id = $rv->{'id'};
-		$self->account->account_type($id,$self->param('account_type'));
 		unless($self->param('site') eq ''){
 			$self->account->site($id,$self->param('site'));
 		}
@@ -25,7 +24,8 @@ sub dashboard{
 		push(@{$site_list},$row);
 	}
 	$self->stash(
-		sites => $site_list
+		sites => $site_list,
+		account_type_list => $self->account->type_list
 	);
 }
 
