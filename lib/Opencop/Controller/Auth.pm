@@ -64,6 +64,7 @@ sub check_session {
 	my $session = $self->session->{'id'} // '00000000-0000-0000-0000-000000000000';
 	if($self->auth->verifySession($session)){
 		$self->auth->refreshSession($session);
+		$self->session(expiration => 28800);
 		return 1;
 	}
 	$self->flash(error => 'You tried to access a resource that requires you to be logged in.  Please login to continue.');
