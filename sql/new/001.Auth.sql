@@ -25,7 +25,7 @@ CREATE TABLE users (
 	middle TEXT,
 	login_identifier TEXT UNIQUE,
 	password TEXT,
-	account_type UUID NOT NULL REFERENCES account_types(id),
+	account_type UUID REFERENCES account_types(id),
 	active BOOLEAN DEFAULT true,
 	site UUID REFERENCES opencop.site(id)
 );
