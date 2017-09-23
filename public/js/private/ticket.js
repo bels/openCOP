@@ -1,5 +1,25 @@
 ;(function(){
 	$(function(){
+		$('.date-picker').datetimepicker();
+		jQuery.validator.setDefaults({
+			highlight: function(element) {
+		        $(element).closest('.form-group').addClass('has-error');
+		    },
+		    unhighlight: function(element) {
+		        $(element).closest('.form-group').removeClass('has-error');
+		    },
+		    errorElement: 'span',
+		    errorClass: 'help-block',
+		    errorPlacement: function(error, element) {
+		        if(element.parent('.input-group').length) {
+		            error.insertAfter(element.parent());
+		        } else {
+		            error.insertAfter(element);
+		        }
+		    }
+		});
+		
+		
 		$('.edit.btn').click(function(){
 			var $this = $(this);
 			$('.static').each(function(index,element){
@@ -13,7 +33,33 @@
 			$('#billable').prop('disabled','');
 		});
 		
+		$('.update-ticket.form').validate({
+			rules:{
+				synopsis: {
+					required: true
+				},
+				author: {
+					required: true
+				},
+				contact: {
+					required: true
+				},
+				phone: {
+					require_from_group: [1, '.contact-group']
+				},
+				email: {
+					email: true,
+					require_from_group: [1, '.contact-group']
+				},
+				problem: {
+					required: true
+				}
+			}
+		});
+		
 		$('.save.btn').click(function(){
+			var $form = $('.update-form'):
+			if(!$form.valid()) return false;
 			var data = {};
 			$('.form-control').each(function(index,element){
 				data[$(element).attr('id')] = $(element).val();
@@ -23,6 +69,7 @@
 			});
 			data['billable'] = $('#billable').prop('checked');
 			data['csrf_token'] = $('#csrf_token').val();
+			
 			$.ajax({
 				url: '/ticket/update/' + $('#ticket_id').val(),
 				method: 'POST',
@@ -32,18 +79,26 @@
 				window.location.href = window.location.href;
 			});
 		});
-		
-		$('.add.troubleshooting.btn').click(function(){
-			var $form = $(this).parent().parent().find('form');
-			var data = $form.serialize();
-			$.ajax({
-				url: $form.attr('action'),
-				method: $form.attr('method'),
-				data: data
-			}).done(function(data){
-				alert('troubleshooting added');
-				window.location.href = window.location.href;
-			});
+
+		$('.troubleshooting-form').validate({
+			rules:{
+				troubleshooting_time: {
+					required: true,
+					digits: true
+				},
+				troubleshoot: 'required'
+			},
+			submitHandler: function(form){
+				var data = $(form).serialize();
+				$.ajax({
+					url: $(form).attr('action'),
+					method: $(form).attr('method'),
+					data: data
+				}).done(function(data){
+					alert('troubleshooting added');
+					window.location.href = window.location.href;
+				});
+			}
 		});
 		
 		$('.delete.btn').click(function(){

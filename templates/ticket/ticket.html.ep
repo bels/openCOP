@@ -1,4 +1,5 @@
 % content_for ticket_details => begin
+		%= form_for update_ticket => (class => 'form-horizontal update-ticket form', method => 'POST') => begin
 			%= hidden_field ticket_id => $ticket_id, id => 'ticket_id', class => 'input'
 			%= csrf_field id => 'csrf_token'
 			<fieldset>
@@ -216,4 +217,5 @@
 					<div id="attach_div" class="col-md-5"><div id="attach" rel="#multiAttach"><label>Attach a File</label><img src="images/attach.png" title="Attach A File"></div></div>
 				</div>
 			</fieldset>
+		% end
 % end
