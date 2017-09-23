@@ -350,7 +350,9 @@ BEGIN
 		AND
 			t.genesis >= now() - timeframe
 		AND
-			t.paid = false;
+			t.paid = false
+		AND
+			t.billable = true;
 END;
 $$ LANGUAGE plpgsql;
 
