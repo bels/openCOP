@@ -133,7 +133,7 @@ CREATE TABLE reports (
 	name TEXT NOT NULL UNIQUE,
 	report TEXT,
 	public BOOLEAN DEFAULT true,
-	description TEXT DEFAULT null
+	description TEXT DEFAULT null,
 	active BOOLEAN DEFAULT true
 );
 
