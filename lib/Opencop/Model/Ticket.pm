@@ -223,31 +223,6 @@ order by
 	t.genesis desc
 SQL
 
-my $first_time_sql =<<SQL;
-select
-	s.status
-from
-	status s
-join
-	ticket t
-on
-	t.status = s.id
-where
-	t.id = ?
-SQL
-
-my $update_status_sql =<<SQL;
-update
-	ticket t
-set
-	status = (select id from status s where s.status = 'In Progress')
-where
-	t.id = ?
-SQL
-	my $status = $self->pg->db->query($first_time_sql,$ticket_id)->hash;
-	if($status->{'status'} eq 'New'){
-		$self->pg->db->query($update_status_sql,$ticket_id);
-	}
 	return $self->pg->db->query($sql,$ticket_id)->hashes->to_array;
 }
 
@@ -304,7 +279,33 @@ sub add_troubleshooting{
 	my ($self,$updater_id,$data) = @_;
 	#this is a called from a controller from a certain code path
 
-	$self->_insert_troubleshooting($updater_id,$data->{'ticket_id'},$data->{'troubleshooting_time'} . ' ' . $data->{'time_interval'},$data->{'troubleshoot'});
+	
+my $first_time_sql =<<SQL;
+select
+	s.status
+from
+	status s
+join
+	ticket t
+on
+	t.status = s.id
+where
+	t.id = ?
+SQL
+
+my $update_status_sql =<<SQL;
+update
+	ticket t
+set
+	status = (select id from status s where s.status = 'In Progress')
+where
+	t.id = ?
+SQL
+	my $status = $self->pg->db->query($first_time_sql,$data->{'ticket_id'})->hash;
+	if($status->{'status'} eq 'New'){
+		$self->pg->db->query($update_status_sql,$data->{'ticket_id'});
+	}
+	$self->_insert_troubleshooting($updater_id,$data->{'ticket_id'},$data->{'troubleshooting_time'} . ' ' . $data->{'time_interval'},$data->{'on-site'},$data->{'troubleshoot'});
 }
 
 sub delete{
@@ -325,13 +326,17 @@ SQL
 }
 
 sub _insert_troubleshooting{
-	my ($self,$tech,$ticket,$time_worked,$data) = @_;
+	my ($self,$tech,$ticket,$time_worked,$on_site,$data) = @_;
 	
 my $troubleshooting_sql =<<SQL;
-insert into troubleshooting(technician, ticket, time_worked, troubleshooting) values(?,?,?,?)
+insert into troubleshooting(technician, ticket, time_worked, troubleshooting, on_site) values(?,?,?,?,?)
 SQL
 
-	$self->pg->db->query($troubleshooting_sql,$tech,$ticket,$time_worked,$data);
+	if(!defined($on_site)){
+		$on_site = 0;
+	}
+
+	$self->pg->db->query($troubleshooting_sql,$tech,$ticket,$time_worked,$data,$on_site);
 	return;
 }
 

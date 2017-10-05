@@ -106,7 +106,8 @@ CREATE TABLE troubleshooting(
 	technician UUID references auth.users(id),
 	time_worked INTERVAL,
 	ticket UUID references ticket(id) on delete cascade,
-	troubleshooting TEXT
+	troubleshooting TEXT,
+	on_site BOOLEAN DEFAULT false
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON troubleshooting TO opencop_user;
