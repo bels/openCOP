@@ -33,7 +33,7 @@
 			$('#billable').prop('disabled','');
 		});
 		
-		$('.update-ticket.form').validate({
+		$('#update-ticket-form').validate({
 			rules:{
 				synopsis: {
 					required: true
@@ -54,33 +54,34 @@
 				problem: {
 					required: true
 				}
+			},
+			submitHandler: function(form){
+				var data = {};
+				$('.form-control').each(function(index,element){
+					data[$(element).attr('id')] = $(element).val();
+				});
+				$('input:not(.form-control,#billable)').each(function(index,element){
+					data[$(element).attr('id')] = $(element).val();
+				});
+				data['billable'] = $('#billable').prop('checked');
+				data['csrf_token'] = $('#csrf_token').val();
+				
+				$.ajax({
+					url: '/ticket/update/' + $('#ticket_id').val(),
+					method: 'POST',
+					data: JSON.stringify(data),
+					dataType: 'json'
+				}).done(function(data){
+					window.location.href = window.location.href;
+				});
 			}
 		});
-		
+
 		$('.save.btn').click(function(){
-			var $form = $('.update-form'):
-			if(!$form.valid()) return false;
-			var data = {};
-			$('.form-control').each(function(index,element){
-				data[$(element).attr('id')] = $(element).val();
-			});
-			$('input:not(.form-control,#billable)').each(function(index,element){
-				data[$(element).attr('id')] = $(element).val();
-			});
-			data['billable'] = $('#billable').prop('checked');
-			data['csrf_token'] = $('#csrf_token').val();
-			
-			$.ajax({
-				url: '/ticket/update/' + $('#ticket_id').val(),
-				method: 'POST',
-				data: JSON.stringify(data),
-				dataType: 'json'
-			}).done(function(data){
-				window.location.href = window.location.href;
-			});
+			$('#update-ticket-form').submit();
 		});
 
-		$('.troubleshooting-form').validate({
+		$('#troubleshooting-form').validate({
 			rules:{
 				troubleshooting_time: {
 					required: true,

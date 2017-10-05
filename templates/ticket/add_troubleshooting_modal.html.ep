@@ -7,7 +7,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title">Add Troubleshooting</h4>
 			</div>
-			<form class="form-horizontal troubleshooting-form" action="<%= url_for('add_troubleshooting') %>" method="POST">
+			<form class="form-horizontal" id="troubleshooting-form" action="<%= url_for('add_troubleshooting') %>" method="POST">
 				<div class="modal-body">
 						%= hidden_field ticket_id => $ticket_id, id => 'ticket_id', class => 'input'
 						<div class="form-group">

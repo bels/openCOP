@@ -1,5 +1,5 @@
 % content_for ticket_details => begin
-		%= form_for update_ticket => (class => 'form-horizontal update-ticket form', method => 'POST') => begin
+		%= form_for update_ticket => (class => 'form-horizontal update-ticket form', method => 'POST', id => 'update-ticket-form') => begin
 			%= hidden_field ticket_id => $ticket_id, id => 'ticket_id', class => 'input'
 			%= csrf_field id => 'csrf_token'
 			<fieldset>

@@ -59,7 +59,7 @@ sub view_ticket{
 			'/js/common/jquery/plugins/additional-methods.min.js',
 			'/js/common/moment.js',
 			'/js/common/bootstrap-datetimepicker.min.js',
-			'/js/private/new_ticket.js'
+			'/js/private/ticket.js'
 		],
 		styles => [
 			'/styles/common/bootstrap-datetimepicker.css'
