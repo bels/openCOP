@@ -223,6 +223,31 @@ order by
 	t.genesis desc
 SQL
 
+my $first_time_sql =<<SQL;
+select
+	s.status
+from
+	status s
+join
+	ticket t
+on
+	t.status = s.id
+where
+	t.id = ?
+SQL
+
+my $update_status_sql =<<SQL;
+update
+	ticket t
+set
+	status = (select id from status s where s.status = 'In Progress')
+where
+	t.id = ?
+SQL
+	my $status = $self->pg->db->query($first_time_sql,$ticket_id)->hash;
+	if($status->{'status'} eq 'New'){
+		$self->pg->db->query($update_status_sql,$ticket_id);
+	}
 	return $self->pg->db->query($sql,$ticket_id)->hashes->to_array;
 }
 
