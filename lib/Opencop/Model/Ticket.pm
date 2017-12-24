@@ -210,7 +210,8 @@ my $sql =<<SQL;
 select
 	u.first || ' ' || u.last as tech_name,
 	t.troubleshooting,
-	t.genesis
+	t.genesis,
+	t.time_worked
 from
 	troubleshooting t
 join
