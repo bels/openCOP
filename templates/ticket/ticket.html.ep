@@ -206,7 +206,7 @@
 							<p class="troubleshoot">
 								% foreach my $t (@{$troubleshooting}){
 									Technician: <%= $t->{'tech_name'} %><br>
-									Date: <%= $t->{'genesis'} %><br>
+									Date: <%= $t->{'genesis'} %> - Time Worked: <%= $t->{'time_worked'} %><br>
 									Troubleshooting: <%= $t->{'troubleshooting'} %>
 									<hr>
 								% } 
