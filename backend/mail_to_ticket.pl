@@ -14,7 +14,7 @@ my $config_file = './conf/config.yml';
 
 my $config = YAML::XS::LoadFile($config_file);
 
-my $imap = Mail::IMAPClient->new(Server => $config->{'mail_server'},User => $config->{'helpdesk_account'},Password => $config->{'helpdesk_password'},Port => $config->{'port'}, Ssl => $config->{'ssl'}, Uid => $config->{'uid'}) or die "IMAP Failure: $!";
+my $imap = Mail::IMAPClient->new(Server => $config->{'mail_server'},User => $config->{'helpdesk_account'},Password => $config->{'helpdesk_password'},Port => $config->{'port'}, Ssl => $config->{'ssl'}, Uid => $config->{'uid'},Ignoresizeerrors => $config->{'ignore_size_errors'}) or die "IMAP Failure: $!";
 
 my $inbox = $config->{'mail_inbox_folder'};
 if($imap->exists($inbox))

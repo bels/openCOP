@@ -11,3 +11,4 @@ ticket_db: FILL_ME_IN
 db_username: FILL_ME_IN
 db_user_password: FILL_ME_IN
 ticket_table: ticket
+ignore_size_errors: 1
