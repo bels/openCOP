@@ -109,14 +109,8 @@ select
 	u.id
 from
 	users u
-join
-	profile p
-on
-	u.id = p.user_id
 where
-	p.content = 'technician'
-and
-	p.data_type = (select id from profile_data_type where description = 'account_type')
+	account_type = (select id from auth.account_types where name = 'Technician')
 SQL
 
 	return $self->pg->db->query($sql)->arrays->to_array;
